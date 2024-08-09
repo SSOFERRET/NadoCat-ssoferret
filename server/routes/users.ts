@@ -1,10 +1,12 @@
-// import express, { Router } from "express";
-// const router: Router = express.Router();
-// import signup from "../controller/user/Users";
+import express, { Router } from "express";
+const router: Router = express.Router();
+import signup from "../controller/user/Users";
 
-// router.use(express.json());
+router.use(express.json());
 
-// //회원가입
-// router.post("/signup", signup);
+router.post("/signup", signup);
+router.post("/login", login);
+router.post("/auth/kakao", kakao);
+router.post("/auth/google", google);
 
-// export default router;
+export default router;
