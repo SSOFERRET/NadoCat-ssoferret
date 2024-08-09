@@ -16,15 +16,16 @@ import { getUserId } from "./Communities";
 // [] 사용자 정보 받아오는 부분 구현 필요
 export const getComments = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const postId = Number(req.params.community_id);
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const count = await prisma.communityComments.count({
       where: {
-        communityId: id,
+        communityId: postId,
       },
     });
-    const comments = await getCommunityComments(id, limit, cursor);
+
+    const comments = await getCommunityComments(postId, limit, cursor);
 
     const nextCursor =
       comments.length === limit ? comments[comments.length - 1].comment : null;
@@ -48,7 +49,7 @@ export const getComments = async (req: Request, res: Response) => {
 
 export const createComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const postId = Number(req.params.community_id);
     const comment = req.body.comment;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
@@ -58,11 +59,18 @@ export const createComment = async (req: Request, res: Response) => {
         .json({ message: "입력값을 확인해 주세요." });
     }
 
-    await addComment(id, userId, comment);
+    await addComment(postId, userId, comment);
 
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
     console.error(error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if(error.code === "P2003") {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .json({ message: "존재하지 않는 게시글입니다." });
+      }
+    }
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Internal Server Error" });
@@ -71,7 +79,7 @@ export const createComment = async (req: Request, res: Response) => {
 
 export const updateComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const postId = Number(req.params.community_id);
     const commentId = Number(req.params.comment_id);
     const comment = req.body.comment;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
@@ -82,7 +90,7 @@ export const updateComment = async (req: Request, res: Response) => {
         .json({ message: "입력값을 확인해 주세요." });
     }
 
-    await updateCommentById(id, userId, commentId, comment);
+    await updateCommentById(postId, userId, commentId, comment);
 
     res.status(StatusCodes.OK).json({ message: "댓글이 수정되었습니다." });
   } catch (error) {
@@ -92,6 +100,12 @@ export const updateComment = async (req: Request, res: Response) => {
         return res
           .status(StatusCodes.NOT_FOUND)
           .json({ message: "존재하지 않는 댓글입니다." });
+      }
+
+      if(error.code === "P2003") {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .json({ message: "존재하지 않는 게시글입니다." });
       }
     }
 
@@ -103,11 +117,11 @@ export const updateComment = async (req: Request, res: Response) => {
 
 export const deleteComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const postId = Number(req.params.community_id);
     const commentId = Number(req.params.comment_id);
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
-    await deleteCommentById(id, userId, commentId);
+    await deleteCommentById(postId, userId, commentId);
 
     res.status(StatusCodes.OK).json({ message: "댓글이 삭제되었습니다." });
   } catch (error) {
@@ -117,6 +131,12 @@ export const deleteComment = async (req: Request, res: Response) => {
         return res
           .status(StatusCodes.NOT_FOUND)
           .json({ message: "존재하지 않는 댓글입니다." });
+      }
+
+      if(error.code === "P2003") {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .json({ message: "존재하지 않는 게시글입니다." });
       }
     }
 
