@@ -178,15 +178,17 @@ model HomeCats {
 }
 
 model Images {
-  imageId         Int              @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
-  url             String           @db.VarChar(100)
-  communityImages CommunityImages?
-  eventImages     EventImages?
-  events          Events[]
-  missingReports  MissingReports[]
-  missings        Missings[]
-  streetCatImages StreetCatImages?
-  streetCats      StreetCats[]
+  imageId             Int                  @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
+  url                 String               @db.VarChar(100)
+  communityImages     CommunityImages?
+  eventImages         EventImages?
+  events              Events[]
+  missingImages       MissingImages?
+  missingReportImages MissingReportImages?
+  missingReports      MissingReports[]
+  missings            Missings[]
+  streetCatImages     StreetCatImages?
+  streetCats          StreetCats[]
 
   @@map("images")
 }
@@ -205,13 +207,14 @@ model Likes {
 }
 
 model Locations {
-  locationId     Int              @id @unique(map: "idlocation_id_UNIQUE") @default(autoincrement()) @map("location_id")
-  longitude      Float            @db.Float
-  latitude       Float            @db.Float
-  detail         String           @db.VarChar(100)
-  missingReports MissingReports[]
-  missings       Missings[]
-  streetCats     StreetCats[]
+  locationId       Int               @id @unique(map: "idlocation_id_UNIQUE") @default(autoincrement()) @map("location_id")
+  longitude        Float             @db.Float
+  latitude         Float             @db.Float
+  detail           String            @db.VarChar(100)
+  missingLocations MissingLocations?
+  missingReports   MissingReports[]
+  missings         Missings[]
+  streetCats       StreetCats[]
 
   @@map("locations")
 }
@@ -242,24 +245,55 @@ model MissingFavorites {
   @@map("missing_favorites")
 }
 
+model MissingImages {
+  imageId  Int      @id @unique(map: "image_id_UNIQUE") @map("image_id")
+  postId   Int      @map("post_id")
+  images   Images   @relation(fields: [imageId], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missing_images_image_id_fk")
+  missings Missings @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_images_post_id_fk")
+
+  @@index([postId], map: "missing_images_post_id_fk_idx")
+  @@map("missing_images")
+}
+
+model MissingLocations {
+  locationId Int       @id @unique(map: "location_id_UNIQUE") @map("location_id")
+  postId     Int       @map("post_id")
+  locations  Locations @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missing_locations_location_id_fk")
+  missings   Missings  @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_locations_post_id_fk")
+
+  @@index([postId], map: "missing_locations_post_id_fk_idx")
+  @@map("missing_locations")
+}
+
+model MissingReportImages {
+  imageId        Int            @id @unique(map: "image_id_UNIQUE") @map("image_id")
+  postId         Int            @map("post_id")
+  images         Images         @relation(fields: [imageId], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_images_image_id_fk")
+  missingReports MissingReports @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_images_post_id_fk")
+
+  @@index([postId], map: "missing_report_images_post_id_fk_idx")
+  @@map("missing_report_images")
+}
+
 model MissingReports {
-  postId          Int             @unique(map: "post_id_UNIQUE") @default(autoincrement()) @map("post_id")
-  categoryId      Int             @default(4) @map("category_id")
-  missingId       Int             @map("missing_id")
-  uuid            Bytes           @db.Binary(16)
-  time            DateTime        @db.DateTime(0)
-  locationId      Int             @map("location_id")
-  detail          String?         @db.MediumText
-  views           Int
-  valified        Int             @default(0) @db.TinyInt
-  match           Int             @default(0) @db.TinyInt
-  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
-  thumbnail       Int?
-  boardCategories BoardCategories @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_category_id")
-  locations       Locations       @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_location_id_fk")
-  missings        Missings        @relation(fields: [missingId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_missing_id_fk")
-  images          Images?         @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_thumbnail_fk")
-  users           Users           @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_uuid_fk")
+  postId              Int                   @unique(map: "post_id_UNIQUE") @default(autoincrement()) @map("post_id")
+  categoryId          Int                   @default(4) @map("category_id")
+  missingId           Int                   @map("missing_id")
+  uuid                Bytes                 @db.Binary(16)
+  time                DateTime              @db.DateTime(0)
+  locationId          Int                   @map("location_id")
+  detail              String?               @db.MediumText
+  views               Int
+  valified            Int                   @default(0) @db.TinyInt
+  match               Int                   @default(0) @db.TinyInt
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  thumbnail           Int?
+  missingReportImages MissingReportImages[]
+  boardCategories     BoardCategories       @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_category_id")
+  locations           Locations             @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_location_id_fk")
+  missings            Missings              @relation(fields: [missingId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_missing_id_fk")
+  images              Images?               @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_thumbnail_fk")
+  users               Users                 @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_uuid_fk")
 
   @@id([postId, categoryId])
   @@index([categoryId])
@@ -284,6 +318,8 @@ model Missings {
   updatedAt        DateTime           @default(now()) @map("updated_at") @db.Timestamp(0)
   thumbnail        Int?
   missingFavorites MissingFavorites[]
+  missingImages    MissingImages[]
+  missingLocations MissingLocations[]
   missingReports   MissingReports[]
   boardCategories  BoardCategories    @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "missings_category_id_fk")
   locations        Locations?         @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missings_location_id_fk")
