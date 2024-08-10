@@ -16,7 +16,7 @@ import { getUserId } from "./Communities";
 // [] 사용자 정보 받아오는 부분 구현 필요
 export const getComments = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const id = Number(req.params.communityId);
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const count = await prisma.communityComments.count({
@@ -48,7 +48,7 @@ export const getComments = async (req: Request, res: Response) => {
 
 export const createComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const id = Number(req.params.communityId);
     const comment = req.body.comment;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
@@ -71,8 +71,8 @@ export const createComment = async (req: Request, res: Response) => {
 
 export const updateComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
-    const commentId = Number(req.params.comment_id);
+    const id = Number(req.params.communityId);
+    const commentId = Number(req.params.commentId);
     const comment = req.body.comment;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
@@ -103,8 +103,8 @@ export const updateComment = async (req: Request, res: Response) => {
 
 export const deleteComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
-    const commentId = Number(req.params.comment_id);
+    const id = Number(req.params.communityId);
+    const commentId = Number(req.params.commentId);
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     await deleteCommentById(id, userId, commentId);
