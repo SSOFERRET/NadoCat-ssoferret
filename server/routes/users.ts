@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 const router: Router = express.Router();
 // import signup from "../controller/user/Users";
-import { follow, followings, unfollow } from "../controller/follow/follows";
+import { follow, followings, unfollow } from "../controller/friend/friends";
 
 router.use(express.json());
 
