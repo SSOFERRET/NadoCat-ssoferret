@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { IMissingCreate } from "../types/Missing";
+import { IMissingCreate, IMissingLocation } from "../types/Missing";
 import { IImageBridge } from "../types/image";
 
 export const addMissing = async (
@@ -19,6 +19,15 @@ export const addMissingImages = async (
     data: images
   });
 }
+
+export const addMissingLocation = async (
+  tx: Prisma.TransactionClient,
+  location: IMissingLocation
+) => {
+  return await tx.missingLocations.create({
+    data: location
+  });
+};
 
 export const getMissing = async (
   tx: Prisma.TransactionClient,
