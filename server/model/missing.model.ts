@@ -1,6 +1,8 @@
 import { Prisma } from "@prisma/client";
-import { IMissingCreate, IMissingLocation } from "../types/Missing";
+import { IMissingCreate, IMissingLocation, IMissingReport } from "../types/Missing";
 import { IImageBridge } from "../types/image";
+import { TCategoryId } from "../types/category";
+
 
 export const addMissing = async (
   tx: Prisma.TransactionClient,
@@ -23,22 +25,34 @@ export const removeMissing = async (
   })
 }
 
-export const addMissingImages = async (
+export const addImageFormats = async (
   tx: Prisma.TransactionClient,
+  categoryId: TCategoryId,
   images: IImageBridge[]
 ) => {
-  return await tx.missingImages.createMany({
-    data: images
-  });
+  switch (categoryId) {
+    case 3: return await tx.missingImages.createMany({
+      data: images
+    });
+    case 4: return await tx.missingReportImages.createMany({
+      data: images
+    })
+  }
 }
 
-export const addMissingLocation = async (
+export const addLocationFormats = async (
   tx: Prisma.TransactionClient,
+  categoryId: TCategoryId,
   location: IMissingLocation
 ) => {
-  return await tx.missingLocations.create({
-    data: location
-  });
+  switch (categoryId) {
+    case 3: return await tx.missingLocations.create({
+      data: location
+    });
+    case 4: return await tx.missingReportLocations.create({
+      data: location
+    })
+  }
 };
 
 export const deleteMissingImages = async (
@@ -104,5 +118,14 @@ export const getMissingReportsByPostId = async (
     where: {
       postId
     }
+  })
+};
+
+export const addMissingReport = async (
+  tx: Prisma.TransactionClient,
+  missingReport: IMissingReport
+) => {
+  return await tx.missingReports.create({
+    data: missingReport
   })
 };
