@@ -3,9 +3,11 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, deleteLocations } from "../../model/location.model";
-import { getMissingByPostId, addMissing, addMissingImages, addMissingLocation, deleteMissingLocations, removeMissing, getMissingImagesByPostId, getMissingLocationsByPostId, deleteMissingImages, getMissingReportsByPostId } from "../../model/missing.model";
+import { getMissingByPostId, addMissing, addLocationFormats, deleteMissingLocations, removeMissing, getMissingImagesByPostId, getMissingLocationsByPostId, deleteMissingImages, getMissingReportsByPostId, addImageFormats } from "../../model/missing.model";
 import { addImage, deleteImages } from "../../model/images.model";
-import { IImage } from "../../types/community";
+import { IImage } from "../../types/image";
+import { CATEGORY } from "../../constants/category";
+
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -45,22 +47,22 @@ export const createMissing = async (req: Request, res: Response) => {
         }
       );
 
-      await addMissingLocation(tx, {
+      await addLocationFormats(tx, CATEGORY.MISSINGS, {
         postId: post.postId,
         locationId: newLocation.locationId
-      })
+      });
 
-      if (images.length) {
+      if (images) {
         const newImages = await Promise.all(
           images.map((url: string) => addImage(tx, url))
         );
 
-        const formatedImages = newImages.map((image: IImage) => ({
+        const formattedImages = newImages.map((image: IImage) => ({
           imageId: image.imageId,
           postId: post.postId,
         }));
 
-        await addMissingImages(tx, formatedImages);
+        await addImageFormats(tx, CATEGORY.MISSINGS, formattedImages);
       }
     });
 
@@ -132,7 +134,7 @@ export const deleteMissing = async (req: Request, res: Response) => {
   }
 };
 
-const getUserId = async () => { // 임시
+export const getUserId = async () => { // 임시
   const result = await prisma.users.findUnique({
     where: {
       id: 1
