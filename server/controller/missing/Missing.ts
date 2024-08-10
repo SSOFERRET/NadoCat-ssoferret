@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, getLocationIdsByPostId } from "../../model/location.model";
 import { getMissing, addMissing, addMissingImages } from "../../model/missing.model";
-import { addImage } from "../../model/images.model";
+import { addImage } from "../../model/image.model";
 import { IImage } from "../../types/community";
 import { ILocation } from "../../types/location";
 

@@ -14,8 +14,8 @@ import {
   deleteCommunityTagByTagIds,
   updateCommunityById,
 } from "../../model/community.model";
-import { addImage, deleteImages } from "../../model/images.model";
-import { addTag, deleteTags } from "../../model/tags.model";
+import { addImage, deleteImages } from "../../model/image.model";
+import { addTag, deleteTags } from "../../model/tag.model";
 import { IImage, ITag } from "../../types/community";
 import { deleteCommentsById } from "../../model/communityComment.model";
 
