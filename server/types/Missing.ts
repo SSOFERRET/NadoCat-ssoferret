@@ -17,3 +17,8 @@ export interface IMissingGet extends IMissingCreate {
   found: boolean;
   views: number;
 }
+
+export interface IMissingLocation {
+  locationId: number;
+  postId: number;
+}
