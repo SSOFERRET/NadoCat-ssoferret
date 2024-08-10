@@ -1,7 +1,14 @@
+import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { getUserId } from "../community/Communities";
-import prisma from "../../client";
+import {
+  addFriend,
+  getFriendById,
+  getFriendCounts,
+  getFriends,
+  removeFriend,
+} from "../../model/friend.modle";
 
 export const followings = async (req: Request, res: Response) => {
   try {
@@ -9,49 +16,15 @@ export const followings = async (req: Request, res: Response) => {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
 
-    const count = await prisma.friends.count({
-      where: {
-        uuid: Buffer.from(userId, "hex"),
-      },
-    });
+    const count = await getFriendCounts(userId);
 
-    const friends = await prisma.friends.findMany({
-      where: {
-        uuid: Buffer.from(userId, "hex"),
-      },
-      take: limit,
-      skip: cursor ? 1 : 0,
-      cursor: cursor ? { friendId: cursor } : undefined,
-      select: {
-        friendId: true,
-        followingId: true,
-        usersFriendsFollowingIdTousers: {
-          select: {
-            id: true,
-            uuid: true,
-            email: true,
-            nickname: true,
-            profileImage: true,
-          },
-        },
-      },
-    });
-
-    const result = friends.map((friend) => {
-      return {
-        id: friend.friendId,
-        userId: friend.followingId.toString("hex"),
-        email: friend.usersFriendsFollowingIdTousers.email,
-        nickname: friend.usersFriendsFollowingIdTousers.nickname,
-        profileImage: friend.usersFriendsFollowingIdTousers.profileImage,
-      };
-    });
+    const friends = await getFriends(userId, limit, cursor);
 
     const nextCursor =
-      result.length === limit ? result[result.length - 1].id : null;
+      friends.length === limit ? friends[friends.length - 1].id : null;
 
     res.status(StatusCodes.OK).json({
-      follows: result,
+      follows: friends,
       pagination: {
         nextCursor,
         totalCount: count,
@@ -70,12 +43,7 @@ export const follow = async (req: Request, res: Response) => {
     const userId = await getUserId();
     const followingId = req.params.following_id;
 
-    await prisma.friends.create({
-      data: {
-        followingId: Buffer.from(followingId, "hex"),
-        uuid: Buffer.from(userId, "hex"),
-      },
-    });
+    await addFriend(userId, followingId);
 
     res
       .status(StatusCodes.CREATED)
@@ -93,12 +61,7 @@ export const unfollow = async (req: Request, res: Response) => {
     const userId = await getUserId();
     const followingId = req.params.following_id;
 
-    const friend = await prisma.friends.findFirst({
-      where: {
-        uuid: Buffer.from(userId, "hex"),
-        followingId: Buffer.from(followingId, "hex"),
-      },
-    });
+    const friend = await getFriendById(userId, followingId);
 
     if (!friend) {
       return res
@@ -106,11 +69,7 @@ export const unfollow = async (req: Request, res: Response) => {
         .json({ meesage: "요청한 친구 정보를 찾을 수 없습니다." });
     }
 
-    await prisma.friends.delete({
-      where: {
-        friendId: friend.friendId,
-      },
-    });
+    await removeFriend(friend.friendId);
 
     res.status(StatusCodes.OK).json({ message: "친구 삭제가 완료되었습니다." });
   } catch (error) {
