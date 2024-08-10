@@ -2,35 +2,27 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-import { addLocation, getLocationIdsByPostId } from "../../model/location.model";
-import { getMissing, addMissing, addMissingImages, addMissingLocation } from "../../model/missing.model";
-import { addImage } from "../../model/images.model";
+import { addLocation, deleteLocations } from "../../model/location.model";
+import { getMissingByPostId, addMissing, addMissingImages, addMissingLocation, deleteMissingLocations, removeMissing, getMissingImagesByPostId, getMissingLocationsByPostId, deleteMissingImages, getMissingReportsByPostId } from "../../model/missing.model";
+import { addImage, deleteImages } from "../../model/images.model";
 import { IImage } from "../../types/community";
-import { ILocation } from "../../types/location";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
 * [ ] 구현 내용
 *   [x] create
-*   [ ] delete
-*   [ ] get
+*   [-] delete
+*   [-] get
 *   [ ] put
 */
 
-// export const getMissing = async (req: Request, res: Response) => {
-//   try {
-//     const results = await prisma.missings.findMany({
-//       include: {
-//         boardCategories: true,
-//         users: true,
-//         locations: true,
-//       }
-//     });
-//     res.json(results);
-//   } catch (error) {
-//     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
-//   }
-// };
+/**
+ * 
+ * CHECKLIST
+ * [ ] 이미지 가져오기
+ * [ ] location 가져오기
+ * [ ] 제보글 가져오기
+ */
 
 /**CHECKLIST
  * [x] missing_locations table에 추가 누락
@@ -91,8 +83,8 @@ export const createMissing = async (req: Request, res: Response) => {
 
 /**
  * CHECKLIST
- * [ ] location 삭제
- * [ ] images 삭제
+ * [x] location 삭제
+ * [x] images 삭제
  * [ ] 제보글 삭제
  *
  * */
@@ -101,36 +93,26 @@ export const createMissing = async (req: Request, res: Response) => {
 export const deleteMissing = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.postId);
-    const userId = await getUserId(); // NOTE 사용자 정보 수정
+    const userId = await getUserId(); // NOTE 사용자 정보 인가 
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const post = await getMissing(tx, postId);
+      const locations = await getMissingLocationsByPostId(tx, postId);
+      const images = await getMissingImagesByPostId(tx, postId);
 
-      const locations = await getLocationIdsByPostId(tx, postId);
+      await deleteMissingLocations(tx, postId);
+      await deleteMissingImages(tx, postId);
 
-      console.log(locations);
+      await removeMissing(tx, postId);
 
-      // if (locations) {
+      if (locations) {
+        const formattedLocations = locations.map(location => location.locationId);
+        await deleteLocations(tx, formattedLocations);
+      }
 
-      // }
-
-      // const locations: ILocation = await addLocation(tx, location);
-      // const userId = await getUserId();
-
-
-
-      // if (images.length) {
-      //   const newImages = await Promise.all(
-      //     images.map((url: string) => addImage(tx, url))
-      //   );
-
-      //   const formatedImages = newImages.map((image: IImage) => ({
-      //     imageId: image.imageId,
-      //     postId: post.postId,
-      //   }));
-
-      //   await addMissingImages(tx, formatedImages);
-      // }
+      if (images) {
+        const formattedImages = images.map((image) => image.imageId);
+        await deleteImages(tx, formattedImages);
+      }
     });
 
     res
