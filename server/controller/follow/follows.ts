@@ -3,14 +3,25 @@ import { StatusCodes } from "http-status-codes";
 import { getUserId } from "../community/Communities";
 import prisma from "../../client";
 
-export const followings = async (_req: Request, res: Response) => {
+export const followings = async (req: Request, res: Response) => {
   try {
     const userId = await getUserId();
+    const limit = Number(req.query.limit) || 5;
+    const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
+
+    const count = await prisma.friends.count({
+      where: {
+        uuid: Buffer.from(userId, "hex"),
+      },
+    });
 
     const friends = await prisma.friends.findMany({
       where: {
         uuid: Buffer.from(userId, "hex"),
       },
+      take: limit,
+      skip: cursor ? 1 : 0,
+      cursor: cursor ? { friendId: cursor } : undefined,
       select: {
         friendId: true,
         followingId: true,
@@ -36,7 +47,16 @@ export const followings = async (_req: Request, res: Response) => {
       };
     });
 
-    res.status(StatusCodes.OK).json({ follows: result });
+    const nextCursor =
+      result.length === limit ? result[result.length - 1].id : null;
+
+    res.status(StatusCodes.OK).json({
+      follows: result,
+      pagination: {
+        nextCursor,
+        totalCount: count,
+      },
+    });
   } catch (error) {
     console.error(error);
     res
