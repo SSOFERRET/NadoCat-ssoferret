@@ -12,51 +12,51 @@ export const getCommunityList = async (
 ) => {
   const communities = await prisma.communities.findMany({
     where: {
-      category_id: categoryId,
+      categoryId: categoryId,
     },
     take: limit,
     skip: cursor ? 1 : 0,
-    cursor: cursor ? { post_id: cursor } : undefined,
+    cursor: cursor ? { postId: cursor } : undefined,
     orderBy: [
       {
         [orderBy.sortBy]: orderBy.sortOrder,
       },
       {
-        post_id: "desc",
+        postId: "desc",
       },
     ],
 
     select: {
-      post_id: true,
-      category_id: true,
+      postId: true,
+      categoryId: true,
       title: true,
       content: true,
       views: true,
-      created_at: true,
-      updated_at: true,
+      createdAt: true,
+      updatedAt: true,
       users: {
         select: {
           id: true,
           uuid: true,
           nickname: true,
-          profile_image: true,
+          profileImage: true,
         },
       },
-      community_images: {
+      communityImages: {
         select: {
           images: {
             select: {
-              image_id: true,
+              imageId: true,
               url: true,
             },
           },
         },
       },
-      community_tags: {
+      communityTags: {
         select: {
           tags: {
             select: {
-              tag_id: true,
+              tagId: true,
               tag: true,
             },
           },
@@ -72,10 +72,10 @@ export const getCommunityList = async (
         id: community?.users.id,
         uuid: (community?.users.uuid as Buffer).toString("hex"),
         nickname: community?.users.nickname,
-        profile_image: community?.users.profile_image,
+        profileImage: community?.users.profileImage,
       },
-      community_tags: community.community_tags.map((item: ICommunityTag) => item.tags),
-      community_images: community.community_images.map(
+      communityTags: community.communityTags.map((item: ICommunityTag) => item.tags),
+      communityImages: community.communityImages.map(
         (item: ICommunityImage) => item.images
       ),
     };
@@ -85,40 +85,40 @@ export const getCommunityList = async (
 export const getCommunityById = async (postId: number, categoryId: number) => {
   const community = await prisma.communities.findUnique({
     where: {
-      post_id: postId,
-      category_id: categoryId,
+      postId: postId,
+      categoryId: categoryId,
     },
     select: {
-      post_id: true,
-      category_id: true,
+      postId: true,
+      categoryId: true,
       title: true,
       content: true,
       views: true,
-      created_at: true,
-      updated_at: true,
+      createdAt: true,
+      updatedAt: true,
       users: {
         select: {
           id: true,
           uuid: true,
           nickname: true,
-          profile_image: true,
+          profileImage: true,
         },
       },
-      community_images: {
+      communityImages: {
         select: {
           images: {
             select: {
-              image_id: true,
+              imageId: true,
               url: true,
             },
           },
         },
       },
-      community_tags: {
+      communityTags: {
         select: {
           tags: {
             select: {
-              tag_id: true,
+              tagId: true,
               tag: true,
             },
           },
@@ -137,12 +137,12 @@ export const getCommunityById = async (postId: number, categoryId: number) => {
       id: community?.users.id,
       uuid: (community?.users.uuid as Buffer).toString("hex"),
       nickname: community?.users.nickname,
-      profile_image: community?.users.profile_image,
+      profileImage: community?.users.profileImage,
     },
-    community_tags: community?.community_tags.map(
+    communityTags: community?.communityTags.map(
       (item: ICommunityTag) => item.tags
     ),
-    community_images: community?.community_images.map(
+    communityImages: community?.communityImages.map(
       (item: ICommunityImage) => item.images
     ),
   };
@@ -160,7 +160,7 @@ export const addCommunity = async (
       uuid: Buffer.from(userId, "hex"),
       title,
       content,
-      category_id: categoryId,
+      categoryId: categoryId,
     },
   });
 
@@ -174,9 +174,9 @@ export const updateCommunityById = async (
 ) => {
   return await tx.communities.update({
     where: {
-      post_id: postId,
+      postId: postId,
       uuid: Buffer.from(userId, "hex"),
-      category_id: categoryId,
+      categoryId: categoryId,
     },
     data: {
       title,
@@ -193,9 +193,9 @@ export const removeCommunityById = async (
 ) => {
   return await tx.communities.delete({
     where: {
-      post_id: postId,
+      postId: postId,
       uuid: Buffer.from(userId, "hex"),
-      category_id: categoryId,
+      categoryId: categoryId,
     },
   });
 };
@@ -203,11 +203,11 @@ export const removeCommunityById = async (
 export const addCommunityTags = async (
   tx: Prisma.TransactionClient,
   tags: {
-    post_id: number;
-    tag_id: number;
+    postId: number;
+    tagId: number;
   }[]
 ) => {
-  return await tx.community_tags.createMany({
+  return await tx.communityTags.createMany({
     data: tags,
   });
 };
@@ -215,11 +215,11 @@ export const addCommunityTags = async (
 export const addCommunityImages = async (
   tx: Prisma.TransactionClient,
   images: {
-    post_id: number;
-    image_id: number;
+    postId: number;
+    imageId: number;
   }[]
 ) => {
-  return await tx.community_images.createMany({
+  return await tx.communityImages.createMany({
     data: images,
   });
 };
@@ -228,9 +228,9 @@ export const deleteCommunityTagByTagIds = async (
   tx: Prisma.TransactionClient,
   tagIds: number[]
 ) => {
-  return await tx.community_tags.deleteMany({
+  return await tx.communityTags.deleteMany({
     where: {
-      tag_id: {
+      tagId: {
         in: tagIds,
       },
     },
@@ -241,9 +241,9 @@ export const deleteCommunityTagByTagId = async (
   tx: Prisma.TransactionClient,
   tagId: number
 ) => {
-  return await tx.community_tags.delete({
+  return await tx.communityTags.delete({
     where: {
-      tag_id: tagId,
+      tagId: tagId,
     },
   });
 };
@@ -252,9 +252,9 @@ export const deleteCommunityByPostIds = async (
   tx: Prisma.TransactionClient,
   postIds: number[]
 ) => {
-  return await tx.community_tags.deleteMany({
+  return await tx.communityTags.deleteMany({
     where: {
-      post_id: {
+      postId: {
         in: postIds,
       },
     },
@@ -265,9 +265,9 @@ export const deleteCommunityImagesByImageIds = async (
   tx: Prisma.TransactionClient,
   imageIds: number[]
 ) => {
-  return await tx.community_images.deleteMany({
+  return await tx.communityImages.deleteMany({
     where: {
-      image_id: {
+      imageId: {
         in: imageIds,
       },
     },

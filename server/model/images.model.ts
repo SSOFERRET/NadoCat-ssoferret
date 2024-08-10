@@ -6,7 +6,7 @@ export const deleteImages = async (
 ) => {
   return await tx.images.deleteMany({
     where: {
-      image_id: {
+      imageId: {
         in: imageIds,
       },
     },

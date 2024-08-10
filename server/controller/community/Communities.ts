@@ -29,7 +29,7 @@ import { IImage, ITag } from "../../types/community";
 const getOrderBy = (sort: string) => {
   switch (sort) {
     case "latest":
-      return { sortBy: "created_at", sortOrder: "asc" };
+      return { sortBy: "createdAt", sortOrder: "asc" };
     case "views":
       return { sortBy: "views", sortOrder: "desc" };
     case "likes":
@@ -60,7 +60,7 @@ export const getCommunities = async (req: Request, res: Response) => {
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const sort = req.query.sort?.toString() ?? "latest";
     const orderBy = getOrderBy(sort);
-    const categoryId = Number(req.query.category_id) || 1;
+    const categoryId = Number(req.query.categoryId) || 1;
     const count = await getCommunitiesCount();
 
     const communities = await getCommunityList(
@@ -72,7 +72,7 @@ export const getCommunities = async (req: Request, res: Response) => {
 
     const nextCursor =
       communities.length === limit
-        ? communities[communities.length - 1].post_id
+        ? communities[communities.length - 1].postId
         : null;
 
     const result = {
@@ -100,8 +100,8 @@ export const getCommunities = async (req: Request, res: Response) => {
 
 export const getCommunity = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
-    const categoryId = Number(req.query.category_id) || 1;
+    const id = Number(req.params.communityId);
+    const categoryId = Number(req.query.categoryId) || 1;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     const community = await getCommunityById(id, categoryId);
@@ -115,16 +115,16 @@ export const getCommunity = async (req: Request, res: Response) => {
     // 좋아요 수
     const likes = await prisma.likes.count({
       where: {
-        post_id: id,
-        category_id: categoryId,
+        postId: id,
+        categoryId
       },
     });
 
     // 좋아요 여부
     const liked = await prisma.likes.findFirst({
       where: {
-        post_id: id,
-        category_id: categoryId,
+        postId: id,
+        categoryId,
         uuid: Buffer.from(userId, "hex"), // NOTE 타입 변환
       },
     });
@@ -150,7 +150,7 @@ export const getCommunity = async (req: Request, res: Response) => {
 export const createCommunity = async (req: Request, res: Response) => {
   try {
     const { title, content, tags, images } = req.body;
-    const categoryId = Number(req.query.category_id) || 1;
+    const categoryId = Number(req.query.categoryId) || 1;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -162,8 +162,8 @@ export const createCommunity = async (req: Request, res: Response) => {
         );
 
         const formatedTags = newTags.map((tag: ITag) => ({
-          tag_id: tag.tag_id,
-          post_id: post.post_id,
+          tagId: tag.tagId,
+          postId: post.postId,
         }));
         await addCommunityTags(tx, formatedTags);
       }
@@ -174,8 +174,8 @@ export const createCommunity = async (req: Request, res: Response) => {
         );
 
         const formatedImages = newImages.map((image: IImage) => ({
-          image_id: image.image_id,
-          post_id: post.post_id,
+          imageId: image.imageId,
+          postId: post.postId,
         }));
 
         await addCommunityImages(tx, formatedImages);
@@ -206,8 +206,8 @@ export const createCommunity = async (req: Request, res: Response) => {
 // [ ] 사용자 정보 받아오는 부분 구현 필요
 export const updateCommunity = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
-    const categoryId = Number(req.query.category_id) || 1;
+    const id = Number(req.params.communityId);
+    const categoryId = Number(req.query.categoryId) || 1;
     const userId = await getUserId();
 
     const {
@@ -248,8 +248,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
       );
 
       const formatedTags = tags.map((tag: ITag) => ({
-        tag_id: tag.tag_id,
-        post_id: id,
+        tagId: tag.tagId,
+        postId: id,
       }));
 
       await addCommunityTags(tx, formatedTags);
@@ -263,8 +263,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
       );
 
       const formatedImages = images.map((image: IImage) => ({
-        image_id: image.image_id,
-        post_id: id,
+        imageId: image.imageId,
+        postId: id,
       }));
 
       await addCommunityImages(tx, formatedImages);
@@ -287,8 +287,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
 // [x] 테이블 변경에 따른 태그, 이미지 삭제 수정
 export const deleteCommunity = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
-    const categoryId = Number(req.query.category_id) || 1;
+    const id = Number(req.params.communityId);
+    const categoryId = Number(req.query.categoryId) || 1;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     const post = await getCommunityById(id, categoryId);
@@ -300,15 +300,15 @@ export const deleteCommunity = async (req: Request, res: Response) => {
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      if (post.community_tags?.length) {
-        const tagIds = post.community_tags.map((item: ITag) => item.tag_id);
+      if (post.communityTags?.length) {
+        const tagIds = post.communityTags.map((item: ITag) => item.tagId);
         await deleteCommunityTagByTagIds(tx, tagIds);
         await deleteTags(tx, tagIds);
       }
 
-      if (post.community_images?.length) {
-        const imageIds = post.community_images.map(
-          (item: IImage) => item.image_id
+      if (post.communityImages?.length) {
+        const imageIds = post.communityImages.map(
+          (item: IImage) => item.imageId
         );
         await deleteCommunityImagesByImageIds(tx, imageIds);
         await deleteImages(tx, imageIds);

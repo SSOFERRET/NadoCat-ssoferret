@@ -6,7 +6,7 @@ export const deleteTags = async (
 ) => {
   return await tx.tags.deleteMany({
     where: {
-      tag_id: {
+      tagId: {
         in: tagIds,
       },
     },

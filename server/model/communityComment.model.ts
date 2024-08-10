@@ -5,30 +5,45 @@ export const getCommunityComments = async (
   limit: number,
   cursor: number | undefined
 ) => {
-  return await prisma.community_comments.findMany({
+
+  const result = await prisma.communityComments.findMany({
+
     where: {
-      community_id: postId,
+      communityId: postId,
     },
     take: limit,
     skip: cursor ? 1 : 0,
-    cursor: cursor ? { community_comment_id: cursor } : undefined,
+    cursor: cursor ? { communityCommentId: cursor } : undefined,
     orderBy: [
       {
-        community_comment_id: "asc",
+        communityCommentId: "asc",
       },
     ],
     select: {
-      community_comment_id: true,
+      communityCommentId: true,
       comment: true,
       users: {
         select: {
           id: true,
           uuid: true,
           nickname: true,
-          profile_image: true,
+          profileImage: true,
         },
       },
     },
+  });
+
+  return result.map((item) => {
+    return {
+      commentId: item.communityCommentId,
+      comment: item.comment,
+      user: {
+        id: item.users.id,
+        uuid: item.users.uuid.toString("hex"),
+        nickname: item.users.nickname,
+        profileImage: item.users.nickname,
+      },
+    };
   });
 };
 
@@ -37,10 +52,10 @@ export const addComment = async (
   userId: string,
   comment: string
 ) => {
-  return await prisma.community_comments.create({
+  return await prisma.communityComments.create({
     data: {
       uuid: Buffer.from(userId, "hex"),
-      community_id: postId,
+      communityId: postId,
       comment,
     },
   });
@@ -52,10 +67,10 @@ export const updateCommentById = async (
   commentId: number,
   comment: string
 ) => {
-  return await prisma.community_comments.update({
+  return await prisma.communityComments.update({
     where: {
-      community_id: postId,
-      community_comment_id: commentId,
+      communityId: postId,
+      communityCommentId: commentId,
       uuid: Buffer.from(userId, "hex"),
     },
     data: {
@@ -69,10 +84,10 @@ export const deleteCommentById = async (
   userId: string,
   commentId: number
 ) => {
-  return await prisma.community_comments.delete({
+  return await prisma.communityComments.delete({
     where: {
-      community_id: postId,
-      community_comment_id: commentId,
+      communityId: postId,
+      communityCommentId: commentId,
       uuid: Buffer.from(userId, "hex"),
     },
   });

@@ -1,14 +1,14 @@
 export interface ICommunity {
-  post_id: number;
-  category_id: number;
+  postId: number;
+  categoryId: number;
   title: string;
   content: string | null;
   views: number;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
   users: IUser;
-  community_images: ICommunityImage[] | [];
-  community_tags: ICommunityTag[] | [];
+  communityImages: ICommunityImage[] | [];
+  communityTags: ICommunityTag[] | [];
 }
 
 export interface ICommunities {
@@ -24,11 +24,11 @@ interface IUser {
   id: number;
   uuid: Buffer; // 맞나..?
   nickname: string;
-  profile_image: string | null;
+  profileImage: string | null;
 }
 
 export interface ITag {
-  tag_id: number;
+  tagId: number;
   tag: string;
 }
 
@@ -42,6 +42,6 @@ export interface ICommunityImage {
 }
 
 export interface IImage {
-  image_id: number;
+  imageId: number;
   url: string;
 }
