@@ -22,3 +22,12 @@ export interface IMissingLocation {
   locationId: number;
   postId: number;
 }
+
+export interface IMissingReport {
+  missingId: number,
+  uuid: Buffer,
+  time: string,
+  locationId: number,
+  detail: string,
+  thumbnail: number
+}
