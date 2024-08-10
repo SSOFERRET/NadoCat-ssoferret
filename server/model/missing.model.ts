@@ -88,26 +88,42 @@ export const getMissingByPostId = async (
   })
 }
 
-export const getMissingLocationsByPostId = async (
+export const getLocationFormatsByPostId = async (
   tx: Prisma.TransactionClient,
+  categoryId: TCategoryId,
   postId: number
 ) => {
-  return await tx.missingLocations.findMany({
-    where: {
-      postId
-    }
-  })
+  switch (categoryId) {
+    case 3: return await tx.missingLocations.findMany({
+      where: {
+        postId
+      }
+    })
+    case 4: return await tx.missingReportLocations.findMany({
+      where: {
+        postId
+      }
+    })
+  }
 };
 
-export const getMissingImagesByPostId = async (
+export const getImageFormatsByPostId = async (
   tx: Prisma.TransactionClient,
+  categoryId: TCategoryId,
   postId: number
 ) => {
-  return await tx.missingImages.findMany({
-    where: {
-      postId
-    }
-  })
+  switch (categoryId) {
+    case 3: return await tx.missingImages.findMany({
+      where: {
+        postId
+      }
+    });
+    case 4: return await tx.missingReportImages.findMany({
+      where: {
+        postId
+      }
+    })
+  }
 };
 
 export const getMissingReportsByPostId = async (
