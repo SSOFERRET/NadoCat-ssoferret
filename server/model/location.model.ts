@@ -17,6 +17,7 @@ export const deleteLocations = async (
   tx: Prisma.TransactionClient,
   locationIds: number[]
 ) => {
+  console.log(locationIds);
   return await tx.locations.deleteMany({
     where: {
       locationId: {
@@ -25,14 +26,3 @@ export const deleteLocations = async (
     }
   })
 }
-
-export const getLocationIdsByPostId = async (
-  tx: Prisma.TransactionClient,
-  postId: number
-) => {
-  return await tx.missingLocations.findMany({
-    where: {
-      postId: postId
-    }
-  })
-};
