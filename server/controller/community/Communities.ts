@@ -14,9 +14,10 @@ import {
   deleteCommunityTagByTagIds,
   updateCommunityById,
 } from "../../model/community.model";
-import { addImage, deleteImages } from "../../model/images.model";
-import { addTag, deleteTags } from "../../model/tags.model";
+import { addImage, deleteImages } from "../../model/image.model";
+import { addTag, deleteTags } from "../../model/tag.model";
 import { IImage, ITag } from "../../types/community";
+import { deleteCommentsById } from "../../model/communityComment.model";
 
 // CHECKLIST
 // [x] 이미지 배열로 받아오게 DB 수정
@@ -116,7 +117,7 @@ export const getCommunity = async (req: Request, res: Response) => {
     const likes = await prisma.likes.count({
       where: {
         postId: id,
-        categoryId
+        categoryId,
       },
     });
 
@@ -285,6 +286,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
 // [ ] 에러처리 자세하게 구현하기
 // [ ] 사용자 정보 받아오는 부분 구현 필요
 // [x] 테이블 변경에 따른 태그, 이미지 삭제 수정
+// [ ] 게시글 삭제 시 댓글 삭제 구현
 export const deleteCommunity = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.community_id);
@@ -313,6 +315,8 @@ export const deleteCommunity = async (req: Request, res: Response) => {
         await deleteCommunityImagesByImageIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }
+
+      await deleteCommentsById(tx, id);
 
       await removeCommunityById(tx, id, userId, categoryId);
     });

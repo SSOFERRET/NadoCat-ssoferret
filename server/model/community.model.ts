@@ -1,6 +1,12 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
-import { ICommunity, ICommunityImage, ICommunityTag, IImage, ITag } from "../types/community";
+import {
+  ICommunity,
+  ICommunityImage,
+  ICommunityTag,
+  IImage,
+  ITag,
+} from "../types/community";
 
 export const getCommunitiesCount = async () => await prisma.communities.count();
 
@@ -74,7 +80,9 @@ export const getCommunityList = async (
         nickname: community?.users.nickname,
         profileImage: community?.users.profileImage,
       },
-      communityTags: community.communityTags.map((item: ICommunityTag) => item.tags),
+      communityTags: community.communityTags.map(
+        (item: ICommunityTag) => item.tags
+      ),
       communityImages: community.communityImages.map(
         (item: ICommunityImage) => item.images
       ),

@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../client";
 
 export const getCommunityComments = async (
@@ -87,6 +88,17 @@ export const deleteCommentById = async (
       communityId: postId,
       communityCommentId: commentId,
       uuid: Buffer.from(userId, "hex"),
+    },
+  });
+};
+
+export const deleteCommentsById = async (
+  tx: Prisma.TransactionClient,
+  postId: number
+) => {
+  return await tx.communityComments.deleteMany({
+    where: {
+      communityId: postId,
     },
   });
 };
