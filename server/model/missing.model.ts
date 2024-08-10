@@ -11,6 +11,17 @@ export const addMissing = async (
   });
 }
 
+export const deleteMissing = async (
+  tx: Prisma.TransactionClient,
+  postId: number
+) => {
+  return await tx.missings.delete({
+    where: {
+      postId
+    }
+  })
+}
+
 export const addMissingImages = async (
   tx: Prisma.TransactionClient,
   images: IImageBridge[]
@@ -28,6 +39,17 @@ export const addMissingLocation = async (
     data: location
   });
 };
+
+export const deleteMissingLocations = async (
+  tx: Prisma.TransactionClient,
+  postId: number
+) => {
+  return await tx.missingLocations.deleteMany({
+    where: {
+      postId
+    }
+  })
+}
 
 export const getMissing = async (
   tx: Prisma.TransactionClient,
