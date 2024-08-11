@@ -3,11 +3,12 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, removePost, updateMissingByPostId, getMissingByPostId } from "../../model/missing.model";
+import { addMissing, addLocationFormats, removePost, updateMissingByPostId, getMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
+import { deleteMissingReport } from "./MissingReport";
 
 
 /* CHECKLIST
@@ -75,7 +76,7 @@ export const createMissing = async (req: Request, res: Response) => {
  * CHECKLIST
  * [x] location 삭제
  * [x] images 삭제
- * [ ] 제보글 삭제
+ * [x] 제보글 삭제
  *
  * */
 
@@ -90,6 +91,13 @@ export const deleteMissing = async (req: Request, res: Response) => {
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const missingReports = await getMissingReportsByMissingId(tx, postId);
+
+      if (missingReports)
+        await Promise.all(
+          missingReports.map((report) => deleteMissingReport(req, res, report.postId))
+        );
+
       const locations = await getAndDeleteLocationFormats(tx, postData);
       const images = await getAndDeleteImageFormats(tx, postData);
 
@@ -99,15 +107,16 @@ export const deleteMissing = async (req: Request, res: Response) => {
         await deleteLocationsByLocationIds(tx, locations);
 
       if (images)
-        await deleteImagesByImageIds(tx, images)
+        await deleteImagesByImageIds(tx, images);
     });
 
-    res
+    return res
       .status(StatusCodes.OK)
       .json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
+    console.log(error);
     if (error instanceof Error)
-      validateError(res, error);
+      return validateError(res, error);
   }
 };
 
@@ -131,7 +140,7 @@ export const getUserId = async () => { // 임시
  * [x] 위치 수정
  * [x] 내용 수정
  * 
- * [ ] 상태 수정
+ * [x] 상태 수정
  * [ ] 조회수 업데이트?
  */
 
@@ -176,7 +185,7 @@ export const updateMissing = async (req: Request, res: Response) => { // NOTE Fu
       .json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     if (error instanceof Error)
-      validateError(res, error);
+      return validateError(res, error);
   }
 };
 
@@ -197,4 +206,28 @@ export const validateError = (res: Response, error: Error) => {
   if (error instanceof Prisma.PrismaClientValidationError)
     return validateBadRequest(res, error);
   return validateInternalServerError(res);
+}
+
+export const updateFoundState = async (req: Request, res: Response) => {
+  try {
+    const postId = Number(req.params.postId);
+    const userId = await getUserId(); // NOTE
+    const { found } = req.body;
+    const postData = {
+      postId,
+      userId,
+      categoryId: CATEGORY.MISSINGS
+    }
+
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      await updateFoundByPostId(tx, postData, found);
+    })
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "게시글이 상태가 변경 되었습니다." });
+  } catch (error) {
+    if (error instanceof Error)
+      return validateError(res, error);
+  }
 }
