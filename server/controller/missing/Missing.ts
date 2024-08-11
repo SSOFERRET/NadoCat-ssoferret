@@ -15,9 +15,9 @@ import { deleteMissingReport } from "./MissingReport";
 * [ ] 사용자 정보 가져오기 반영
 * [ ] 구현 내용
 *   [x] create
-*   [-] delete
+*   [x] delete
 *   [-] get
-*   [ ] put
+*   [x] put
 */
 
 /**
