@@ -1,17 +1,17 @@
 import express from "express";
 import {
+  createComment,
+  deleteComment,
+  getComments,
+  updateComment,
+} from "../controller/event/EventComments";
+import {
   createEvent,
   deleteEvent,
   getEvent,
   getEvents,
   updateEvent,
-} from "../controller/event/events";
-import {
-  createComment,
-  deleteComment,
-  getComments,
-  updateComment,
-} from "../controller/event/eventComments";
+} from "../controller/event/Events";
 const router = express.Router();
 
 router.get("/", getEvents);
