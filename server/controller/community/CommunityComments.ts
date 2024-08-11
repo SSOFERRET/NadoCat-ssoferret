@@ -28,7 +28,9 @@ export const getComments = async (req: Request, res: Response) => {
     const comments = await getCommunityComments(postId, limit, cursor);
 
     const nextCursor =
-      comments.length === limit ? comments[comments.length - 1].comment : null;
+      comments.length === limit
+        ? comments[comments.length - 1].commentId
+        : null;
 
     const result = {
       comments,
@@ -65,7 +67,7 @@ export const createComment = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if(error.code === "P2003") {
+      if (error.code === "P2003") {
         return res
           .status(StatusCodes.NOT_FOUND)
           .json({ message: "존재하지 않는 게시글입니다." });
@@ -102,7 +104,7 @@ export const updateComment = async (req: Request, res: Response) => {
           .json({ message: "존재하지 않는 댓글입니다." });
       }
 
-      if(error.code === "P2003") {
+      if (error.code === "P2003") {
         return res
           .status(StatusCodes.NOT_FOUND)
           .json({ message: "존재하지 않는 게시글입니다." });
@@ -133,7 +135,7 @@ export const deleteComment = async (req: Request, res: Response) => {
           .json({ message: "존재하지 않는 댓글입니다." });
       }
 
-      if(error.code === "P2003") {
+      if (error.code === "P2003") {
         return res
           .status(StatusCodes.NOT_FOUND)
           .json({ message: "존재하지 않는 게시글입니다." });
