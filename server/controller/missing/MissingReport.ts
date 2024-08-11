@@ -3,13 +3,14 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, updateLocationById } from "../../model/location.model";
-import { addLocationFormats, addMissingReport, getPostByPostId, removePost, updateMissingReportByPostId } from "../../model/missing.model";
+import { addLocationFormats, addMissingReport, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
 import { getUserId, validateError } from "./Missing";
 
 import { CATEGORY } from "../../constants/category";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { addNewImages } from "../../util/images/addNewImages";
+import { IMissingReport } from "../../types/missing";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -151,3 +152,31 @@ export const updateMissingReport = async (req: Request, res: Response) => { // N
       return validateError(res, error);
   }
 };
+
+export const updateMissingReportCheck = async (req: Request, res: Response) => {
+  try {
+    const userId = await getUserId(); // NOTE
+    const postData = {
+      postId: Number(req.params.postId),
+      categoryId: CATEGORY.MISSING_REPORTS,
+      userId
+    }
+    const { match } = req.body;
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const reportPost = await getPostByPostId(tx, postData);
+      const missingPost = await getPostByPostId(tx, {
+        postId: reportPost.missingId,
+        categoryId: CATEGORY.MISSINGS,
+        userId: reportPost.uuid
+      }) // NOTE 게시글 작성자 인가 추가
+      await updateMissingReportCheckByPostId(tx, postData, match);
+
+      return res.status(StatusCodes.OK).json("게시글 상태가 업데이트 되었습니다.");
+    })
+
+  } catch (error) {
+    console.log(error)
+    if (error instanceof Error)
+      return validateError(res, error);
+  }
+}
