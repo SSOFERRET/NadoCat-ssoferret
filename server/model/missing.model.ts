@@ -148,13 +148,13 @@ export const getImageFormatsByPostId = async (
   }
 };
 
-export const getMissingReportsByPostId = async (
+export const getMissingReportsByMissingId = async (
   tx: Prisma.TransactionClient,
-  postId: number
+  missingId: number
 ) => {
   return await tx.missingReports.findMany({
     where: {
-      postId
+      missingId
     }
   })
 };
@@ -185,6 +185,22 @@ export const updateMissingByPostId = async (
       catId,
       time,
       detail
+    }
+  })
+}
+
+export const updateFoundByPostId = async (
+  tx: Prisma.TransactionClient,
+  postData: IPostData,
+  found: boolean
+) => {
+  return await tx.missings.update({
+    where: {
+      uuid: postData.userId,
+      postId: postData.postId
+    },
+    data: {
+      found: Number(found)
     }
   })
 }
