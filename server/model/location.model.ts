@@ -17,12 +17,24 @@ export const deleteLocations = async (
   tx: Prisma.TransactionClient,
   locationIds: number[]
 ) => {
-  console.log(locationIds);
   return await tx.locations.deleteMany({
     where: {
       locationId: {
         in: locationIds
       }
     }
+  })
+}
+
+export const updateLocationById = async (
+  tx: Prisma.TransactionClient,
+  locationId: number,
+  location: ILocation
+) => {
+  return await tx.locations.update({
+    where: {
+      locationId
+    },
+    data: location
   })
 }
