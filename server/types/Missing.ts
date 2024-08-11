@@ -18,11 +18,6 @@ export interface IMissingGet extends IMissingCreate {
   views: number;
 }
 
-export interface IMissingLocation {
-  locationId: number;
-  postId: number;
-}
-
 export interface IMissingReport {
   missingId: number,
   uuid: Buffer,
