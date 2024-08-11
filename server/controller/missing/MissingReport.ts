@@ -3,10 +3,9 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation } from "../../model/location.model";
-import { addImageFormats, addLocationFormats, addMissingReport, removePost } from "../../model/missing.model";
+import { addLocationFormats, addMissingReport, removePost } from "../../model/missing.model";
 import { getUserId, validateError } from "./Missing";
-import { addImage } from "../../model/images.model";
-import { IImage } from "../../types/image";
+
 import { CATEGORY } from "../../constants/category";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocationsByPostId";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImagesByPostId";
