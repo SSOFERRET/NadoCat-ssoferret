@@ -104,7 +104,7 @@ export const deleteLocationFormats = async (
 export const getPostByPostId = async (
   tx: Prisma.TransactionClient,
   postData: IPostData
-) => {
+): Promise<any> => {
   switch (postData.categoryId) {
     case 3: return await tx.missings.findUnique({
       where: {
@@ -227,6 +227,22 @@ export const updateFoundByPostId = async (
     },
     data: {
       found: Number(found)
+    }
+  })
+}
+
+export const updateMissingReportCheckByPostId = async (
+  tx: Prisma.TransactionClient,
+  postData: IPostData,
+  match: string
+) => {
+  return await tx.missingReports.update({
+    where: {
+      uuid: postData.userId,
+      postId: postData.postId
+    },
+    data: {
+      match
     }
   })
 }
