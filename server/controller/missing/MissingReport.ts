@@ -2,14 +2,15 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-import { addLocation } from "../../model/location.model";
-import { addLocationFormats, addMissingReport, removePost } from "../../model/missing.model";
+import { addLocation, updateLocationById } from "../../model/location.model";
+import { addLocationFormats, addMissingReport, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
 import { getUserId, validateError } from "./Missing";
 
 import { CATEGORY } from "../../constants/category";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { addNewImages } from "../../util/images/addNewImages";
+import { IMissingReport } from "../../types/missing";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -19,7 +20,7 @@ import { addNewImages } from "../../util/images/addNewImages";
 *   [ ] get
 *   [ ] 전체 조회 
 *     [ ] 페이지네이션
-*   [ ] put
+*   [x] put
 *     [ ] 일치 및 불일치
 */
 
@@ -109,3 +110,73 @@ export const deleteMissingReportHandler = async (req: Request, res: Response) =>
       return validateError(res, error);
   }
 };
+
+export const updateMissingReport = async (req: Request, res: Response) => { // NOTE Full Update?인지 확인
+  try {
+    const postId = Number(req.params.postId);
+    const userId = await getUserId(); // NOTE
+    const { report, location, images } = req.body;
+    const postData = {
+      postId,
+      userId,
+      categoryId: CATEGORY.MISSING_REPORTS
+    }
+
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const post = await getPostByPostId(tx, postData);
+      if (!post || !report || !location)
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값 확인 요망" });
+
+      const locationId = post.locationId;
+      if (locationId)
+        await updateLocationById(tx, locationId, location);
+
+      await updateMissingReportByPostId(tx, postId, userId, report.detail, new Date(report.time))
+
+      const imagesToDelete = await getAndDeleteImageFormats(tx, postData);
+
+      if (imagesToDelete)
+        await deleteImagesByImageIds(tx, imagesToDelete);
+
+      if (images) {
+        await addNewImages(tx, postData, images)
+      };
+    })
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "게시글이 수정되었습니다." });
+  } catch (error) {
+    console.log(error);
+    if (error instanceof Error)
+      return validateError(res, error);
+  }
+};
+
+export const updateMissingReportCheck = async (req: Request, res: Response) => {
+  try {
+    const userId = await getUserId(); // NOTE
+    const postData = {
+      postId: Number(req.params.postId),
+      categoryId: CATEGORY.MISSING_REPORTS,
+      userId
+    }
+    const { match } = req.body;
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const reportPost = await getPostByPostId(tx, postData);
+      const missingPost = await getPostByPostId(tx, {
+        postId: reportPost.missingId,
+        categoryId: CATEGORY.MISSINGS,
+        userId: reportPost.uuid
+      }) // NOTE 게시글 작성자 인가 추가
+      await updateMissingReportCheckByPostId(tx, postData, match);
+
+      return res.status(StatusCodes.OK).json("게시글 상태가 업데이트 되었습니다.");
+    })
+
+  } catch (error) {
+    console.log(error)
+    if (error instanceof Error)
+      return validateError(res, error);
+  }
+}

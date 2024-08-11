@@ -101,15 +101,22 @@ export const deleteLocationFormats = async (
   }
 }
 
-export const getMissingByPostId = async (
+export const getPostByPostId = async (
   tx: Prisma.TransactionClient,
-  postId: number
-) => {
-  return await tx.missings.findUnique({
-    where: {
-      postId
-    }
-  })
+  postData: IPostData
+): Promise<any> => {
+  switch (postData.categoryId) {
+    case 3: return await tx.missings.findUnique({
+      where: {
+        postId: postData.postId
+      }
+    });
+    case 4: return await tx.missingReports.findUnique({
+      where: {
+        postId: postData.postId
+      }
+    });
+  }
 }
 
 export const getLocationFormatsByPostId = async (
@@ -189,6 +196,25 @@ export const updateMissingByPostId = async (
   })
 }
 
+export const updateMissingReportByPostId = async (
+  tx: Prisma.TransactionClient,
+  postId: number,
+  uuid: Buffer,
+  detail: string,
+  time: Date
+) => {
+  return await tx.missingReports.update({
+    where: {
+      postId,
+      uuid
+    },
+    data: {
+      time,
+      detail
+    }
+  })
+}
+
 export const updateFoundByPostId = async (
   tx: Prisma.TransactionClient,
   postData: IPostData,
@@ -201,6 +227,22 @@ export const updateFoundByPostId = async (
     },
     data: {
       found: Number(found)
+    }
+  })
+}
+
+export const updateMissingReportCheckByPostId = async (
+  tx: Prisma.TransactionClient,
+  postData: IPostData,
+  match: string
+) => {
+  return await tx.missingReports.update({
+    where: {
+      uuid: postData.userId,
+      postId: postData.postId
+    },
+    data: {
+      match
     }
   })
 }

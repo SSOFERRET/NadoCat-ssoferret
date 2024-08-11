@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, removePost, updateMissingByPostId, getMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId } from "../../model/missing.model";
+import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
@@ -15,9 +15,9 @@ import { deleteMissingReport } from "./MissingReport";
 * [ ] 사용자 정보 가져오기 반영
 * [ ] 구현 내용
 *   [x] create
-*   [-] delete
+*   [x] delete
 *   [-] get
-*   [ ] put
+*   [x] put
 */
 
 /**
@@ -156,7 +156,7 @@ export const updateMissing = async (req: Request, res: Response) => { // NOTE Fu
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const post = await getMissingByPostId(tx, postId);
+      const post = await getPostByPostId(tx, postData);
       if (!post || !missing.catId || !missing.time || !location || !missing.detail)
         return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값 확인 요망" });
 
