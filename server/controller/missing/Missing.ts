@@ -9,7 +9,7 @@ import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
 import { deleteMissingReport } from "./MissingReport";
-import { getImageById } from "../../model/images.model";
+import { getImageById } from "../../model/image.model";
 
 
 /* CHECKLIST

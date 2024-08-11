@@ -2,8 +2,9 @@ import express, { Request, Response } from "express";
 import MissingRouter from "./routes/missings";
 import CommunitiesRouter from "./routes/communities";
 import StreetCatsRouter from "./routes/streetCats";
-// import UserRouter from "./routes/users";
+import UserRouter from "./routes/users";
 import InterestsRouter from "./routes/interest";
+import EventsRouter from "./routes/events";
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,6 +16,8 @@ app.use("/boards/street-cats", StreetCatsRouter);
 app.use("/boards/Interests", InterestsRouter);
 app.use('/boards/missings', MissingRouter);
 // app.use("/users", UserRouter);
+app.use("/boards/events", EventsRouter);
+app.use("/users", UserRouter);
 
 app.use((_req: Request, res: Response) => {
   res.sendStatus(404);
