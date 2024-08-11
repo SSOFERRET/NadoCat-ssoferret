@@ -7,7 +7,7 @@ dotenv.config();
 //[x]jwt 복호화
 const ensureAutorization = (req: Request, res: Response) => {
   try {
-    const auth = req.headers["authorization"]; //Bearer etuiyhuy1D3# ... 이런식으로 나오는 거
+    const auth = req.headers["authorization"]; 
     console.log("auth: ", auth);
 
     if (auth) {

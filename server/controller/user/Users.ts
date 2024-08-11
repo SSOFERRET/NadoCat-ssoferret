@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
+import { v4 as uuidv4 } from "uuid";
 import bcryto from "bcrypt";
 // import crypto from "crypto";
-import { v4 as uuidv4 } from "uuid";
-import jwt from "jsonwebtoken";
 
 const uuid = uuidv4();
 const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
@@ -170,6 +170,3 @@ export const google = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   return res.json({ email: email, password: password });
 };
-
-
-// export default {signup, login, kakao, google};
