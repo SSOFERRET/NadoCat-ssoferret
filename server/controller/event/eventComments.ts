@@ -1,19 +1,14 @@
 import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 import prisma from "../../client";
 import {
   addComment,
   deleteCommentById,
-  getCommunityComments,
+  getEventComments,
   updateCommentById,
-} from "../../model/communityComment.model";
+} from "../../model/eventComment.model";
+import { StatusCodes } from "http-status-codes";
+import { getUserId } from "../community/Communities";
 import { Prisma } from "@prisma/client";
-import { getUserId } from "./Communities";
-
-//  CHECKLIST
-// [x] model 코드 분리
-// [] 에러처리 자세하게 구현하기
-// [] 사용자 정보 받아오는 부분 구현 필요
 export const getComments = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.community_id);
@@ -25,7 +20,7 @@ export const getComments = async (req: Request, res: Response) => {
       },
     });
 
-    const comments = await getCommunityComments(postId, limit, cursor);
+    const comments = await getEventComments(postId, limit, cursor);
 
     const nextCursor =
       comments.length === limit

@@ -1,31 +1,30 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Prisma } from "@prisma/client";
+import { getUserId } from "../community/Communities";
 import prisma from "../../client";
-import {
-  addCommunity,
-  addCommunityTags,
-  addCommunityImages,
-  getCommunitiesCount,
-  getCommunityById,
-  getCommunityList,
-  removeCommunityById,
-  deleteCommunityImagesByImageIds,
-  deleteCommunityTagByTagIds,
-  updateCommunityById,
-} from "../../model/community.model";
-import { addImage, deleteImages } from "../../model/image.model";
+import { Prisma } from "@prisma/client";
 import { addTag, deleteTags } from "../../model/tag.model";
 import { IImage, ITag } from "../../types/community";
-import { deleteCommentsById } from "../../model/communityComment.model";
+import { addImage, deleteImages } from "../../model/image.model";
+import {
+  addEvent,
+  addEventImages,
+  addEventTags,
+  deleteEventImagesByImageIds,
+  deleteEventTagByTagIds,
+  getEventById,
+  getEventList,
+  removeEventById,
+  updateEventById,
+} from "../../model/event.model";
+import { deleteCommentsById } from "../../model/eventComment.model";
 
 // CHECKLIST
-// [x] 이미지 배열로 받아오게 DB 수정
-// [x] 페이지네이션 추가
-// [x] 최신순 정렬
-// [x] 조회순 정렬
-// [ ] 인기순 정렬
-// [ ] 에러처리 자세하게 구현하기
+// [x] 이벤트 게시판 게시글 목록 가져오기
+// [x] 페이지네이션 구현
+// [x] 정렬 구현
+// [ ] 좋아요 수와 좋아요 여부 구현 -> 정렬하려면 필요할지도..?
+// [ ] 에러처리
 
 const getOrderBy = (sort: string) => {
   switch (sort) {
@@ -40,44 +39,24 @@ const getOrderBy = (sort: string) => {
   }
 };
 
-//NOTE 사용자 정보를 받아오기 위한 임시 함수
-export const getUserId = async () => {
-  const result = await prisma.$queryRaw<{ HEX: string }[]>`
-    SELECT HEX(uuid) AS HEX
-    FROM users
-    WHERE id = 1;
-  `;
-
-  if (!result) {
-    throw new Error("사용자 정보 없음");
-  }
-
-  return result[0].HEX;
-};
-
-export const getCommunities = async (req: Request, res: Response) => {
+export const getEvents = async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const sort = req.query.sort?.toString() ?? "latest";
     const orderBy = getOrderBy(sort);
-    const categoryId = Number(req.query.categoryId) || 1;
-    const count = await getCommunitiesCount();
+    const categoryId = Number(req.query.category_id) || 2;
+    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
-    const communities = await getCommunityList(
-      categoryId,
-      limit,
-      orderBy,
-      cursor
-    );
+    const count = await prisma.events.count();
+
+    const posts = await getEventList(categoryId, limit, orderBy, cursor);
 
     const nextCursor =
-      communities.length === limit
-        ? communities[communities.length - 1].postId
-        : null;
+      posts.length === limit ? posts[posts.length - 1].postId : null;
 
     const result = {
-      posts: communities,
+      posts,
       pagination: {
         nextCursor,
         totalCount: count,
@@ -94,29 +73,27 @@ export const getCommunities = async (req: Request, res: Response) => {
 };
 
 // CHECKLIST
-// [x] 이미지 배열로 받아오게 DB 수정
-// [x] likes, liked 추가
-// [ ] 좋아요 관련 부분 코드 분리
-// [ ] 에러처리 자세하게 구현하기
-
-export const getCommunity = async (req: Request, res: Response) => {
+// [x] 이벤트 게시판 게시글 가져오기
+// [ ] 좋아요, 좋아요 여부 처리 수정
+// [ ] 에러처리
+export const getEvent = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.communityId);
-    const categoryId = Number(req.query.categoryId) || 1;
+    const postId = Number(req.params.evnet_id);
+    const categoryId = Number(req.query.category_id) || 2;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const post = await getEventById(postId, categoryId);
 
-    const community = await getCommunityById(id, categoryId);
-
-    if (!community) {
+    if (!post) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ message: "게시글을 찾을 수 없습니다." });
     }
 
+    //TODO 좋아요 수, 좋아요 여부 수정 필요
     // 좋아요 수
     const likes = await prisma.likes.count({
       where: {
-        postId: id,
+        postId,
         categoryId,
       },
     });
@@ -124,38 +101,47 @@ export const getCommunity = async (req: Request, res: Response) => {
     // 좋아요 여부
     const liked = await prisma.likes.findFirst({
       where: {
-        postId: id,
+        postId,
         categoryId,
         uuid: Buffer.from(userId, "hex"), // NOTE 타입 변환
       },
     });
 
     const result = {
-      ...community,
+      ...post,
       likes,
       liked: !!liked,
     };
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal Server Error" });
   }
 };
 
 // CHECKLIST
-// [ ] 이미지 저장 구현 필요
-// [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
-// [ ] 에러처리 자세하게 구현하기
-// [ ] 사용자 정보 받아오는 부분 구현 필요
-
-export const createCommunity = async (req: Request, res: Response) => {
+// [x] 이벤트 게시판 게시글 등록
+// [ ] 예외 처리
+// [ ] 에러처리
+export const createEvent = async (req: Request, res: Response) => {
   try {
-    const { title, content, tags, images } = req.body;
-    const categoryId = Number(req.query.categoryId) || 1;
+    const { title, content, isClosed, date, tags, images } = req.body;
+    const categoryId = Number(req.query.category_id) || 2;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const post = await addCommunity(tx, userId, title, content, categoryId);
+      const post = await addEvent(
+        tx,
+        userId,
+        title,
+        content,
+        isClosed,
+        date,
+        categoryId
+      );
 
       if (tags.length > 0) {
         const newTags = await Promise.all(
@@ -166,7 +152,8 @@ export const createCommunity = async (req: Request, res: Response) => {
           tagId: tag.tagId,
           postId: post.postId,
         }));
-        await addCommunityTags(tx, formatedTags);
+
+        await addEventTags(tx, formatedTags);
       }
 
       if (images.length > 0) {
@@ -179,13 +166,11 @@ export const createCommunity = async (req: Request, res: Response) => {
           postId: post.postId,
         }));
 
-        await addCommunityImages(tx, formatedImages);
+        await addEventImages(tx, formatedImages);
       }
     });
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "게시글이 등록되었습니다." });
+    res.status(StatusCodes.CREATED).json("게시글 등록");
   } catch (error) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientValidationError) {
@@ -193,7 +178,6 @@ export const createCommunity = async (req: Request, res: Response) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "입력값을 확인해 주세요." });
     }
-
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Internal Server Error" });
@@ -201,19 +185,20 @@ export const createCommunity = async (req: Request, res: Response) => {
 };
 
 // CHECKLIST
-// [ ] 이미지 저장 구현 필요
-// [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
-// [ ] 에러처리 자세하게 구현하기
-// [ ] 사용자 정보 받아오는 부분 구현 필요
-export const updateCommunity = async (req: Request, res: Response) => {
+// [x] 이벤트 게시판 게시글 수정
+// [ ] 에러처리
+export const updateEvent = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.communityId);
-    const categoryId = Number(req.query.categoryId) || 1;
-    const userId = await getUserId();
+    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const id = Number(req.params.community_id);
+    const postId = Number(req.params.evnet_id);
+    const categoryId = Number(req.query.category_id) || 1;
 
     const {
       title,
       content,
+      isClosed,
+      date,
       images,
       tags,
       newTags,
@@ -225,6 +210,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
     if (
       !title ||
       !content ||
+      !isClosed ||
+      !date ||
       !images ||
       !tags ||
       !newTags ||
@@ -238,9 +225,18 @@ export const updateCommunity = async (req: Request, res: Response) => {
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      await updateCommunityById(tx, id, userId, categoryId, title, content);
+      await updateEventById(
+        tx,
+        userId,
+        postId,
+        title,
+        content,
+        isClosed,
+        date,
+        categoryId
+      );
 
-      await deleteCommunityTagByTagIds(tx, deleteTagIds);
+      await deleteEventTagByTagIds(tx, deleteTagIds);
 
       await deleteTags(tx, deleteTagIds);
 
@@ -253,9 +249,9 @@ export const updateCommunity = async (req: Request, res: Response) => {
         postId: id,
       }));
 
-      await addCommunityTags(tx, formatedTags);
+      await addEventTags(tx, formatedTags);
 
-      await deleteCommunityImagesByImageIds(tx, deleteimageIds);
+      await deleteEventImagesByImageIds(tx, deleteimageIds);
 
       await deleteImages(tx, deleteimageIds);
 
@@ -268,12 +264,14 @@ export const updateCommunity = async (req: Request, res: Response) => {
         postId: id,
       }));
 
-      await addCommunityImages(tx, formatedImages);
+      await addEventImages(tx, formatedImages);
     });
 
     res
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 수정되었습니다." });
+
+    res.status(StatusCodes.OK).json("게시글 수정");
   } catch (error) {
     console.error(error);
     res
@@ -283,17 +281,16 @@ export const updateCommunity = async (req: Request, res: Response) => {
 };
 
 // CHECKLIST
-// [ ] 에러처리 자세하게 구현하기
-// [ ] 사용자 정보 받아오는 부분 구현 필요
-// [x] 테이블 변경에 따른 태그, 이미지 삭제 수정
-// [ ] 게시글 삭제 시 댓글 삭제 구현
-export const deleteCommunity = async (req: Request, res: Response) => {
+// [x] 이벤트 게시판 게시글 삭제
+// [ ] 관련 댓글 삭제
+// [ ] 에러처리
+export const deleteEvent = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.communityId);
-    const categoryId = Number(req.query.categoryId) || 1;
+    const postId = Number(req.params.evnet_id);
+    const categoryId = Number(req.query.category_id) || 2;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
-    const post = await getCommunityById(id, categoryId);
+    const post = await getEventById(postId, categoryId);
 
     if (!post) {
       return res
@@ -302,27 +299,26 @@ export const deleteCommunity = async (req: Request, res: Response) => {
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      if (post.communityTags?.length) {
-        const tagIds = post.communityTags.map((item: ITag) => item.tagId);
-        await deleteCommunityTagByTagIds(tx, tagIds);
+      if (post.eventTags?.length) {
+        const tagIds = post.eventTags.map((item: ITag) => item.tagId);
+        await deleteEventTagByTagIds(tx, tagIds);
         await deleteTags(tx, tagIds);
       }
 
-      if (post.communityImages?.length) {
-        const imageIds = post.communityImages.map(
-          (item: IImage) => item.imageId
-        );
-        await deleteCommunityImagesByImageIds(tx, imageIds);
+      if (post.eventImages?.length) {
+        const imageIds = post.eventImages.map((item: IImage) => item.imageId);
+        await deleteEventImagesByImageIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }
 
-      await deleteCommentsById(tx, id);
+      await deleteCommentsById(tx, postId);
 
-      await removeCommunityById(tx, id, userId, categoryId);
+      await removeEventById(tx, postId, userId, categoryId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
+    console.error(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2025") {
         return res
@@ -330,7 +326,6 @@ export const deleteCommunity = async (req: Request, res: Response) => {
           .json({ message: "게시글이 존재하지 않습니다" });
       }
     }
-    console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Internal Server Error" });
