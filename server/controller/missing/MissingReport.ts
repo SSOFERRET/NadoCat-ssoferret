@@ -7,8 +7,8 @@ import { addLocationFormats, addMissingReport, removePost } from "../../model/mi
 import { getUserId, validateError } from "./Missing";
 
 import { CATEGORY } from "../../constants/category";
-import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocationsByPostId";
-import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImagesByPostId";
+import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
+import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { addNewImages } from "../../util/images/addNewImages";
 
 /* CHECKLIST

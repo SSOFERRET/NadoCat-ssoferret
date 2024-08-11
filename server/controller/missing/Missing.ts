@@ -6,8 +6,8 @@ import { addLocation, updateLocationById } from "../../model/location.model";
 import { addMissing, addLocationFormats, removePost, updateMissingByPostId, getMissingByPostId } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
-import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImagesByPostId";
-import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocationsByPostId";
+import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
+import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
 
 
 /* CHECKLIST
