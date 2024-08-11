@@ -14,17 +14,15 @@ const ensureAutorization = (req: Request, res: Response) => {
       const decodedJwt = jwt.verify(auth, process.env.PRIVATE_KEY as string);
       console.log("decodedJwt: ", decodedJwt);
       return decodedJwt;
+
     } else if (auth && auth.startsWith("Bearer ")) {
-      // "Bearer " 다음부분부터 JWT로 사용
       const receivedJwt = auth.substring(7);
       console.log("receivedJwt: ", receivedJwt);
 
-      const decodedJwt = jwt.verify(
-        receivedJwt,
-        process.env.PRIVATE_KEY as string
-      );
+      const decodedJwt = jwt.verify(receivedJwt, process.env.PRIVATE_KEY as string);
       console.log("decodedJwt: ", decodedJwt);
       return decodedJwt;
+      
     } else {
       throw new ReferenceError("잘못된 jwt 형식입니다.");
     }
