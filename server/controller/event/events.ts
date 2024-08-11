@@ -14,8 +14,10 @@ import {
   deleteEventTagByTagIds,
   getEventById,
   getEventList,
+  removeEventById,
   updateEventById,
 } from "../../model/event.model";
+import { deleteCommentsById } from "../../model/eventComment.model";
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 목록 가져오기
@@ -308,13 +310,10 @@ export const deleteEvent = async (req: Request, res: Response) => {
         await deleteEventImagesByImageIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }
-      await tx.events.delete({
-        where: {
-          postId,
-          uuid: Buffer.from(userId, "hex"),
-          categoryId: categoryId,
-        },
-      });
+
+      await deleteCommentsById(tx, postId);
+
+      await removeEventById(tx, postId, userId, categoryId);
     });
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
