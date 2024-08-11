@@ -38,3 +38,14 @@ export const updateLocationById = async (
     data: location
   })
 }
+
+export const getLocationById = async (
+  tx: Prisma.TransactionClient,
+  locationId: number
+) => {
+  return await tx.locations.findUnique({
+    where: {
+      locationId
+    }
+  })
+};

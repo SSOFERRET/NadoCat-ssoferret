@@ -1,13 +1,14 @@
 import express from "express";
 import { getMissingFavorites, postMissingFavorites, deleteMissingFavorites } from "../controller/missing/MissingsFavorites";
 import { getMissings } from "../controller/missing/Missings";
-import { createMissing, deleteMissing, updateFoundState, updateMissing } from "../controller/missing/Missing";
+import { createMissing, deleteMissing, getMissing, updateFoundState, updateMissing } from "../controller/missing/Missing";
 import { createMissingReport, deleteMissingReport, deleteMissingReportHandler, updateMissingReport, updateMissingReportCheck } from "../controller/missing/MissingReport";
 
 const router = express.Router();
 router.use(express.json());
 
 router.get("", getMissings);
+router.get("/:postId", getMissing);
 router.post("", createMissing);
 router.delete("/:postId", deleteMissing);
 router.put("/:postId", updateMissing);
