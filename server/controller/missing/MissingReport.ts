@@ -19,7 +19,7 @@ import { addNewImages } from "../../util/images/addNewImages";
 *   [ ] get
 *   [ ] 전체 조회 
 *     [ ] 페이지네이션
-*   [ ] put
+*   [x] put
 *     [ ] 일치 및 불일치
 */
 
