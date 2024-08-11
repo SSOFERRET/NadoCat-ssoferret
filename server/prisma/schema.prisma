@@ -285,11 +285,10 @@ model MissingReports {
   locationId             Int                      @map("location_id")
   detail                 String?                  @db.MediumText
   views                  Int                      @default(0)
-  valified               Int                      @default(0) @db.TinyInt
-  match                  Int                      @default(0) @db.TinyInt
+  match                  String                   @default("-") @db.VarChar(1)
   createdAt              DateTime                 @default(now()) @map("created_at") @db.Timestamp(0)
   thumbnail              Int?
-  updated_at             DateTime?                @default(now()) @db.Timestamp(0)
+  updatedAt              DateTime                 @default(now()) @map("updated_at") @db.Timestamp(0)
   missingReportImages    MissingReportImages[]
   missingReportLocations MissingReportLocations[]
   boardCategories        BoardCategories          @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_category_id")
@@ -317,8 +316,8 @@ model Missings {
   detail           String?            @db.LongText
   found            Int?               @default(0) @db.TinyInt
   views            Int                @default(0)
-  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt        DateTime           @default(now()) @map("updated_at") @db.Timestamp(0)
+  createdAt        DateTime?          @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt        DateTime?          @default(now()) @map("updated_at") @db.Timestamp(0)
   thumbnail        Int?
   missingFavorites MissingFavorites[]
   missingImages    MissingImages[]

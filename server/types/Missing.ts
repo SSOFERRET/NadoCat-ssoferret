@@ -24,5 +24,6 @@ export interface IMissingReport {
   time: string,
   locationId: number,
   detail: string,
-  thumbnail: number
+  thumbnail: number,
+  match: string
 }
