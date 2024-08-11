@@ -287,7 +287,7 @@ export const updateEvent = async (req: Request, res: Response) => {
 export const deleteEvent = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.evnet_id);
-    const categoryId = Number(req.query.category_id) ?? 2;
+    const categoryId = Number(req.query.category_id) || 2;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     const post = await getEventById(postId, categoryId);
@@ -315,6 +315,7 @@ export const deleteEvent = async (req: Request, res: Response) => {
 
       await removeEventById(tx, postId, userId, categoryId);
     });
+
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
     console.error(error);
