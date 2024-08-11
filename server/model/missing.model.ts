@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { IMissingCreate, IMissingReport } from "../types/missing";
 import { IImageBridge } from "../types/image";
 import { TCategoryId } from "../types/category";
-import { TPostData } from "../types/post";
+import { IPostData } from "../types/post";
 import { ILocationBridge } from "../types/location";
 
 
@@ -17,7 +17,7 @@ export const addMissing = async (
 
 export const removePost = async (
   tx: Prisma.TransactionClient,
-  postData: TPostData
+  postData: IPostData
 ) => {
   switch (postData.categoryId) {
     case 3: return await tx.missings.delete({
@@ -67,7 +67,7 @@ export const addLocationFormats = async (
 
 export const deleteImageFormats = async (
   tx: Prisma.TransactionClient,
-  postData: TPostData
+  postData: IPostData
 ) => {
   switch (postData.categoryId) {
     case 3: return await tx.missingImages.deleteMany({
@@ -85,7 +85,7 @@ export const deleteImageFormats = async (
 
 export const deleteLocationFormats = async (
   tx: Prisma.TransactionClient,
-  postData: TPostData
+  postData: IPostData
 ) => {
   switch (postData.categoryId) {
     case 3: return await tx.missingLocations.deleteMany({
@@ -114,7 +114,7 @@ export const getMissingByPostId = async (
 
 export const getLocationFormatsByPostId = async (
   tx: Prisma.TransactionClient,
-  postData: TPostData
+  postData: IPostData
 ) => {
   switch (postData.categoryId) {
     case 3: return await tx.missingLocations.findMany({
@@ -132,7 +132,7 @@ export const getLocationFormatsByPostId = async (
 
 export const getImageFormatsByPostId = async (
   tx: Prisma.TransactionClient,
-  postData: TPostData
+  postData: IPostData
 ) => {
   switch (postData.categoryId) {
     case 3: return await tx.missingImages.findMany({

@@ -1,6 +1,6 @@
 import { TCategoryId } from "./category"
 
-export interface TPostData {
+export interface IPostData {
   postId: number;
   categoryId: TCategoryId;
   userId: Buffer;

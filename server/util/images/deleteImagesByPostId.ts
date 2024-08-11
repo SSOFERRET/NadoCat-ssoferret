@@ -1,13 +1,12 @@
 import { Prisma } from "@prisma/client";
-import { addImage, deleteImages } from "../../model/images.model";
-import { IImage, IImageBridge } from "../../types/image";
-import { addImageFormats, deleteImageFormats, getImageFormatsByPostId } from "../../model/missing.model";
-import { TCategoryId } from "../../types/category";
-import { TPostData } from "../../types/post";
+import { deleteImages } from "../../model/images.model";
+import { IImageBridge } from "../../types/image";
+import { deleteImageFormats, getImageFormatsByPostId } from "../../model/missing.model";
+import { IPostData } from "../../types/post";
 
 export const getAndDeleteImageFormats = async (
   tx: Prisma.TransactionClient,
-  postData: TPostData
+  postData: IPostData
 ) => {
   const images = await getImageFormatsByPostId(tx, postData);
   await deleteImageFormats(tx, postData);

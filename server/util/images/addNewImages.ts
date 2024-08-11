@@ -2,11 +2,11 @@ import { Prisma } from "@prisma/client";
 import { addImage } from "../../model/images.model";
 import { IImage } from "../../types/image";
 import { addImageFormats } from "../../model/missing.model";
-import { TPostData } from "../../types/post";
+import { IPostData } from "../../types/post";
 
 export const addNewImages = async (
   tx: Prisma.TransactionClient,
-  postData: TPostData,
+  postData: IPostData,
   images: string[]
 ) => {
   const newImages = await Promise.all(

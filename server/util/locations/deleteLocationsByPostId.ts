@@ -1,12 +1,12 @@
 import { Prisma } from "@prisma/client";
 import { deleteLocationFormats, getLocationFormatsByPostId } from "../../model/missing.model";
-import { TPostData } from "../../types/post";
+import { IPostData } from "../../types/post";
 import { ILocationBridge } from "../../types/location";
 import { deleteLocations } from "../../model/location.model";
 
 export const getAndDeleteLocationFormats = async (
   tx: Prisma.TransactionClient,
-  postData: TPostData
+  postData: IPostData
 ) => {
   const locations = await getLocationFormatsByPostId(tx, postData);
   await deleteLocationFormats(tx, postData);
