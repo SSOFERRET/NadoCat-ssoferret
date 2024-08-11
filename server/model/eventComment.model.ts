@@ -34,7 +34,7 @@ export const getEventComments = async (
 
   return result.map((item) => {
     return {
-      eventId: item.eventCommentId,
+      commentId: item.eventCommentId,
       comment: item.comment,
       user: {
         id: item.users.id,

@@ -23,7 +23,9 @@ export const getComments = async (req: Request, res: Response) => {
     const comments = await getEventComments(postId, limit, cursor);
 
     const nextCursor =
-      comments.length === limit ? comments[comments.length - 1].comment : null;
+      comments.length === limit
+        ? comments[comments.length - 1].commentId
+        : null;
 
     const result = {
       comments,
