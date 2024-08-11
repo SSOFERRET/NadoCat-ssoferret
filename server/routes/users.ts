@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 const router: Router = express.Router();
-import signup from "../controller/user/Users";
+import {signup, login, kakao, google} from "../controller/user/Users";
 
 router.use(express.json());
 
