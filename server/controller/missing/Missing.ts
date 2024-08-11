@@ -2,13 +2,14 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-import { addLocation, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId } from "../../model/missing.model";
+import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
+import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
 import { deleteMissingReport } from "./MissingReport";
+import { getImageById } from "../../model/images.model";
 
 
 /* CHECKLIST
@@ -23,10 +24,45 @@ import { deleteMissingReport } from "./MissingReport";
 /**
  * 
  * CHECKLIST
- * [x] 이미지 가져오기
- * [x] location 가져오기
+ * [ ] 이미지 가져오기
+ * [ ] location 가져오기
  * [ ] 제보글 가져오기
  */
+
+export const getMissing = async (req: Request, res: Response) => {
+  try {
+    const postId = Number(req.params.postId);
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const userId = await getUserId(); // NOTE
+      const postData = {
+        postId,
+        categoryId: CATEGORY.MISSINGS,
+        userId
+      }
+
+      let post = await getPostByPostId(tx, postData);
+
+      const locationFormats = await getLocationFormatsByPostId(tx, postData);
+      if (locationFormats) {
+        const locations = await Promise.all(locationFormats.map((locationFormat) => getLocationById(tx, locationFormat.locationId)));
+        post = { ...post, locations };
+      }
+
+      const imageFormats = await getImageFormatsByPostId(tx, postData);
+      if (imageFormats) {
+        const images = await Promise.all(imageFormats.map((imageFormat) => getImageById(tx, imageFormat.imageId)));
+        post = { ...post, images };
+      }
+
+      return res
+        .status(StatusCodes.CREATED)
+        .json(post);
+    });
+  } catch (error) {
+    if (error instanceof Error)
+      validateError(res, error);
+  }
+};
 
 /**CHECKLIST
  * [x] missing_locations table에 추가 누락
