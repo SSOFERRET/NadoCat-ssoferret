@@ -2,11 +2,12 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-import { addLocation, deleteLocations, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, addImageFormats, getLocationFormatsByPostId, getImageFormatsByPostId, deleteImageFormats, deleteLocationFormats, removePost, updateMissingByPostId, getMissingByPostId } from "../../model/missing.model";
-import { addImage, deleteImages } from "../../model/images.model";
-import { IImage } from "../../types/image";
+import { addLocation, updateLocationById } from "../../model/location.model";
+import { addMissing, addLocationFormats, removePost, updateMissingByPostId, getMissingByPostId } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
+import { addNewImages } from "../../util/images/addNewImages";
+import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
+import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
 
 
 /* CHECKLIST
@@ -21,8 +22,8 @@ import { CATEGORY } from "../../constants/category";
 /**
  * 
  * CHECKLIST
- * [ ] 이미지 가져오기
- * [ ] location 가져오기
+ * [x] 이미지 가져오기
+ * [x] location 가져오기
  * [ ] 제보글 가져오기
  */
 
@@ -53,16 +54,11 @@ export const createMissing = async (req: Request, res: Response) => {
       });
 
       if (images) {
-        const newImages = await Promise.all(
-          images.map((url: string) => addImage(tx, url))
-        );
-
-        const formattedImages = newImages.map((image: IImage) => ({
-          imageId: image.imageId,
+        await addNewImages(tx, {
+          userId,
           postId: post.postId,
-        }));
-
-        await addImageFormats(tx, CATEGORY.MISSINGS, formattedImages);
+          categoryId: CATEGORY.MISSINGS,
+        }, images)
       }
     });
 
@@ -70,16 +66,8 @@ export const createMissing = async (req: Request, res: Response) => {
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientValidationError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
-    }
-
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    if (error instanceof Error)
+      validateError(res, error);
   }
 };
 
@@ -91,46 +79,35 @@ export const createMissing = async (req: Request, res: Response) => {
  *
  * */
 
-
 export const deleteMissing = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.postId);
-    const userId = await getUserId(); // NOTE 사용자 정보 인가 
+    const userId = await getUserId(); // NOTE
+    const postData = {
+      userId,
+      postId,
+      categoryId: CATEGORY.MISSINGS
+    }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const locations = await getLocationFormatsByPostId(tx, CATEGORY.MISSINGS, postId);
-      const images = await getImageFormatsByPostId(tx, CATEGORY.MISSINGS, postId);
+      const locations = await getAndDeleteLocationFormats(tx, postData);
+      const images = await getAndDeleteImageFormats(tx, postData);
 
-      await deleteLocationFormats(tx, CATEGORY.MISSING_REPORTS, postId);
-      await deleteImageFormats(tx, CATEGORY.MISSINGS, postId);
+      await removePost(tx, postData);
 
-      await removePost(tx, CATEGORY.MISSINGS, postId);
+      if (locations)
+        await deleteLocationsByLocationIds(tx, locations);
 
-      if (locations) {
-        const formattedLocations = locations.map(location => location.locationId);
-        await deleteLocations(tx, formattedLocations);
-      }
-
-      if (images) {
-        const formattedImages = images.map((image) => image.imageId);
-        await deleteImages(tx, formattedImages);
-      }
+      if (images)
+        await deleteImagesByImageIds(tx, images)
     });
 
     res
       .status(StatusCodes.OK)
       .json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientValidationError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
-    }
-
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    if (error instanceof Error)
+      validateError(res, error);
   }
 };
 
@@ -163,6 +140,11 @@ export const updateMissing = async (req: Request, res: Response) => { // NOTE Fu
     const postId = Number(req.params.postId);
     const userId = await getUserId(); // NOTE
     const { missing, location, images } = req.body;
+    const postData = {
+      postId,
+      userId,
+      categoryId: CATEGORY.MISSINGS
+    }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await getMissingByPostId(tx, postId);
@@ -175,40 +157,44 @@ export const updateMissing = async (req: Request, res: Response) => { // NOTE Fu
 
       await updateMissingByPostId(tx, postId, userId, missing.catId, missing.detail, new Date(missing.time))
 
-      const imagesToDelete = await getImageFormatsByPostId(tx, CATEGORY.MISSINGS, postId);
-      await deleteImageFormats(tx, CATEGORY.MISSINGS, postId);
-      if (imagesToDelete) {
-        const formattedImages = imagesToDelete.map((image) => image.imageId);
-        await deleteImages(tx, formattedImages);
-      }
+      const imagesToDelete = await getAndDeleteImageFormats(tx, postData);
+
+      if (imagesToDelete)
+        await deleteImagesByImageIds(tx, imagesToDelete);
 
       if (images) {
-        const newImages = await Promise.all(
-          images.map((url: string) => addImage(tx, url))
-        );
+        await addNewImages(tx, {
+          userId,
+          postId,
+          categoryId: CATEGORY.MISSINGS,
+        }, images)
+      };
+    })
 
-        const formattedImages = newImages.map((image: IImage) => ({
-          imageId: image.imageId,
-          postId: post.postId,
-        }));
-
-        await addImageFormats(tx, CATEGORY.MISSINGS, formattedImages);
-      }
-    });
-
-    res
+    return res
       .status(StatusCodes.OK)
       .json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientValidationError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
-    }
-
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    if (error instanceof Error)
+      validateError(res, error);
   }
 };
+
+export const validateBadRequest = (res: Response, error: Error) => {
+  console.error(error);
+  return res
+    .status(StatusCodes.BAD_REQUEST)
+    .json({ message: "입력값을 확인해 주세요." });
+}
+
+export const validateInternalServerError = (res: Response) => {
+  res
+    .status(StatusCodes.INTERNAL_SERVER_ERROR)
+    .json({ message: "Internal Server Error" });
+}
+
+export const validateError = (res: Response, error: Error) => {
+  if (error instanceof Prisma.PrismaClientValidationError)
+    return validateBadRequest(res, error);
+  return validateInternalServerError(res);
+}

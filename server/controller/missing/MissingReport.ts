@@ -2,12 +2,14 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-import { addLocation, deleteLocations } from "../../model/location.model";
-import { addImageFormats, addLocationFormats, addMissingReport, deleteImageFormats, deleteLocationFormats, getImageFormatsByPostId, getLocationFormatsByPostId, removePost } from "../../model/missing.model";
-import { getUserId } from "./Missing";
-import { addImage, deleteImages } from "../../model/images.model";
-import { IImage, IImageBridge } from "../../types/image";
+import { addLocation } from "../../model/location.model";
+import { addLocationFormats, addMissingReport, removePost } from "../../model/missing.model";
+import { getUserId, validateError } from "./Missing";
+
 import { CATEGORY } from "../../constants/category";
+import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
+import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
+import { addNewImages } from "../../util/images/addNewImages";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -50,34 +52,20 @@ export const createMissingReport = async (req: Request, res: Response) => {
         locationId: newLocation.locationId
       })
 
-      if (images) {
-        const newImages = await Promise.all(
-          images.map((url: string) => addImage(tx, url))
-        );
-
-        const formattedImages = newImages.map((image: IImage) => ({
-          imageId: image.imageId,
+      if (images)
+        await addNewImages(tx, {
+          userId,
           postId: post.postId,
-        }));
-
-        await addImageFormats(tx, CATEGORY.MISSING_REPORTS, formattedImages);
-      }
+          categoryId: CATEGORY.MISSING_REPORTS,
+        }, images)
     });
 
     res
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientValidationError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
-    }
-
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    if (error instanceof Error)
+      validateError(res, error);
   }
 };
 
@@ -94,40 +82,30 @@ export const deleteMissingReport = async (req: Request, res: Response) => {
     const missingId = Number(req.params.missingId);
     const postId = Number(req.params.postId);
     const userId = await getUserId(); // NOTE
+    const postData = {
+      userId,
+      categoryId: CATEGORY.MISSING_REPORTS,
+      postId
+    }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const locations = await getLocationFormatsByPostId(tx, CATEGORY.MISSING_REPORTS, postId);
-      const images = await getImageFormatsByPostId(tx, CATEGORY.MISSING_REPORTS, postId);
+      const locations = await getAndDeleteLocationFormats(tx, postData);
+      const images = await getAndDeleteImageFormats(tx, postData);
 
-      await deleteLocationFormats(tx, CATEGORY.MISSING_REPORTS, postId);
-      await deleteImageFormats(tx, CATEGORY.MISSING_REPORTS, postId);
+      await removePost(tx, postData);
 
-      await removePost(tx, CATEGORY.MISSING_REPORTS, postId);
+      if (locations)
+        await deleteLocationsByLocationIds(tx, locations);
 
-      if (locations) {
-        const formattedLocations = locations.map(location => location.locationId);
-        await deleteLocations(tx, formattedLocations);
-      }
-
-      if (images) {
-        const formattedImages = images.map((image) => image.imageId);
-        await deleteImages(tx, formattedImages);
-      }
+      if (images)
+        await deleteImagesByImageIds(tx, images);
     });
 
     res
       .status(StatusCodes.OK)
       .json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientValidationError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
-    }
-
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    if (error instanceof Error)
+      validateError(res, error);
   }
 };
