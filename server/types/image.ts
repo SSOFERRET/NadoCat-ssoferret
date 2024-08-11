@@ -1,6 +1,6 @@
 export interface IImage {
   url: string;
-  imageId?: number;
+  imageId: number;
 }
 
 export interface IImageBridge {

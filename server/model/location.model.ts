@@ -26,13 +26,26 @@ export const deleteLocations = async (
   })
 }
 
-export const getLocationIdsByPostId = async (
+export const updateLocationById = async (
   tx: Prisma.TransactionClient,
-  postId: number
+  locationId: number,
+  location: ILocation
 ) => {
-  return await tx.missingLocations.findMany({
+  return await tx.locations.update({
     where: {
-      postId: postId
+      locationId
+    },
+    data: location
+  })
+}
+
+export const getLocationById = async (
+  tx: Prisma.TransactionClient,
+  locationId: number
+) => {
+  return await tx.locations.findUnique({
+    where: {
+      locationId
     }
   })
 };

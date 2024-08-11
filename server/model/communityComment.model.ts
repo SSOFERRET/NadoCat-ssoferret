@@ -6,7 +6,9 @@ export const getCommunityComments = async (
   limit: number,
   cursor: number | undefined
 ) => {
+
   const result = await prisma.communityComments.findMany({
+
     where: {
       communityId: postId,
     },

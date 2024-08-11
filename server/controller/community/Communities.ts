@@ -61,7 +61,7 @@ export const getCommunities = async (req: Request, res: Response) => {
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const sort = req.query.sort?.toString() ?? "latest";
     const orderBy = getOrderBy(sort);
-    const categoryId = Number(req.query.category_id) || 1;
+    const categoryId = Number(req.query.categoryId) || 1;
     const count = await getCommunitiesCount();
 
     const communities = await getCommunityList(
@@ -101,8 +101,8 @@ export const getCommunities = async (req: Request, res: Response) => {
 
 export const getCommunity = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
-    const categoryId = Number(req.query.category_id) || 1;
+    const id = Number(req.params.communityId);
+    const categoryId = Number(req.query.categoryId) || 1;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     const community = await getCommunityById(id, categoryId);
@@ -151,7 +151,7 @@ export const getCommunity = async (req: Request, res: Response) => {
 export const createCommunity = async (req: Request, res: Response) => {
   try {
     const { title, content, tags, images } = req.body;
-    const categoryId = Number(req.query.category_id) || 1;
+    const categoryId = Number(req.query.categoryId) || 1;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -207,8 +207,8 @@ export const createCommunity = async (req: Request, res: Response) => {
 // [ ] 사용자 정보 받아오는 부분 구현 필요
 export const updateCommunity = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
-    const categoryId = Number(req.query.category_id) || 1;
+    const id = Number(req.params.communityId);
+    const categoryId = Number(req.query.categoryId) || 1;
     const userId = await getUserId();
 
     const {
@@ -289,8 +289,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
 // [ ] 게시글 삭제 시 댓글 삭제 구현
 export const deleteCommunity = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
-    const categoryId = Number(req.query.category_id) || 1;
+    const id = Number(req.params.communityId);
+    const categoryId = Number(req.query.categoryId) || 1;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     const post = await getCommunityById(id, categoryId);
