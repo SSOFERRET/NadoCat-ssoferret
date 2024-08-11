@@ -8,7 +8,7 @@ import {
   getFriendCounts,
   getFriends,
   removeFriend,
-} from "../../model/friend.modle";
+} from "../../model/friend.model";
 
 export const followings = async (req: Request, res: Response) => {
   try {
