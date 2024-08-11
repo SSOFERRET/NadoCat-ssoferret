@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, deleteLocations } from "../../model/location.model";
-import { getMissingByPostId, addMissing, addLocationFormats, deleteMissingLocations, removeMissing, getMissingImagesByPostId, getMissingLocationsByPostId, deleteMissingImages, getMissingReportsByPostId, addImageFormats } from "../../model/missing.model";
+import { addMissing, addLocationFormats, addImageFormats, getLocationFormatsByPostId, getImageFormatsByPostId, deleteImageFormats, deleteLocationFormats, removePost } from "../../model/missing.model";
 import { addImage, deleteImages } from "../../model/images.model";
 import { IImage } from "../../types/image";
 import { CATEGORY } from "../../constants/category";
@@ -98,13 +98,13 @@ export const deleteMissing = async (req: Request, res: Response) => {
     const userId = await getUserId(); // NOTE 사용자 정보 인가 
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const locations = await getMissingLocationsByPostId(tx, postId);
-      const images = await getMissingImagesByPostId(tx, postId);
+      const locations = await getLocationFormatsByPostId(tx, CATEGORY.MISSINGS, postId);
+      const images = await getImageFormatsByPostId(tx, CATEGORY.MISSINGS, postId);
 
-      await deleteMissingLocations(tx, postId);
-      await deleteMissingImages(tx, postId);
+      await deleteLocationFormats(tx, CATEGORY.MISSING_REPORTS, postId);
+      await deleteImageFormats(tx, CATEGORY.MISSINGS, postId);
 
-      await removeMissing(tx, postId);
+      await removePost(tx, CATEGORY.MISSINGS, postId);
 
       if (locations) {
         const formattedLocations = locations.map(location => location.locationId);
