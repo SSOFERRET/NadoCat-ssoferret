@@ -1,22 +1,13 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
-import {
-  ICommunity,
-  ICommunityImage,
-  ICommunityTag,
-  IImage,
-  ITag,
-} from "../types/community";
 
-export const getCommunitiesCount = async () => await prisma.communities.count();
-
-export const getCommunityList = async (
+export const getEventList = async (
   categoryId: number,
   limit: number,
   orderBy: { sortBy: string; sortOrder: string },
   cursor: number | undefined
 ) => {
-  const communities = await prisma.communities.findMany({
+  const events = await prisma.events.findMany({
     where: {
       categoryId: categoryId,
     },
@@ -28,7 +19,7 @@ export const getCommunityList = async (
         [orderBy.sortBy]: orderBy.sortOrder,
       },
       {
-        postId: "desc",
+        postId: "asc",
       },
     ],
 
@@ -40,6 +31,7 @@ export const getCommunityList = async (
       views: true,
       createdAt: true,
       updatedAt: true,
+      isClosed: true,
       users: {
         select: {
           id: true,
@@ -48,7 +40,7 @@ export const getCommunityList = async (
           profileImage: true,
         },
       },
-      communityImages: {
+      eventImages: {
         select: {
           images: {
             select: {
@@ -58,7 +50,7 @@ export const getCommunityList = async (
           },
         },
       },
-      communityTags: {
+      eventTags: {
         select: {
           tags: {
             select: {
@@ -71,27 +63,23 @@ export const getCommunityList = async (
     },
   });
 
-  return communities.map((community: ICommunity) => {
+  return events.map((event: any) => {
     return {
-      ...community,
+      ...event,
       users: {
-        id: community?.users.id,
-        uuid: (community?.users.uuid as Buffer).toString("hex"),
-        nickname: community?.users.nickname,
-        profileImage: community?.users.profileImage,
+        id: event?.users.id,
+        uuid: (event?.users.uuid as Buffer).toString("hex"),
+        nickname: event?.users.nickname,
+        profileImage: event?.users.profileImage,
       },
-      communityTags: community.communityTags.map(
-        (item: ICommunityTag) => item.tags
-      ),
-      communityImages: community.communityImages.map(
-        (item: ICommunityImage) => item.images
-      ),
+      eventTags: event.eventTags.map((item: any) => item.tags),
+      eventImages: event.eventImages.map((item: any) => item.images),
     };
   });
 };
 
-export const getCommunityById = async (postId: number, categoryId: number) => {
-  const community = await prisma.communities.findUnique({
+export const getEventById = async (postId: number, categoryId: number) => {
+  const event = await prisma.events.findUnique({
     where: {
       postId: postId,
       categoryId: categoryId,
@@ -112,7 +100,7 @@ export const getCommunityById = async (postId: number, categoryId: number) => {
           profileImage: true,
         },
       },
-      communityImages: {
+      eventImages: {
         select: {
           images: {
             select: {
@@ -122,7 +110,7 @@ export const getCommunityById = async (postId: number, categoryId: number) => {
           },
         },
       },
-      communityTags: {
+      eventTags: {
         select: {
           tags: {
             select: {
@@ -135,71 +123,75 @@ export const getCommunityById = async (postId: number, categoryId: number) => {
     },
   });
 
-  if (!community) {
+  if (!event) {
     return null;
   }
 
   return {
-    ...community,
+    ...event,
     users: {
-      id: community?.users.id,
-      uuid: (community?.users.uuid as Buffer).toString("hex"),
-      nickname: community?.users.nickname,
-      profileImage: community?.users.profileImage,
+      id: event?.users.id,
+      uuid: (event?.users.uuid as Buffer).toString("hex"),
+      nickname: event?.users.nickname,
+      profileImage: event?.users.profileImage,
     },
-    communityTags: community?.communityTags.map(
-      (item: ICommunityTag) => item.tags
-    ),
-    communityImages: community?.communityImages.map(
-      (item: ICommunityImage) => item.images
-    ),
+    eventTags: event?.eventTags.map((item: any) => item.tags),
+    eventImages: event?.eventImages.map((item: any) => item.images),
   };
 };
 
-export const addCommunity = async (
+export const addEvent = async (
   tx: Prisma.TransactionClient,
   userId: string,
   title: string,
   content: string,
+  isClosed: boolean,
+  date: string,
   categoryId: number
 ) =>
-  await tx.communities.create({
+  await tx.events.create({
     data: {
-      uuid: Buffer.from(userId, "hex"),
       title,
       content,
-      categoryId: categoryId,
+      isClosed: isClosed ? 1 : 0,
+      categoryId,
+      uuid: Buffer.from(userId, "hex"),
+      date,
     },
   });
 
-export const updateCommunityById = async (
+export const updateEventById = async (
   tx: Prisma.TransactionClient,
-  postId: number,
   userId: string,
-  categoryId: number,
+  postId: number,
   title: string,
-  content: string
+  content: string,
+  isClosed: boolean,
+  date: string,
+  categoryId: number
 ) => {
-  return await tx.communities.update({
+  return await tx.events.update({
     where: {
-      postId: postId,
+      postId,
       uuid: Buffer.from(userId, "hex"),
       categoryId: categoryId,
     },
     data: {
       title,
       content,
+      isClosed: isClosed ? 1 : 0,
+      date,
     },
   });
 };
 
-export const removeCommunityById = async (
+export const removeEventById = async (
   tx: Prisma.TransactionClient,
   postId: number,
   userId: string,
   categoryId: number
 ) => {
-  return await tx.communities.delete({
+  return await tx.events.delete({
     where: {
       postId: postId,
       uuid: Buffer.from(userId, "hex"),
@@ -208,35 +200,35 @@ export const removeCommunityById = async (
   });
 };
 
-export const addCommunityTags = async (
+export const addEventTags = async (
   tx: Prisma.TransactionClient,
   tags: {
     postId: number;
     tagId: number;
   }[]
 ) => {
-  return await tx.communityTags.createMany({
+  return await tx.eventTags.createMany({
     data: tags,
   });
 };
 
-export const addCommunityImages = async (
+export const addEventImages = async (
   tx: Prisma.TransactionClient,
   images: {
     postId: number;
     imageId: number;
   }[]
 ) => {
-  return await tx.communityImages.createMany({
+  return await tx.eventImages.createMany({
     data: images,
   });
 };
 
-export const deleteCommunityTagByTagIds = async (
+export const deleteEventTagByTagIds = async (
   tx: Prisma.TransactionClient,
   tagIds: number[]
 ) => {
-  return await tx.communityTags.deleteMany({
+  return await tx.eventTags.deleteMany({
     where: {
       tagId: {
         in: tagIds,
@@ -269,11 +261,11 @@ export const deleteCommunityTagByTagIds = async (
 //   });
 // };
 
-export const deleteCommunityImagesByImageIds = async (
+export const deleteEventImagesByImageIds = async (
   tx: Prisma.TransactionClient,
   imageIds: number[]
 ) => {
-  return await tx.communityImages.deleteMany({
+  return await tx.eventImages.deleteMany({
     where: {
       imageId: {
         in: imageIds,
