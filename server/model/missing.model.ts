@@ -171,3 +171,24 @@ export const addMissingReport = async (
     data: missingReport
   })
 };
+
+export const updateMissingByPostId = async (
+  tx: Prisma.TransactionClient,
+  postId: number,
+  uuid: Buffer,
+  catId: number,
+  detail: string,
+  time: Date
+) => {
+  return await tx.missings.update({
+    where: {
+      postId,
+      uuid
+    },
+    data: {
+      catId,
+      time,
+      detail
+    }
+  })
+}
