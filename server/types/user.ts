@@ -13,5 +13,5 @@ export interface IUserSecrets {
   uuid: Buffer
   hashPassword: string
   salt: string
-  refreshToken: string
+  refreshToken: string | null
 }

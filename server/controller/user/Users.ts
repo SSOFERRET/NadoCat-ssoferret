@@ -44,6 +44,11 @@ export const login = async (req: Request, res: Response) => {
   try {
     const {generalToken, refreshToken, result, userUuidString} = await loginUser(email, password, autoLogin); 
 
+    if(!userUuidString || (!refreshToken && autoLogin)){
+      console.log("유효하지 않은 UUID 또는 Refresh Token입니다.");
+      throw new Error("유효하지 않은 값입니다.");
+    }
+
       res.cookie("generalToken", generalToken, {
         httpOnly: true
       });
@@ -56,7 +61,7 @@ export const login = async (req: Request, res: Response) => {
         });
 
         //refresh token DB 저장
-        await saveRefreshToken(userUuidString as string, refreshToken as string);   
+        await saveRefreshToken(userUuidString, refreshToken as string);   
       }
 
     return res.status(StatusCodes.OK).json({
