@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 import bcryto from "bcrypt";
 // import crypto from "crypto";
 
@@ -159,9 +160,23 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-//::카카오
+//[ ]카카오
 export const kakao = async (req: Request, res: Response) => {
+  const { code } = req.query; //response_type=code → code로 고정, url에서 읽어올거
+
+  //토큰요청
+  // const resType = await axios({
+  //   grant_type
+  // })
+
+
+
   const { email, password } = req.body;
+  const kakaoAuthUrl = process.env.KAKAO_AUTH_URL;
+
+
+
+
   return res.json({ email: email, password: password });
 };
 
