@@ -19,11 +19,11 @@ export interface IMissingGet extends IMissingCreate {
 }
 
 export interface IMissingReport {
-  missingId: number,
-  uuid: Buffer,
-  time: string,
-  locationId: number,
-  detail: string,
-  thumbnail: number,
-  match: string
+  missingId: number;
+  uuid: Buffer;
+  time: string;
+  locationId: number;
+  detail: string;
+  thumbnail: number;
+  match: string;
 }
