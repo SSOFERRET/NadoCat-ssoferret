@@ -1,12 +1,12 @@
 import express from "express";
 import { getMissingFavorites, postMissingFavorites, deleteMissingFavorites } from "../controller/missing/MissingsFavorites";
-import { createMissing, deleteMissing, getMissing, updateFoundState, updateMissing } from "../controller/missing/Missings";
-import { createMissingReport, deleteMissingReport, deleteMissingReportHandler, getMissingReport, updateMissingReport, updateMissingReportCheck } from "../controller/missing/MissingReports";
+import { createMissing, deleteMissing, getMissing, getMissings, updateFoundState, updateMissing } from "../controller/missing/Missings";
+import { createMissingReport, deleteMissingReport, deleteMissingReportHandler, getMissingReport, getMissingReports, updateMissingReport, updateMissingReportCheck } from "../controller/missing/MissingReports";
 
 const router = express.Router();
 router.use(express.json());
 
-// router.get("", getMissings);
+router.get("", getMissings);
 router.get("/:postId", getMissing);
 router.post("", createMissing);
 router.delete("/:postId", deleteMissing);
@@ -15,6 +15,7 @@ router.patch("/:postId", updateFoundState);
 
 router.get("/:MissingId/reports/:postId", getMissingReport);
 router.post("/:postId/reports", createMissingReport);
+router.get("/:MissingId/reports", getMissingReports);
 router.delete("/:MissingId/reports/:postId", deleteMissingReportHandler);
 router.put("/:missingId/reports/:postId", updateMissingReport);
 router.patch("/:missingId/reports/:postId", updateMissingReportCheck);

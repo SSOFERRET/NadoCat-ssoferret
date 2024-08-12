@@ -12,6 +12,8 @@ import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/ima
 import { addNewImages } from "../../util/images/addNewImages";
 import { IMissingReport } from "../../types/missing";
 import { getImageById } from "../../model/image.model";
+import { PAGINATION } from "../../constants/pagination";
+import { getPosts } from "./Common";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -31,6 +33,16 @@ import { getImageById } from "../../model/image.model";
  * [x] 이미지 가져오기
  * [x] location 가져오기
  */
+
+export const getMissingReports = async (req: Request, res: Response) => {
+  const listData = {
+    limit: Number(req.query.limit) || PAGINATION.LIMIT,
+    cursor: req.query.cursor ? Number(req.query.cursor) : undefined,
+    orderBy: { sortBy: "createdAt", sortOrder: "asc" },
+    categoryId: CATEGORY.MISSING_REPORTS
+  };
+  return await getPosts(req, res, listData);
+}
 
 export const getMissingReport = async (req: Request, res: Response) => {
   try {

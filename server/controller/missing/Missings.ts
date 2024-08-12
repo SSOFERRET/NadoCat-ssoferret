@@ -3,13 +3,15 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId } from "../../model/missing.model";
+import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId, getPostList, getPostsCount } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
 import { deleteMissingReport } from "./MissingReports";
 import { getImageById } from "../../model/image.model";
+import { PAGINATION } from "../../constants/pagination";
+import { getPosts } from "./Common";
 
 
 /* CHECKLIST
@@ -20,6 +22,29 @@ import { getImageById } from "../../model/image.model";
 *   [-] get
 *   [x] put
 */
+
+const getOrderBy = (sort: string) => {
+  switch (sort) {
+    case "latest":
+      return { sortBy: "createdAt", sortOrder: "asc" };
+    case "oldest":
+      return { sortBy: "createdAt", sortOrder: "desc" };
+    default:
+      throw new Error("일치하는 정렬 기준이 없습니다.");
+  }
+};
+
+export const getMissings = async (req: Request, res: Response) => {
+  const sort = req.query.sort?.toString() ?? "latest";
+
+  const listData = {
+    limit: Number(req.query.limit) || PAGINATION.LIMIT,
+    cursor: req.query.cursor ? Number(req.query.cursor) : undefined,
+    orderBy: getOrderBy(sort),
+    categoryId: CATEGORY.MISSINGS
+  };
+  return await getPosts(req, res, listData);
+}
 
 /**
  * 
