@@ -37,5 +37,41 @@ html {
 /* buttons */
 /* tags */
 /* others */
+main {
+  display: flex;
+  flex-direction: column;
+  width: 430rem;
+  height: 800rem;
+  margin: 0 auto;
+  max-width: 430rem;
+  background-color: cadetblue;
+}
 
-/*# sourceMappingURL=common.css.map */
+h2 {
+  font-family: "bold";
+  font-size: 16rem !important;
+  background-color: aquamarine;
+}
+
+section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 20rem;
+}
+
+.test-box {
+  width: 190rem;
+  height: 190rem;
+  background-color: blueviolet;
+  border-radius: 5rem;
+  margin-bottom: 18rem;
+}
+
+p {
+  color: #191919;
+  font-family: "medium";
+  font-size: 14rem !important;
+}
+
+/*# sourceMappingURL=streetCat.css.map */
