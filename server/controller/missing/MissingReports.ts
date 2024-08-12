@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, updateLocationById } from "../../model/location.model";
 import { addLocationFormats, addMissingReport, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
-import { getUserId, validateError } from "./Missing";
+import { getUserId, validateError } from "./Missings";
 
 import { CATEGORY } from "../../constants/category";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
