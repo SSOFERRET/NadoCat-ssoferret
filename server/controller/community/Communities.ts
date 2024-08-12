@@ -18,6 +18,7 @@ import { addImage, deleteImages } from "../../model/image.model";
 import { addTag, deleteTags } from "../../model/tag.model";
 import { IImage, ITag } from "../../types/community";
 import { deleteCommentsById } from "../../model/communityComment.model";
+import { handleControllerError } from "../../util/errors/errors";
 
 // CHECKLIST
 // [x] 이미지 배열로 받아오게 DB 수정
@@ -59,7 +60,7 @@ export const getCommunities = async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
-    const sort = req.query.sort?.toString() ?? "latest";
+    const sort = req.query.sort?.toString() || "latest";
     const orderBy = getOrderBy(sort);
     const categoryId = Number(req.query.categoryId) || 1;
     const count = await getCommunitiesCount();
@@ -86,10 +87,7 @@ export const getCommunities = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -138,7 +136,7 @@ export const getCommunity = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    handleControllerError(error, res);
   }
 };
 
@@ -166,6 +164,7 @@ export const createCommunity = async (req: Request, res: Response) => {
           tagId: tag.tagId,
           postId: post.postId,
         }));
+
         await addCommunityTags(tx, formatedTags);
       }
 
@@ -187,16 +186,7 @@ export const createCommunity = async (req: Request, res: Response) => {
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientValidationError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
-    }
-
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -275,10 +265,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -323,16 +310,6 @@ export const deleteCommunity = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: "게시글이 존재하지 않습니다" });
-      }
-    }
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };

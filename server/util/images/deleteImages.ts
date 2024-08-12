@@ -1,7 +1,10 @@
 import { Prisma } from "@prisma/client";
 import { deleteImages } from "../../model/image.model";
 import { IImageBridge } from "../../types/image";
-import { deleteImageFormats, getImageFormatsByPostId } from "../../model/missing.model";
+import {
+  deleteImageFormats,
+  getImageFormatsByPostId,
+} from "../../model/missing.model";
 import { IPostData } from "../../types/post";
 
 export const getAndDeleteImageFormats = async (
@@ -11,7 +14,7 @@ export const getAndDeleteImageFormats = async (
   const images = await getImageFormatsByPostId(tx, postData);
   await deleteImageFormats(tx, postData);
   return images;
-}
+};
 
 export const deleteImagesByImageIds = async (
   tx: Prisma.TransactionClient,
@@ -19,4 +22,4 @@ export const deleteImagesByImageIds = async (
 ) => {
   const formattedImages = images.map((image) => image.imageId);
   return await deleteImages(tx, formattedImages);
-}
+};

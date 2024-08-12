@@ -276,6 +276,16 @@ model MissingReportImages {
   @@map("missing_report_images")
 }
 
+model MissingReportLocations {
+  locationId     Int            @id @unique(map: "location_id_UNIQUE") @map("location_id")
+  postId         Int            @map("post_id")
+  locations      Locations      @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_locations_location_id_fk")
+  missingReports MissingReports @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_post_id_fk")
+
+  @@index([postId], map: "missing_report_post_id_fk_idx")
+  @@map("missing_report_locations")
+}
+
 model MissingReports {
   postId                 Int                      @unique(map: "post_id_UNIQUE") @default(autoincrement()) @map("post_id")
   categoryId             Int                      @default(4) @map("category_id")
@@ -316,8 +326,8 @@ model Missings {
   detail           String?            @db.LongText
   found            Int?               @default(0) @db.TinyInt
   views            Int                @default(0)
-  createdAt        DateTime?          @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt        DateTime?          @default(now()) @map("updated_at") @db.Timestamp(0)
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt        DateTime           @default(now()) @map("updated_at") @db.Timestamp(0)
   thumbnail        Int?
   missingFavorites MissingFavorites[]
   missingImages    MissingImages[]
@@ -516,14 +526,4 @@ model Users {
   userSecrets                                 UserSecrets[]
 
   @@map("users")
-}
-
-model MissingReportLocations {
-  locationId     Int            @id @unique(map: "location_id_UNIQUE") @map("location_id")
-  postId         Int            @map("post_id")
-  locations      Locations      @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_locations_location_id_fk")
-  missingReports MissingReports @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_post_id_fk")
-
-  @@index([postId], map: "missing_report_post_id_fk_idx")
-  @@map("missing_report_locations")
 }

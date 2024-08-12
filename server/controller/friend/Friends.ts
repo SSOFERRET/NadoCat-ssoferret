@@ -1,4 +1,3 @@
-import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { getUserId } from "../community/Communities";
@@ -9,6 +8,7 @@ import {
   getFriends,
   removeFriend,
 } from "../../model/friend.model";
+import { handleControllerError } from "../../util/errors/errors";
 
 export const followings = async (req: Request, res: Response) => {
   try {
@@ -31,10 +31,7 @@ export const followings = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -49,10 +46,7 @@ export const follow = async (req: Request, res: Response) => {
       .status(StatusCodes.CREATED)
       .json({ message: "친구 추가가 완료되었습니다." });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -73,9 +67,6 @@ export const unfollow = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({ message: "친구 삭제가 완료되었습니다." });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };

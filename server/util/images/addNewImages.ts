@@ -15,7 +15,7 @@ export const addNewImages = async (
 
   const formattedImages = newImages.map((image: IImage) => ({
     imageId: image.imageId,
-    postId: postData.postId
+    postId: postData.postId,
   }));
 
   await addImageFormats(tx, postData.categoryId, formattedImages);

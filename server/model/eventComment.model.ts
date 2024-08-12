@@ -36,7 +36,7 @@ export const getEventComments = async (
     return {
       commentId: item.eventCommentId,
       comment: item.comment,
-      user: {
+      users: {
         id: item.users.id,
         uuid: item.users.uuid.toString("hex"),
         nickname: item.users.nickname,

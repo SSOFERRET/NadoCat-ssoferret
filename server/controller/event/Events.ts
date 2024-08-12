@@ -18,6 +18,7 @@ import {
   updateEventById,
 } from "../../model/event.model";
 import { deleteCommentsById } from "../../model/eventComment.model";
+import { handleControllerError } from "../../util/errors/errors";
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 목록 가져오기
@@ -43,7 +44,7 @@ export const getEvents = async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
-    const sort = req.query.sort?.toString() ?? "latest";
+    const sort = req.query.sort?.toString() || "latest";
     const orderBy = getOrderBy(sort);
     const categoryId = Number(req.query.category_id) || 2;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
@@ -115,10 +116,7 @@ export const getEvent = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -270,13 +268,8 @@ export const updateEvent = async (req: Request, res: Response) => {
     res
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 수정되었습니다." });
-
-    res.status(StatusCodes.OK).json("게시글 수정");
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -299,14 +292,14 @@ export const deleteEvent = async (req: Request, res: Response) => {
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      if (post.eventTags?.length) {
-        const tagIds = post.eventTags.map((item: ITag) => item.tagId);
+      if (post.tags?.length) {
+        const tagIds = post.tags.map((item: ITag) => item.tagId);
         await deleteEventTagByTagIds(tx, tagIds);
         await deleteTags(tx, tagIds);
       }
 
-      if (post.eventImages?.length) {
-        const imageIds = post.eventImages.map((item: IImage) => item.imageId);
+      if (post.images?.length) {
+        const imageIds = post.images.map((item: IImage) => item.imageId);
         await deleteEventImagesByImageIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }
@@ -318,16 +311,6 @@ export const deleteEvent = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: "게시글이 존재하지 않습니다" });
-      }
-    }
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
