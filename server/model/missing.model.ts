@@ -10,29 +10,31 @@ export const addMissing = async (
   missing: IMissingCreate
 ) => {
   return await tx.missings.create({
-    data: missing
+    data: missing,
   });
-}
+};
 
 export const removePost = async (
   tx: Prisma.TransactionClient,
   postData: IPostData
 ) => {
   switch (postData.categoryId) {
-    case 3: return await tx.missings.delete({
-      where: {
-        postId: postData.postId,
-        categoryId: postData.categoryId
-      }
-    });
-    case 4: return await tx.missingReports.delete({
-      where: {
-        postId: postData.postId,
-        categoryId: postData.categoryId
-      }
-    });
+    case 3:
+      return await tx.missings.delete({
+        where: {
+          postId: postData.postId,
+          categoryId: postData.categoryId,
+        },
+      });
+    case 4:
+      return await tx.missingReports.delete({
+        where: {
+          postId: postData.postId,
+          categoryId: postData.categoryId,
+        },
+      });
   }
-}
+};
 
 export const addImageFormats = async (
   tx: Prisma.TransactionClient,
@@ -40,14 +42,16 @@ export const addImageFormats = async (
   images: IImageBridge[]
 ) => {
   switch (categoryId) {
-    case 3: return await tx.missingImages.createMany({
-      data: images
-    });
-    case 4: return await tx.missingReportImages.createMany({
-      data: images
-    })
+    case 3:
+      return await tx.missingImages.createMany({
+        data: images,
+      });
+    case 4:
+      return await tx.missingReportImages.createMany({
+        data: images,
+      });
   }
-}
+};
 
 export const addLocationFormats = async (
   tx: Prisma.TransactionClient,
@@ -55,12 +59,14 @@ export const addLocationFormats = async (
   location: ILocationBridge
 ) => {
   switch (categoryId) {
-    case 3: return await tx.missingLocations.create({
-      data: location
-    });
-    case 4: return await tx.missingReportLocations.create({
-      data: location
-    })
+    case 3:
+      return await tx.missingLocations.create({
+        data: location,
+      });
+    case 4:
+      return await tx.missingReportLocations.create({
+        data: location,
+      });
   }
 };
 
@@ -69,70 +75,78 @@ export const deleteImageFormats = async (
   postData: IPostData
 ) => {
   switch (postData.categoryId) {
-    case 3: return await tx.missingImages.deleteMany({
-      where: {
-        postId: postData.postId
-      }
-    });
-    case 4: return await tx.missingReportImages.deleteMany({
-      where: {
-        postId: postData.postId
-      }
-    });
+    case 3:
+      return await tx.missingImages.deleteMany({
+        where: {
+          postId: postData.postId,
+        },
+      });
+    case 4:
+      return await tx.missingReportImages.deleteMany({
+        where: {
+          postId: postData.postId,
+        },
+      });
   }
-}
+};
 
 export const deleteLocationFormats = async (
   tx: Prisma.TransactionClient,
   postData: IPostData
 ) => {
   switch (postData.categoryId) {
-    case 3: return await tx.missingLocations.deleteMany({
-      where: {
-        postId: postData.postId
-      }
-    });
-    case 4: return await tx.missingReportLocations.deleteMany({
-      where: {
-        postId: postData.postId
-      }
-    });
+    case 3:
+      return await tx.missingLocations.deleteMany({
+        where: {
+          postId: postData.postId,
+        },
+      });
+    case 4:
+      return await tx.missingReportLocations.deleteMany({
+        where: {
+          postId: postData.postId,
+        },
+      });
   }
-}
+};
 
 export const getPostByPostId = async (
   tx: Prisma.TransactionClient,
   postData: IPostData
 ): Promise<any> => {
   switch (postData.categoryId) {
-    case 3: return await tx.missings.findUnique({
-      where: {
-        postId: postData.postId
-      }
-    });
-    case 4: return await tx.missingReports.findUnique({
-      where: {
-        postId: postData.postId
-      }
-    });
+    case 3:
+      return await tx.missings.findUnique({
+        where: {
+          postId: postData.postId,
+        },
+      });
+    case 4:
+      return await tx.missingReports.findUnique({
+        where: {
+          postId: postData.postId,
+        },
+      });
   }
-}
+};
 
 export const getLocationFormatsByPostId = async (
   tx: Prisma.TransactionClient,
   postData: IPostData
 ) => {
   switch (postData.categoryId) {
-    case 3: return await tx.missingLocations.findMany({
-      where: {
-        postId: postData.postId
-      }
-    })
-    case 4: return await tx.missingReportLocations.findMany({
-      where: {
-        postId: postData.postId
-      }
-    })
+    case 3:
+      return await tx.missingLocations.findMany({
+        where: {
+          postId: postData.postId,
+        },
+      });
+    case 4:
+      return await tx.missingReportLocations.findMany({
+        where: {
+          postId: postData.postId,
+        },
+      });
   }
 };
 
@@ -141,16 +155,18 @@ export const getImageFormatsByPostId = async (
   postData: IPostData
 ) => {
   switch (postData.categoryId) {
-    case 3: return await tx.missingImages.findMany({
-      where: {
-        postId: postData.postId
-      }
-    });
-    case 4: return await tx.missingReportImages.findMany({
-      where: {
-        postId: postData.postId
-      }
-    })
+    case 3:
+      return await tx.missingImages.findMany({
+        where: {
+          postId: postData.postId,
+        },
+      });
+    case 4:
+      return await tx.missingReportImages.findMany({
+        where: {
+          postId: postData.postId,
+        },
+      });
   }
 };
 
@@ -160,9 +176,9 @@ export const getMissingReportsByMissingId = async (
 ) => {
   return await tx.missingReports.findMany({
     where: {
-      missingId
-    }
-  })
+      missingId,
+    },
+  });
 };
 
 export const addMissingReport = async (
@@ -170,8 +186,8 @@ export const addMissingReport = async (
   missingReport: IMissingReport
 ) => {
   return await tx.missingReports.create({
-    data: missingReport
-  })
+    data: missingReport,
+  });
 };
 
 export const updateMissingByPostId = async (
@@ -185,15 +201,15 @@ export const updateMissingByPostId = async (
   return await tx.missings.update({
     where: {
       postId,
-      uuid
+      uuid,
     },
     data: {
       catId,
       time,
-      detail
-    }
-  })
-}
+      detail,
+    },
+  });
+};
 
 export const updateMissingReportByPostId = async (
   tx: Prisma.TransactionClient,
@@ -205,14 +221,14 @@ export const updateMissingReportByPostId = async (
   return await tx.missingReports.update({
     where: {
       postId,
-      uuid
+      uuid,
     },
     data: {
       time,
-      detail
-    }
-  })
-}
+      detail,
+    },
+  });
+};
 
 export const updateFoundByPostId = async (
   tx: Prisma.TransactionClient,
@@ -222,13 +238,13 @@ export const updateFoundByPostId = async (
   return await tx.missings.update({
     where: {
       uuid: postData.userId,
-      postId: postData.postId
+      postId: postData.postId,
     },
     data: {
-      found: Number(found)
-    }
-  })
-}
+      found: Number(found),
+    },
+  });
+};
 
 export const updateMissingReportCheckByPostId = async (
   tx: Prisma.TransactionClient,
@@ -238,10 +254,10 @@ export const updateMissingReportCheckByPostId = async (
   return await tx.missingReports.update({
     where: {
       uuid: postData.userId,
-      postId: postData.postId
+      postId: postData.postId,
     },
     data: {
-      match
-    }
-  })
-}
+      match,
+    },
+  });
+};
