@@ -1,4 +1,4 @@
-export interface ICommunity{
+export interface IEvent {
   postId: number;
   categoryId: number;
   title: string;
@@ -6,17 +6,18 @@ export interface ICommunity{
   views: number;
   createdAt: Date;
   updatedAt: Date;
+  isClosed: number;
   users: IUser;
-  communityImages: ICommunityImage[] | [];
-  communityTags: ICommunityTag[] | [];
+  eventImages: IEventImage[] | [];
+  eventTags: IEventTag[] | [];
 }
 
-export interface ICommunityList {
-  posts: ICommunity[];
+export interface IEventList {
+  posts: IEvent[];
   pagination: IPagination;
 }
 
-export interface ICommunityTag {
+export interface IEventTag {
   tags: ITag;
 }
 
@@ -37,7 +38,7 @@ export interface IPagination {
   totalCount: number;
 }
 
-export interface ICommunityImage {
+export interface IEventImage {
   images: IImage;
 }
 

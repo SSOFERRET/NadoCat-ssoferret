@@ -43,7 +43,7 @@ export const getEvents = async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
-    const sort = req.query.sort?.toString() ?? "latest";
+    const sort = req.query.sort?.toString() || "latest";
     const orderBy = getOrderBy(sort);
     const categoryId = Number(req.query.category_id) || 2;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
@@ -299,14 +299,14 @@ export const deleteEvent = async (req: Request, res: Response) => {
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      if (post.eventTags?.length) {
-        const tagIds = post.eventTags.map((item: ITag) => item.tagId);
+      if (post.tags?.length) {
+        const tagIds = post.tags.map((item: ITag) => item.tagId);
         await deleteEventTagByTagIds(tx, tagIds);
         await deleteTags(tx, tagIds);
       }
 
-      if (post.eventImages?.length) {
-        const imageIds = post.eventImages.map((item: IImage) => item.imageId);
+      if (post.images?.length) {
+        const imageIds = post.images.map((item: IImage) => item.imageId);
         await deleteEventImagesByImageIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }
