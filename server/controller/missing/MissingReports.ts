@@ -2,6 +2,11 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
+<<<<<<< HEAD:server/controller/missing/MissingReports.ts
+import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
+import { addLocationFormats, addMissingReport, getImageFormatsByPostId, getLocationFormatsByPostId, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
+import { getUserId, validateError } from "./Missings";
+=======
 import { addLocation, updateLocationById } from "../../model/location.model";
 import {
   addLocationFormats,
@@ -12,6 +17,7 @@ import {
   updateMissingReportCheckByPostId,
 } from "../../model/missing.model";
 import { getUserId, validateError } from "./Missing";
+>>>>>>> f2e081b7046dbc2104222340669d90c35dc67e5b:server/controller/missing/MissingReport.ts
 
 import { CATEGORY } from "../../constants/category";
 import {
@@ -24,8 +30,23 @@ import {
 } from "../../util/images/deleteImages";
 import { addNewImages } from "../../util/images/addNewImages";
 import { IMissingReport } from "../../types/missing";
+import { getImageById } from "../../model/image.model";
+import { PAGINATION } from "../../constants/pagination";
+import { getPosts } from "./Common";
 
 /* CHECKLIST
+<<<<<<< HEAD:server/controller/missing/MissingReports.ts
+* [ ] 사용자 정보 가져오기 반영
+* [ ] 구현 내용
+*   [x] create
+*   [x] delete
+*   [x] get
+*   [ ] 전체 조회 
+*     [ ] 페이지네이션
+*   [x] put
+*     [x] 일치 및 불일치
+*/
+=======
  * [ ] 사용자 정보 가져오기 반영
  * [ ] 구현 내용
  *   [x] create
@@ -36,6 +57,7 @@ import { IMissingReport } from "../../types/missing";
  *   [x] put
  *     [ ] 일치 및 불일치
  */
+>>>>>>> f2e081b7046dbc2104222340669d90c35dc67e5b:server/controller/missing/MissingReport.ts
 
 /**
  *
@@ -43,6 +65,51 @@ import { IMissingReport } from "../../types/missing";
  * [x] 이미지 가져오기
  * [x] location 가져오기
  */
+
+export const getMissingReports = async (req: Request, res: Response) => {
+  const listData = {
+    limit: Number(req.query.limit) || PAGINATION.LIMIT,
+    cursor: req.query.cursor ? Number(req.query.cursor) : undefined,
+    orderBy: { sortBy: "createdAt", sortOrder: "asc" },
+    categoryId: CATEGORY.MISSING_REPORTS
+  };
+  return await getPosts(req, res, listData);
+}
+
+export const getMissingReport = async (req: Request, res: Response) => {
+  try {
+    const postId = Number(req.params.postId);
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const userId = await getUserId(); // NOTE
+      const postData = {
+        postId,
+        categoryId: CATEGORY.MISSING_REPORTS,
+        userId
+      }
+
+      let post = await getPostByPostId(tx, postData);
+
+      const locationFormats = await getLocationFormatsByPostId(tx, postData);
+      if (locationFormats) {
+        const locations = await Promise.all(locationFormats.map((locationFormat) => getLocationById(tx, locationFormat.locationId)));
+        post = { ...post, locations };
+      }
+
+      const imageFormats = await getImageFormatsByPostId(tx, postData);
+      if (imageFormats) {
+        const images = await Promise.all(imageFormats.map((imageFormat) => getImageById(tx, imageFormat.imageId)));
+        post = { ...post, images };
+      }
+
+      return res
+        .status(StatusCodes.CREATED)
+        .json(post);
+    });
+  } catch (error) {
+    if (error instanceof Error)
+      validateError(res, error);
+  }
+};
 
 export const createMissingReport = async (req: Request, res: Response) => {
   try {
