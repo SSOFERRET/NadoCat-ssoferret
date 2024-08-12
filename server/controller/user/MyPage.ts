@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
-import ensureAutorization from "../../utils/auth";
+import ensureAutorization from "../../util/auth/auth";
 
 //[x]마이페이지
 export const my = async (req: Request, res: Response) => {

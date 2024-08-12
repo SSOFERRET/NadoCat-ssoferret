@@ -1,65 +1,19 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
-import bcryto from "bcrypt";
 // import crypto from "crypto";
-
-const uuid = uuidv4();
-const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
-console.log("uuidBuffer:", uuidBuffer);
-const prisma = new PrismaClient();
+import { createUser, loginUser, saveRefreshToken} from "../../model/user.model";
+import { IUsers, IUserSecrets } from "../../types/user";
 
 //[x]회원가입
 export const signup = async (req: Request, res: Response) => {
-
   const { email, nickname, password, authtype } = req.body;
-
-  const hashing = async (password: string) => {
-    const saltRound = 10;
-    const salt = await bcryto.genSalt(saltRound);
-
-    const hashPassword = await bcryto.hash(password, salt);
-    return { salt, hashPassword };
-  };
-
 
   //DB저장
   try {
-    const { salt, hashPassword } = await hashing(password);
-
-    const result = await prisma.$transaction(async (prisma) => {
-      const user = await prisma.users.create({
-        data: {
-          uuid: uuidBuffer,
-          email: email,
-          nickname: nickname,
-          auth_type: authtype,
-          status: "active", //default: active
-        },
-      });
-
-      const secretUser = await prisma.user_secrets.create({
-        data: {
-          uuid: uuidBuffer,
-          hash_password: hashPassword,
-          salt: salt,
-        },
-      });
-
-      return { user, secretUser };
-    });
-
-    //변환 확인용으로 넣음
-    const userUuidString = result.user.uuid
-      .toString("hex")
-      .match(/.{1,4}/g)
-      ?.join("-");
-    console.log("userUuidString:", userUuidString);
+    const result: {user: IUsers, secretUser: IUserSecrets} = await createUser(email, nickname, password, authtype);
 
     if (result.user && result.secretUser) {
       return res.status(StatusCodes.CREATED).json({
@@ -69,96 +23,55 @@ export const signup = async (req: Request, res: Response) => {
           userId: result.user.uuid,
           email: result.user.email,
           nickname: result.user.nickname,
-          // authtype: result.user.auth_type
+          authtype: result.user.authType
         },
       });
     } else {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "회원가입 실패!" });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 실패!" });
     }
+
   } catch (error) {
     console.log("회원가입 error:", error);
-    return res.status(StatusCodes.BAD_REQUEST).end();
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 처리 중 오류가 발생했습니다." });
   }
 };
 
+
 //[x]로그인
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, password, autoLogin } = req.body;
 
   try {
-    const result = await prisma.$transaction(async (prisma) => {
-      const selectUsers = await prisma.users.findFirst({
-        where: {
-          email: email,
-        },
-      });
+    const {generalToken, refreshToken, result, userUuidString} = await loginUser(email, password, autoLogin); 
 
-      if (!selectUsers) {
-        console.log("사용자를 찾을 수 없습니다.");
-        return null;
-      }
-
-      const userUuid = selectUsers.uuid; 
-      const selectUserSecrets = await prisma.user_secrets.findFirst({
-        where: {
-          uuid: userUuid,
-        },
-      });
-
-      if (!selectUserSecrets) {
-        console.log("사용자를 찾을 수 없습니다.");
-        return null;
-      }
-
-      return { selectUsers, selectUserSecrets };
-    })
-
-    if (!result) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "사용자를 찾을 수 없습니다." });
-    }
-
-    const { selectUsers, selectUserSecrets } = result; 
-    const isPasswordValid = await bcryto.compare(
-      password,
-      selectUserSecrets.hash_password
-    ); 
-
-    if (!isPasswordValid) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "사용자 정보가 일치하지 않습니다." });
-    }
-
-    const userUuidString = selectUsers.uuid.toString("hex").match(/.{1,4}/g) ?.join("-"); 
-    const token = jwt.sign(
-      { 
-        uuid: userUuidString,
-        email: selectUsers.email
-      }, process.env.PRIVATE_KEY as string, {
-        expiresIn: "1m",
-        issuer: "fefive"
-      });
-
-      res.cookie("token", token, {
+      res.cookie("generalToken", generalToken, {
         httpOnly: true
       });
+
+      if(autoLogin){ //자동로그인시
+        res.cookie("generalToken", generalToken, {
+          httpOnly: true,
+          maxAge: 3 * 60 * 1000 //3분
+          // maxAge: 7 * 24 * 60 * 60 * 1000 //7일
+        });
+
+        //refresh token DB 저장
+        await saveRefreshToken(userUuidString as string, refreshToken as string);   
+      }
 
     return res.status(StatusCodes.OK).json({
       message: "로그인 성공",
       user: {
-        email: selectUsers.email,
-        nickname: selectUsers.nickname,
-        password: selectUserSecrets.hash_password,
+        email: result.selectUsers.email,
+        nickname: result.selectUsers.nickname,
+        password: result.selectUserSecrets.hashPassword,
         uuid: userUuidString,
       },
     });
+    
   } catch (error) {
     console.log("로그인 error:", error);
-    return res.status(StatusCodes.BAD_REQUEST).end();
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: "로그인 처리 중 오류가 발생했습니다." });
   }
 };
 
