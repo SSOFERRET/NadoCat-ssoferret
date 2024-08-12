@@ -59,7 +59,7 @@ export const getCommunities = async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
-    const sort = req.query.sort?.toString() ?? "latest";
+    const sort = req.query.sort?.toString() || "latest";
     const orderBy = getOrderBy(sort);
     const categoryId = Number(req.query.categoryId) || 1;
     const count = await getCommunitiesCount();
@@ -166,6 +166,7 @@ export const createCommunity = async (req: Request, res: Response) => {
           tagId: tag.tagId,
           postId: post.postId,
         }));
+
         await addCommunityTags(tx, formatedTags);
       }
 

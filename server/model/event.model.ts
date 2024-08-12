@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
+import { IEvent, IEventImage, IEventTag } from "../types/event";
 
 export const getEventList = async (
   categoryId: number,
@@ -63,17 +64,24 @@ export const getEventList = async (
     },
   });
 
-  return events.map((event: any) => {
+  return events.map((event: IEvent) => {
     return {
-      ...event,
+      postId: event.postId,
+      categoryId: event.categoryId,
+      title: event.content,
+      content: event.content,
+      views: 0,
+      createdAt: event.createdAt,
+      updatedAt: event.updatedAt,
+      isClosed: !!event.isClosed,
       users: {
         id: event?.users.id,
         uuid: (event?.users.uuid as Buffer).toString("hex"),
         nickname: event?.users.nickname,
         profileImage: event?.users.profileImage,
       },
-      eventTags: event.eventTags.map((item: any) => item.tags),
-      eventImages: event.eventImages.map((item: any) => item.images),
+      tags: event.eventTags.map((item: IEventTag) => item.tags),
+      images: event.eventImages.map((item: IEventImage) => item.images),
     };
   });
 };
@@ -128,15 +136,21 @@ export const getEventById = async (postId: number, categoryId: number) => {
   }
 
   return {
-    ...event,
+    postId: true,
+    categoryId: true,
+    title: true,
+    content: true,
+    views: true,
+    createdAt: true,
+    updatedAt: true,
     users: {
       id: event?.users.id,
       uuid: (event?.users.uuid as Buffer).toString("hex"),
       nickname: event?.users.nickname,
       profileImage: event?.users.profileImage,
     },
-    eventTags: event?.eventTags.map((item: any) => item.tags),
-    eventImages: event?.eventImages.map((item: any) => item.images),
+    tags: event?.eventTags.map((item: IEventTag) => item.tags),
+    images: event?.eventImages.map((item: IEventImage) => item.images),
   };
 };
 
@@ -236,30 +250,6 @@ export const deleteEventTagByTagIds = async (
     },
   });
 };
-
-// export const deleteCommunityTagByTagId = async (
-//   tx: Prisma.TransactionClient,
-//   tagId: number
-// ) => {
-//   return await tx.communityTags.delete({
-//     where: {
-//       tagId: tagId,
-//     },
-//   });
-// };
-
-// export const deleteCommunityByPostIds = async (
-//   tx: Prisma.TransactionClient,
-//   postIds: number[]
-// ) => {
-//   return await tx.communityTags.deleteMany({
-//     where: {
-//       postId: {
-//         in: postIds,
-//       },
-//     },
-//   });
-// };
 
 export const deleteEventImagesByImageIds = async (
   tx: Prisma.TransactionClient,
