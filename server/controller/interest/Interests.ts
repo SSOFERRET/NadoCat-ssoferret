@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
-import { Prisma } from "@prisma/client";
 import { getUserId } from "../community/Communities";
 import { interest } from "../../model/interest.model";
 import { StatusCodes } from "http-status-codes";

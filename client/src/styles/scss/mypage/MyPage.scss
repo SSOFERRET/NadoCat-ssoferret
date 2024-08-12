@@ -1,4 +1,4 @@
-@import "../styles/scss/base/common.scss";
+@import "../base/common.scss";
 
 @mixin font ($size, $color){
   color: $color;
@@ -6,8 +6,8 @@
 }
 
 .myPage{
-  width:360px;
-  height: 740px;
+  width:100vw;
+  height: 100vh;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
@@ -20,14 +20,15 @@
     position: fixed;
     background-color: white;
     z-index: 1999;
+    width: 100vw;
 
     #title{
-      margin-top: 15px;
+      margin-top: 3vh;
       @include font($size-14, $silver);
       font-family: "bold";
       border-bottom: .5px solid $silver;
-      width: 320px;
-      height: 25px;
+      width: 80vw;
+      height: 3vh;
     }
   }
 }

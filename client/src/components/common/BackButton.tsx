@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 const BackButton = () => {
   const navigate = useNavigate();  
   return (
-    <div style={{width: "360px"}}>
+    <div style={{width: "80vw"}}>
       <IoIosArrowBack 
-      style={{color: "black", fontSize: "22px", marginLeft: "20px", marginTop: "20px"}} 
+      style={{color: "black", fontSize: "22px", marginTop: "2vh"}} 
       onClick={() => navigate(-1)}/>
     </div>
   );
