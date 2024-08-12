@@ -24,8 +24,8 @@ import { getImageById } from "../../model/image.model";
 /**
  * 
  * CHECKLIST
- * [ ] 이미지 가져오기
- * [ ] location 가져오기
+ * [x] 이미지 가져오기
+ * [x] location 가져오기
  * [ ] 제보글 가져오기
  */
 
