@@ -5,7 +5,6 @@ import { TCategoryId } from "../types/category";
 import { IPostData } from "../types/post";
 import { ILocationBridge } from "../types/location";
 
-
 export const addMissing = async (
   tx: Prisma.TransactionClient,
   missing: IMissingCreate
