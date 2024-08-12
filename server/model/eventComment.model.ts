@@ -1,27 +1,25 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
 
-export const getCommunityComments = async (
+export const getEventComments = async (
   postId: number,
   limit: number,
   cursor: number | undefined
 ) => {
-
-  const result = await prisma.communityComments.findMany({
-
+  const result = await prisma.eventComments.findMany({
     where: {
-      communityId: postId,
+      eventId: postId,
     },
     take: limit,
     skip: cursor ? 1 : 0,
-    cursor: cursor ? { communityCommentId: cursor } : undefined,
+    cursor: cursor ? { eventCommentId: cursor } : undefined,
     orderBy: [
       {
-        communityCommentId: "asc",
+        eventCommentId: "asc",
       },
     ],
     select: {
-      communityCommentId: true,
+      eventCommentId: true,
       comment: true,
       users: {
         select: {
@@ -36,7 +34,7 @@ export const getCommunityComments = async (
 
   return result.map((item) => {
     return {
-      commentId: item.communityCommentId,
+      commentId: item.eventCommentId,
       comment: item.comment,
       user: {
         id: item.users.id,
@@ -53,10 +51,10 @@ export const addComment = async (
   userId: string,
   comment: string
 ) => {
-  return await prisma.communityComments.create({
+  return await prisma.eventComments.create({
     data: {
       uuid: Buffer.from(userId, "hex"),
-      communityId: postId,
+      eventId: postId,
       comment,
     },
   });
@@ -68,10 +66,10 @@ export const updateCommentById = async (
   commentId: number,
   comment: string
 ) => {
-  return await prisma.communityComments.update({
+  return await prisma.eventComments.update({
     where: {
-      communityId: postId,
-      communityCommentId: commentId,
+      eventId: postId,
+      eventCommentId: commentId,
       uuid: Buffer.from(userId, "hex"),
     },
     data: {
@@ -85,10 +83,10 @@ export const deleteCommentById = async (
   userId: string,
   commentId: number
 ) => {
-  return await prisma.communityComments.delete({
+  return await prisma.eventComments.delete({
     where: {
-      communityId: postId,
-      communityCommentId: commentId,
+      eventId: postId,
+      eventCommentId: commentId,
       uuid: Buffer.from(userId, "hex"),
     },
   });
@@ -98,9 +96,9 @@ export const deleteCommentsById = async (
   tx: Prisma.TransactionClient,
   postId: number
 ) => {
-  return await tx.communityComments.deleteMany({
+  return await tx.eventComments.deleteMany({
     where: {
-      communityId: postId,
+      eventId: postId,
     },
   });
 };

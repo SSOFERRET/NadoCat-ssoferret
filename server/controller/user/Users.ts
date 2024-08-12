@@ -16,6 +16,7 @@ const prisma = new PrismaClient();
 
 //[x]회원가입
 export const signup = async (req: Request, res: Response) => {
+
   const { email, nickname, password, authtype } = req.body;
 
   const hashing = async (password: string) => {
@@ -25,6 +26,7 @@ export const signup = async (req: Request, res: Response) => {
     const hashPassword = await bcryto.hash(password, salt);
     return { salt, hashPassword };
   };
+
 
   //DB저장
   try {

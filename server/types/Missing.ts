@@ -17,3 +17,13 @@ export interface IMissingGet extends IMissingCreate {
   found: boolean;
   views: number;
 }
+
+export interface IMissingReport {
+  missingId: number,
+  uuid: Buffer,
+  time: string,
+  locationId: number,
+  detail: string,
+  thumbnail: number,
+  match: string
+}
