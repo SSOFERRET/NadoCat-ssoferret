@@ -2,8 +2,8 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-import { addLocation, updateLocationById } from "../../model/location.model";
-import { addLocationFormats, addMissingReport, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
+import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
+import { addLocationFormats, addMissingReport, getImageFormatsByPostId, getLocationFormatsByPostId, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
 import { getUserId, validateError } from "./Missings";
 
 import { CATEGORY } from "../../constants/category";
@@ -11,17 +11,18 @@ import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../..
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { addNewImages } from "../../util/images/addNewImages";
 import { IMissingReport } from "../../types/missing";
+import { getImageById } from "../../model/image.model";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
 * [ ] 구현 내용
 *   [x] create
 *   [x] delete
-*   [ ] get
+*   [x] get
 *   [ ] 전체 조회 
 *     [ ] 페이지네이션
 *   [x] put
-*     [ ] 일치 및 불일치
+*     [x] 일치 및 불일치
 */
 
 /**
@@ -30,6 +31,41 @@ import { IMissingReport } from "../../types/missing";
  * [x] 이미지 가져오기
  * [x] location 가져오기
  */
+
+export const getMissingReport = async (req: Request, res: Response) => {
+  try {
+    const postId = Number(req.params.postId);
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const userId = await getUserId(); // NOTE
+      const postData = {
+        postId,
+        categoryId: CATEGORY.MISSING_REPORTS,
+        userId
+      }
+
+      let post = await getPostByPostId(tx, postData);
+
+      const locationFormats = await getLocationFormatsByPostId(tx, postData);
+      if (locationFormats) {
+        const locations = await Promise.all(locationFormats.map((locationFormat) => getLocationById(tx, locationFormat.locationId)));
+        post = { ...post, locations };
+      }
+
+      const imageFormats = await getImageFormatsByPostId(tx, postData);
+      if (imageFormats) {
+        const images = await Promise.all(imageFormats.map((imageFormat) => getImageById(tx, imageFormat.imageId)));
+        post = { ...post, images };
+      }
+
+      return res
+        .status(StatusCodes.CREATED)
+        .json(post);
+    });
+  } catch (error) {
+    if (error instanceof Error)
+      validateError(res, error);
+  }
+};
 
 export const createMissingReport = async (req: Request, res: Response) => {
   try {
