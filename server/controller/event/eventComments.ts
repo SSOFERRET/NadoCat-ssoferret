@@ -8,7 +8,7 @@ import {
 } from "../../model/eventComment.model";
 import { StatusCodes } from "http-status-codes";
 import { getUserId } from "../community/Communities";
-import { Prisma } from "@prisma/client";
+import { handleControllerError } from "../../util/errors/errors";
 export const getComments = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.community_id);
@@ -37,10 +37,7 @@ export const getComments = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -60,17 +57,7 @@ export const createComment = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2003") {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: "존재하지 않는 게시글입니다." });
-      }
-    }
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -91,24 +78,7 @@ export const updateComment = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({ message: "댓글이 수정되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: "존재하지 않는 댓글입니다." });
-      }
-
-      if (error.code === "P2003") {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: "존재하지 않는 게시글입니다." });
-      }
-    }
-
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
@@ -122,23 +92,6 @@ export const deleteComment = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({ message: "댓글이 삭제되었습니다." });
   } catch (error) {
-    console.error(error);
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2025") {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: "존재하지 않는 댓글입니다." });
-      }
-
-      if (error.code === "P2003") {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: "존재하지 않는 게시글입니다." });
-      }
-    }
-
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
