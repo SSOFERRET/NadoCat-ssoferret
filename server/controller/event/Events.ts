@@ -4,21 +4,27 @@ import { getUserId } from "../community/Communities";
 import prisma from "../../client";
 import { Prisma } from "@prisma/client";
 import { addTag, deleteTags } from "../../model/tag.model";
-import { IImage, ITag } from "../../types/community";
 import { addImage, deleteImages } from "../../model/image.model";
 import {
   addEvent,
   addEventImages,
   addEventTags,
-  deleteEventImagesByImageIds,
-  deleteEventTagByTagIds,
   getEventById,
   getEventList,
+  getEventsCount,
+  getLikeIds,
   removeEventById,
+  removeImagesByIds,
+  removeLikesById,
+  removeTagsByIds,
   updateEventById,
 } from "../../model/event.model";
 import { deleteCommentsById } from "../../model/eventComment.model";
 import { handleControllerError } from "../../util/errors/errors";
+import { CATEGORY } from "../../constants/category";
+import { ITag } from "../../types/tag";
+import { IImage } from "../../types/image";
+import { removeLikesByIds } from "../../model/like.model";
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 목록 가져오기
@@ -27,31 +33,14 @@ import { handleControllerError } from "../../util/errors/errors";
 // [ ] 좋아요 수와 좋아요 여부 구현 -> 정렬하려면 필요할지도..?
 // [ ] 에러처리
 
-const getOrderBy = (sort: string) => {
-  switch (sort) {
-    case "latest":
-      return { sortBy: "createdAt", sortOrder: "asc" };
-    case "views":
-      return { sortBy: "views", sortOrder: "desc" };
-    case "likes":
-      return { sortBy: "likes", sortOrder: "desc" }; // 테이블 수정 필요
-    default:
-      throw new Error("일치하는 정렬 기준이 없습니다.");
-  }
-};
-
 export const getEvents = async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const sort = req.query.sort?.toString() || "latest";
-    const orderBy = getOrderBy(sort);
-    const categoryId = Number(req.query.category_id) || 2;
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const count = await getEventsCount();
 
-    const count = await prisma.events.count();
-
-    const posts = await getEventList(categoryId, limit, orderBy, cursor);
+    const posts = await getEventList(limit, sort, cursor);
 
     const nextCursor =
       posts.length === limit ? posts[posts.length - 1].postId : null;
@@ -75,29 +64,20 @@ export const getEvents = async (req: Request, res: Response) => {
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 가져오기
-// [ ] 좋아요, 좋아요 여부 처리 수정
+// [ ] 좋아요 관련 부분 코드 분리
 // [ ] 에러처리
 export const getEvent = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.evnet_id);
-    const categoryId = Number(req.query.category_id) || 2;
+    const categoryId = CATEGORY.EVENTS;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
-    const post = await getEventById(postId, categoryId);
+    const post = await getEventById(postId);
 
     if (!post) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ message: "게시글을 찾을 수 없습니다." });
     }
-
-    //TODO 좋아요 수, 좋아요 여부 수정 필요
-    // 좋아요 수
-    const likes = await prisma.likes.count({
-      where: {
-        postId,
-        categoryId,
-      },
-    });
 
     // 좋아요 여부
     const liked = await prisma.likes.findFirst({
@@ -110,7 +90,6 @@ export const getEvent = async (req: Request, res: Response) => {
 
     const result = {
       ...post,
-      likes,
       liked: !!liked,
     };
 
@@ -127,19 +106,10 @@ export const getEvent = async (req: Request, res: Response) => {
 export const createEvent = async (req: Request, res: Response) => {
   try {
     const { title, content, isClosed, date, tags, images } = req.body;
-    const categoryId = Number(req.query.category_id) || 2;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const post = await addEvent(
-        tx,
-        userId,
-        title,
-        content,
-        isClosed,
-        date,
-        categoryId
-      );
+      const post = await addEvent(tx, userId, title, content, isClosed, date);
 
       if (tags.length > 0) {
         const newTags = await Promise.all(
@@ -168,7 +138,9 @@ export const createEvent = async (req: Request, res: Response) => {
       }
     });
 
-    res.status(StatusCodes.CREATED).json("게시글 등록");
+    res
+      .status(StatusCodes.CREATED)
+      .json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientValidationError) {
@@ -190,7 +162,6 @@ export const updateEvent = async (req: Request, res: Response) => {
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
     const id = Number(req.params.community_id);
     const postId = Number(req.params.evnet_id);
-    const categoryId = Number(req.query.category_id) || 1;
 
     const {
       title,
@@ -223,18 +194,9 @@ export const updateEvent = async (req: Request, res: Response) => {
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      await updateEventById(
-        tx,
-        userId,
-        postId,
-        title,
-        content,
-        isClosed,
-        date,
-        categoryId
-      );
+      await updateEventById(tx, userId, postId, title, content, isClosed, date);
 
-      await deleteEventTagByTagIds(tx, deleteTagIds);
+      await removeTagsByIds(tx, deleteTagIds);
 
       await deleteTags(tx, deleteTagIds);
 
@@ -249,7 +211,7 @@ export const updateEvent = async (req: Request, res: Response) => {
 
       await addEventTags(tx, formatedTags);
 
-      await deleteEventImagesByImageIds(tx, deleteimageIds);
+      await removeImagesByIds(tx, deleteimageIds);
 
       await deleteImages(tx, deleteimageIds);
 
@@ -275,15 +237,16 @@ export const updateEvent = async (req: Request, res: Response) => {
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 삭제
-// [ ] 관련 댓글 삭제
+// [x] 관련 댓글 삭제
 // [ ] 에러처리
 export const deleteEvent = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.evnet_id);
-    const categoryId = Number(req.query.category_id) || 2;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
-    const post = await getEventById(postId, categoryId);
+    const post = await getEventById(postId);
+
+    const likeIds = await getLikeIds(postId);
 
     if (!post) {
       return res
@@ -294,19 +257,24 @@ export const deleteEvent = async (req: Request, res: Response) => {
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       if (post.tags?.length) {
         const tagIds = post.tags.map((item: ITag) => item.tagId);
-        await deleteEventTagByTagIds(tx, tagIds);
+        await removeTagsByIds(tx, tagIds);
         await deleteTags(tx, tagIds);
       }
 
       if (post.images?.length) {
         const imageIds = post.images.map((item: IImage) => item.imageId);
-        await deleteEventImagesByImageIds(tx, imageIds);
+        await removeImagesByIds(tx, imageIds);
         await deleteImages(tx, imageIds);
+      }
+
+      if (likeIds.length) {
+        await removeLikesById(tx, postId);
+        await removeLikesByIds(tx, likeIds);
       }
 
       await deleteCommentsById(tx, postId);
 
-      await removeEventById(tx, postId, userId, categoryId);
+      await removeEventById(tx, postId, userId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });

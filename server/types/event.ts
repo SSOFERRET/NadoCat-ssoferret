@@ -1,3 +1,6 @@
+import { IImage } from "./image";
+import { ITag } from "./tag";
+
 export interface IEvent {
   postId: number;
   categoryId: number;
@@ -8,6 +11,7 @@ export interface IEvent {
   updatedAt: Date;
   isClosed: number;
   users: IUser;
+  _count: ICount;
   eventImages: IEventImage[] | [];
   eventTags: IEventTag[] | [];
 }
@@ -28,11 +32,6 @@ interface IUser {
   profileImage: string | null;
 }
 
-export interface ITag {
-  tagId: number;
-  tag: string;
-}
-
 export interface IPagination {
   nextCursor: number | null;
   totalCount: number;
@@ -42,7 +41,6 @@ export interface IEventImage {
   images: IImage;
 }
 
-export interface IImage {
-  imageId: number;
-  url: string;
+interface ICount {
+  eventLikes: number;
 }
