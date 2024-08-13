@@ -1,0 +1,38 @@
+@import "../../styles/scss/base/common.scss";
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: pink;
+  padding: 20px;
+
+  .login-title{
+    font-size: 10rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: yellowgreen;
+  }
+
+  .login-btn {
+    @include bigButton(off);
+    margin-bottom: 10rem;
+  }
+
+  .login-social-btn {
+    @include bigButton(off);
+    margin-bottom: 10rem;
+
+    &.kakao {
+      background-color: yellow;
+      color:white;
+    }
+
+    &.google {
+      background-color: white;
+      color:black;
+      border: 1rem solid green;
+    }
+  }
+}
