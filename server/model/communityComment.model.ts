@@ -39,6 +39,7 @@ export const getCommunityComments = async (
       commentId: item.communityCommentId,
       comment: item.comment,
       createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
       users: {
         id: item.users.id,
         uuid: item.users.uuid.toString("hex"),
