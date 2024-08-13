@@ -1,4 +1,7 @@
-export interface ICommunity{
+import { IImage } from "./image";
+import { ITag } from "./tag";
+
+export interface ICommunity {
   postId: number;
   categoryId: number;
   title: string;
@@ -7,6 +10,7 @@ export interface ICommunity{
   createdAt: Date;
   updatedAt: Date;
   users: IUser;
+  _count: ICount;
   communityImages: ICommunityImage[] | [];
   communityTags: ICommunityTag[] | [];
 }
@@ -27,11 +31,6 @@ interface IUser {
   profileImage: string | null;
 }
 
-export interface ITag {
-  tagId: number;
-  tag: string;
-}
-
 export interface IPagination {
   nextCursor: number | null;
   totalCount: number;
@@ -41,7 +40,6 @@ export interface ICommunityImage {
   images: IImage;
 }
 
-export interface IImage {
-  imageId: number;
-  url: string;
+interface ICount {
+  communityLikes: number;
 }
