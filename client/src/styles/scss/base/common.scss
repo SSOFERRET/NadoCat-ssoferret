@@ -21,22 +21,22 @@ html {
 // TODO: 절대 경로 수정 필요
 @font-face {
   font-family: "bold";
-  src: url("../../../assets/fonts/Pretendard-Bold.ttf");
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
 }
 
 @font-face {
   font-family: "semiBold";
-  src: url("../../../assets/fonts/Pretendard-SemiBold.ttf");
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
 }
 
 @font-face {
   font-family: "medium";
-  src: url("../../../assets/fonts/Pretendard-Medium.ttf");
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
 }
 
 @font-face {
   font-family: "regular";
-  src: url("../../../assets/fonts/Pretendard-Regular.ttf");
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
 }
 
 /* font size */
@@ -47,6 +47,7 @@ $size-16: 16rem !important;
 $size-15: 15rem !important;
 $size-14: 14rem !important;
 $size-12: 12rem !important;
+$size-11: 11rem !important;
 $size-10: 10rem !important;
 
 /* color palette */
