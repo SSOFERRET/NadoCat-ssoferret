@@ -22,6 +22,7 @@ export const getCommunityComments = async (
       communityCommentId: true,
       comment: true,
       createdAt: true,
+      updatedAt:true,
       users: {
         select: {
           id: true,

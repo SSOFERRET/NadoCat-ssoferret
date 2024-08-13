@@ -21,6 +21,8 @@ export const getEventComments = async (
     select: {
       eventCommentId: true,
       comment: true,
+      createdAt: true,
+      updatedAt: true,
       users: {
         select: {
           id: true,
