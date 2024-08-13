@@ -14,7 +14,6 @@ import {
   updateMissingReportCheckByPostId,
 } from "../../model/missing.model";
 import { getUserId, validateError } from "./Missings";
-
 import { CATEGORY } from "../../constants/category";
 import {
   deleteLocationsByLocationIds,
@@ -31,17 +30,16 @@ import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 
 /* CHECKLIST
- * [ ] 사용자 정보 가져오기 반영
- * [ ] 구현 내용
- *   [x] create
- *   [x] delete
- *   [ ] get
- *   [ ] 전체 조회
- *     [ ] 페이지네이션
- *   [x] put
- *     [ ] 일치 및 불일치
- */
-
+* [ ] 사용자 정보 가져오기 반영
+* [ ] 구현 내용
+*   [x] create
+*   [x] delete
+*   [x] get
+*   [ ] 전체 조회 
+*     [ ] 페이지네이션
+*   [x] put
+*     [x] 일치 및 불일치
+*/
 /**
  *
  * CHECKLIST

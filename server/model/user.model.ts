@@ -114,6 +114,9 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
           issuer: "fefive"
         }
       );
+      
+      console.log("refreshToken왜 안나오냐:", refreshToken);
+
     }
 
    return {generalToken, refreshToken, result, userUuidString};
@@ -129,15 +132,15 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
 export const saveRefreshToken = async (uuid: string , refreshToken: string) => {
     try {
       const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
-      const selectUserSecrets = await prisma.user_secrets.findFirst({
+      const selectUserSecrets = await prisma.userSecrets.findFirst({
         where: {
           uuid: uuidBuffer,
-        },
+        },         
       });
 
-        const updateSecretUser = await prisma.user_secrets.update({
+        const updateSecretUser = await prisma.userSecrets.update({
           data: {
-            refresh_token: refreshToken
+            refreshToken: refreshToken
           },
           where: {
             userSecretId: selectUserSecrets?.userSecretId,
