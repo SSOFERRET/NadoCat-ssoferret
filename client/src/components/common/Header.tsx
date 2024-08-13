@@ -21,16 +21,6 @@ export const Header: React.FC = () => {
           </a>
         </button>
       </header>
-
-
-
-      <body>
-        <div id="root">
-          <header></header>
-          <main></main>
-          <footer></footer>
-        </div>
-      </body>
     </>
   )
 }
