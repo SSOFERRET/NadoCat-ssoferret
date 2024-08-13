@@ -2,22 +2,9 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-<<<<<<< HEAD:server/controller/missing/MissingReports.ts
 import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
 import { addLocationFormats, addMissingReport, getImageFormatsByPostId, getLocationFormatsByPostId, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
 import { getUserId, validateError } from "./Missings";
-=======
-import { addLocation, updateLocationById } from "../../model/location.model";
-import {
-  addLocationFormats,
-  addMissingReport,
-  getPostByPostId,
-  removePost,
-  updateMissingReportByPostId,
-  updateMissingReportCheckByPostId,
-} from "../../model/missing.model";
-import { getUserId, validateError } from "./Missing";
->>>>>>> f2e081b7046dbc2104222340669d90c35dc67e5b:server/controller/missing/MissingReport.ts
 
 import { CATEGORY } from "../../constants/category";
 import {
@@ -33,9 +20,9 @@ import { IMissingReport } from "../../types/missing";
 import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
+import { notifications, notifyMissingReport } from "../notification/Notifications";
 
 /* CHECKLIST
-<<<<<<< HEAD:server/controller/missing/MissingReports.ts
 * [ ] 사용자 정보 가져오기 반영
 * [ ] 구현 내용
 *   [x] create
@@ -46,18 +33,6 @@ import { getPosts } from "./Common";
 *   [x] put
 *     [x] 일치 및 불일치
 */
-=======
- * [ ] 사용자 정보 가져오기 반영
- * [ ] 구현 내용
- *   [x] create
- *   [x] delete
- *   [ ] get
- *   [ ] 전체 조회
- *     [ ] 페이지네이션
- *   [x] put
- *     [ ] 일치 및 불일치
- */
->>>>>>> f2e081b7046dbc2104222340669d90c35dc67e5b:server/controller/missing/MissingReport.ts
 
 /**
  *
@@ -143,12 +118,15 @@ export const createMissingReport = async (req: Request, res: Response) => {
           },
           images
         );
+
+      notifyMissingReport("new", post.postId, userId); // NOTE userId를 실종고양이 게시글 게시자로 변경(-)
     });
 
-    res
+    return res
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) validateError(res, error);
   }
 };
@@ -235,6 +213,8 @@ export const updateMissingReport = async (req: Request, res: Response) => {
       if (images) {
         await addNewImages(tx, postData, images);
       }
+
+      notifyMissingReport("update", postData.postId, userId);
     });
 
     return res
@@ -263,6 +243,8 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
         userId: reportPost.uuid,
       }); // NOTE 게시글 작성자 인가 추가
       await updateMissingReportCheckByPostId(tx, postData, match);
+
+      notifyMissingReport(match === "Y" ? "match" : "unmatch", postData.postId, userId);
 
       return res
         .status(StatusCodes.OK)
