@@ -2,7 +2,7 @@ import React from "react";
 import logoHeader from "../../assets/img/logoHeader.png";
 import { BiBell } from "react-icons/bi";
 import "../../styles/css/base/normalize.css";
-import "../../styles/css/components/common/header.css"
+import "../../styles/css/components/common/header.css";
 import { Link } from "react-router-dom";
 
 export const Header: React.FC = () => {
@@ -22,6 +22,5 @@ export const Header: React.FC = () => {
         </button>
       </header>
     </>
-  )
-}
-
+  );
+};
