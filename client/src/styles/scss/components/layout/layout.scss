@@ -1,1 +1,10 @@
 @import "../../base/common.scss";
+
+main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 430rem;
+  margin-top: 58rem;
+}

@@ -1,14 +1,14 @@
 @import "../../base/common.scss";
 
-main {
-  display: flex;
-  flex-direction: column;
-  width: 430rem;
-  height: 800rem;
-  margin: 0 auto;
-  max-width: 430rem;
-  background-color: cadetblue;
-}
+// main {
+//   display: flex;
+//   flex-direction: column;
+//   width: 100%;
+//   margin: 0 auto;
+//   max-width: 430rem;
+//   margin-top: 58rem;
+//   background-color: cadetblue;
+// }
 
 h2 {
   font-family: "bold";
@@ -33,7 +33,7 @@ section {
 
 p {
   color: $black;
-  font-family: "medium";
+  font-family: "bold";
   font-size: $size-14;
 }
 

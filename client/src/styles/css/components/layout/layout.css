@@ -17,19 +17,19 @@ html {
 /* font */
 @font-face {
   font-family: "bold";
-  src: url("../../../assets/fonts/Pretendard-Bold.ttf");
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
 }
 @font-face {
   font-family: "semiBold";
-  src: url("../../../assets/fonts/Pretendard-SemiBold.ttf");
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
 }
 @font-face {
   font-family: "medium";
-  src: url("../../../assets/fonts/Pretendard-Medium.ttf");
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
 }
 @font-face {
   font-family: "regular";
-  src: url("../../../assets/fonts/Pretendard-Regular.ttf");
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
 }
 /* font size */
 /* color palette */
@@ -37,5 +37,13 @@ html {
 /* buttons */
 /* tags */
 /* others */
+main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 430rem;
+  margin-top: 58rem;
+}
 
 /*# sourceMappingURL=layout.css.map */
