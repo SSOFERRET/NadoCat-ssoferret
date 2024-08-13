@@ -2,8 +2,9 @@ import { Prisma } from "@prisma/client";
 import { IMissingCreate, IMissingReport } from "../types/missing";
 import { IImageBridge } from "../types/image";
 import { TCategoryId } from "../types/category";
-import { IPostData } from "../types/post";
+import { IListData, IPostData } from "../types/post";
 import { ILocationBridge } from "../types/location";
+import prisma from "../client";
 
 export const addMissing = async (
   tx: Prisma.TransactionClient,
@@ -12,6 +13,116 @@ export const addMissing = async (
   return await tx.missings.create({
     data: missing,
   });
+};
+
+export const getPostList = async (
+  listData: IListData
+): Promise<any> => {
+  const { limit, cursor, orderBy, categoryId } = listData;
+  switch (categoryId) {
+    case 3: return await getMissingsList(listData);
+    case 4: return await getMissingReportsList(listData);
+  }
+};
+
+const getMissingsList = async (
+  listData: IListData
+) => {
+  const { limit, cursor, orderBy } = listData;
+
+  const fetchMissingsByFoundStatus = async (
+    foundStatus: number,
+    limit: number,
+    cursor?: number
+  ) => {
+    return await prisma.missings.findMany({
+      where: {
+        found: foundStatus,
+      },
+      take: limit,
+      skip: cursor ? 1 : 0,
+      cursor: cursor ? { postId: cursor } : undefined,
+      orderBy: [
+        {
+          [orderBy.sortBy]: orderBy.sortOrder,
+        },
+        {
+          postId: "desc",
+        },
+      ],
+    });
+  };
+  const unfoundList = await fetchMissingsByFoundStatus(0, limit, cursor);
+  const remainingLimit = limit - unfoundList.length;
+  let foundList = remainingLimit > 0 ? await fetchMissingsByFoundStatus(1, remainingLimit, cursor) : [];
+
+  const posts = [...unfoundList, ...foundList];
+
+  let nextCursor = null;
+
+  if (posts.length === limit) {
+    const lastPost = posts[posts.length - 1];
+    nextCursor = lastPost.postId;
+  }
+
+  return { posts, nextCursor };
+}
+
+const getMissingReportsList = async (
+  listData: IListData
+) => {
+  const { limit, cursor, orderBy } = listData;
+
+  const fetchMissingReportsByFoundStatus = async (
+    matchStatus: string,
+    limit: number,
+    cursor?: number
+  ) => {
+    return await prisma.missingReports.findMany({
+      where: {
+        match: matchStatus
+      },
+      take: limit,
+      skip: cursor ? 1 : 0,
+      cursor: cursor ? { postId: cursor } : undefined,
+      orderBy: [
+        {
+          [orderBy.sortBy]: orderBy.sortOrder,
+        },
+        {
+          postId: "desc",
+        },
+      ],
+    });
+  };
+  const matchList = await fetchMissingReportsByFoundStatus("Y", limit, cursor);
+  let remainingLimit = limit - matchList.length;
+  const checkingList = remainingLimit > 0 ? await fetchMissingReportsByFoundStatus("-", remainingLimit, cursor) : [];
+
+  const posts = [...matchList, ...checkingList];
+
+  remainingLimit = limit - posts.length;
+
+  const unmatchList = await fetchMissingReportsByFoundStatus("N", limit, cursor);
+
+  let nextCursor = null;
+
+  if (posts.length === limit) {
+    const lastPost = posts[posts.length - 1];
+    nextCursor = lastPost.postId;
+  }
+
+  return { posts, nextCursor };
+}
+
+export const getPostsCount = async (
+  categoryId: TCategoryId
+) => {
+  switch (categoryId) {
+    case 3: return await prisma.missings.count();
+    case 4: return await prisma.missingReports.count();
+    default: return new Error("잘못된 카테고리 ID");
+  }
 };
 
 export const removePost = async (

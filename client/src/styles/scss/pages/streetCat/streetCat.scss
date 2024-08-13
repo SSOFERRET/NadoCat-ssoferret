@@ -1,0 +1,39 @@
+@import "../../base/common.scss";
+
+main {
+  display: flex;
+  flex-direction: column;
+  width: 430rem;
+  height: 800rem;
+  margin: 0 auto;
+  max-width: 430rem;
+  background-color: cadetblue;
+}
+
+h2 {
+  font-family: "bold";
+  font-size: $size-16;
+  background-color: aquamarine;
+}
+
+section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 20rem;
+}
+
+.test-box {
+  width: 190rem;
+  height: 190rem;
+  background-color: blueviolet;
+  border-radius: $round-5;
+  margin-bottom: 18rem;
+}
+
+p {
+  color: $black;
+  font-family: "medium";
+  font-size: $size-14;
+}
+

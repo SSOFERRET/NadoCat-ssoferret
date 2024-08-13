@@ -37,5 +37,10 @@ html {
 /* buttons */
 /* tags */
 /* others */
+h1 {
+  color: #F2B705;
+  font-family: "bold";
+  font-size: 24rem !important;
+}
 
-/*# sourceMappingURL=common.css.map */
+/*# sourceMappingURL=header.css.map */
