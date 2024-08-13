@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/css/base/normalize.css";
 import "../../styles/css/pages/streetCat/streetCat.css";
 import { Header } from "../../components/common/Header";
+import { Footer } from "../../components/common/Footer";
 
 // interface IStreetCatPost {
 //   postId: number;
@@ -46,18 +47,17 @@ import { Header } from "../../components/common/Header";
 export const StreetCats: React.FC = () => {
   return (
     <>
-      <Header />
-      <h2>네비 들어갈 자리</h2>
-      <main>
-        <section>
-          <div className="test-box">1</div>
-          <div className="test-box">2</div>
-          <div className="test-box">1</div>
-          <div className="test-box">2</div>
-          <div className="test-box">1</div>
-          <div className="test-box">2</div>
-        </section>
-      </main>
+      <section>
+        <div className="test-box">1</div>
+        <div className="test-box">2</div>
+        <div className="test-box">1</div>
+        <div className="test-box">2</div>
+        <div className="test-box">1</div>
+        <div className="test-box">2</div>
+        <div className="test-box">1</div>
+        <div className="test-box">2</div>
+        <p> 텍스트 적용 테스트 </p>
+      </section>
     </>
   )
 }
