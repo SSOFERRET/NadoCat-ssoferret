@@ -11,7 +11,7 @@ import {
 import { follow, followings, unfollow } from "../controller/friend/Friends";
 
 const router= express.Router();
-//router.use(express.json());
+// router.use(express.json()); //index.ts에 있어서 없어도 됨
 
 //사용자
 router.post("/signup", signupValidator, signup);

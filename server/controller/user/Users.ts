@@ -40,9 +40,11 @@ export const signup = async (req: Request, res: Response) => {
 //[x]로그인
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
+  const isAutoLogin = (autoLogin === 'true' || autoLogin === true);
 
   try {
     const {generalToken, refreshToken, result, userUuidString} = await loginUser(email, password, autoLogin); 
+    console.log("autoLogin상태: ", autoLogin);
 
     if(!userUuidString || (!refreshToken && autoLogin)){
       console.log("유효하지 않은 UUID 또는 Refresh Token입니다.");
@@ -53,8 +55,8 @@ export const login = async (req: Request, res: Response) => {
         httpOnly: true
       });
 
-      if(autoLogin){ //자동로그인시
-        res.cookie("generalToken", generalToken, {
+      if(isAutoLogin){ //자동로그인시
+        res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
           maxAge: 3 * 60 * 1000 //3분
           // maxAge: 7 * 24 * 60 * 60 * 1000 //7일
@@ -72,6 +74,10 @@ export const login = async (req: Request, res: Response) => {
         password: result.selectUserSecrets.hashPassword,
         uuid: userUuidString,
       },
+      tokens: {
+        accessToken: generalToken,
+        refreshToken: refreshToken
+      }
     });
     
   } catch (error) {
