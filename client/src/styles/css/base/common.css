@@ -4,12 +4,12 @@ html {
   overflow-x: hidden;
 }
 
-@media screen and (min-width: 430rem) {
+@media screen and (min-width: 430px) {
   html {
-    font-size: 1rem;
+    font-size: 1px;
   }
 }
-@media screen and (max-width: 429rem) {
+@media screen and (max-width: 429px) {
   html {
     font-size: 0.2325581395vw;
   }
