@@ -2,23 +2,18 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-<<<<<<< HEAD:server/controller/missing/MissingReports.ts
 import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
-import { addLocationFormats, addMissingReport, getImageFormatsByPostId, getLocationFormatsByPostId, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
-import { getUserId, validateError } from "./Missings";
-=======
-import { addLocation, updateLocationById } from "../../model/location.model";
 import {
   addLocationFormats,
   addMissingReport,
+  getImageFormatsByPostId,
+  getLocationFormatsByPostId,
   getPostByPostId,
   removePost,
   updateMissingReportByPostId,
   updateMissingReportCheckByPostId,
 } from "../../model/missing.model";
-import { getUserId, validateError } from "./Missing";
->>>>>>> f2e081b7046dbc2104222340669d90c35dc67e5b:server/controller/missing/MissingReport.ts
-
+import { getUserId, validateError } from "./Missings";
 import { CATEGORY } from "../../constants/category";
 import {
   deleteLocationsByLocationIds,
@@ -35,7 +30,6 @@ import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 
 /* CHECKLIST
-<<<<<<< HEAD:server/controller/missing/MissingReports.ts
 * [ ] 사용자 정보 가져오기 반영
 * [ ] 구현 내용
 *   [x] create
@@ -46,19 +40,6 @@ import { getPosts } from "./Common";
 *   [x] put
 *     [x] 일치 및 불일치
 */
-=======
- * [ ] 사용자 정보 가져오기 반영
- * [ ] 구현 내용
- *   [x] create
- *   [x] delete
- *   [ ] get
- *   [ ] 전체 조회
- *     [ ] 페이지네이션
- *   [x] put
- *     [ ] 일치 및 불일치
- */
->>>>>>> f2e081b7046dbc2104222340669d90c35dc67e5b:server/controller/missing/MissingReport.ts
-
 /**
  *
  * CHECKLIST

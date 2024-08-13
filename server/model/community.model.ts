@@ -1,39 +1,42 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
 import { ICommunity, ICommunityImage, ICommunityTag } from "../types/community";
+import { CATEGORY } from "../constants/category";
+import { getOrderBy } from "../util/sort/orderBy";
+import { SortOrder } from "../types/sort";
 
 export const getCommunitiesCount = async () => await prisma.communities.count();
 
 export const getCommunityList = async (
-  categoryId: number,
   limit: number,
-  orderBy: { sortBy: string; sortOrder: string },
+  sort: string,
   cursor: number | undefined
 ) => {
+  const categoryId = CATEGORY.COMMUNITIES;
+  const orderBy = getOrderBy(sort);
+  const orderOptions = [];
+
+  if (orderBy.sortBy === "likes") {
+    orderOptions.push({
+      communityLikes: {
+        _count: orderBy.sortOrder as SortOrder,
+      },
+    });
+  } else {
+    orderOptions.push({
+      [orderBy.sortBy]: orderBy.sortOrder as SortOrder,
+    });
+  }
+
   const communities = await prisma.communities.findMany({
     where: {
-      categoryId: categoryId,
+      categoryId,
     },
     take: limit,
     skip: cursor ? 1 : 0,
     cursor: cursor ? { postId: cursor } : undefined,
-    orderBy: [
-      {
-        [orderBy.sortBy]: orderBy.sortOrder,
-      },
-      {
-        postId: "desc",
-      },
-    ],
-
-    select: {
-      postId: true,
-      categoryId: true,
-      title: true,
-      content: true,
-      views: true,
-      createdAt: true,
-      updatedAt: true,
+    orderBy: orderOptions,
+    include: {
       users: {
         select: {
           id: true,
@@ -60,6 +63,11 @@ export const getCommunityList = async (
               tag: true,
             },
           },
+        },
+      },
+      _count: {
+        select: {
+          communityLikes: true,
         },
       },
     },
@@ -84,15 +92,17 @@ export const getCommunityList = async (
       images: community.communityImages.map(
         (item: ICommunityImage) => item.images
       ),
+      likes: community._count.communityLikes,
     };
   });
 };
 
-export const getCommunityById = async (postId: number, categoryId: number) => {
+export const getCommunityById = async (postId: number) => {
+  const categoryId = CATEGORY.COMMUNITIES;
   const community = await prisma.communities.findUnique({
     where: {
-      postId: postId,
-      categoryId: categoryId,
+      postId,
+      categoryId,
     },
     select: {
       postId: true,
@@ -130,6 +140,11 @@ export const getCommunityById = async (postId: number, categoryId: number) => {
           },
         },
       },
+      _count: {
+        select: {
+          communityLikes: true,
+        },
+      },
     },
   });
 
@@ -138,19 +153,24 @@ export const getCommunityById = async (postId: number, categoryId: number) => {
   }
 
   return {
-    ...community,
+    postId: community.postId,
+    categoryId: community.categoryId,
+    title: community.title,
+    content: community.content,
+    views: community.views,
+    createdAt: community.createdAt,
+    updatedAt: community.updatedAt,
     users: {
       id: community?.users.id,
       uuid: (community?.users.uuid as Buffer).toString("hex"),
       nickname: community?.users.nickname,
       profileImage: community?.users.profileImage,
     },
-    communityTags: community?.communityTags.map(
-      (item: ICommunityTag) => item.tags
-    ),
-    communityImages: community?.communityImages.map(
+    tags: community?.communityTags.map((item: ICommunityTag) => item.tags),
+    images: community?.communityImages.map(
       (item: ICommunityImage) => item.images
     ),
+    likes: community._count.communityLikes,
   };
 };
 
@@ -158,31 +178,32 @@ export const addCommunity = async (
   tx: Prisma.TransactionClient,
   userId: string,
   title: string,
-  content: string,
-  categoryId: number
-) =>
-  await tx.communities.create({
+  content: string
+) => {
+  const categoryId = CATEGORY.COMMUNITIES;
+  return await tx.communities.create({
     data: {
       uuid: Buffer.from(userId, "hex"),
       title,
       content,
-      categoryId: categoryId,
+      categoryId,
     },
   });
+};
 
 export const updateCommunityById = async (
   tx: Prisma.TransactionClient,
   postId: number,
   userId: string,
-  categoryId: number,
   title: string,
   content: string
 ) => {
+  const categoryId = CATEGORY.COMMUNITIES;
   return await tx.communities.update({
     where: {
-      postId: postId,
+      postId,
       uuid: Buffer.from(userId, "hex"),
-      categoryId: categoryId,
+      categoryId,
     },
     data: {
       title,
@@ -194,14 +215,14 @@ export const updateCommunityById = async (
 export const removeCommunityById = async (
   tx: Prisma.TransactionClient,
   postId: number,
-  userId: string,
-  categoryId: number
+  userId: string
 ) => {
+  const categoryId = CATEGORY.COMMUNITIES;
   return await tx.communities.delete({
     where: {
-      postId: postId,
+      postId,
       uuid: Buffer.from(userId, "hex"),
-      categoryId: categoryId,
+      categoryId,
     },
   });
 };
@@ -230,7 +251,7 @@ export const addCommunityImages = async (
   });
 };
 
-export const deleteCommunityTagByTagIds = async (
+export const removeTagsByIds = async (
   tx: Prisma.TransactionClient,
   tagIds: number[]
 ) => {
@@ -243,31 +264,7 @@ export const deleteCommunityTagByTagIds = async (
   });
 };
 
-// export const deleteCommunityTagByTagId = async (
-//   tx: Prisma.TransactionClient,
-//   tagId: number
-// ) => {
-//   return await tx.communityTags.delete({
-//     where: {
-//       tagId: tagId,
-//     },
-//   });
-// };
-
-// export const deleteCommunityByPostIds = async (
-//   tx: Prisma.TransactionClient,
-//   postIds: number[]
-// ) => {
-//   return await tx.communityTags.deleteMany({
-//     where: {
-//       postId: {
-//         in: postIds,
-//       },
-//     },
-//   });
-// };
-
-export const deleteCommunityImagesByImageIds = async (
+export const removeImagesByIds = async (
   tx: Prisma.TransactionClient,
   imageIds: number[]
 ) => {
@@ -276,6 +273,28 @@ export const deleteCommunityImagesByImageIds = async (
       imageId: {
         in: imageIds,
       },
+    },
+  });
+};
+
+export const getLikeIds = async (postId: number) => {
+  return await prisma.communityLikes.findMany({
+    where: {
+      postId,
+    },
+    select: {
+      likeId: true,
+    },
+  });
+};
+
+export const removeLikesById = async (
+  tx: Prisma.TransactionClient,
+  postId: number
+) => {
+  return await tx.communityLikes.deleteMany({
+    where: {
+      postId,
     },
   });
 };

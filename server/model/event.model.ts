@@ -1,29 +1,107 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
 import { IEvent, IEventImage, IEventTag } from "../types/event";
+import { CATEGORY } from "../constants/category";
+import { getOrderBy } from "../util/sort/orderBy";
+import { SortOrder } from "../types/sort";
+
+export const getEventsCount = async () => await prisma.events.count();
 
 export const getEventList = async (
-  categoryId: number,
   limit: number,
-  orderBy: { sortBy: string; sortOrder: string },
+  sort: string,
   cursor: number | undefined
 ) => {
+  const categoryId = CATEGORY.EVENTS;
+  const orderBy = getOrderBy(sort);
+  const orderOptions = [];
+
+  if (orderBy.sortBy === "likes") {
+    orderOptions.push({
+      eventLikes: {
+        _count: orderBy.sortOrder as SortOrder,
+      },
+    });
+  } else {
+    orderOptions.push({
+      [orderBy.sortBy]: orderBy.sortOrder as SortOrder,
+    });
+  }
   const events = await prisma.events.findMany({
     where: {
-      categoryId: categoryId,
+      categoryId,
     },
     take: limit,
     skip: cursor ? 1 : 0,
     cursor: cursor ? { postId: cursor } : undefined,
-    orderBy: [
-      {
-        [orderBy.sortBy]: orderBy.sortOrder,
+    orderBy: orderOptions,
+    include: {
+      users: {
+        select: {
+          id: true,
+          uuid: true,
+          nickname: true,
+          profileImage: true,
+        },
       },
-      {
-        postId: "asc",
+      eventImages: {
+        select: {
+          images: {
+            select: {
+              imageId: true,
+              url: true,
+            },
+          },
+        },
       },
-    ],
+      eventTags: {
+        select: {
+          tags: {
+            select: {
+              tagId: true,
+              tag: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          eventLikes: true,
+        },
+      },
+    },
+  });
 
+  return events.map((event: IEvent) => {
+    return {
+      postId: event.postId,
+      categoryId: event.categoryId,
+      title: event.content,
+      content: event.content,
+      views: event.views,
+      createdAt: event.createdAt,
+      updatedAt: event.updatedAt,
+      isClosed: !!event.isClosed,
+      users: {
+        id: event?.users.id,
+        uuid: (event?.users.uuid as Buffer).toString("hex"),
+        nickname: event?.users.nickname,
+        profileImage: event?.users.profileImage,
+      },
+      tags: event.eventTags.map((item: IEventTag) => item.tags),
+      images: event.eventImages.map((item: IEventImage) => item.images),
+      likes: event._count.eventLikes,
+    };
+  });
+};
+
+export const getEventById = async (postId: number) => {
+  const categoryId = CATEGORY.EVENTS;
+  const event = await prisma.events.findUnique({
+    where: {
+      postId,
+      categoryId,
+    },
     select: {
       postId: true,
       categoryId: true,
@@ -61,71 +139,9 @@ export const getEventList = async (
           },
         },
       },
-    },
-  });
-
-  return events.map((event: IEvent) => {
-    return {
-      postId: event.postId,
-      categoryId: event.categoryId,
-      title: event.content,
-      content: event.content,
-      views: 0,
-      createdAt: event.createdAt,
-      updatedAt: event.updatedAt,
-      isClosed: !!event.isClosed,
-      users: {
-        id: event?.users.id,
-        uuid: (event?.users.uuid as Buffer).toString("hex"),
-        nickname: event?.users.nickname,
-        profileImage: event?.users.profileImage,
-      },
-      tags: event.eventTags.map((item: IEventTag) => item.tags),
-      images: event.eventImages.map((item: IEventImage) => item.images),
-    };
-  });
-};
-
-export const getEventById = async (postId: number, categoryId: number) => {
-  const event = await prisma.events.findUnique({
-    where: {
-      postId: postId,
-      categoryId: categoryId,
-    },
-    select: {
-      postId: true,
-      categoryId: true,
-      title: true,
-      content: true,
-      views: true,
-      createdAt: true,
-      updatedAt: true,
-      users: {
+      _count: {
         select: {
-          id: true,
-          uuid: true,
-          nickname: true,
-          profileImage: true,
-        },
-      },
-      eventImages: {
-        select: {
-          images: {
-            select: {
-              imageId: true,
-              url: true,
-            },
-          },
-        },
-      },
-      eventTags: {
-        select: {
-          tags: {
-            select: {
-              tagId: true,
-              tag: true,
-            },
-          },
+          eventLikes: true,
         },
       },
     },
@@ -136,13 +152,14 @@ export const getEventById = async (postId: number, categoryId: number) => {
   }
 
   return {
-    postId: true,
-    categoryId: true,
-    title: true,
-    content: true,
-    views: true,
-    createdAt: true,
-    updatedAt: true,
+    postId: event.postId,
+    categoryId: event.categoryId,
+    title: event.content,
+    content: event.content,
+    views: event.views,
+    createdAt: event.createdAt,
+    updatedAt: event.updatedAt,
+    isClosed: !!event.isClosed,
     users: {
       id: event?.users.id,
       uuid: (event?.users.uuid as Buffer).toString("hex"),
@@ -151,6 +168,7 @@ export const getEventById = async (postId: number, categoryId: number) => {
     },
     tags: event?.eventTags.map((item: IEventTag) => item.tags),
     images: event?.eventImages.map((item: IEventImage) => item.images),
+    likes: event._count.eventLikes,
   };
 };
 
@@ -160,10 +178,10 @@ export const addEvent = async (
   title: string,
   content: string,
   isClosed: boolean,
-  date: string,
-  categoryId: number
-) =>
-  await tx.events.create({
+  date: string
+) => {
+  const categoryId = CATEGORY.EVENTS;
+  return await tx.events.create({
     data: {
       title,
       content,
@@ -173,7 +191,7 @@ export const addEvent = async (
       date,
     },
   });
-
+};
 export const updateEventById = async (
   tx: Prisma.TransactionClient,
   userId: string,
@@ -181,14 +199,14 @@ export const updateEventById = async (
   title: string,
   content: string,
   isClosed: boolean,
-  date: string,
-  categoryId: number
+  date: string
 ) => {
+  const categoryId = CATEGORY.EVENTS;
   return await tx.events.update({
     where: {
       postId,
       uuid: Buffer.from(userId, "hex"),
-      categoryId: categoryId,
+      categoryId,
     },
     data: {
       title,
@@ -202,14 +220,14 @@ export const updateEventById = async (
 export const removeEventById = async (
   tx: Prisma.TransactionClient,
   postId: number,
-  userId: string,
-  categoryId: number
+  userId: string
 ) => {
+  const categoryId = CATEGORY.EVENTS;
   return await tx.events.delete({
     where: {
-      postId: postId,
+      postId,
       uuid: Buffer.from(userId, "hex"),
-      categoryId: categoryId,
+      categoryId,
     },
   });
 };
@@ -238,7 +256,7 @@ export const addEventImages = async (
   });
 };
 
-export const deleteEventTagByTagIds = async (
+export const removeTagsByIds = async (
   tx: Prisma.TransactionClient,
   tagIds: number[]
 ) => {
@@ -251,7 +269,7 @@ export const deleteEventTagByTagIds = async (
   });
 };
 
-export const deleteEventImagesByImageIds = async (
+export const removeImagesByIds = async (
   tx: Prisma.TransactionClient,
   imageIds: number[]
 ) => {
@@ -260,6 +278,28 @@ export const deleteEventImagesByImageIds = async (
       imageId: {
         in: imageIds,
       },
+    },
+  });
+};
+
+export const getLikeIds = async (postId: number) => {
+  return await prisma.eventLikes.findMany({
+    where: {
+      postId,
+    },
+    select: {
+      likeId: true,
+    },
+  });
+};
+
+export const removeLikesById = async (
+  tx: Prisma.TransactionClient,
+  postId: number
+) => {
+  return await tx.eventLikes.deleteMany({
+    where: {
+      postId,
     },
   });
 };
