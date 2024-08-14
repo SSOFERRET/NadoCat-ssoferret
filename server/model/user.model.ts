@@ -9,19 +9,19 @@ const prisma = new PrismaClient();
 //[x]회원가입
 export const createUser = async (email: string, nickname: string, password: string, authType: string) => {
   
-  const hashing = async (password: string) => {
-    const saltRound = 10;
-    const salt = await bcryto.genSalt(saltRound);
-    const hashPassword = await bcryto.hash(password, salt);
-    return { salt, hashPassword };
-  };
+    const hashing = async (password: string) => {
+        const saltRound = 10;
+        const salt = await bcryto.genSalt(saltRound);
+        const hashPassword = await bcryto.hash(password, salt);
+        return { salt, hashPassword };
+    };
 
-  const { salt, hashPassword } = await hashing(password);
-  const uuid = uuidv4();
-  const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
-
-  //DB저장
-  try {
+    const { salt, hashPassword } = await hashing(password);
+    const uuid = uuidv4();
+    const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
+    
+    //DB저장
+    try {
     const result = await prisma.$transaction(async (prisma) => {
       const user = await prisma.users.create({
         data: {
@@ -57,48 +57,48 @@ export const createUser = async (email: string, nickname: string, password: stri
 export const loginUser = async (email: string, password: string, autoLogin: boolean) => {
   try {
     const result = await prisma.$transaction(async (prisma) => {
-      const selectUsers = await prisma.users.findFirst({
+      const selectUser = await prisma.users.findFirst({
         where: {
           email: email,
         },
       });
 
-      if (!selectUsers) {
+      if (!selectUser) {
         console.log("사용자를 찾을 수 없습니다.");
         return null;
       }
 
-      const userUuid = selectUsers.uuid; 
-      const selectUserSecrets = await prisma.userSecrets.findFirst({
+      const userUuid = selectUser.uuid; 
+      const selectUserSecret = await prisma.userSecrets.findFirst({
         where: {
           uuid: userUuid,
         },
       });
 
-      if (!selectUserSecrets) {
+      if (!selectUserSecret) {
         console.log("사용자를 찾을 수 없습니다.");
         return null;
       }
 
-      return { selectUsers, selectUserSecrets };
+      return { selectUser, selectUserSecret };
     });
 
     if (!result) {
       throw new Error("사용자를 찾을 수 없습니다.");
     }
 
-    const { selectUsers, selectUserSecrets } = result; 
-    const isPasswordValid = await bcryto.compare(password, selectUserSecrets.hashPassword); 
+    const { selectUser, selectUserSecret } = result; 
+    const isPasswordValid = await bcryto.compare(password, selectUserSecret.hashPassword); 
 
     if (!isPasswordValid) {
       throw new Error("사용자 정보가 일치하지 않습니다.");
     }
 
-    const userUuidString = selectUsers.uuid.toString("hex").match(/.{1,4}/g) ?.join("-"); 
+    const userUuidString = selectUser.uuid.toString("hex").match(/.{1,4}/g) ?.join("-"); 
     const generalToken = jwt.sign(
       { 
         uuid: userUuidString,
-        email: selectUsers.email
+        email: selectUser.email
       }, process.env.PRIVATE_KEY_GEN as string, {
         expiresIn: "1m",
         issuer: "fefive"
@@ -128,7 +128,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
 };
 
 
-//[ ] 자동로그인
+//[x] 자동로그인(리프레시 토큰)
 export const saveRefreshToken = async (uuid: string , refreshToken: string) => {
     try {
       const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
@@ -152,4 +152,54 @@ export const saveRefreshToken = async (uuid: string , refreshToken: string) => {
       console.log("자동로그인 error:", error);
       throw new Error("자동로그인 중 오류 발생");
     } 
+};
+
+
+//[ ] 카카오 로그인
+export const kakaoUser = async( email: string, nickname: string, accessToken: string, refreshToken: string, tokenExpiry: string) => {
+try {
+    const result = await prisma.$transaction(async (prisma) => {
+        const selectUser = await prisma.users.findFirst({
+            where: {
+                email: email
+            }
+        });
+        
+        if(!selectUser){ //회원가입
+            const uuid = uuidv4();
+            const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
+            
+            const createUser = await prisma.users.create({
+                data: {
+                    uuid: uuidBuffer,
+                    email: email,
+                    nickname: nickname,
+                    authType: "kakao",
+                    status: "active", //default: active
+                },
+            });
+    
+            const createUserOauthSecret = await prisma.userOauthSecrets.create({
+                data: {
+                    uuid: uuidBuffer,
+                    accessToken: accessToken, 
+                    refreshToken: refreshToken,
+                    tokenExpiry: "",
+                },
+            });
+
+            return {createUser, createUserOauthSecret};
+        }//if
+
+        return selectUser;
+    });
+
+    return result;
+    
+} catch (error) {
+    console.log("카카오로그인 error:", error);
+    throw new Error("카카오로그인 중 오류 발생");
+}    
+
+
 }
