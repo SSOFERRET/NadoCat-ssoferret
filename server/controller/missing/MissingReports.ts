@@ -24,10 +24,10 @@ import {
   getAndDeleteImageFormats,
 } from "../../util/images/deleteImages";
 import { addNewImages } from "../../util/images/addNewImages";
-import { IMissingReport } from "../../types/missing";
 import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
+import { notifyMissingReport } from "../notification/Notifications";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -124,12 +124,15 @@ export const createMissingReport = async (req: Request, res: Response) => {
           },
           images
         );
+
+      notifyMissingReport("new", post.postId, userId); // NOTE userId를 실종고양이 게시글 게시자로 변경(-)
     });
 
-    res
+    return res
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) validateError(res, error);
   }
 };
@@ -216,6 +219,8 @@ export const updateMissingReport = async (req: Request, res: Response) => {
       if (images) {
         await addNewImages(tx, postData, images);
       }
+
+      notifyMissingReport("update", postData.postId, userId);
     });
 
     return res
@@ -244,6 +249,8 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
         userId: reportPost.uuid,
       }); // NOTE 게시글 작성자 인가 추가
       await updateMissingReportCheckByPostId(tx, postData, match);
+
+      notifyMissingReport(match === "Y" ? "match" : "unmatch", postData.postId, userId);
 
       return res
         .status(StatusCodes.OK)
