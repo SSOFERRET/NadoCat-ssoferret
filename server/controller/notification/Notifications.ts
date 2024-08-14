@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { createNotification, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
 import { getUserId } from "../missing/Missings";
 import { StatusCodes } from "http-status-codes";
+import { handleControllerError } from "../../util/errors/errors";
 
 /* CHECKLIST
 * [ ] 알람글 isRead update API
@@ -10,7 +11,7 @@ import { StatusCodes } from "http-status-codes";
 *  [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
 *  [x] 실종고양이 제보글 수정 => 게시글 게시자
 *  
-*  [-] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
+*  [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
 *  
 *  [-] 신규 글 작성 => 친구
 *  [-] 좋아요 찍힘 => 게시글 게시자
@@ -41,7 +42,7 @@ export const serveNotifications = (req: Request, res: Response) => {
     const userId = req.query.userId;
     let userIdBuffer: Buffer;
     if (typeof userId === "string")
-      userIdBuffer = Buffer.from(userId + "\0".repeat(16 - userId.length));
+      userIdBuffer = Buffer.from(userId, "hex");
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -74,7 +75,7 @@ export const serveNotifications = (req: Request, res: Response) => {
 
 
   } catch (error) {
-    console.log(error)
+    handleControllerError(error, res);
   }
 };
 
@@ -108,7 +109,6 @@ export const updateNotifications = async (req: Request, res: Response) => {
 
     return res.status(StatusCodes.OK);
   } catch (error) {
-    console.log(error);
-    res.status(StatusCodes.BAD_REQUEST).json(error);
+    handleControllerError(error, res);
   }
 } 
