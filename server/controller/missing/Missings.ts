@@ -12,14 +12,18 @@ import { deleteMissingReport } from "./MissingReports";
 import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
+import { getMissingFavoriteAdders, getMissingReporters } from "../../model/notification.model";
+import { notify } from "../notification/Notifications";
+import { getMissingFavorites } from "./MissingsFavorites";
+import { getFriendList } from "../../model/friend.model";
 
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
-* [ ] 구현 내용
+* [x] 구현 내용
 *   [x] create
 *   [x] delete
-*   [-] get
+*   [x] get
 *   [x] put
 */
 
@@ -122,6 +126,15 @@ export const createMissing = async (req: Request, res: Response) => {
           categoryId: CATEGORY.MISSINGS,
         }, images)
       }
+
+      const friends = await getFriendList(tx, userId)
+
+      friends.forEach((friend) => notify({
+        type: "newPost",
+        receiver: friend.followingId,
+        sender: userId,
+        url: `/boards/missings/${post.postId}`
+      }))
     });
 
     res
@@ -282,6 +295,16 @@ export const updateFoundState = async (req: Request, res: Response) => {
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await updateFoundByPostId(tx, postData, found);
+
+      const receivers = [...await getMissingReporters(tx, postId), ...await getMissingFavoriteAdders(tx, postId)];
+
+      receivers.forEach((receiver) => notify({
+        type: "found",
+        receiver: receiver.uuid,
+        sender: userId,
+        url: `/boards/missings/${postId}`,
+        result: found ? "Y" : "N"
+      }))
     })
 
     return res
