@@ -27,7 +27,7 @@ import { addNewImages } from "../../util/images/addNewImages";
 import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
-import { notifyMissingReport } from "../notification/Notifications";
+import { notify } from "../notification/Notifications";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -35,8 +35,8 @@ import { notifyMissingReport } from "../notification/Notifications";
 *   [x] create
 *   [x] delete
 *   [x] get
-*   [ ] 전체 조회 
-*     [ ] 페이지네이션
+*   [x] 전체 조회 
+*     [x] 페이지네이션
 *   [x] put
 *     [x] 일치 및 불일치
 */
@@ -125,7 +125,12 @@ export const createMissingReport = async (req: Request, res: Response) => {
           images
         );
 
-      notifyMissingReport("new", post.postId, userId); // NOTE userId를 실종고양이 게시글 게시자로 변경(-)
+      notify({
+        type: "newPost",
+        receiver: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
+        sender: userId,
+        url: `/boards/missings/${missingId}/reports/${post.postId}`
+      });
     });
 
     return res
@@ -185,6 +190,7 @@ export const deleteMissingReportHandler = async (
 export const updateMissingReport = async (req: Request, res: Response) => {
   // NOTE Full Update?인지 확인
   try {
+    const missingId = Number(req.params.missingId);
     const postId = Number(req.params.postId);
     const userId = await getUserId(); // NOTE
     const { report, location, images } = req.body;
@@ -220,7 +226,12 @@ export const updateMissingReport = async (req: Request, res: Response) => {
         await addNewImages(tx, postData, images);
       }
 
-      notifyMissingReport("update", postData.postId, userId);
+      notify({
+        type: "update",
+        receiver: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
+        sender: userId,
+        url: `/boards/missings/${missingId}/reports/${postId}`
+      });
     });
 
     return res
@@ -250,7 +261,13 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
       }); // NOTE 게시글 작성자 인가 추가
       await updateMissingReportCheckByPostId(tx, postData, match);
 
-      notifyMissingReport(match === "Y" ? "match" : "unmatch", postData.postId, userId);
+      notify({
+        type: "match",
+        receiver: userId,
+        sender: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
+        result: match,
+        url: `/boards/missings/${missingPost.postId}/reports/${postData.postId}`,
+      });
 
       return res
         .status(StatusCodes.OK)

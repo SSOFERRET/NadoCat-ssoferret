@@ -1,14 +1,36 @@
 import { Request, Response } from "express";
-import { TCategoryId } from "../../types/category";
-import { CATEGORY } from "../../constants/category";
-import { DATE } from "../../constants/date";
+import { createNotification, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
+import { getUserId } from "../missing/Missings";
+import { StatusCodes } from "http-status-codes";
 
-interface INotification {
-  notificationId: number;
-  type: string;
+/* CHECKLIST
+* [ ] 알람글 isRead update API
+
+*  [x] 실종고양이 제보글 => 게시글 게시자
+*  [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
+*  [x] 실종고양이 제보글 수정 => 게시글 게시자
+*  
+*  [-] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
+*  
+*  [-] 신규 글 작성 => 친구
+*  [-] 좋아요 찍힘 => 게시글 게시자
+*  [-] 댓글 => 게시글 게시자
+* 
+*  [-] 친구 요청 => 요청 받은 사용자
+*  
+*/
+
+interface INoticiationData {
+  type: TNotify;
   receiver: Buffer;
-  categoryId: TCategoryId;
-  postId: number;
+  sender: Buffer;
+  url: string;
+  commentId?: number;
+  result?: string;
+}
+
+export interface INotification extends INoticiationData {
+  // notificationTimeId: number;
   timestamp: string;
 }
 
@@ -27,53 +49,66 @@ export const serveNotifications = (req: Request, res: Response) => {
       'Connection': 'keep-alive',
     });
 
-    const sendNotifications = () => {
+    const sendNotifications = async () => {
       console.log(notifications);
-      if (!userId) return;
 
       while (notifications.length) {
-        const notification = notifications.shift();
-
-        if (notification && userIdBuffer.equals(notification.receiver)) {
-          res.write(`event: ${notification ? notification.type : undefined}\n`);
-          res.write(`data: {
-            notificationId: ${notification.notificationId},
-            type: ${notification.type},
-            categoryId: ${notification.categoryId},
-            postId: ${notification.postId},
-            timestamp: ${notification.timestamp}
-          }\n\n`);
-        }
+        await createNotification(notifications);
+        notifications.forEach((notification) => {
+          if (notification && userId && userIdBuffer.equals(notification.receiver)) {
+            res.write(`data: {
+              type: ${notification.type},
+              sender: ${notification.sender},
+              url: ${notification.url},
+              timestamp: ${notification.timestamp}
+            }\n\n`);
+          }
+        })
+        notifications.length = 0;
       }
     };
 
     const intervalid = setInterval(sendNotifications, 10000);
 
     req.on('close', () => clearInterval(intervalid));
+
+
   } catch (error) {
     console.log(error)
   }
 };
 
-type TNotifyMissingReport = "new" | "update" | "match" | "unmatch";
+type TNotify = "newPost" | "newComment" | "update" | "match" | "unmatch" | "follow" | "found" | "unfound" | "like";
+
 
 const timestampObject = () => {
   const timestamp = new Date();
 
   return {
-    notificationId: Math.floor((timestamp.getTime() - DATE.BASETIME) / 1000),
+    // notificationTimeId: Math.floor((timestamp.getTime() - DATE.BASETIME) / 1000),
     timestamp: timestamp.toISOString()
   }
 }
 
-export const notifyMissingReport = (type: TNotifyMissingReport, postId: number, receiver: Buffer) => {
+export const notify = (data: INoticiationData) => {
+  //NOTE commentId에 대한 처리. 페이지네이션 처리?
   const timestamp = timestampObject();
 
   return notifications.push({
     ...timestamp,
-    type,
-    receiver,
-    categoryId: CATEGORY.MISSING_REPORTS,
-    postId
+    ...data
   });
 }
+
+export const updateNotifications = async (req: Request, res: Response) => {
+  // NOTE header의 user 내용으로 변경할 것
+  try {
+    const userId = await getUserId();
+    updateNotificationsIsReadByReceiver(userId);
+
+    return res.status(StatusCodes.OK);
+  } catch (error) {
+    console.log(error);
+    res.status(StatusCodes.BAD_REQUEST).json(error);
+  }
+} 
