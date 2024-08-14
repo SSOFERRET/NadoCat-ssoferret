@@ -1,12 +1,12 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./api/queryClient";
 import MyPage from "./pages/MyPage";
 import { StreetCats } from "./pages/streetCat/StreetCat";
 import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
-import Layout from "./components/layout/Layout";
+import {Layout} from "./components/layout/Layout";
 
 const routeList = [
   {

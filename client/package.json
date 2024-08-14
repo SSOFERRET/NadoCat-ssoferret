@@ -13,6 +13,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.51.23",
     "@types/node": "^22.0.2",
+    "axios": "^1.7.3",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

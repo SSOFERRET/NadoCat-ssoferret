@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosRequestConfig} from "axios";
-import {getToken, removeToken} from "../store/userStore";
+import {getGeneralToken, removeToken} from "../store/userStore";
 
 const BASE_URL = "http://localhost:3000"; //서버주소
 const DEFAULT_TIMEOUT = 30000;
@@ -11,7 +11,7 @@ export const createClient = (config?: AxiosRequestConfig)  => {
         headers: {
             "content-type": "application/json",//json을 통해 content교환
             // Authorization: getToken()? getToken().generalToken : "",
-            Authorization: getToken()? `Bearer ${getToken().generalToken}` : "",
+            Authorization: getGeneralToken()? `Bearer ${getGeneralToken()}` : "",
         },
         withCredentials: true,
         ...config,
@@ -19,7 +19,7 @@ export const createClient = (config?: AxiosRequestConfig)  => {
 
     axiosInstance.interceptors.request.use(
         (config) => {
-            config.headers["Authorization"] = `${getToken()}`;
+            config.headers["Authorization"] = `${getGeneralToken()}`;
             return config;
         },
         (error: AxiosError) => {

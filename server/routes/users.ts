@@ -16,7 +16,7 @@ const router= express.Router();
 //사용자
 router.post("/signup", signupValidator, signup);
 router.post("/login", loginValidator, login);
-router.post("/auth/kakao", kakao);
+router.post("/auth/kakao/callback", kakao);
 router.post("/auth/google", google);
 router.post("/my", my);
 
