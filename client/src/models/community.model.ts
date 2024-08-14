@@ -19,3 +19,18 @@ export interface Tag {
   tagId: number;
   tag: string;
 }
+
+export interface IPagination {
+  nextCursor: number;
+  totalCount: number;
+}
+
+export interface ICommunityPage {
+  pagination: IPagination;
+  posts: ICommunity[];
+}
+
+export interface ICommunityPost {
+  pageParams: number[];
+  pages: ICommunityPage[];
+}

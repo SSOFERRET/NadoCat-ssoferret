@@ -1,4 +1,3 @@
-import React from "react";
 import { getCommunityPosts } from "../api/community.api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
@@ -14,7 +13,7 @@ const useCommunity = () => {
     queryKey: ["community"],
     queryFn: ({ pageParam = 0 }) => getCommunityPosts({ pageParam }),
     initialPageParam: 0,
-    getNextPageParam: (lastPage, _pages) => {
+    getNextPageParam: (lastPage) => {
       const nextCursor = lastPage.pagination.nextCursor;
       if (nextCursor) {
         return nextCursor;

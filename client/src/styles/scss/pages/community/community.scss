@@ -2,6 +2,14 @@
 
 .container {
   min-height: 100vh;
-  background-color: antiquewhite;
+  padding: 20rem;
   padding-bottom: 64rem;
+}
+
+.category {
+  font-family: "semiBold";
+  font-size: $size-14;
+  color: silver;
+  border-bottom: 0.5rem solid $lightgray;
+  padding-bottom: 10rem;
 }
