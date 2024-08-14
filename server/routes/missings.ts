@@ -13,10 +13,10 @@ router.delete("/:postId", deleteMissing);
 router.put("/:postId", updateMissing);
 router.patch("/:postId", updateFoundState);
 
-router.get("/:MissingId/reports/:postId", getMissingReport);
+router.get("/:missingId/reports/:postId", getMissingReport);
 router.post("/:postId/reports", createMissingReport);
-router.get("/:MissingId/reports", getMissingReports);
-router.delete("/:MissingId/reports/:postId", deleteMissingReportHandler);
+router.get("/:missingId/reports", getMissingReports);
+router.delete("/:missingId/reports/:postId", deleteMissingReportHandler);
 router.put("/:missingId/reports/:postId", updateMissingReport);
 router.patch("/:missingId/reports/:postId", updateMissingReportCheck);
 
