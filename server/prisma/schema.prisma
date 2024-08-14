@@ -7,393 +7,523 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model TestString {
-  idTestString  Int    @id @default(autoincrement())
-  TestStringcol String @db.VarChar(45)
+model BoardCategories {
+  categoryId     Int              @id @unique(map: "category_id_UNIQUE") @default(autoincrement()) @map("category_id")
+  category       String           @unique(map: "category_UNIQUE") @db.VarChar(20)
+  communities    Communities[]
+  events         Events[]
+  likes          Likes[]
+  missingReports MissingReports[]
+  missings       Missings[]
+  reports        Reports[]
+  streetCats     StreetCats[]
+
+  @@map("board_categories")
 }
 
-model board_categories {
-  category_id     Int               @id @unique(map: "category_id_UNIQUE") @default(autoincrement())
-  category        String            @unique(map: "category_UNIQUE") @db.VarChar(20)
-  communities     communities[]
-  events          events[]
-  images          images[]
-  likes           likes[]
-  missing_reports missing_reports[]
-  missings        missings[]
-  reports         reports[]
-  street_cats     street_cats[]
-  tags            tags[]
+model Chats {
+  chatId    Int        @id @unique(map: "chat_id_UNIQUE") @default(autoincrement()) @map("chat_id")
+  chatName  String     @map("chat_name") @db.VarChar(45)
+  uuid      Bytes      @db.Binary(16)
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
+  users     Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "chats_uuid_fk")
+  messages  Messages[]
+
+  @@index([uuid], map: "chats_uuid_fk_idx")
+  @@map("chats")
 }
 
-model chats {
-  chat_id    Int        @id @unique(map: "chat_id_UNIQUE") @default(autoincrement())
-  chat_name  String     @db.VarChar(45)
-  user_id    String     @db.VarChar(45)
-  created_at DateTime   @default(now()) @db.Timestamp(0)
-  users      users      @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "chats_user_id_fk")
-  messages   messages[]
+model Communities {
+  postId            Int                 @unique(map: "post_id_UNIQUE") @default(autoincrement()) @map("post_id")
+  categoryId        Int                 @default(1) @map("category_id")
+  title             String              @db.VarChar(100)
+  content           String?             @db.LongText
+  views             Int                 @default(0)
+  createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt         DateTime            @default(now()) @map("updated_at") @db.Timestamp(0)
+  thumbnail         Int?
+  uuid              Bytes               @db.Binary(16)
+  boardCategories   BoardCategories     @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "communities_category_id_fk")
+  users             Users               @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "communities_uuid_fk")
+  communityComments CommunityComments[]
+  communityImages   CommunityImages[]
+  communityTags     CommunityTags[]
 
-  @@index([user_id], map: "chats_user_id_fk_idx")
+  @@id([postId, categoryId])
+  @@index([categoryId])
+  @@index([uuid], map: "communities_uuid_fk_idx")
+  @@map("communities")
 }
 
-model communities {
-  post_id            Int                  @unique(map: "post_id_UNIQUE") @default(autoincrement())
-  category_id        Int                  @default(1)
-  title              String               @db.VarChar(100)
+model CommunityComments {
+  communityCommentId Int         @id @unique(map: "community_comment_id_UNIQUE") @default(autoincrement()) @map("community_comment_id")
+  communityId        Int         @map("community_id")
+  comment            String      @db.MediumText
+  createdAt          DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt          DateTime    @default(now()) @map("updated_at") @db.Timestamp(0)
+  uuid               Bytes       @db.Binary(16)
+  communities        Communities @relation(fields: [communityId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "community_comments_community_id_fk")
+  users              Users       @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "community_comments_uuid_fk")
+
+  @@index([communityId], map: "communities_community_id_fk_idx")
+  @@index([uuid], map: "community_comments_uuid_fk_idx")
+  @@map("community_comments")
+}
+
+model CommunityImages {
+  imageId     Int         @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
+  postId      Int         @map("post_id")
+  images      Images      @relation(fields: [imageId], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "community_images_image_id_fk")
+  communities Communities @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "community_images_post_id_fk")
+
+  @@index([postId], map: "community_images_post_id_fk_idx")
+  @@map("community_images")
+}
+
+model CommunityTags {
+  tagId       Int         @id @unique(map: "tag_id_UNIQUE") @default(autoincrement()) @map("tag_id")
+  postId      Int         @map("post_id")
+  communities Communities @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "community_tags_post_id_fk")
+  tags        Tags        @relation(fields: [tagId], references: [tagId], onDelete: NoAction, onUpdate: NoAction, map: "community_tags_tag_id_fk")
+
+  @@index([postId], map: "community_tags_post_id_fk_idx")
+  @@map("community_tags")
+}
+
+model EventComments {
+  eventCommentId Int      @id @unique(map: "event_comment_id_UNIQUE") @default(autoincrement()) @map("event_comment_id")
+  eventId        Int      @map("event_id")
+  comment        String   @db.MediumText
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamp(0)
+  uuid           Bytes    @db.Binary(16)
+  events         Events   @relation(fields: [eventId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "event_comments_event_id_fk")
+  users          Users    @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "event_comments_uuid_fk")
+
+  @@index([eventId], map: "event_comments_event_id_fk_idx")
+  @@index([uuid], map: "event_comments_uuid_fk_idx")
+  @@map("event_comments")
+}
+
+model EventImages {
+  imageId Int    @id @map("image_id")
+  postId  Int    @map("post_id")
+  images  Images @relation(fields: [imageId], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "event_images_image_id_fk")
+  events  Events @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "event_images_post_id_fk")
+
+  @@index([postId], map: "event_images_post_id_fk_idx")
+  @@map("event_images")
+}
+
+model EventTags {
+  tagId  Int    @id @unique(map: "tag_id_UNIQUE") @default(autoincrement()) @map("tag_id")
+  postId Int    @map("post_id")
+  events Events @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "event_tags_post_id_fk")
+  tags   Tags   @relation(fields: [tagId], references: [tagId], onDelete: NoAction, onUpdate: NoAction, map: "event_tags_tag_id_fk")
+
+  @@index([postId], map: "event_tags_post_id_fk_idx")
+  @@map("event_tags")
+}
+
+model Events {
+  postId          Int             @unique(map: "post_id_UNIQUE") @default(autoincrement()) @map("post_id")
+  categoryId      Int             @default(2) @map("category_id")
+  title           String          @db.VarChar(100)
+  isClosed        Int             @default(0) @map("is_closed") @db.TinyInt
+  date            String          @db.VarChar(45)
+  content         String          @db.LongText
+  views           Int             @default(0)
+  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt       DateTime        @default(now()) @map("updated_at") @db.Timestamp(0)
+  thumbnail       Int?
+  uuid            Bytes           @db.Binary(16)
+  eventComments   EventComments[]
+  eventImages     EventImages[]
+  eventTags       EventTags[]
+  boardCategories BoardCategories @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "events_category_id_fk")
+  images          Images?         @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "events_thumbnail_fk")
+  users           Users           @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "events_uuid_fk")
+
+  @@id([postId, categoryId])
+  @@index([categoryId], map: "events_category_id_fk_idx")
+  @@index([thumbnail], map: "events_thumbnail_fk_idx")
+  @@index([uuid], map: "events_uuid_fk_idx")
+  @@map("events")
+}
+
+model Friends {
+  friendId                       Int   @id @unique(map: "friend_id_UNIQUE") @default(autoincrement()) @map("friend_id")
+  uuid                           Bytes @db.Binary(16)
+  followingId                    Bytes @map("following_id") @db.Binary(16)
+  usersFriendsFollowingIdTousers Users @relation("friends_following_idTousers", fields: [followingId], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "friends_following_id_fk")
+  usersFriendsUuidTousers        Users @relation("friends_uuidTousers", fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "friends_uuid_fk")
+
+  @@index([followingId], map: "friends_following_id_fk_idx")
+  @@index([uuid], map: "friends_uuid_fk_idx")
+  @@map("friends")
+}
+
+model HomeCats {
+  homeCatId    Int     @id @unique(map: "home_cat_id_UNIQUE") @default(autoincrement()) @map("home_cat_id")
+  name         String  @db.VarChar(10)
+  age          Int?
+  gender       String? @db.Char(1)
+  uuid         Bytes   @db.Binary(16)
+  detail       String? @db.MediumText
+  profileImage String? @map("profile_image") @db.VarChar(100)
+  users        Users   @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "home_cats_uuid_fk")
+
+  @@index([uuid], map: "home_cats_uuid_fk_idx")
+  @@map("home_cats")
+}
+
+model Images {
+  imageId             Int                  @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
+  url                 String               @db.VarChar(100)
+  communityImages     CommunityImages?
+  eventImages         EventImages?
+  events              Events[]
+  missingImages       MissingImages?
+  missingReportImages MissingReportImages?
+  missingReports      MissingReports[]
+  missings            Missings[]
+  streetCatImages     StreetCatImages?
+  streetCats          StreetCats[]
+
+  @@map("images")
+}
+
+model Likes {
+  postId          Int             @map("post_id")
+  categoryId      Int             @map("category_id")
+  uuid            Bytes           @db.Binary(16)
+  boardCategories BoardCategories @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "likes_category_id_fk")
+  users           Users           @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "likes_uuid_fk")
+
+  @@id([postId, categoryId])
+  @@index([categoryId], map: "likes_category_id_fk_idx")
+  @@index([uuid], map: "likes_uuid_fk_idx")
+  @@map("likes")
+}
+
+model Locations {
+  locationId             Int                     @id @unique(map: "idlocation_id_UNIQUE") @default(autoincrement()) @map("location_id")
+  longitude              Float                   @db.Float
+  latitude               Float                   @db.Float
+  detail                 String                  @db.VarChar(100)
+  missingLocations       MissingLocations?
+  missingReportLocations MissingReportLocations?
+  missingReports         MissingReports[]
+  missings               Missings[]
+  streetCats             StreetCats[]
+
+  @@map("locations")
+}
+
+model Messages {
+  messageId Int      @id @unique(map: "message_id_UNIQUE") @default(autoincrement()) @map("message_id")
+  uuid      Bytes    @db.Binary(16)
+  chatId    Int      @map("chat_id")
+  content   String   @db.LongText
+  sentAt    DateTime @map("sent_at") @db.Timestamp(0)
+  chats     Chats    @relation(fields: [chatId], references: [chatId], onDelete: NoAction, onUpdate: NoAction, map: "messages_chat_id_fk")
+  users     Users    @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "messages_uuid_fk")
+
+  @@index([chatId])
+  @@index([uuid], map: "messages_uuid_fk_idx")
+  @@map("messages")
+}
+
+model MissingFavorites {
+  missingFavoriteId Int      @id @unique(map: "missing_favorite_id_UNIQUE") @default(autoincrement()) @map("missing_favorite_id")
+  uuid              Bytes    @db.Binary(16)
+  postId            Int      @map("post_id")
+  missings          Missings @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_favorites_post_id_fk")
+  users             Users    @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "missing_favorites_uuid_fk")
+
+  @@index([postId], map: "missing_favorites_post_id_fk_idx")
+  @@index([uuid], map: "missing_favorites_uuid_fk_idx")
+  @@map("missing_favorites")
+}
+
+model MissingImages {
+  imageId  Int      @id @unique(map: "image_id_UNIQUE") @map("image_id")
+  postId   Int      @map("post_id")
+  images   Images   @relation(fields: [imageId], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missing_images_image_id_fk")
+  missings Missings @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_images_post_id_fk")
+
+  @@index([postId], map: "missing_images_post_id_fk_idx")
+  @@map("missing_images")
+}
+
+model MissingLocations {
+  locationId Int       @id @unique(map: "location_id_UNIQUE") @map("location_id")
+  postId     Int       @map("post_id")
+  locations  Locations @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missing_locations_location_id_fk")
+  missings   Missings  @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_locations_post_id_fk")
+
+  @@index([postId], map: "missing_locations_post_id_fk_idx")
+  @@map("missing_locations")
+}
+
+model MissingReportImages {
+  imageId        Int            @id @unique(map: "image_id_UNIQUE") @map("image_id")
+  postId         Int            @map("post_id")
+  images         Images         @relation(fields: [imageId], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_images_image_id_fk")
+  missingReports MissingReports @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_images_post_id_fk")
+
+  @@index([postId], map: "missing_report_images_post_id_fk_idx")
+  @@map("missing_report_images")
+}
+
+model MissingReportLocations {
+  locationId     Int            @id @unique(map: "location_id_UNIQUE") @map("location_id")
+  postId         Int            @map("post_id")
+  locations      Locations      @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_locations_location_id_fk")
+  missingReports MissingReports @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_report_post_id_fk")
+
+  @@index([postId], map: "missing_report_post_id_fk_idx")
+  @@map("missing_report_locations")
+}
+
+model MissingReports {
+  postId                 Int                      @unique(map: "post_id_UNIQUE") @default(autoincrement()) @map("post_id")
+  categoryId             Int                      @default(4) @map("category_id")
+  missingId              Int                      @map("missing_id")
+  uuid                   Bytes                    @db.Binary(16)
+  time                   DateTime                 @db.DateTime(0)
+  locationId             Int                      @map("location_id")
+  detail                 String?                  @db.MediumText
+  views                  Int                      @default(0)
+  match                  String                   @default("-") @db.VarChar(1)
+  createdAt              DateTime                 @default(now()) @map("created_at") @db.Timestamp(0)
+  thumbnail              Int?
+  updatedAt              DateTime                 @default(now()) @map("updated_at") @db.Timestamp(0)
+  missingReportImages    MissingReportImages[]
+  missingReportLocations MissingReportLocations[]
+  boardCategories        BoardCategories          @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_category_id")
+  locations              Locations                @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_location_id_fk")
+  missings               Missings                 @relation(fields: [missingId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_missing_id_fk")
+  images                 Images?                  @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_thumbnail_fk")
+  users                  Users                    @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_uuid_fk")
+
+  @@id([postId, categoryId])
+  @@index([categoryId])
+  @@index([locationId], map: "missing_reports_location_id_fk_idx")
+  @@index([missingId])
+  @@index([uuid], map: "missing_reports_uuid_fk_idx")
+  @@index([thumbnail], map: "missint_reports_thumbnail_fk_idx")
+  @@map("missing_reports")
+}
+
+model Missings {
+  postId           Int                @unique(map: "post_id_UNIQUE") @default(autoincrement()) @map("post_id")
+  categoryId       Int                @default(3) @map("category_id")
+  uuid             Bytes              @db.Binary(16)
+  catId            Int                @map("cat_id")
+  time             DateTime?          @db.DateTime(0)
+  locationId       Int?               @map("location_id")
+  detail           String?            @db.LongText
+  found            Int?               @default(0) @db.TinyInt
+  views            Int                @default(0)
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt        DateTime           @default(now()) @map("updated_at") @db.Timestamp(0)
+  thumbnail        Int?
+  missingFavorites MissingFavorites[]
+  missingImages    MissingImages[]
+  missingLocations MissingLocations[]
+  missingReports   MissingReports[]
+  boardCategories  BoardCategories    @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "missings_category_id_fk")
+  locations        Locations?         @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missings_location_id_fk")
+  images           Images?            @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missings_thumbnail_id_fk")
+  users            Users              @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "missings_uuid_fk")
+
+  @@id([postId, categoryId])
+  @@index([categoryId], map: "missings_category_id_fk_idx")
+  @@index([locationId], map: "missings_location_id_fk_idx")
+  @@index([thumbnail], map: "missings_thumbnail_id_fk_idx")
+  @@index([uuid], map: "missings_user_id_fk_idx")
+  @@map("missings")
+}
+
+model NotificationTypes {
+  notificationTypeId Int             @id @unique(map: "notification_type_id_UNIQUE") @default(autoincrement()) @map("notification_type_id")
+  type               String          @unique(map: "type_UNIQUE") @db.VarChar(10)
+  notifications      Notifications[]
+
+  @@map("notification_types")
+}
+
+model Notifications {
+  notificationId                      Int               @id @unique(map: "notification_id_UNIQUE") @default(autoincrement()) @map("notification_id")
+  receiverId                          Bytes             @map("receiver_id") @db.Binary(16)
+  senderId                            Bytes             @map("sender_id") @db.Binary(16)
+  typeId                              Int               @map("type_id")
+  url                                 String            @db.VarChar(100)
+  isRead                              Int               @map("is_read") @db.TinyInt
+  createdAt                           DateTime          @default(now()) @map("created_at") @db.Timestamp(0)
+  usersNotificationsReceiverIdTousers Users             @relation("notifications_receiver_idTousers", fields: [receiverId], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "notifications_receiver_id_fk")
+  usersNotificationsSenderIdTousers   Users             @relation("notifications_sender_idTousers", fields: [senderId], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "notifications_sender_id_fk")
+  notificationTypes                   NotificationTypes @relation(fields: [typeId], references: [notificationTypeId], onDelete: NoAction, onUpdate: NoAction, map: "notifications_type_id_fk")
+
+  @@index([receiverId], map: "notifications_receiver_id_fk_idx")
+  @@index([senderId], map: "notifications_sender_id_fk_idx")
+  @@index([typeId], map: "notifications_type_id_fk_idx")
+  @@map("notifications")
+}
+
+model Reports {
+  reportId        Int             @id @unique(map: "report_id_UNIQUE") @default(autoincrement()) @map("report_id")
+  postId          Int             @map("post_id")
+  categoryId      Int             @map("category_id")
+  detail          String?         @db.VarChar(45)
+  boardCategories BoardCategories @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "reports_category_id_fk")
+
+  @@index([categoryId], map: "reports_category_id_fk_idx")
+  @@map("reports")
+}
+
+model StreetCatComments {
+  streetCatCommentId Int        @id @unique(map: "street_cat_comment_id_UNIQUE") @default(autoincrement()) @map("street_cat_comment_id")
+  streetCatId        Int        @map("street_cat_id")
+  uuid               Bytes      @db.Binary(16)
+  comment            String     @db.MediumText
+  createdAt          DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt          DateTime?  @default(now()) @map("updated_at") @db.Timestamp(0)
+  streetCats         StreetCats @relation(fields: [streetCatId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_comments_post_id_fk")
+  users              Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_comments_uuid_fk")
+
+  @@index([streetCatId], map: "street_cat_comments_post_id_fk_idx")
+  @@index([uuid], map: "street_cat_comments_uuid_fk_idx")
+  @@map("street_cat_comments")
+}
+
+model StreetCatFavorites {
+  uuid       Bytes      @db.Binary(16)
+  postId     Int        @map("post_id")
+  streetCats StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
+  users      Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
+
+  @@id([uuid, postId])
+  @@index([postId], map: "street_cat_favorites_post_id_fk_idx")
+  @@map("street_cat_favorites")
+}
+
+model StreetCatImages {
+  imageId    Int        @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
+  postId     Int        @map("post_id")
+  images     Images     @relation(fields: [imageId], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_images_image_id_fk")
+  streetCats StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_images_post_id_fk")
+
+  @@index([postId], map: "street_cat_images_post_id_fk_idx")
+  @@map("street_cat_images")
+}
+
+model StreetCatTags {
+  tagId      Int        @id @unique(map: "tag_id_UNIQUE") @default(autoincrement()) @map("tag_id")
+  postId     Int        @map("post_id")
+  streetCats StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_tags_post_id_fk")
+  tags       Tags       @relation(fields: [tagId], references: [tagId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_tags_tag_id_fk")
+
+  @@index([postId], map: "street_cat_tags_post_id_fk_idx")
+  @@map("street_cat_tags")
+}
+
+model StreetCats {
+  postId             Int                  @unique(map: "post_id_UNIQUE") @default(autoincrement()) @map("post_id")
+  categoryId         Int                  @default(5) @map("category_id")
+  name               String?              @db.VarChar(10)
+  gender             String               @db.VarChar(10)
+  neutered           String               @db.VarChar(10)
+  neuteringDate      DateTime?            @map("neutering_date") @db.Date
+  discoveryDate      DateTime?            @map("discovery_date") @db.Date
+  locationId         Int                  @map("location_id")
   content            String?              @db.LongText
   views              Int                  @default(0)
-  created_at         DateTime             @default(now()) @db.Timestamp(0)
-  updated_at         DateTime             @default(now()) @db.Timestamp(0)
+  createdAt          DateTime             @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt          DateTime             @default(now()) @map("updated_at") @db.Timestamp(0)
   thumbnail          Int?
-  user_id            String               @db.VarChar(45)
-  board_categories   board_categories     @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "communities_category_id_fk")
-  images             images?              @relation(fields: [thumbnail], references: [image_id], onDelete: NoAction, onUpdate: NoAction, map: "communities_thumbnail_fk")
-  users              users                @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "communities_user_id_fk")
-  community_comments community_comments[]
-  tags               tags[]
+  uuid               Bytes                @db.Binary(16)
+  streetCatComments  StreetCatComments[]
+  streetCatFavorites StreetCatFavorites[]
+  streetCatImages    StreetCatImages[]
+  streetCatTags      StreetCatTags[]
+  boardCategories    BoardCategories      @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "street_cats_category_id_fk")
+  locations          Locations            @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "street_cats_location_id_fk")
+  images             Images?              @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "street_cats_thumbnail_fk")
+  users              Users                @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cats_uuid_fk")
 
-  @@id([post_id, category_id])
-  @@index([category_id])
-  @@index([thumbnail], map: "communities_thumnail_fk_idx")
-  @@index([user_id], map: "communities_user_id_fk_idx")
-}
-
-model community_comments {
-  community_comment_id Int         @id @unique(map: "community_comment_id_UNIQUE") @default(autoincrement())
-  community_id         Int
-  comment              String      @db.MediumText
-  created_at           DateTime    @default(now()) @db.Timestamp(0)
-  updated_at           DateTime    @default(now()) @db.Timestamp(0)
-  user_id              String      @db.VarChar(45)
-  communities          communities @relation(fields: [community_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "community_comments_community_id_fk")
-  users                users       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "community_comments_user_id_fk")
-
-  @@index([community_id], map: "communities_community_id_fk_idx")
-  @@index([user_id], map: "community_comments_user_id_fk_idx")
-}
-
-model event_comments {
-  event_comment_id Int      @id @unique(map: "event_comment_id_UNIQUE") @default(autoincrement())
-  event_id         Int
-  comment          String   @db.MediumText
-  created_at       DateTime @default(now()) @db.Timestamp(0)
-  updated_at       DateTime @default(now()) @db.Timestamp(0)
-  user_id          String   @db.VarChar(45)
-  events           events   @relation(fields: [event_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "event_comments_event_id_fk")
-  users            users    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "event_comments_user_id_fk")
-
-  @@index([event_id], map: "event_comments_event_id_fk_idx")
-  @@index([user_id], map: "event_comments_user_id_fk_idx")
-}
-
-model events {
-  post_id          Int              @unique(map: "post_id_UNIQUE") @default(autoincrement())
-  category_id      Int              @default(2)
-  title            String           @db.VarChar(100)
-  is_closed        Int              @default(0) @db.TinyInt
-  date             String           @db.VarChar(45)
-  content          String           @db.LongText
-  views            Int              @default(0)
-  created_at       DateTime         @default(now()) @db.Timestamp(0)
-  updated_at       DateTime         @default(now()) @db.Timestamp(0)
-  user_id          String           @db.VarChar(45)
-  thumbnail        Int?
-  event_comments   event_comments[]
-  board_categories board_categories @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "events_category_id_fk")
-  images           images?          @relation(fields: [thumbnail], references: [image_id], onDelete: NoAction, onUpdate: NoAction, map: "events_thumbnail_fk")
-  users            users            @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "events_user_id_fk")
-
-  @@id([post_id, category_id])
-  @@index([category_id], map: "events_category_id_fk_idx")
-  @@index([thumbnail], map: "events_thumbnail_fk_idx")
-  @@index([user_id])
-}
-
-model friends {
-  friend_id                         Int    @id @unique(map: "friend_id_UNIQUE") @default(autoincrement())
-  user_id                           String @db.VarChar(45)
-  following_id                      String @db.VarChar(45)
-  users_friends_following_idTousers users  @relation("friends_following_idTousers", fields: [following_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "friends_following_id_fk")
-  users_friends_user_idTousers      users  @relation("friends_user_idTousers", fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "friends_user_id_fk")
-
-  @@index([following_id], map: "friends_following_id_fk_idx")
-  @@index([user_id])
-}
-
-model home_cats {
-  home_cat_id   Int     @id @unique(map: "home_cat_id_UNIQUE") @default(autoincrement())
-  name          String  @db.VarChar(10)
-  age           Int?
-  gender        String? @db.Char(1)
-  user_id       String  @db.VarChar(45)
-  detail        String? @db.MediumText
-  profile_image String? @db.VarChar(100)
-  users         users   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "home_cats_user_id_fk")
-
-  @@index([user_id], map: "home_cats_users_id_idx")
-}
-
-model images {
-  image_id         Int               @id @unique(map: "image_id_UNIQUE") @default(autoincrement())
-  url              String            @db.VarChar(100)
-  post_id          Int
-  category_id      Int
-  communities      communities[]
-  events           events[]
-  board_categories board_categories  @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "images_category_id")
-  missing_reports  missing_reports[]
-  missings         missings[]
-  street_cats      street_cats[]
-
-  @@index([category_id])
-}
-
-model likes {
-  post_id          Int
-  category_id      Int
-  user_id          String           @db.VarChar(45)
-  board_categories board_categories @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "likes_category_id_fk")
-  users            users            @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "likes_user_id_fk")
-
-  @@id([post_id, category_id])
-  @@index([category_id], map: "likes_category_id_fk_idx")
-  @@index([user_id], map: "likes_user_id_fk_idx")
-}
-
-model locations {
-  location_id     Int               @id @unique(map: "idlocation_id_UNIQUE") @default(autoincrement())
-  longitude       Float             @db.Float
-  latitude        Float             @db.Float
-  detail          String            @db.VarChar(100)
-  missing_reports missing_reports[]
-  missings        missings[]
-  street_cats     street_cats[]
-}
-
-model messages {
-  message_id Int      @id @unique(map: "message_id_UNIQUE") @default(autoincrement())
-  user_id    String   @db.VarChar(45)
-  chat_id    Int
-  content    String   @db.LongText
-  sent_at    DateTime @db.Timestamp(0)
-  chats      chats    @relation(fields: [chat_id], references: [chat_id], onDelete: NoAction, onUpdate: NoAction, map: "messages_chat_id")
-  users      users    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "messages_user_id")
-
-  @@index([chat_id])
-  @@index([user_id])
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model missing_favorites {
-  user_id  String   @db.VarChar(45)
-  post_id  Int
-  missings missings @relation(fields: [post_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "missing_favorites_post_id_fk")
-  users    users    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "missing_favorites_user_id_fk")
-
-  @@index([post_id], map: "missing_favorites_post_id_fk_idx")
-  @@index([user_id], map: "missing_favorites_user_id_fk_idx")
-  @@ignore
-}
-
-model missing_reports {
-  post_id          Int              @unique(map: "post_id_UNIQUE") @default(autoincrement())
-  category_id      Int              @default(4)
-  missing_id       Int
-  user_id          String           @db.VarChar(45)
-  time             DateTime         @db.DateTime(0)
-  location_id      Int
-  detail           String?          @db.MediumText
-  views            Int
-  valified         Int              @default(0) @db.TinyInt
-  match            Int              @default(0) @db.TinyInt
-  created_at       DateTime         @default(now()) @db.Timestamp(0)
-  thumbnail        Int?
-  board_categories board_categories @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_category_id")
-  locations        locations        @relation(fields: [location_id], references: [location_id], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_location_id_fk")
-  missings         missings         @relation(fields: [missing_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_missing_id_fk")
-  users            users            @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_user_id_fk")
-  images           images?          @relation(fields: [thumbnail], references: [image_id], onDelete: NoAction, onUpdate: NoAction, map: "missint_reports_thumbnail_fk")
-
-  @@id([post_id, category_id])
-  @@index([category_id])
-  @@index([location_id], map: "missing_reports_location_id_fk_idx")
-  @@index([missing_id])
-  @@index([user_id], map: "missing_reports_user_id_fk_idx")
-  @@index([thumbnail], map: "missint_reports_thumbnail_fk_idx")
-}
-
-model missings {
-  post_id           Int                 @unique(map: "post_id_UNIQUE") @default(autoincrement())
-  category_id       Int                 @default(3)
-  user_id           String              @db.VarChar(45)
-  cat_id            Int
-  time              DateTime?           @db.DateTime(0)
-  location_id       Int?
-  detail            String?             @db.LongText
-  found             Int?                @default(0) @db.TinyInt
-  views             Int                 @default(0)
-  created_at        DateTime            @default(now()) @db.Timestamp(0)
-  updated_at        DateTime            @default(now()) @db.Timestamp(0)
-  thumbnail         Int?
-  missing_favorites missing_favorites[] @ignore
-  missing_reports   missing_reports[]
-  board_categories  board_categories    @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "missings_category_id_fk")
-  locations         locations?          @relation(fields: [location_id], references: [location_id], onDelete: NoAction, onUpdate: NoAction, map: "missings_location_id_fk")
-  images            images?             @relation(fields: [thumbnail], references: [image_id], onDelete: NoAction, onUpdate: NoAction, map: "missings_thumbnail_id_fk")
-  users             users               @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "missings_user_id_fk")
-
-  @@id([post_id, category_id])
-  @@index([category_id], map: "missings_category_id_fk_idx")
-  @@index([location_id], map: "missings_location_id_fk_idx")
-  @@index([thumbnail], map: "missings_thumbnail_id_fk_idx")
-  @@index([user_id], map: "missings_user_id_fk_idx")
-}
-
-model notification_types {
-  notification_type_id Int             @id @unique(map: "notification_type_id_UNIQUE") @default(autoincrement())
-  type                 String          @unique(map: "type_UNIQUE") @db.VarChar(10)
-  notifications        notifications[]
-}
-
-model notifications {
-  notification_id                        Int                @id @unique(map: "notification_id_UNIQUE") @default(autoincrement())
-  receiver_id                            String             @db.VarChar(45)
-  sender_id                              String             @db.VarChar(45)
-  type_id                                Int
-  url                                    String             @db.VarChar(100)
-  is_read                                Int                @db.TinyInt
-  created_at                             DateTime           @default(now()) @db.Timestamp(0)
-  users_notifications_receiver_idTousers users              @relation("notifications_receiver_idTousers", fields: [receiver_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "notifications_receiver_id_fk")
-  users_notifications_sender_idTousers   users              @relation("notifications_sender_idTousers", fields: [sender_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "notifications_sender_id_fk")
-  notification_types                     notification_types @relation(fields: [type_id], references: [notification_type_id], onDelete: NoAction, onUpdate: NoAction, map: "notifications_type_id_fk")
-
-  @@index([receiver_id])
-  @@index([sender_id], map: "notifications_sender_id_fk_idx")
-  @@index([type_id], map: "notifications_type_id_fk_idx")
-}
-
-model reports {
-  report_id        Int              @id @unique(map: "report_id_UNIQUE") @default(autoincrement())
-  post_id          Int
-  category_id      Int
-  detail           String?          @db.VarChar(45)
-  board_categories board_categories @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "reports_category_id_fk")
-
-  @@index([category_id], map: "reports_category_id_fk_idx")
-}
-
-model street_cat_comments {
-  street_cat_comment_id Int         @id @unique(map: "street_cat_comment_id_UNIQUE") @default(autoincrement())
-  street_cat_id         Int
-  user_id               String      @db.VarChar(45)
-  comment               String      @db.MediumText
-  created_at            DateTime    @default(now()) @db.Timestamp(0)
-  updated_at            DateTime?   @default(now()) @db.Timestamp(0)
-  street_cats           street_cats @relation(fields: [street_cat_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_comments_post_id_fk")
-  users                 users       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_comments_user_id_fk")
-
-  @@index([street_cat_id], map: "street_cat_comments_post_id_fk_idx")
-  @@index([user_id], map: "street_cat_comments_user_id_fk_idx")
-}
-
-model street_cat_favorites {
-  user_id     String      @db.VarChar(45)
-  post_id     Int
-  street_cats street_cats @relation(fields: [post_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
-  users       users       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_user_id_fk")
-
-  @@id([user_id, post_id])
-  @@index([post_id], map: "street_cat_favorites_post_id_fk_idx")
-}
-
-model street_cats {
-  post_id              Int                    @unique(map: "post_id_UNIQUE") @default(autoincrement())
-  category_id          Int                    @default(5)
-  name                 String?                @db.VarChar(10)
-  gender               String?                @db.Char(1)
-  neutering_date       DateTime?              @db.Date
-  discovery_date       DateTime?              @db.Date
-  location_id          Int
-  content              String?                @db.LongText
-  views                Int                    @default(0)
-  created_at           DateTime               @default(now()) @db.Timestamp(0)
-  updated_at           DateTime               @default(now()) @db.Timestamp(0)
-  thumbnail            Int?
-  user_id              String                 @db.VarChar(45)
-  neutered             Boolean                @default(false)
-  street_cat_comments  street_cat_comments[]
-  street_cat_favorites street_cat_favorites[]
-  board_categories     board_categories       @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "street_cats_category_id_fk")
-  locations            locations              @relation(fields: [location_id], references: [location_id], onDelete: NoAction, onUpdate: NoAction, map: "street_cats_location_id_fk")
-  images               images?                @relation(fields: [thumbnail], references: [image_id], onDelete: NoAction, onUpdate: NoAction, map: "street_cats_thumbnail_fk")
-  users                users                  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "street_cats_user_id_fk")
-
-  @@id([post_id, category_id])
-  @@index([category_id])
-  @@index([location_id], map: "street_cats_location_id_fk_idx")
+  @@id([postId, categoryId])
+  @@index([categoryId])
+  @@index([locationId], map: "street_cats_location_id_fk_idx")
   @@index([thumbnail], map: "street_cats_thumbnail_fk_idx")
-  @@index([user_id], map: "street_cats_user_id_fk_idx")
+  @@index([uuid], map: "street_cats_uuid_fk_idx")
+  @@map("street_cats")
 }
 
-model tags {
-  tag_id           Int              @id @unique(map: "tag_id_UNIQUE") @default(autoincrement())
-  tag              String           @db.VarChar(20)
-  category_id      Int
-  post_id          Int
-  board_categories board_categories @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "tags_category_id_fk")
-  communities      communities      @relation(fields: [post_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction, map: "tags_communities_post_id_fk")
+model Tags {
+  tagId         Int            @id @unique(map: "tag_id_UNIQUE") @default(autoincrement()) @map("tag_id")
+  tag           String         @db.VarChar(20)
+  communityTags CommunityTags?
+  eventTags     EventTags?
+  streetCatTags StreetCatTags?
 
-  @@index([category_id], map: "tags_category_id_fk_idx")
-  @@index([post_id], map: "tags_communities_post_id_fk_idx")
+  @@map("tags")
 }
 
-model user_oauth_secrets {
-  user_oauth_secret_id Int    @id @unique(map: "user_oauth_secret_id_UNIQUE") @default(autoincrement())
-  user_id              String @unique(map: "user_id_UNIQUE") @db.VarChar(45)
-  access_token         String @db.VarChar(45)
-  refresh_token        String @db.VarChar(45)
-  token_expiry         String @db.VarChar(45)
-  users                users  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "user_oauth_secrets_user_id_fk")
+model UserOauthSecrets {
+  userOauthSecretId Int    @id @unique(map: "user_oauth_secret_id_UNIQUE") @default(autoincrement()) @map("user_oauth_secret_id")
+  uuid              Bytes  @db.Binary(16)
+  accessToken       String @map("access_token") @db.VarChar(45)
+  refreshToken      String @map("refresh_token") @db.VarChar(45)
+  tokenExpiry       String @map("token_expiry") @db.VarChar(45)
+  users             Users  @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "user_oauth_secrets_uuid_fk")
+
+  @@index([uuid], map: "user_oauth_secrets_uuid_fk_idx")
+  @@map("user_oauth_secrets")
 }
 
-model user_secrets {
-  user_secret_id Int    @id @unique(map: "user_secret_id_UNIQUE") @default(autoincrement())
-  user_id        String @db.VarChar(45)
-  hash_password  String @db.VarChar(45)
-  salt           String @db.VarChar(45)
-  users          users  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "user_secrets_user_id_fk")
+model UserSecrets {
+  userSecretId Int    @id @unique(map: "user_secret_id_UNIQUE") @default(autoincrement()) @map("user_secret_id")
+  uuid         Bytes  @db.Binary(16)
+  hashPassword String @map("hash_password") @db.VarChar(200)
+  salt         String @db.VarChar(45)
+  users        Users  @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "user_secrets_uuid_fk")
 
-  @@index([user_id], map: "user_secrets_fk_idx")
+  @@index([uuid], map: "user_secrets_uuid_fk_idx")
+  @@map("user_secrets")
 }
 
-model users {
-  id                                             Int                    @unique(map: "id_UNIQUE") @default(autoincrement())
-  user_id                                        String                 @id @unique(map: "user_id_UNIQUE") @db.VarChar(45)
-  email                                          String                 @unique(map: "email_UNIQUE") @db.VarChar(45)
-  name                                           String                 @db.VarChar(10)
-  detail                                         String?                @db.MediumText
-  auth_type                                      String                 @db.VarChar(10)
-  profile_image                                  String?                @db.VarChar(100)
-  created_at                                     DateTime               @default(now()) @db.Timestamp(0)
-  chats                                          chats[]
-  communities                                    communities[]
-  community_comments                             community_comments[]
-  event_comments                                 event_comments[]
-  events                                         events[]
-  friends_friends_following_idTousers            friends[]              @relation("friends_following_idTousers")
-  friends_friends_user_idTousers                 friends[]              @relation("friends_user_idTousers")
-  home_cats                                      home_cats[]
-  likes                                          likes[]
-  messages                                       messages[]
-  missing_favorites                              missing_favorites[]    @ignore
-  missing_reports                                missing_reports[]
-  missings                                       missings[]
-  notifications_notifications_receiver_idTousers notifications[]        @relation("notifications_receiver_idTousers")
-  notifications_notifications_sender_idTousers   notifications[]        @relation("notifications_sender_idTousers")
-  street_cat_comments                            street_cat_comments[]
-  street_cat_favorites                           street_cat_favorites[]
-  street_cats                                    street_cats[]
-  user_oauth_secrets                             user_oauth_secrets?
-  user_secrets                                   user_secrets[]
+model Users {
+  id                                          Int                  @unique(map: "id_UNIQUE") @default(autoincrement())
+  uuid                                        Bytes                @id @unique(map: "user_id_UNIQUE") @db.Binary(16)
+  email                                       String               @unique(map: "email_UNIQUE") @db.VarChar(45)
+  nickname                                    String               @db.VarChar(10)
+  detail                                      String?              @db.MediumText
+  authType                                    String               @map("auth_type") @db.VarChar(10)
+  profileImage                                String?              @map("profile_image") @db.VarChar(100)
+  createdAt                                   DateTime             @default(now()) @map("created_at") @db.Timestamp(0)
+  status                                      String               @default("active") @db.VarChar(20)
+  chats                                       Chats[]
+  communities                                 Communities[]
+  communityComments                           CommunityComments[]
+  eventComments                               EventComments[]
+  events                                      Events[]
+  friendsFriendsFollowingIdTousers            Friends[]            @relation("friends_following_idTousers")
+  friendsFriendsUuidTousers                   Friends[]            @relation("friends_uuidTousers")
+  homeCats                                    HomeCats[]
+  likes                                       Likes[]
+  messages                                    Messages[]
+  missingFavorites                            MissingFavorites[]
+  missingReports                              MissingReports[]
+  missings                                    Missings[]
+  notificationsNotificationsReceiverIdTousers Notifications[]      @relation("notifications_receiver_idTousers")
+  notificationsNotificationsSenderIdTousers   Notifications[]      @relation("notifications_sender_idTousers")
+  streetCatComments                           StreetCatComments[]
+  streetCatFavorites                          StreetCatFavorites[]
+  streetCats                                  StreetCats[]
+  userOauthSecrets                            UserOauthSecrets[]
+  userSecrets                                 UserSecrets[]
+
+  @@map("users")
 }

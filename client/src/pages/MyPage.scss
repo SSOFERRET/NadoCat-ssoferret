@@ -6,18 +6,28 @@
 }
 
 .myPage{
-    width:360px;
-    height: 740px;
+  width:360px;
+  height: 740px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  .header{
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgb(255, 255, 255);
+    position: fixed;
+    background-color: white;
+    z-index: 1999;
+
     #title{
-        margin-top: 15px;
-        @include font($size-14, $silver);
-        font-family: "bold";
-        border-bottom: .5px solid $silver;
-        width: 320px;
-        height: 25px;
+      margin-top: 15px;
+      @include font($size-14, $silver);
+      font-family: "bold";
+      border-bottom: .5px solid $silver;
+      width: 320px;
+      height: 25px;
     }
+  }
 }

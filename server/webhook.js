@@ -32,10 +32,12 @@ app.post("/webhook", (req, res) => {
         }
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
+
+        if (!res.headersSent)
+          res.status(200).send("Webhook received and processed successfully");
       }
     );
   }
-  res.status(200).send("Webhook received");
 });
 
 const PORT = 3030;

@@ -1,0 +1,53 @@
+@import "../../base/common.scss";
+
+footer {
+  display: flex;
+  align-items: center;
+  padding: 10rem 20rem;
+  margin: 0 auto;
+  max-width: 390rem;
+  background-color: $white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 430rem;
+  
+}
+
+.navbar-item {
+  cursor: pointer;
+  font-family: "regular";
+  font-size: $size-11;
+  color: $black;
+  text-align: center;
+  text-decoration: none;
+  
+  &.active {
+    font-family: bold;
+    color: $secondary;
+
+    svg {
+      fill: $secondary;
+    }
+  }
+
+  svg {
+    width: 22rem;
+    height: 22rem;
+    fill: $black;
+  }
+
+  span {
+    display: block;
+    text-align: center;
+    margin-top: 5rem;
+  }
+}

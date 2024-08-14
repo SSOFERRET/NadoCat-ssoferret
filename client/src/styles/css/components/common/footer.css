@@ -1,0 +1,93 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  background-color: #FCF7E0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+footer {
+  display: flex;
+  align-items: center;
+  padding: 10rem 20rem;
+  margin: 0 auto;
+  max-width: 390rem;
+  background-color: #FFFFFF;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 430rem;
+}
+
+.navbar-item {
+  cursor: pointer;
+  font-family: "regular";
+  font-size: 11rem !important;
+  color: #191919;
+  text-align: center;
+  text-decoration: none;
+}
+.navbar-item.active {
+  font-family: bold;
+  color: #F27405;
+}
+.navbar-item.active svg {
+  fill: #F27405;
+}
+.navbar-item svg {
+  width: 22rem;
+  height: 22rem;
+  fill: #191919;
+}
+.navbar-item span {
+  display: block;
+  text-align: center;
+  margin-top: 5rem;
+}
+
+/*# sourceMappingURL=footer.css.map */
