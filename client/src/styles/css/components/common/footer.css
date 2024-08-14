@@ -37,31 +37,51 @@ html {
 /* buttons */
 /* tags */
 /* others */
-h2 {
-  font-family: "bold";
-  font-size: 16rem !important;
-  background-color: aquamarine;
-}
-
-section {
+footer {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  padding: 10rem 20rem;
+  margin: 0 auto;
+  max-width: 430rem;
+  background-color: #FFFFFF;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
   justify-content: space-between;
-  padding: 0 20rem;
+  align-items: center;
+  width: 430rem;
 }
 
-.test-box {
-  width: 190rem;
-  height: 190rem;
-  background-color: blueviolet;
-  border-radius: 5rem;
-  margin-bottom: 18rem;
-}
-
-p {
+.navbar-item {
+  cursor: pointer;
+  font-family: "regular";
+  font-size: 11rem !important;
   color: #191919;
-  font-family: "bold";
-  font-size: 14rem !important;
+  text-align: center;
+  text-decoration: none;
+}
+.navbar-item.active {
+  font-family: bold;
+  color: #F27405;
+}
+.navbar-item.active svg {
+  fill: #F27405;
+}
+.navbar-item svg {
+  width: 22rem;
+  height: 22rem;
+  fill: #191919;
+}
+.navbar-item span {
+  display: block;
+  text-align: center;
+  margin-top: 5rem;
 }
 
-/*# sourceMappingURL=streetCat.css.map */
+/*# sourceMappingURL=footer.css.map */

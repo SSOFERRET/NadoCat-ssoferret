@@ -16,11 +16,10 @@ import {
   getAndDeleteImageFormats,
 } from "../../util/images/deleteImages";
 import { addNewImages } from "../../util/images/addNewImages";
-import { IMissingReport } from "../../types/missing";
 import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
-import { notifications, notifyMissingReport } from "../notification/Notifications";
+import { notifyMissingReport } from "../notification/Notifications";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -33,7 +32,6 @@ import { notifications, notifyMissingReport } from "../notification/Notification
 *   [x] put
 *     [x] 일치 및 불일치
 */
-
 /**
  *
  * CHECKLIST

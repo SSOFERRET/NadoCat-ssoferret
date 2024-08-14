@@ -21,6 +21,8 @@ export const getEventComments = async (
     select: {
       eventCommentId: true,
       comment: true,
+      createdAt: true,
+      updatedAt: true,
       users: {
         select: {
           id: true,
@@ -36,6 +38,8 @@ export const getEventComments = async (
     return {
       commentId: item.eventCommentId,
       comment: item.comment,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
       users: {
         id: item.users.id,
         uuid: item.users.uuid.toString("hex"),
