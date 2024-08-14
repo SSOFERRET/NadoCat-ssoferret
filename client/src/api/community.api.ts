@@ -1,4 +1,4 @@
-import { httpClient } from "./axios";
+import { httpClient } from "./http";
 
 const LIMIT = 10;
 
