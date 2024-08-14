@@ -1,6 +1,7 @@
 @import "../../base/common.scss";
 
 .container {
-  height: 100vh;
+  min-height: 100vh;
   background-color: antiquewhite;
+  padding-bottom: 64rem;
 }
