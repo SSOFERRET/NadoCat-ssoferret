@@ -7,7 +7,7 @@ import { StreetCats } from "./pages/streetCat/StreetCat";
 import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
-import Community from "./pages/community/community";
+import Community from "./pages/community/Community";
 
 const routeList = [
   {
