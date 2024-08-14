@@ -3,9 +3,17 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
-import { addLocationFormats, addMissingReport, getImageFormatsByPostId, getLocationFormatsByPostId, getPostByPostId, removePost, updateMissingReportByPostId, updateMissingReportCheckByPostId } from "../../model/missing.model";
+import {
+  addLocationFormats,
+  addMissingReport,
+  getImageFormatsByPostId,
+  getLocationFormatsByPostId,
+  getPostByPostId,
+  removePost,
+  updateMissingReportByPostId,
+  updateMissingReportCheckByPostId,
+} from "../../model/missing.model";
 import { getUserId, validateError } from "./Missings";
-
 import { CATEGORY } from "../../constants/category";
 import {
   deleteLocationsByLocationIds,
