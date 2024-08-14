@@ -1,4 +1,6 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../client";
+import { getUserId } from "../controller/community/Communities";
 
 export const getFriendCounts = async (userId: string) => {
   return await prisma.friends.count({
@@ -53,6 +55,17 @@ export const getFriendById = async (userId: string, followingId: string) => {
       followingId: Buffer.from(followingId, "hex"),
     },
   });
+};
+
+export const getFriendList = async (
+  tx: Prisma.TransactionClient,
+  userId: Buffer
+) => {
+  return await tx.friends.findMany({
+    where: {
+      uuid: userId
+    }
+  })
 };
 
 export const addFriend = async (userId: string, followingId: string) => {
