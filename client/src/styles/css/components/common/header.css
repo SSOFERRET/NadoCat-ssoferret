@@ -34,6 +34,12 @@ html {
 /* font size */
 /* color palette */
 /* radious */
+body {
+  background-color: #FCF7E0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
 /* buttons */
 /* tags */
 /* others */
@@ -43,7 +49,7 @@ header {
   align-items: center;
   padding: 17rem 20rem;
   margin: 0 auto;
-  max-width: 430rem;
+  max-width: 390rem;
   background-color: #FFFFFF;
   position: fixed;
   top: 0;

@@ -6,7 +6,7 @@ import MyPage from "./pages/MyPage";
 import { StreetCats } from "./pages/streetCat/StreetCat";
 import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
-import Layout from "./components/layout/Layout";
+import { Layout } from "./components/layout/Layout";
 
 const routeList = [
   {

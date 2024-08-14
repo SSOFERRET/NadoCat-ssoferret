@@ -34,6 +34,12 @@ html {
 /* font size */
 /* color palette */
 /* radious */
+body {
+  background-color: #FCF7E0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
 /* buttons */
 /* tags */
 /* others */
@@ -44,6 +50,8 @@ main {
   margin: 0 auto;
   max-width: 430rem;
   margin-top: 58rem;
+  margin-bottom: 60rem;
+  background-color: #FFFFFF;
 }
 
 /*# sourceMappingURL=layout.css.map */
