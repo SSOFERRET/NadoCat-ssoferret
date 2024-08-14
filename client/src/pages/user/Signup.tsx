@@ -1,5 +1,12 @@
 import React from "react";
 
+export interface SignupProps {
+    email: string;
+    password: string;
+    nickname: string;
+  }
+  
+
 const Signup = () => {
   return (
     <div>
