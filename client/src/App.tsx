@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./api/queryClient";
 import MyPage from "./pages/MyPage";
@@ -7,38 +7,45 @@ import { StreetCats } from "./pages/streetCat/StreetCat";
 import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
 import { Layout } from "./components/layout/Layout";
+import Community from "./pages/community/community";
 
 const routeList = [
   {
     path: "/users/my",
-    elemet: <MyPage />
+    elemet: <MyPage />,
   },
   {
     path: "/boards/street-cats",
-    elemet: <StreetCats />
+    elemet: <StreetCats />,
   },
   {
     path: "/users/login",
-    elemet: <Login />
+    elemet: <Login />,
   },
   {
     path: "/users/signup",
-    elemet: <Signup />
+    elemet: <Signup />,
   },
-]
+  {
+    path: "/boards/communities",
+    elemet: <Community />,
+  },
+];
 
-const router = createBrowserRouter(routeList.map((item) => {
-  return {
-    ...item,
-    element: <Layout>{item.elemet}</Layout>,
-  }
-}))
+const router = createBrowserRouter(
+  routeList.map((item) => {
+    return {
+      ...item,
+      element: <Layout>{item.elemet}</Layout>,
+    };
+  })
+);
 
 const App: React.FC = () => {
   return (
-   <QueryClientProvider client={queryClient}>
-   <RouterProvider router={router}/>
-  </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 };
 

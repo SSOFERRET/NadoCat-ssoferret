@@ -22,6 +22,5 @@ export const Header: React.FC = () => {
         </button>
       </header>
     </>
-  )
-}
-
+  );
+};

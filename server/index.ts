@@ -8,12 +8,16 @@ import StreetCatsRouter from "./routes/streetCats";
 import UserRouter from "./routes/users";
 import InterestsRouter from "./routes/interest";
 import EventsRouter from "./routes/events";
+import NotificationsRouter from "./routes/notifications";
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', //클라이언트가 요청하는 출처
+    credentials: true//자격 증명(쿠키 등) 허용
+  }));
 // app.use(helmet()) // NOTE 개발중이라 주석 처리해뒀음
 app.use(morgan("tiny"));
 
@@ -23,7 +27,7 @@ app.use("/boards/Interests", InterestsRouter);
 app.use('/boards/missings', MissingRouter);
 // app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
-app.use("/users", UserRouter);
+app.use("/notifications", NotificationsRouter);
 
 app.use((_req: Request, res: Response) => {
   res.sendStatus(404);
