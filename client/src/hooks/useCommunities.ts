@@ -23,6 +23,9 @@ const useCommunities = (sort?: Sort) => {
     },
   });
 
+  const posts = data ? data.pages.flatMap((page) => page.posts) : [];
+  const isEmpty = posts.length === 0;
+
   return {
     data,
     isLoading,
@@ -31,6 +34,7 @@ const useCommunities = (sort?: Sort) => {
     hasNextPage,
     isFetchingNextPage,
     isFetching,
+    isEmpty,
   };
 };
 
