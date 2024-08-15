@@ -1,0 +1,124 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  background-color: #FCF7E0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.post-details {
+  margin-bottom: 28rem;
+}
+.post-details .user {
+  width: 100%;
+  display: flex;
+  padding: 13rem 0;
+}
+.post-details .user .user-info {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.post-details .user .user-info .user-details {
+  display: flex;
+  flex-direction: column;
+}
+.post-details .user .user-info .user-details .nickname {
+  font-family: "bold";
+  font-size: 14rem !important;
+  margin-bottom: 5rem;
+}
+.post-details .user .user-info .user-details .date {
+  font-family: "medium";
+  font-size: 10rem !important;
+  color: #B8BCBF;
+}
+.post-details .user .user-info .options-icon {
+  width: 22rem;
+  height: 22rem;
+  color: #4C4C4C;
+  margin-left: auto;
+}
+.post-details .post-title {
+  display: inline-block;
+  font-family: "bold";
+  font-size: 16rem !important;
+  line-height: 1.2;
+  margin: 7rem 0 13rem 0;
+}
+.post-details .image {
+  width: 380rem;
+  height: 380rem;
+  border-radius: 5rem;
+  background-color: lightgray;
+  overflow: hidden;
+  margin-bottom: 13rem;
+}
+.post-details .post-info {
+  display: flex;
+  align-items: center;
+  gap: 14rem;
+  font-family: "medium";
+  font-size: 14rem !important;
+  color: #4C4C4C;
+  margin: 20rem 0;
+}
+.post-details .post-info svg {
+  width: 17rem;
+  height: 17rem;
+}
+.post-details .post-info div {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+.post-details .post-info .likes svg {
+  color: #F2B705;
+}
+.post-details .post-content {
+  font-family: "medium";
+  font-size: 14rem !important;
+  line-height: 1.5;
+  color: #4C4C4C;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/*# sourceMappingURL=postDetail.css.map */

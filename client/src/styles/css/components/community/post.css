@@ -51,7 +51,7 @@ body {
   border-bottom: 0.5rem solid #D9D9D9;
   cursor: pointer;
 }
-.board-post .post-info {
+.board-post .board-post-info {
   display: flex;
   flex-direction: column;
   justify-content: space-between;

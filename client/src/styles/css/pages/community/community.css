@@ -47,6 +47,7 @@ body {
   min-height: 100vh;
   padding: 20rem;
   padding-bottom: 64rem;
+  background-color: #FFFFFF;
 }
 .community-container .category {
   font-family: "semiBold";
