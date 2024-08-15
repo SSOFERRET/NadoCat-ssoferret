@@ -30,10 +30,15 @@
 
   .post-meta {
     display: flex;
+    align-items: center;
     font-size: $size-12;
     font-family: "medium";
     color: $silver;
     gap: 5rem;
+
+    .post-views {
+      margin-right: 14rem;
+    }
   }
 
   .post-image {

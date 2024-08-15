@@ -4,11 +4,11 @@ import "../../styles/css/components/community/postList.css";
 import { ICommunity, ICommunityPage } from "../../models/community.model";
 import { InfiniteData } from "@tanstack/react-query";
 
-interface Props {
+interface IProps {
   posts: InfiniteData<ICommunityPage> | undefined;
 }
 
-const PostList = ({ posts }: Props) => {
+const PostList = ({ posts }: IProps) => {
   return (
     <ul className="list">
       {posts?.pages.map((group: ICommunityPage, i: number) => (

@@ -1,4 +1,4 @@
-import { ICommunityPage } from "../models/community.model";
+import { ICommunity, ICommunityPage } from "../models/community.model";
 import { httpClient } from "./http";
 
 const LIMIT = 10;
@@ -11,6 +11,10 @@ interface ICommunityPostsParams {
   sort?: Sort;
 }
 
+interface CommunityDetailParams {
+  postId: number;
+}
+
 export const getCommunityPosts = async ({
   pageParam,
   limit,
@@ -21,5 +25,12 @@ export const getCommunityPosts = async ({
       sort ?? SORT
     }`
   );
+  return response.data;
+};
+
+export const getCommunityDetail = async ({
+  postId,
+}: CommunityDetailParams): Promise<ICommunity> => {
+  const response = await httpClient.get(`/boards/communities/${postId}`);
   return response.data;
 };

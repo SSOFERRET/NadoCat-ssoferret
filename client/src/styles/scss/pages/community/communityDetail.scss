@@ -21,14 +21,6 @@
       width: 100%;
       display: flex;
       padding: 13rem 0;
-      .avatar {
-        width: 32rem;
-        height: 32rem;
-        border-radius: 50%;
-        background-color: $primary;
-        margin-right: 9rem;
-        flex-shrink: 0;
-      }
 
       .user-info {
         width: 100%;
@@ -72,15 +64,7 @@
       border-radius: $round-5;
       background-color: lightgray;
       overflow: hidden;
-    }
-
-    .tags {
-      margin-top: 13rem;
-      .tag {
-        font-size: $size-14;
-        @include tag();
-        font-family: "regular";
-      }
+      margin-bottom: 13rem;
     }
   }
 
@@ -115,56 +99,7 @@
     font-size: $size-14;
     line-height: 1.5;
     color: $dimgray;
-  }
-}
-
-.comment-list {
-  border-top: 0.5rem solid $lightgray;
-
-  .comment-card {
-    padding: 18rem 0;
-    border-bottom: 0.5rem solid $lightgray;
-
-    .comment {
-      display: flex;
-
-      .avatar {
-        width: 32rem;
-        height: 32rem;
-        background-color: $primary;
-        border-radius: 50%;
-        margin-right: 9rem;
-        flex-shrink: 0;
-      }
-
-      .detail {
-        .nickname {
-          font-family: "bold";
-          font-size: $size-14;
-          margin-right: 5rem;
-        }
-
-        .date {
-          font-family: "medium";
-          font-size: $size-10;
-        }
-
-        .comment-detail {
-          margin-top: 5rem;
-          color: $dimgray;
-          font-family: "medium";
-          font-size: $size-14;
-          line-height: 1.2;
-        }
-      }
-    }
-
-    &:nth-child(odd) .avatar {
-      background-color: $primary;
-    }
-
-    &:nth-child(even) .avatar {
-      background-color: $lightgray;
-    }
+    white-space: pre-wrap;
+    word-break: break-all;
   }
 }

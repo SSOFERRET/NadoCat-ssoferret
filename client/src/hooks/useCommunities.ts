@@ -1,7 +1,7 @@
 import { getCommunityPosts, Sort } from "../api/community.api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-const useCommunity = (sort?: Sort) => {
+const useCommunities = (sort?: Sort) => {
   const {
     data,
     isLoading,
@@ -32,4 +32,4 @@ const useCommunity = (sort?: Sort) => {
   };
 };
 
-export default useCommunity;
+export default useCommunities;

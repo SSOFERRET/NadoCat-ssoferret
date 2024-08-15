@@ -8,6 +8,11 @@ export interface ICommunity {
   updatedAt: string;
   images: Image[];
   tags: Tag[];
+  users?: {
+    uuid: string;
+    nickname: string;
+    profileImage: string;
+  };
 }
 
 export interface Image {
