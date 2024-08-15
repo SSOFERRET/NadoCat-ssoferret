@@ -5,6 +5,7 @@ const useCommunities = (sort?: Sort) => {
   const {
     data,
     isLoading,
+    error,
     isFetching,
     fetchNextPage,
     hasNextPage,
@@ -25,6 +26,7 @@ const useCommunities = (sort?: Sort) => {
   return {
     data,
     isLoading,
+    error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,

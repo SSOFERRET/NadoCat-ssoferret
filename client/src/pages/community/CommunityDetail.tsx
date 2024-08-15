@@ -8,6 +8,7 @@ import Avartar from "../../components/community/Avartar";
 import useCommunity from "../../hooks/useCommunity";
 import { useParams } from "react-router-dom";
 import Tags from "../../components/common/Tags";
+import ErrorNotFound from "../../components/error/ErrorNotFound";
 
 // CHECKLIST
 // [ ] 댓글 컴포넌트 분리
@@ -18,11 +19,14 @@ import Tags from "../../components/common/Tags";
 const CommunityDetail = () => {
   const params = useParams();
   const postId = Number(params.id);
-  const { data: post } = useCommunity(postId);
+  const { data: post, error, isLoading } = useCommunity(postId);
+
   return (
-    <>
+    <div className="community-detail">
+      {isLoading && <div>loading...</div>}
+      {error && <ErrorNotFound />}
       {post && (
-        <div className="community-detail">
+        <>
           <div className="category">
             <span>커뮤니티</span>
           </div>
@@ -61,9 +65,9 @@ const CommunityDetail = () => {
             <pre className="post-content">{post.content}</pre>
           </section>
           <CommunityComments postId={postId} />
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 };
 
