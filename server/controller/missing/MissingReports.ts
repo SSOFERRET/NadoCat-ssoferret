@@ -28,6 +28,7 @@ import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 import { notify } from "../notification/Notifications";
+import { handleControllerError } from "../../util/errors/errors";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -155,25 +156,31 @@ export const deleteMissingReport = async (
   res: Response,
   postIdInput?: number
 ) => {
-  const missingId = Number(req.params.missingId);
-  const postId = postIdInput ? postIdInput : Number(req.params.postId);
-  const userId = await getUserId(); // NOTE
-  const postData = {
-    userId,
-    categoryId: CATEGORY.MISSING_REPORTS,
-    postId,
-  };
+  try {
+    const missingId = Number(req.params.missingId);
+    const postId = postIdInput ? postIdInput : Number(req.params.postId);
+    const userId = await getUserId(); // NOTE
+    const postData = {
+      userId,
+      categoryId: CATEGORY.MISSING_REPORTS,
+      postId,
+    };
 
-  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    const locations = await getAndDeleteLocationFormats(tx, postData);
-    const images = await getAndDeleteImageFormats(tx, postData);
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const locations = await getAndDeleteLocationFormats(tx, postData);
+      const images = await getAndDeleteImageFormats(tx, postData);
 
-    await removePost(tx, postData);
+      await removePost(tx, postData);
 
-    if (locations) await deleteLocationsByLocationIds(tx, locations);
+      if (locations) await deleteLocationsByLocationIds(tx, locations);
 
-    if (images) await deleteImagesByImageIds(tx, images);
-  });
+      if (images) await deleteImagesByImageIds(tx, images);
+    });
+
+    return res.status(StatusCodes.OK).json("제보글 삭제");
+  } catch (error) {
+    return handleControllerError(error, res);
+  }
 };
 
 export const deleteMissingReportHandler = async (
