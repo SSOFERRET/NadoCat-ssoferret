@@ -1,5 +1,7 @@
 import React from "react";
-import "../../styles/css/base/normalize.css";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { FaPlus } from "react-icons/fa6";
+import "../../styles/css/base/reset.css";
 import "../../styles/css/pages/streetCat/streetCat.css";
 import { Header } from "../../components/common/Header";
 import { Footer } from "../../components/common/Footer";
@@ -47,16 +49,125 @@ import { Footer } from "../../components/common/Footer";
 export const StreetCats: React.FC = () => {
   return (
     <>
-      <section>
-        <div className="test-box">1</div>
-        <div className="test-box">2</div>
-        <div className="test-box">1</div>
-        <div className="test-box">2</div>
-        <div className="test-box">1</div>
-        <div className="test-box">2</div>
-        <div className="test-box">1</div>
-        <div className="test-box">2</div>
-        <p> 텍스트 적용 테스트 </p>
+      <button className="write-btn">
+        <FaPlus />
+        <a href="">글쓰기</a>
+      </button>
+
+      <section className="street-cat-section">
+        <nav className="street-cat-nav">
+          <ul>
+            <li className="active">
+              <span>
+                동네 고양이 도감
+                <span className="nav-bar"></span>
+              </span>
+            </li>
+            <li>
+              <span>내 도감</span>
+            </li>
+            <li>
+              <span>동네 고양이 지도</span>
+            </li>
+          </ul>
+        </nav>
+
+        <p className="title">우리 동네 고양이</p>
+
+        <ul className="street-cat-list">
+          <li className="street-cat">
+            <a href="">
+              <div className="test-box">
+                <img src="" alt="" />
+                <AiFillHeart className="active"/>
+              </div>
+              <div className="street-cat-info">
+                <span className="name">고양이름</span>
+                <span className="date">2024년 8월 10일</span>
+              </div>
+            </a>
+          </li>
+          <li className="street-cat">
+            <a href="">
+              <div className="test-box">
+                <img src="" alt="" />
+                <AiOutlineHeart />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">고양이름</span>
+                <span className="date">2024년 8월 10일</span>
+              </div>
+            </a>
+          </li>
+          <li className="street-cat">
+            <a href="">
+              <div className="test-box">
+                <img src="" alt="" />
+                <AiOutlineHeart />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">고양이름</span>
+                <span className="date">2024년 8월 10일</span>
+              </div>
+            </a>
+          </li>
+          <li className="street-cat">
+            <a href="">
+              <div className="test-box">
+                <img src="" alt="" />
+                <AiOutlineHeart />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">고양이름</span>
+                <span className="date">2024년 8월 10일</span>
+              </div>
+            </a>
+          </li>
+          <li className="street-cat">
+            <a href="">
+              <div className="test-box">
+                <img src="" alt="" />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">고양이름</span>
+                <span className="date">2024년 8월 10일</span>
+              </div>
+            </a>
+          </li>
+          <li className="street-cat">
+            <a href="">
+              <div className="test-box">
+                <img src="" alt="" />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">고양이름</span>
+                <span className="date">2024년 8월 10일</span>
+              </div>
+            </a>
+          </li>
+          <li className="street-cat">
+            <a href="">
+              <div className="test-box">
+                <img src="" alt="" />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">고양이름</span>
+                <span className="date">2024년 8월 10일</span>
+              </div>
+            </a>
+          </li>
+          <li className="street-cat">
+            <a href="">
+              <div className="test-box">
+                <img src="" alt="" />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">고양이름</span>
+                <span className="date">2024년 8월 10일</span>
+              </div>
+            </a>
+          </li>
+        </ul>
       </section>
     </>
   )

@@ -1,39 +1,125 @@
 @import "../../base/common.scss";
 
-// main {
-//   display: flex;
-//   flex-direction: column;
-//   width: 100%;
-//   margin: 0 auto;
-//   max-width: 430rem;
-//   margin-top: 58rem;
-//   background-color: cadetblue;
-// }
+.write-btn {
+  background-color: $primary;
+  border: none;
+  border-radius: $rount-30;
+  font-size: 16rem;
+  padding: 16rem 20rem;
+  position: fixed;
+  right: 20rem;
+  bottom: 74rem;
+  z-index: 100;
 
-h2 {
-  font-family: "bold";
-  font-size: $size-16;
-  background-color: aquamarine;
+  svg {
+    width: 19rem;
+    height: 19rem;
+    fill: $white;
+    margin-right: 4rem;
+    vertical-align: middle;
+  }
+
+  a {
+    text-decoration: none;
+    font-family: "bold";
+    font-size: $size-18;
+    color: $white;
+    vertical-align: middle;
+  }
 }
 
-section {
+.street-cat-section {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: space-between;
   padding: 0 20rem;
+  font-size: 14rem;
+}
+
+.street-cat-nav {
+  font-family: "regular";
+  padding: 7rem 0 14rem 0;
+  border-bottom: 0.5rem solid $lightgray;
+
+  ul {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  li {
+    position: relative;
+
+    &.active {
+      font-family: "bold";
+      color: $primary;
+    }
+
+    .nav-bar {
+      display: block;
+      width: 100%;
+      height: 2rem;
+      background-color: $primary;
+      position: absolute;
+      bottom: -15rem;
+    }
+  }
+}
+
+.title {
+  font-family: "bold";
+  font-size: $size-16;
+  padding: 14rem 0;
+}
+
+.street-cat-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  a {
+    text-decoration: none;
+    color: $black;
+  }
 }
 
 .test-box {
   width: 190rem;
   height: 190rem;
-  background-color: blueviolet;
+  background-color: $lightgray;
   border-radius: $round-5;
-  margin-bottom: 18rem;
+  position: relative;
+
+  svg {
+    width: 25rem;
+    height: 25rem;
+    fill: $dimgray;
+    position: absolute;
+    right: 10rem;
+    bottom: 8rem;
+
+    &.active {
+      fill: $primary;
+    }
+  }
 }
 
-p {
-  color: $black;
-  font-family: "bold";
-  font-size: $size-14;
-}
+.street-cat-info {
+  margin: 10rem 0 18rem 0;
 
+  span {
+    display: block;
+    
+  }
+
+  .name {
+    font-family: "bold";
+    font-size: $size-14;
+    margin-bottom: 4rem;
+  }
+  .date {
+    font-family: "medium";
+    font-size: $size-10;
+    color: $silver;
+  }
+}
