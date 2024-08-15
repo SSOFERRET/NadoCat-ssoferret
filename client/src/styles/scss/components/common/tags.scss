@@ -1,9 +1,14 @@
 @import "../../base/common.scss";
 
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 4rem;
+}
+
 .tag {
   @include tag();
   font-family: "regular";
-  max-width: 106rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
