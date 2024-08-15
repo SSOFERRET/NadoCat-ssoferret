@@ -1,18 +1,20 @@
 import React from "react";
-import CommunityCard from "./Post";
-import { ICommunity } from "../../models/community.model";
+import Post from "./Post";
+import "../../styles/css/components/community/postList.css";
+import { ICommunity, ICommunityPage } from "../../models/community.model";
+import { InfiniteData } from "@tanstack/react-query";
 
-interface Props {
-  posts: any;
+interface IProps {
+  posts: InfiniteData<ICommunityPage> | undefined;
 }
 
-const CommunityList = ({ posts }: Props) => {
+const PostList = ({ posts }: IProps) => {
   return (
-    <ul>
-      {posts?.pages.map((group: { posts: ICommunity[] }, i: number) => (
+    <ul className="list">
+      {posts?.pages.map((group: ICommunityPage, i: number) => (
         <React.Fragment key={i}>
           {group.posts.map((post: ICommunity) => (
-            <CommunityCard key={post.postId} post={post} />
+            <Post key={post.postId} post={post} />
           ))}
         </React.Fragment>
       ))}
@@ -20,4 +22,4 @@ const CommunityList = ({ posts }: Props) => {
   );
 };
 
-export default CommunityList;
+export default PostList;

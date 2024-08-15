@@ -1,0 +1,24 @@
+@import "../../base/common.scss";
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 4rem;
+}
+
+.tag {
+  @include tag();
+  font-family: "regular";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tags-md .tag {
+  font-size: $size-14;
+}
+
+.tags-sm .tag {
+  max-width: 75rem;
+  font-size: $size-10;
+}
