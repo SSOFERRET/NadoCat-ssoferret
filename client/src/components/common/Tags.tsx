@@ -25,7 +25,7 @@ const Tags = ({ tags, size = "md" }: IProps) => {
 
   return (
     <div className={`tags ${sizeClass}`}>
-      {tags.slice(0, 2).map((tag: ITag) => (
+      {tags.map((tag: ITag) => (
         <span className="tag" key={tag.tagId}>
           &#035; {tag.tag}
         </span>

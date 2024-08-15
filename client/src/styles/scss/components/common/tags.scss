@@ -1,13 +1,19 @@
 @import "../../base/common.scss";
 
-.tags-md .tag {
+.tag {
   @include tag();
   font-family: "regular";
+  max-width: 106rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tags-md .tag {
   font-size: $size-14;
 }
 
 .tags-sm .tag {
-  @include tag();
-  font-family: "regular";
+  max-width: 80rem;
   font-size: $size-10;
 }
