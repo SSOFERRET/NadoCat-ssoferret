@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId, getPostList, getPostsCount } from "../../model/missing.model";
+import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
@@ -13,9 +13,7 @@ import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 import { getMissingFavoriteAdders, getMissingReporters } from "../../model/notification.model";
-import { notify } from "../notification/Notifications";
-import { getMissingFavorites } from "./MissingsFavorites";
-import { getFriendList } from "../../model/friend.model";
+import { notify, notifyNewPostToFriends } from "../notification/Notifications";
 
 
 /* CHECKLIST
@@ -127,14 +125,7 @@ export const createMissing = async (req: Request, res: Response) => {
         }, images)
       }
 
-      const friends = await getFriendList(tx, userId)
-
-      friends.forEach((friend) => notify({
-        type: "newPost",
-        receiver: friend.followingId,
-        sender: userId,
-        url: `/boards/missings/${post.postId}`
-      }))
+      await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
     });
 
     res
