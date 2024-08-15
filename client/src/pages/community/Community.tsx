@@ -4,6 +4,11 @@ import PostList from "../../components/community/PostList";
 import useCommunities from "../../hooks/useCommunities";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
+// CHECKLIST
+// [ ] 정렬 기준 동적으로 받아오게 수정
+// [ ] 카테고리 컴포넌트 분리
+// [ ] 무한 스크롤 로딩 스피너 만들기
+
 const Community = () => {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useCommunities("views");
