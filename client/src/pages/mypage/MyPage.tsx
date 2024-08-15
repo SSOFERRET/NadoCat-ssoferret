@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BackButton from '../../components/common/BackButton';
-import '../../styles/scss/mypage/MyPage.scss';
+import '../../styles/scss/pages/mypage/MyPage.scss';
 import "../../styles/css/base/reset.css";
 import Posts from '../../components/mypage/Posts';
 

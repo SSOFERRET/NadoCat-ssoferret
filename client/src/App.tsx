@@ -8,6 +8,7 @@ import Layout from "./components/layout/Layout";
 import Community from "./pages/community/Community";
 import Chat from "./pages/chat/Chat";
 import MyPage from "./pages/mypage/MyPage";
+import ChatList from "./pages/chat/ChatList";
 
 const routeList = [
   {
@@ -33,6 +34,10 @@ const routeList = [
   {
     path: "/chat",
     elemet: <Chat />,
+  },
+  {
+    path: "/chat/chatlist",
+    elemet: <ChatList />,
   },
 ];
 
