@@ -70,12 +70,15 @@
         white-space: nowrap;
         line-height: 1.8em;
         margin: 0;
-        width: 100%;
+        width: 90%;
         text-overflow: ellipsis;
         white-space: nowrap;
         max-height: 2vh;
         overflow: hidden;
       }
+    }
+    .icon{
+      font-size: 1.7vh;
     }
   }
  }

@@ -1,0 +1,53 @@
+@use "../../styles/scss/base/common.scss" as *;
+
+@mixin font ($size,$weight, $color) {
+  font-size: $size;
+  font-weight: $weight;
+  color: $color;
+}
+
+.modal{
+  width: 430px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .background{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    margin: 0;
+    top: 0;
+    left: 0;
+    background-color: #2525257d;
+  }
+  .contents{
+    background-color: white;
+    width: 80%;
+    height: 22vh;
+    position: absolute;
+    top: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around;
+    align-items: center;
+    border-radius: 1.5vh;
+    .alarm{
+      @include font(20em, 600, black);
+    }
+    .question{
+      @include font(14em, 400, #4C4C4C);
+    }
+    .buttonbox{
+      display: flex;
+      width: 70%;
+      justify-content: space-between;
+      .discard{
+        @include smallButton("");
+      }
+      .goout{
+        @include smallButton("on");
+      }
+    }
+  }
+}
