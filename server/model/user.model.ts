@@ -20,7 +20,6 @@ export const createUser = async (email: string, nickname: string, password: stri
     const uuid = uuidv4();
     const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
     
-    //DB저장
     try {
     const result = await prisma.$transaction(async (prisma) => {
       const user = await prisma.users.create({
@@ -29,7 +28,7 @@ export const createUser = async (email: string, nickname: string, password: stri
           email: email,
           nickname: nickname,
           authType: "",
-          status: "active", //default: active
+          status: "active",
         },
       });
 
@@ -165,7 +164,7 @@ try {
             }
         });
         
-        if(!selectUser){ //회원가입
+        if(!selectUser){ 
             const uuid = uuidv4();
             const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
             
@@ -175,7 +174,7 @@ try {
                     email: email,
                     nickname: nickname,
                     authType: "kakao",
-                    status: "active", //default: active
+                    status: "active",
                 },
             });
     
@@ -184,12 +183,12 @@ try {
                     uuid: uuidBuffer,
                     accessToken: accessToken, 
                     refreshToken: refreshToken,
-                    tokenExpiry: "",
+                    tokenExpiry: tokenExpiry,
                 },
             });
 
             return {createUser, createUserOauthSecret};
-        }//if
+        }
 
         return selectUser;
     });

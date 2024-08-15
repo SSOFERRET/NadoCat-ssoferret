@@ -1,9 +1,12 @@
 import React from 'react'
+import { useKakao } from '../../hooks/useKakao'
 
 const Login = () => {
-  return (
+    useKakao();
+  
+    return (
     <div>Login</div>
   )
-}
+};
 
 export default Login

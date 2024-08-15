@@ -16,8 +16,8 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.CORS_ALLOW_ORIGIN, //클라이언트가 요청하는 출처
-    credentials: true, //자격 증명(쿠키 등) 허용
+    origin: process.env.CORS_ALLOW_ORIGIN, 
+    credentials: true,
   })
 );
 // app.use(helmet()) // NOTE 개발중이라 주석 처리해뒀음

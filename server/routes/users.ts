@@ -11,13 +11,12 @@ import {
 import { follow, followings, unfollow } from "../controller/friend/Friends";
 
 const router= express.Router();
-// router.use(express.json()); //index.ts에 있어서 없어도 됨
 
 //사용자
 router.post("/signup", signupValidator, signup);
 router.post("/login", loginValidator, login);
-router.post("/auth/kakao/callback", kakao);
-router.post("/auth/google", google);
+router.get("/auth/kakao/callback", kakao);
+router.get("/auth/google", google);
 router.post("/my", my);
 
 // 동네 고양이 도감 즐겨찾기(내 도감)
