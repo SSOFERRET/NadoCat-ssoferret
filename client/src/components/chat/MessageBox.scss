@@ -11,13 +11,16 @@
   .inputBox{
     background-color: $whitesmoke;
     width: 90%;
-    height: 3vh;
+    min-height: 3vh;
     border-radius: 3vh;
     border: 1px solid $lightgray;
     color: black;
     padding: 1vh 2vh;
     outline: none;
-
+    white-space: pre-wrap; 
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    box-sizing: border-box;
     &::placeholder{
       margin-left: 2vh;
       color: $silver;
@@ -29,7 +32,7 @@
     background-color: white;
     padding: 1vh;
     .sendImg{
-      width: 4.5vw;
+      height: 2.2vh;
       background-color: white;
     }
   }

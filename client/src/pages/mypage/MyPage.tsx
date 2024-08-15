@@ -79,7 +79,7 @@ const MyPage: React.FC = () => {
   return (
     <div className="myPage">
       <div className="header">
-        <BackButton />
+        <BackButton userName=''/>
         <div id="title">관심글</div>
       </div>
       <Posts lists={lists}/>

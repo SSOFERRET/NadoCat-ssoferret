@@ -6,7 +6,7 @@ const Chat = () => {
   return (
     <div className='Chat'>
       <BackButton userName='문소영fkfkf'/>
-      
+        
       <MessageBox />
     </div>
   );
