@@ -1,4 +1,3 @@
-import React from "react";
 import "../../styles/css/pages/community/community.css";
 import PostList from "../../components/community/PostList";
 import useCommunities from "../../hooks/useCommunities";

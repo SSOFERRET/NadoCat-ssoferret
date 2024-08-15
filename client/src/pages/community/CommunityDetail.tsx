@@ -1,10 +1,9 @@
-import React from "react";
 import "../../styles/css/pages/community/communityDetail.css";
 import { formatDate, formatViews } from "../../utils/format/format";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { AiFillHeart } from "react-icons/ai";
 import { PiChatCircleBold } from "react-icons/pi";
-import Comments from "../../components/community/Comments";
+import CommunityComments from "../../components/community/CommunityComments";
 import Avartar from "../../components/community/Avartar";
 import useCommunity from "../../hooks/useCommunity";
 import { useParams } from "react-router-dom";
@@ -61,7 +60,7 @@ const CommunityDetail = () => {
             </div>
             <pre className="post-content">{post.content}</pre>
           </section>
-          <Comments postId={postId} />
+          <CommunityComments postId={postId} />
         </div>
       )}
     </>

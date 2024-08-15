@@ -1,0 +1,39 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getCommunityComments } from "../api/community.api";
+
+const useCommunityComment = (postId: number) => {
+  const {
+    data,
+    isLoading,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["community", postId],
+    queryFn: ({ pageParam = 0 }) => getCommunityComments({ pageParam, postId }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const nextCursor = lastPage.pagination.nextCursor;
+      if (nextCursor) {
+        return nextCursor;
+      }
+      return undefined;
+    },
+  });
+
+  const comments = data ? data.pages.flatMap((page) => page.comments) : [];
+  const isEmpty = comments.length === 0;
+
+  return {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+    isEmpty,
+  };
+};
+
+export default useCommunityComment;

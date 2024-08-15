@@ -8,11 +8,7 @@ export interface ICommunity {
   updatedAt: string;
   images: Image[];
   tags: Tag[];
-  users?: {
-    uuid: string;
-    nickname: string;
-    profileImage: string;
-  };
+  users?: Users;
 }
 
 export interface Image {
@@ -38,4 +34,10 @@ export interface ICommunityPage {
 export interface ICommunityPost {
   pageParams: number[];
   pages: ICommunityPage[];
+}
+
+interface Users {
+  uuid: string;
+  nickname: string;
+  profileImage: string;
 }
