@@ -5,8 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import { handleControllerError } from "../../util/errors/errors";
 import { TCategoryId } from "../../types/category";
 import { getFriendList } from "../../model/friend.model";
-import { CATEGORY, getCategory, getCategoryUrlStringById } from "../../constants/category";
-import { IPostData } from "../../types/post";
+import { getCategoryUrlStringById } from "../../constants/category";
 import { getPostAuthorUuid } from "../../model/common/uuid";
 
 /* CHECKLIST
