@@ -1,6 +1,4 @@
-import { Prisma } from "@prisma/client";
 import { TCategoryId } from "../../types/category";
-import { getCategoryModel } from "./model";
 import prisma from "../../client";
 import { getCategory } from "../../constants/category";
 
