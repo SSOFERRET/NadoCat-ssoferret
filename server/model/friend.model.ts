@@ -58,10 +58,9 @@ export const getFriendById = async (userId: string, followingId: string) => {
 };
 
 export const getFriendList = async (
-  tx: Prisma.TransactionClient,
   userId: Buffer
 ) => {
-  return await tx.friends.findMany({
+  return await prisma.friends.findMany({
     where: {
       uuid: userId
     }
