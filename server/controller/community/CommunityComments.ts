@@ -9,6 +9,9 @@ import {
 } from "../../model/communityComment.model";
 import { getUserId } from "./Communities";
 import { handleControllerError } from "../../util/errors/errors";
+import { notifyNewComment } from "../notification/Notifications";
+import { getPostAuthorUuid } from "../../model/common/uuid";
+import { CATEGORY } from "../../constants/category";
 
 //  CHECKLIST
 // [x] model 코드 분리
@@ -58,7 +61,10 @@ export const createComment = async (req: Request, res: Response) => {
         .json({ message: "입력값을 확인해 주세요." });
     }
 
-    await addComment(postId, userId, comment);
+    const newComment = await addComment(postId, userId, comment);
+
+    if (newComment)
+      await notifyNewComment(Buffer.from(userId, "hex"), CATEGORY.COMMUNITIES, postId, newComment.communityCommentId);
 
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
