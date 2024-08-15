@@ -2,21 +2,26 @@ import { Request, Response } from "express";
 import { createNotification, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
 import { getUserId } from "../missing/Missings";
 import { StatusCodes } from "http-status-codes";
+import { handleControllerError } from "../../util/errors/errors";
+import { TCategoryId } from "../../types/category";
+import { getFriendList } from "../../model/friend.model";
+import { getCategoryUrlStringById } from "../../constants/category";
+import { getPostAuthorUuid } from "../../model/common/uuid";
 
 /* CHECKLIST
-* [ ] 알람글 isRead update API
+* [x] 알람글 isRead update API
 
 *  [x] 실종고양이 제보글 => 게시글 게시자
 *  [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
 *  [x] 실종고양이 제보글 수정 => 게시글 게시자
 *  
-*  [-] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
+*  [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
 *  
-*  [-] 신규 글 작성 => 친구
+*  [x] 신규 글 작성 => 친구
 *  [-] 좋아요 찍힘 => 게시글 게시자
-*  [-] 댓글 => 게시글 게시자
+*  [x] 댓글 => 게시글 게시자
 * 
-*  [-] 친구 요청 => 요청 받은 사용자
+*  [x] 친구 요청 => 요청 받은 사용자
 *  
 */
 
@@ -41,7 +46,7 @@ export const serveNotifications = (req: Request, res: Response) => {
     const userId = req.query.userId;
     let userIdBuffer: Buffer;
     if (typeof userId === "string")
-      userIdBuffer = Buffer.from(userId + "\0".repeat(16 - userId.length));
+      userIdBuffer = Buffer.from(userId, "hex");
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -74,11 +79,11 @@ export const serveNotifications = (req: Request, res: Response) => {
 
 
   } catch (error) {
-    console.log(error)
+    handleControllerError(error, res);
   }
 };
 
-type TNotify = "newPost" | "newComment" | "update" | "match" | "unmatch" | "follow" | "found" | "unfound" | "like";
+type TNotify = "newPost" | "comment" | "update" | "match" | "follow" | "found" | "like";
 
 
 const timestampObject = () => {
@@ -91,7 +96,6 @@ const timestampObject = () => {
 }
 
 export const notify = (data: INoticiationData) => {
-  //NOTE commentId에 대한 처리. 페이지네이션 처리?
   const timestamp = timestampObject();
 
   return notifications.push({
@@ -108,7 +112,50 @@ export const updateNotifications = async (req: Request, res: Response) => {
 
     return res.status(StatusCodes.OK);
   } catch (error) {
-    console.log(error);
-    res.status(StatusCodes.BAD_REQUEST).json(error);
+    handleControllerError(error, res);
   }
-} 
+}
+
+export const notifyNewPostToFriends = async (
+  userId: Buffer,
+  categoryId: TCategoryId,
+  postId: number,
+) => {
+  const friends = await getFriendList(userId);
+
+  friends.forEach((friend) => notify({
+    type: "newPost",
+    receiver: friend.followingId,
+    sender: userId,
+    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`
+  }))
+}
+
+export const notifyNewComment = async (
+  userId: Buffer,
+  categoryId: TCategoryId,
+  postId: number,
+  cursor: number
+) => {
+  const postAuthor = await getPostAuthorUuid(categoryId, postId);
+  notify({
+    type: "comment",
+    receiver: postAuthor,
+    sender: userId,
+    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}/comments?cursor=${cursor}` //프론트 url에 맞출 것
+  });
+};
+
+export const notifyNewLike = async (
+  userId: Buffer,
+  categoryId: TCategoryId,
+  postId: number,
+) => {
+  const postAuthor = await getPostAuthorUuid(categoryId, postId);
+  notify({
+    type: "like",
+    receiver: postAuthor,
+    sender: userId,
+    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}` //프론트 url에 맞출 것
+  });
+};
