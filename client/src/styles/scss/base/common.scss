@@ -43,6 +43,7 @@ html {
 $size-32: 32rem !important;
 $size-24: 24rem !important;
 $size-19: 19rem !important;
+$size-18: 18rem !important;
 $size-16: 16rem !important;
 $size-15: 15rem !important;
 $size-14: 14rem !important;
@@ -70,6 +71,13 @@ $white: #FFFFFF;
 /* radious */
 $round-5: 5rem;
 $round-10: 10rem;
+$rount-30: 30rem;
+
+body {
+  background-color: $pale;
+  letter-spacing: -0.7px;
+  color: $black;
+}
 
 /* buttons */
 @mixin smallButton($active) {

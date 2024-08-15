@@ -3,7 +3,7 @@ import { GoHomeFill } from "react-icons/go";
 import { PiCat, PiChatCircleBold } from "react-icons/pi";
 import { RiSearchLine } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa6";
-import "../../styles/css/base/normalize.css";
+import "../../styles/css/base/reset.css";
 import "../../styles/css/components/common/footer.css"
 import { Link } from "react-router-dom";
 

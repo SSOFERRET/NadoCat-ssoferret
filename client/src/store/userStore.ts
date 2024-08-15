@@ -8,12 +8,16 @@ interface StoreState{
   storeAutoLogin: (refreshToken: string) => void;
   storeAuthType: (authType: string) => void;
   storeLogout: () => void;
-};
+}
 
-export const getToken = () => {
+export const getGeneralToken = () => {
   const generalToken = localStorage.getItem("generalToken");
+  return {generalToken};
+}
+
+export const getRefreshToken = () => {
   const refreshToken = localStorage.getItem("refreshToken");
-  return {generalToken, refreshToken}
+  return {refreshToken}
 }
 
 const setGeneralToken = (generalToken: string) => {
@@ -31,7 +35,7 @@ export const removeToken = () => {
 }
 
 export const useAuthStore = create<StoreState>((set) => ({
-  isLoggedIn: getToken().generalToken? true : false,
+  isLoggedIn: getGeneralToken().generalToken? true : false,
   isAutoLogin: false,
   authType: null,
   storeLogin: (generalToken) => {
