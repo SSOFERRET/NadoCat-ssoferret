@@ -8,6 +8,7 @@ import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
 import Community from "./pages/community/Community";
+import CommunityDetail from "./pages/community/CommunityDetail";
 
 const routeList = [
   {
@@ -29,6 +30,10 @@ const routeList = [
   {
     path: "/boards/communities",
     elemet: <Community />,
+  },
+  {
+    path: "/boards/communities/:id",
+    elemet: <CommunityDetail />,
   },
 ];
 

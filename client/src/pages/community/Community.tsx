@@ -1,12 +1,12 @@
 import React from "react";
-import "../../styles/scss/pages/community/community.scss";
+import "../../styles/css/pages/community/community.css";
 import PostList from "../../components/community/PostList";
-import useCommunity from "../../hooks/useCommunity";
+import useCommunities from "../../hooks/useCommunities";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 const Community = () => {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useCommunity();
+    useCommunities("views");
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {

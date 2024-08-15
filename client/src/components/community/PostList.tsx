@@ -3,7 +3,6 @@ import Post from "./Post";
 import "../../styles/scss/components/community/postList.scss";
 import { ICommunity, ICommunityPage } from "../../models/community.model";
 import { InfiniteData } from "@tanstack/react-query";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 interface Props {
   posts: InfiniteData<ICommunityPage> | undefined;
