@@ -7,6 +7,7 @@ import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
 import Community from "./pages/community/Community";
 import Chat from "./pages/chat/Chat";
+import MyPage from "./pages/mypage/MyPage";
 
 const routeList = [
   {
@@ -29,6 +30,10 @@ const routeList = [
     path: "/boards/communities",
     elemet: <Community />,
   },
+  {
+    path: "/chat",
+    elemet: <Chat />,
+  },
 ];
 
 const router = createBrowserRouter(
@@ -39,10 +44,6 @@ const router = createBrowserRouter(
     };
   })
 );
-import { BrowserRouter,Routes, Route } from "react-router-dom";
-import MyPage from "./pages/mypage/MyPage";
-import React from "react";
-import Chat from "./pages/chat/Chat";
 
 const App: React.FC = () => {
   return (

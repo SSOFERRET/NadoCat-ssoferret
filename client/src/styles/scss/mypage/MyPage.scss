@@ -6,7 +6,7 @@
 }
 
 .myPage{
-  width:100vw;
+  width:430px;
   height: 100vh;
   overflow-y: scroll;
   display: flex;
@@ -20,14 +20,14 @@
     position: fixed;
     background-color: white;
     z-index: 1999;
-    width: 100vw;
+    width: 430px;
 
     #title{
       margin-top: 3vh;
       @include font($size-14, $silver);
       font-family: "bold";
       border-bottom: .5px solid $silver;
-      width: 80vw;
+      width: 85%;
       height: 3vh;
     }
   }

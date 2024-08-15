@@ -1,6 +1,6 @@
 import React from 'react';
 import "./Posts.scss";
-
+import "../../styles/css/base/reset.css";
 interface Post {
   title: string;
   contents: string;

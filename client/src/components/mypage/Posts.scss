@@ -3,15 +3,31 @@
   color: $color;
   font-size: $size;
 }
+
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
 .background{
   margin-top: 12vh;
+  
   .postsBox{
     border-bottom: .5px solid $silver;
-    width: 80vw;
     height: 12vh;
     display: flex;
     align-items: center;
-  
+    width: 360px;
     .postsContents{
       display: flex;
       flex-direction: column;
@@ -25,20 +41,21 @@
       .title{
         @include font(16px, black);
         font-family: "bold";
-        line-height: 1.2em;
+        line-height: 1em;
         margin: 0;
         width: 100%;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-height: 3vh;
+        max-height: 2vh;
         overflow: hidden;
-        height: 30%;
+        height: 20%;
+        padding: .5em 0;
       }
       .contents{
         @include font(14px, $black);
         font-family: "medium";
-        line-height: 1.1em;
-        width: 100%;
+        line-height: 1.4em;
+        width: 90%;
         margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -46,7 +63,7 @@
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
         overflow: hidden;
-        height: 35%;
+        height: 40%;
         
       }
       #time{
@@ -56,7 +73,7 @@
         margin: 0;
         height: 20%;
         position: relative;
-        bottom: -1.5vh;
+        bottom: -1.2vh;
       }
     }
     .postsImg{

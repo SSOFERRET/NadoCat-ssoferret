@@ -8,7 +8,7 @@ interface BackButton{
 const BackButton:React.FC<BackButton>= ({userName}) => {
   const navigate = useNavigate();  
   return (
-    <div style={{width: "90vw", display: "flex", alignItems: "center"}}>
+    <div style={{width: "95%", display: "flex", alignItems: "center"}}>
       <IoIosArrowBack 
       style={{color: "black", width: "13%",fontSize: "22px", padding: "2vh 1.4vh 2vh 0"}} 
       onClick={() => navigate(-1)}/>
