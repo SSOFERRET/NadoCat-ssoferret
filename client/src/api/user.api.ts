@@ -8,7 +8,7 @@ export const signup = async(userData: SignupProps) => {
         return response.data;
     } catch (error) {
         console.error("signup error:", error);
-        throw error; // 혹은 에러 핸들링 로직 추가
+        throw error; 
     }
 }
 
@@ -16,7 +16,6 @@ export const signup = async(userData: SignupProps) => {
 
 //비밀번호 변경
 
-//백엔드 토큰받기
 interface ILoginResponse {
     generalToken: string;
     refreshToken: string;
@@ -28,6 +27,6 @@ export const login = async(data: LoginProps) => {
         return response.data;
     } catch (error) {
         console.error("login error:", error);
-        throw error; // 혹은 에러 핸들링 로직 추가
+        throw error;
     }
 }

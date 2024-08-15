@@ -1,7 +1,6 @@
 import React from "react";
 import "./Login.scss";
 
-// const KAKAO_AUTH_URL = `${process.env.REACT_APP_KAKAO_AUTH_URL}?response_type=code&client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email`;
 const KAKAO_AUTH_URL = `${import.meta.env.VITE_KAKAO_AUTH_URL}?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email`;
 
 export interface LoginProps {
@@ -11,11 +10,9 @@ export interface LoginProps {
   autoLogin: string;
 }
 
-
 const Login = () => {
-    
     if(!import.meta.env.VITE_KAKAO_REST_API_KEY || import.meta.env.VITE_KAKAO_REDIRECT_URI){
-        console.error("카카오 값 뭐가 없음");
+        console.error("카카오 값이 없음");
     }
     
     console.log("VITE_KAKAO_REST_API_KEY: ", import.meta.env.VITE_KAKAO_REST_API_KEY);

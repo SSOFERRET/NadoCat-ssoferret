@@ -9,8 +9,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
     baseURL: BASE_URL,
     timeout: DEFAULT_TIMEOUT,
     headers: {
-      "content-type": "application/json", //json을 통해 content교환
-      // Authorization: getToken()? getToken().generalToken : "",
+      "content-type": "application/json",
       Authorization: getGeneralToken() ? `Bearer ${getGeneralToken()}` : "",
     },
     withCredentials: true,
