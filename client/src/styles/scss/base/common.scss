@@ -1,34 +1,55 @@
+/* 1rem to 1rem */
+html {
+  font-size: calc(1vw / 4.3);
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+      font-size: 1px;
+  }
+}
+
+@media screen and (max-width: 429px) {
+  html {
+      font-size: calc(1vw / 4.3);
+  }
+}
+
 /* font */
 // 디자인에 사용된 폰트만 적용
+// TODO: 절대 경로 수정 필요
 @font-face {
   font-family: "bold";
-  src: url("../../../assets/fonts/Pretendard-Bold.ttf");
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
 }
 
 @font-face {
   font-family: "semiBold";
-  src: url("../../../assets/fonts/Pretendard-SemiBold.ttf");
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
 }
 
 @font-face {
   font-family: "medium";
-  src: url("../../../assets/fonts/Pretendard-Medium.ttf");
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
 }
 
 @font-face {
   font-family: "regular";
-  src: url("../../../assets/fonts/Pretendard-Regular.ttf");
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
 }
 
 /* font size */
-$size-32: 32px;
-$size-24: 24px;
-$size-19: 19px;
-$size-16: 16px;
-$size-15: 15px;
-$size-14: 14px;
-$size-12: 12px;
-$size-10: 10px;
+$size-32: 32rem !important;
+$size-24: 24rem !important;
+$size-19: 19rem !important;
+$size-18: 18rem !important;
+$size-16: 16rem !important;
+$size-15: 15rem !important;
+$size-14: 14rem !important;
+$size-12: 12rem !important;
+$size-11: 11rem !important;
+$size-10: 10rem !important;
 
 /* color palette */
 // yellow color
@@ -48,19 +69,26 @@ $whitesmoke: #F5F5F5;
 $white: #FFFFFF;
 
 /* radious */
-$round-5: 5px;
-$round-10: 10px;
+$round-5: 5rem;
+$round-10: 10rem;
+$rount-30: 30rem;
+
+body {
+  background-color: $pale;
+  letter-spacing: -0.7px;
+  color: $black;
+}
 
 /* buttons */
 @mixin smallButton($active) {
-  width: 121px;
-  height: 44px;
+  width: 121rem;
+  height: 44rem;
   font-family: "Pretendard-Bold";
   font-size: $size-16;
   text-align: center;
   line-height: 1;
   border-radius: $round-5;
-  padding: 13px;
+  padding: 13rem;
   @if ($active == 'on') {
     background-color: $primary;
     color: $white;
@@ -68,19 +96,19 @@ $round-10: 10px;
   } @else {
     background-color: $white;
     color: $primary;
-    border: $primary solid 2px;
+    border: $primary solid 2rem;
   }
 }
 
 @mixin bigButton($active) {
-  width: 390px;
-  height: 50px;
+  width: 390rem;
+  height: 50rem;
   font-family: "Pretendard-Bold";
   font-size: $size-16;
   text-align: center;
   line-height: 1;
   border-radius: $round-5;
-  padding: 16px;
+  padding: 16rem;
   color: $white;
   border: 0;
   @if ($active == 'on') {
@@ -98,17 +126,17 @@ $round-10: 10px;
   font-family: "Pretendard-Regular";
   color: $secondary;
   border-radius: $round-5;
-  padding: 6px 8px;
-  margin-right: 4px;
+  padding: 6rem 8rem;
+  margin-right: 4rem;
 }
 
 /* others */
 // IR
 @mixin blind {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
+  width: 1rem;
+  height: 1rem;
+  margin: -1rem;
   padding: 0;
   overflow: hidden;
   border: 0;

@@ -2,17 +2,18 @@ import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
-import { addLocation, updateLocationById } from "../../model/location.model";
+import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
 import {
   addLocationFormats,
   addMissingReport,
+  getImageFormatsByPostId,
+  getLocationFormatsByPostId,
   getPostByPostId,
   removePost,
   updateMissingReportByPostId,
   updateMissingReportCheckByPostId,
 } from "../../model/missing.model";
-import { getUserId, validateError } from "./Missing";
-
+import { getUserId, validateError } from "./Missings";
 import { CATEGORY } from "../../constants/category";
 import {
   deleteLocationsByLocationIds,
@@ -23,26 +24,73 @@ import {
   getAndDeleteImageFormats,
 } from "../../util/images/deleteImages";
 import { addNewImages } from "../../util/images/addNewImages";
-import { IMissingReport } from "../../types/missing";
+import { getImageById } from "../../model/image.model";
+import { PAGINATION } from "../../constants/pagination";
+import { getPosts } from "./Common";
+import { notifyMissingReport } from "../notification/Notifications";
 
 /* CHECKLIST
- * [ ] 사용자 정보 가져오기 반영
- * [ ] 구현 내용
- *   [x] create
- *   [x] delete
- *   [ ] get
- *   [ ] 전체 조회
- *     [ ] 페이지네이션
- *   [x] put
- *     [ ] 일치 및 불일치
- */
-
+* [ ] 사용자 정보 가져오기 반영
+* [ ] 구현 내용
+*   [x] create
+*   [x] delete
+*   [x] get
+*   [ ] 전체 조회 
+*     [ ] 페이지네이션
+*   [x] put
+*     [x] 일치 및 불일치
+*/
 /**
  *
  * CHECKLIST
  * [x] 이미지 가져오기
  * [x] location 가져오기
  */
+
+export const getMissingReports = async (req: Request, res: Response) => {
+  const listData = {
+    limit: Number(req.query.limit) || PAGINATION.LIMIT,
+    cursor: req.query.cursor ? Number(req.query.cursor) : undefined,
+    orderBy: { sortBy: "createdAt", sortOrder: "asc" },
+    categoryId: CATEGORY.MISSING_REPORTS
+  };
+  return await getPosts(req, res, listData);
+}
+
+export const getMissingReport = async (req: Request, res: Response) => {
+  try {
+    const postId = Number(req.params.postId);
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const userId = await getUserId(); // NOTE
+      const postData = {
+        postId,
+        categoryId: CATEGORY.MISSING_REPORTS,
+        userId
+      }
+
+      let post = await getPostByPostId(tx, postData);
+
+      const locationFormats = await getLocationFormatsByPostId(tx, postData);
+      if (locationFormats) {
+        const locations = await Promise.all(locationFormats.map((locationFormat) => getLocationById(tx, locationFormat.locationId)));
+        post = { ...post, locations };
+      }
+
+      const imageFormats = await getImageFormatsByPostId(tx, postData);
+      if (imageFormats) {
+        const images = await Promise.all(imageFormats.map((imageFormat) => getImageById(tx, imageFormat.imageId)));
+        post = { ...post, images };
+      }
+
+      return res
+        .status(StatusCodes.CREATED)
+        .json(post);
+    });
+  } catch (error) {
+    if (error instanceof Error)
+      validateError(res, error);
+  }
+};
 
 export const createMissingReport = async (req: Request, res: Response) => {
   try {
@@ -76,12 +124,15 @@ export const createMissingReport = async (req: Request, res: Response) => {
           },
           images
         );
+
+      notifyMissingReport("new", post.postId, userId); // NOTE userId를 실종고양이 게시글 게시자로 변경(-)
     });
 
-    res
+    return res
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) validateError(res, error);
   }
 };
@@ -168,6 +219,8 @@ export const updateMissingReport = async (req: Request, res: Response) => {
       if (images) {
         await addNewImages(tx, postData, images);
       }
+
+      notifyMissingReport("update", postData.postId, userId);
     });
 
     return res
@@ -196,6 +249,8 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
         userId: reportPost.uuid,
       }); // NOTE 게시글 작성자 인가 추가
       await updateMissingReportCheckByPostId(tx, postData, match);
+
+      notifyMissingReport(match === "Y" ? "match" : "unmatch", postData.postId, userId);
 
       return res
         .status(StatusCodes.OK)
