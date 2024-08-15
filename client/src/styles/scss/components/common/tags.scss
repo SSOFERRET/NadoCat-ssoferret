@@ -1,0 +1,13 @@
+@import "../../base/common.scss";
+
+.tags-md .tag {
+  @include tag();
+  font-family: "regular";
+  font-size: $size-14;
+}
+
+.tags-sm .tag {
+  @include tag();
+  font-family: "regular";
+  font-size: $size-10;
+}
