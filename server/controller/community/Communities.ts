@@ -24,6 +24,7 @@ import { CATEGORY } from "../../constants/category";
 import { IImage } from "../../types/image";
 import { ITag } from "../../types/tag";
 import { removeLikesByIds } from "../../model/like.model";
+import { notifyNewPostToFriends } from "../notification/Notifications";
 
 // CHECKLIST
 // [x] 이미지 배열로 받아오게 DB 수정
@@ -155,6 +156,8 @@ export const createCommunity = async (req: Request, res: Response) => {
 
         await addCommunityImages(tx, formatedImages);
       }
+
+      await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.COMMUNITIES, post.postId);
     });
 
     res
