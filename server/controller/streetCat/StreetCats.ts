@@ -3,6 +3,8 @@ import prisma from "../../client";
 import { IImages, IStreetCatImages } from "../../types/streetCat";
 import { addImage, createFavoriteCat, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, readFavoriteCat, readFavoriteCatPostIds, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, removeComment, removeFavoriteCat, updatePost } from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
+import { notifyNewPostToFriends } from "../notification/Notifications";
+import { CATEGORY } from "../../constants/category";
 
 // CHECKLIST
 // [ ] 페이지네이션 구현
@@ -11,7 +13,7 @@ import { Prisma } from "@prisma/client";
 
 // NOTE uuid 받아오는 임시함수 / 추후 삭제
 export const getUuid = async () => {
-  const result = await prisma.$queryRaw<{"uuid": Buffer}[]>(
+  const result = await prisma.$queryRaw<{ "uuid": Buffer }[]>(
     Prisma.sql`SELECT uuid FROM users WHERE id = 1`
   )
 
@@ -29,15 +31,15 @@ export const getStreetCats = async (req: Request, res: Response) => {
       if (uuid) {
         // 도감 목록 좋아요 유무
         const getPostsWithFavorites = await (isNaN(cursor)
-        ? readPostsWithFavorites(tx, uuid, limit)
-        : readPostsWithFavorites(tx, uuid, limit, cursor)
+          ? readPostsWithFavorites(tx, uuid, limit)
+          : readPostsWithFavorites(tx, uuid, limit, cursor)
         );
 
         res.status(201).json(getPostsWithFavorites);
       } else {
-        const getPosts = await (isNaN(cursor) 
-        ? readPosts(tx, limit)
-        : readPosts(tx, limit, cursor)
+        const getPosts = await (isNaN(cursor)
+          ? readPosts(tx, limit)
+          : readPosts(tx, limit, cursor)
         );
 
         res.status(201).json(getPosts);
@@ -75,7 +77,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
   const categoryId = 5;
   const uuid = await getUuid();
 
-  const postData = {categoryId, name, gender, neutered, discoveryDate, locationId, content, uuid};
+  const postData = { categoryId, name, gender, neutered, discoveryDate, locationId, content, uuid };
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -85,7 +87,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
       // 도감 이미지 생성
       if (images.length) {
         // images 데이터 생성
-        const createImages = await Promise.all (
+        const createImages = await Promise.all(
           images.map((url: string) => addImage(tx, url))
         );
 
@@ -97,6 +99,8 @@ export const createStreetCat = async (req: Request, res: Response) => {
 
         // street_cat_images 데이터 생성
         await createStreetCatImages(tx, getStreetCatImages);
+
+        await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, newPost.postId);
       }
 
       res.status(201).json({ message: "동네 고양이 도감 생성" });
@@ -116,7 +120,7 @@ export const updateStreetCat = async (req: Request, res: Response) => {
   const categoryId = 5;
   const uuid = await getUuid();
   const postId = Number(req.params.street_cat_id);
-  const postData = {postId, categoryId, name, gender, neutered, discoveryDate, locationId, content, uuid};
+  const postData = { postId, categoryId, name, gender, neutered, discoveryDate, locationId, content, uuid };
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -133,7 +137,7 @@ export const updateStreetCat = async (req: Request, res: Response) => {
       // 도감 이미지 생성
       if (addImages.length) {
         // 새로 추가한 이미지 등록
-        const createImages = await Promise.all (
+        const createImages = await Promise.all(
           addImages.map((url: string) => addImage(tx, url))
         );
 
@@ -168,12 +172,12 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
 
       await deleteAllStreetCatImages(tx, postId);
 
-      await deleteImages(tx, deleteImageIds);      
+      await deleteImages(tx, deleteImageIds);
 
       await removeAllFavoriteCat(postId);
-      
+
       await removeAllComment(postId);
-      
+
       await deletePost(tx, postId, uuid);
 
       // status 204는 message가 보내지지 않아 임시로 200
