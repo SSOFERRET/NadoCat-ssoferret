@@ -5,7 +5,7 @@ import helmet from "helmet";
 import MissingRouter from "./routes/missings";
 import CommunitiesRouter from "./routes/communities";
 import StreetCatsRouter from "./routes/streetCats";
-import UserRouter from "./routes/users";
+// import UserRouter from "./routes/users";
 import InterestsRouter from "./routes/interest";
 import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
@@ -53,7 +53,7 @@ app.use("/boards/communities", CommunitiesRouter);
 app.use("/boards/street-cats", StreetCatsRouter);
 app.use("/boards/Interests", InterestsRouter);
 app.use("/boards/missings", MissingRouter);
-app.use("/users", UserRouter);
+// app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
 app.use("/notifications", NotificationsRouter);
 

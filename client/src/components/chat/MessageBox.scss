@@ -1,7 +1,7 @@
 @import "../../styles/scss/base/common.scss"; 
 
 .messageBox{
-  width: 90%;
+  width: 400px;
   height: 6vh;
   display: flex;
   justify-content: center;
@@ -31,6 +31,8 @@
   .button{
     background-color: white;
     padding: 1vh;
+    border: none;
+    cursor: pointer;
     .sendImg{
       height: 2.2vh;
       background-color: white;

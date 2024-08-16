@@ -40,13 +40,16 @@
     }
     .buttonbox{
       display: flex;
-      width: 70%;
       justify-content: space-between;
       .discard{
         @include smallButton("");
+        margin-right: .5vh;
+        cursor: pointer;
       }
       .goout{
         @include smallButton("on");
+        margin-left: .5vh;
+        cursor: pointer;
       }
     }
   }

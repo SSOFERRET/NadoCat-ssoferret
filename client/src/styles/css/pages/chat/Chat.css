@@ -1,0 +1,16 @@
+.layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.layout .Chat {
+  width: 430px;
+  height: 100vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/*# sourceMappingURL=Chat.css.map */
