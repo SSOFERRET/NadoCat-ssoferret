@@ -24,6 +24,7 @@ const useCommunityComment = (postId: number) => {
 
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];
   const isEmpty = comments.length === 0;
+  const commentCount = data?.pages.flatMap((v) => v.pagination.totalCount)[0];
 
   return {
     data,
@@ -33,6 +34,7 @@ const useCommunityComment = (postId: number) => {
     isFetchingNextPage,
     isFetching,
     isEmpty,
+    commentCount,
   };
 };
 

@@ -11,9 +11,10 @@ import ImageCarousel from "../common/ImageCarousel";
 
 interface IProps {
   post: ICommunity;
+  commentCount: number;
 }
 
-const PostDetail = ({ post }: IProps) => {
+const PostDetail = ({ post, commentCount }: IProps) => {
   return (
     <section className="post-details">
       {post?.users && (
@@ -41,7 +42,7 @@ const PostDetail = ({ post }: IProps) => {
         </div>
         <div className="comment-count">
           <PiChatCircleBold />
-          <span>댓글 수</span>
+          <span>{commentCount}</span>
         </div>
         <div className="views">
           조회수 <span>{formatViews(post.views)}</span>
