@@ -35,7 +35,10 @@ html {
 /* color palette */
 /* radious */
 body {
-  background-color: #FCF7E0;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
   letter-spacing: -0.7px;
   color: #191919;
 }
@@ -49,9 +52,9 @@ main {
   width: 100%;
   margin: 0 auto;
   max-width: 430rem;
-  margin-top: 58rem;
   margin-bottom: 60rem;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
+  min-height: calc(100vh - 61rem);
 }
 
 /*# sourceMappingURL=layout.css.map */

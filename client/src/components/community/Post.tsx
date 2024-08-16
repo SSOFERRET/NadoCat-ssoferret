@@ -39,7 +39,7 @@ const Post = ({ post }: IProps) => {
       className="board-post"
       onClick={() => navigate(`${location.pathname}/${post.postId}`)}
     >
-      <div className="post-info">
+      <div className="board-post-info">
         <span className="post-title" ref={titleRef}>
           {post.title}
         </span>

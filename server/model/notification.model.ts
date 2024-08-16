@@ -14,7 +14,7 @@ export const updateNotificationsIsReadByReceiver = async (receiver: Buffer) => {
       receiver
     },
     data: {
-      isRead: 1
+      isRead: true
     }
   })
 }

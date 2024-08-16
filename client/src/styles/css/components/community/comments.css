@@ -35,7 +35,10 @@ html {
 /* color palette */
 /* radious */
 body {
-  background-color: #FCF7E0;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
   letter-spacing: -0.7px;
   color: #191919;
 }
@@ -45,11 +48,11 @@ body {
 /* others */
 .comment-list {
   width: 100%;
-  border-top: 0.5rem solid #D9D9D9;
+  border-top: 0.5rem solid #d9d9d9;
 }
 .comment-list .comment-card {
   padding: 18rem 0;
-  border-bottom: 0.5rem solid #D9D9D9;
+  border-bottom: 0.5rem solid #d9d9d9;
 }
 .comment-list .comment-card .comment {
   display: flex;
@@ -57,7 +60,7 @@ body {
 .comment-list .comment-card .comment .avatar {
   width: 32rem;
   height: 32rem;
-  background-color: #F2B705;
+  background-color: #f2b705;
   border-radius: 50%;
   margin-right: 9rem;
   flex-shrink: 0;
@@ -70,23 +73,23 @@ body {
 .comment-list .comment-card .comment .detail .date {
   font-family: "medium";
   font-size: 10rem !important;
-  color: #B8BCBF;
+  color: #b8bcbf;
   margin-left: 5rem;
 }
 .comment-list .comment-card .comment .detail .comment-detail {
   white-space: pre-wrap;
   word-break: break-all;
   margin-top: 5rem;
-  color: #4C4C4C;
+  color: #4c4c4c;
   font-family: "medium";
   font-size: 14rem !important;
   line-height: 1.2;
 }
 .comment-list .comment-card:nth-child(odd) .avatar {
-  background-color: #F2B705;
+  background-color: #f2b705;
 }
 .comment-list .comment-card:nth-child(even) .avatar {
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
 }
 
 /*# sourceMappingURL=comments.css.map */
