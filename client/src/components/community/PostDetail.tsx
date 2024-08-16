@@ -7,6 +7,7 @@ import { AiFillHeart } from "react-icons/ai";
 import { PiChatCircleBold } from "react-icons/pi";
 import Tags from "../common/Tags";
 import { ICommunity } from "../../models/community.model";
+import ImageCarousel from "../common/ImageCarousel";
 
 interface IProps {
   post: ICommunity;
@@ -31,7 +32,7 @@ const PostDetail = ({ post }: IProps) => {
         </div>
       )}
       <span className="post-title">{post.title}</span>
-      <div className="image"></div>
+      {post.images.length && <ImageCarousel images={post.images} />}
       <Tags tags={post.tags} />
       <div className="post-info">
         <div className="likes">
