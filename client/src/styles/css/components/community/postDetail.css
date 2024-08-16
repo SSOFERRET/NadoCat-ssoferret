@@ -35,7 +35,10 @@ html {
 /* color palette */
 /* radious */
 body {
-  background-color: #FCF7E0;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
   letter-spacing: -0.7px;
   color: #191919;
 }
@@ -68,12 +71,12 @@ body {
 .post-details .user .user-info .user-details .date {
   font-family: "medium";
   font-size: 10rem !important;
-  color: #B8BCBF;
+  color: #b8bcbf;
 }
 .post-details .user .user-info .options-icon {
   width: 22rem;
   height: 22rem;
-  color: #4C4C4C;
+  color: #4c4c4c;
   margin-left: auto;
 }
 .post-details .post-title {
@@ -97,7 +100,7 @@ body {
   gap: 14rem;
   font-family: "medium";
   font-size: 14rem !important;
-  color: #4C4C4C;
+  color: #4c4c4c;
   margin: 20rem 0;
 }
 .post-details .post-info svg {
@@ -110,13 +113,13 @@ body {
   gap: 4rem;
 }
 .post-details .post-info .likes svg {
-  color: #F2B705;
+  color: #f2b705;
 }
 .post-details .post-content {
   font-family: "medium";
   font-size: 14rem !important;
   line-height: 1.5;
-  color: #4C4C4C;
+  color: #4c4c4c;
   white-space: pre-wrap;
   word-break: break-all;
 }

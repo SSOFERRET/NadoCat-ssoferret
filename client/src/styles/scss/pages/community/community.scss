@@ -1,7 +1,9 @@
 @import "../../base/common.scss";
 
 .community-container {
-  min-height: 100vh;
+  // min-height: 100vh;
+  height: 100%;
+  // min-height: calc(100vh - 61rem);
   padding: 20rem;
   padding-bottom: 64rem;
   background-color: $white;
