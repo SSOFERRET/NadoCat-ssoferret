@@ -1,0 +1,10 @@
+@import "../../base/common.scss";
+
+.avatar {
+  width: 32rem;
+  height: 32rem;
+  border-radius: 50%;
+  background-color: $primary;
+  margin-right: 9rem;
+  flex-shrink: 0;
+}

@@ -1,35 +1,16 @@
-import React from "react";
-import { getCommunityPosts } from "../api/community.api";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { getCommunityDetail } from "../api/community.api";
 
-const useCommunity = () => {
-  const {
-    data,
-    isLoading,
-    isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["community"],
-    queryFn: ({ pageParam = 0 }) => getCommunityPosts({ pageParam }),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, _pages) => {
-      const nextCursor = lastPage.pagination.nextCursor;
-      if (nextCursor) {
-        return nextCursor;
-      }
-      return undefined;
-    },
+const useCommunity = (postId: number) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["communityDetail", postId],
+    queryFn: () => getCommunityDetail({ postId }),
   });
 
   return {
     data,
     isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isFetching,
+    error,
   };
 };
 
