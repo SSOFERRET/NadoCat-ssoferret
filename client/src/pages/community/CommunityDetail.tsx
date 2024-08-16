@@ -6,6 +6,7 @@ import ErrorNotFound from "../../components/error/ErrorNotFound";
 import PostDetail from "../../components/community/PostDetail";
 import { Suspense } from "react";
 import useCommunityComment from "../../hooks/useCommunityComment";
+import CommentForm from "../../components/community/CommentForm";
 
 // CHECKLIST
 // [x] 댓글 컴포넌트 분리
@@ -28,10 +29,13 @@ const CommunityDetail = () => {
       {isLoading && <div>loading...</div>}
       {error && <ErrorNotFound />}
       {post && (
-        <Suspense fallback={<div>loading...</div>}>
-          <PostDetail post={post} commentCount={commentCount} />
-          <CommunityComments postId={postId} />
-        </Suspense>
+        <>
+          <Suspense fallback={<div>loading...</div>}>
+            <PostDetail post={post} commentCount={commentCount} />
+            <CommunityComments postId={postId} />
+          </Suspense>
+          <CommentForm />
+        </>
       )}
     </div>
   );

@@ -48,6 +48,7 @@ body {
 /* others */
 .post-details {
   margin-bottom: 28rem;
+  padding: 0 20rem;
 }
 .post-details .user {
   width: 100%;

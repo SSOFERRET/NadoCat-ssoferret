@@ -47,7 +47,7 @@ body {
 /* tags */
 /* others */
 .comment-list {
-  width: 100%;
+  padding: 0 20rem;
   border-top: 0.5rem solid #d9d9d9;
 }
 .comment-list .comment-card {

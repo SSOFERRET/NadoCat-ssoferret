@@ -9,6 +9,8 @@ import Tags from "../common/Tags";
 import { ICommunity } from "../../models/community.model";
 import ImageCarousel from "../common/ImageCarousel";
 
+// CHECKLIST
+// [ ] 조회수 기능 구현
 interface IProps {
   post: ICommunity;
   commentCount: number;
