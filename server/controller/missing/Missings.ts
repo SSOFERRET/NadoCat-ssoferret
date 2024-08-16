@@ -14,6 +14,9 @@ import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 import { getMissingFavoriteAdders, getMissingReporters } from "../../model/notification.model";
 import { notify, notifyNewPostToFriends } from "../notification/Notifications";
+import jwt from "jsonwebtoken";
+import ensureAuthorization from "../../util/auth/auth";
+
 
 
 /* CHECKLIST
@@ -59,6 +62,7 @@ export const getMissings = async (req: Request, res: Response) => {
 export const getMissing = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.postId);
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const userId = await getUserId(); // NOTE
       const postData = {
@@ -95,13 +99,39 @@ export const getMissing = async (req: Request, res: Response) => {
  * [x] missing_locations table에 추가 누락
 */
 
+
+
 export const createMissing = async (req: Request, res: Response) => {
   try {
+    const authorization = ensureAuthorization(req, res);
+    console.log("authorization: ", authorization);
+
+
+    if (authorization instanceof jwt.TokenExpiredError) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        message: "로그인 세션이 만료되었습니다. 다시 로그인해주세요.",
+      });
+    } else if (authorization instanceof jwt.JsonWebTokenError) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "잘못된 토큰입니다.",
+      });
+    }
+
+    if (!authorization)
+      return new Error("인증 과정에 문제 발생");
+
+    if (typeof authorization !== 'object' || !('uuid' in authorization))
+      return new Error("decodedJwt 반환값이 부적절");
+
+    if (typeof authorization.uuid !== 'string')
+      return new Error("uuid 타입")
+
     const { missing, location, images } = req.body;
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newLocation = await addLocation(tx, location);
 
-      const userId = await getUserId();
+      const userId = Buffer.from((authorization.uuid as string).split("-").join(""), "hex");
 
       const post = await addMissing(tx,
         {
