@@ -12,8 +12,8 @@ import { deleteMissingReport } from "./MissingReports";
 import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
-import { getMissingFavoriteAdders, getMissingReporters } from "../../model/notification.model";
-import { notify, notifyNewPostToFriends } from "../notification/Notifications";
+// import { getMissingFavoriteAdders, getMissingReporters } from "../../model/notification.model";
+// import { notify, notifyNewPostToFriends } from "../notification/Notifications";
 
 
 /* CHECKLIST
@@ -95,47 +95,47 @@ export const getMissing = async (req: Request, res: Response) => {
  * [x] missing_locations table에 추가 누락
 */
 
-export const createMissing = async (req: Request, res: Response) => {
-  try {
-    const { missing, location, images } = req.body;
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const newLocation = await addLocation(tx, location);
+// export const createMissing = async (req: Request, res: Response) => {
+//   try {
+//     const { missing, location, images } = req.body;
+//     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+//       const newLocation = await addLocation(tx, location);
 
-      const userId = await getUserId();
+//       const userId = await getUserId();
 
-      const post = await addMissing(tx,
-        {
-          ...missing,
-          uuid: userId,
-          time: new Date(missing.time),
-          locationId: newLocation.locationId,
-        }
-      );
+//       const post = await addMissing(tx,
+//         {
+//           ...missing,
+//           uuid: userId,
+//           time: new Date(missing.time),
+//           locationId: newLocation.locationId,
+//         }
+//       );
 
-      await addLocationFormats(tx, CATEGORY.MISSINGS, {
-        postId: post.postId,
-        locationId: newLocation.locationId
-      });
+//       await addLocationFormats(tx, CATEGORY.MISSINGS, {
+//         postId: post.postId,
+//         locationId: newLocation.locationId
+//       });
 
-      if (images) {
-        await addNewImages(tx, {
-          userId,
-          postId: post.postId,
-          categoryId: CATEGORY.MISSINGS,
-        }, images)
-      }
+//       if (images) {
+//         await addNewImages(tx, {
+//           userId,
+//           postId: post.postId,
+//           categoryId: CATEGORY.MISSINGS,
+//         }, images)
+//       }
 
-      await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
-    });
+//       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
+//     });
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "게시글이 등록되었습니다." });
-  } catch (error) {
-    if (error instanceof Error)
-      validateError(res, error);
-  }
-};
+//     res
+//       .status(StatusCodes.CREATED)
+//       .json({ message: "게시글이 등록되었습니다." });
+//   } catch (error) {
+//     if (error instanceof Error)
+//       validateError(res, error);
+//   }
+// };
 
 /**
  * CHECKLIST
@@ -273,36 +273,36 @@ export const validateError = (res: Response, error: Error) => {
   return validateInternalServerError(res);
 }
 
-export const updateFoundState = async (req: Request, res: Response) => {
-  try {
-    const postId = Number(req.params.postId);
-    const userId = await getUserId(); // NOTE
-    const { found } = req.body;
-    const postData = {
-      postId,
-      userId,
-      categoryId: CATEGORY.MISSINGS
-    }
+// export const updateFoundState = async (req: Request, res: Response) => {
+//   try {
+//     const postId = Number(req.params.postId);
+//     const userId = await getUserId(); // NOTE
+//     const { found } = req.body;
+//     const postData = {
+//       postId,
+//       userId,
+//       categoryId: CATEGORY.MISSINGS
+//     }
 
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      await updateFoundByPostId(tx, postData, found);
+//     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+//       await updateFoundByPostId(tx, postData, found);
 
-      const receivers = [...await getMissingReporters(tx, postId), ...await getMissingFavoriteAdders(tx, postId)];
+//       const receivers = [...await getMissingReporters(tx, postId), ...await getMissingFavoriteAdders(tx, postId)];
 
-      receivers.forEach((receiver) => notify({
-        type: "found",
-        receiver: receiver.uuid,
-        sender: userId,
-        url: `/boards/missings/${postId}`,
-        result: found ? "Y" : "N"
-      }))
-    })
+//       receivers.forEach((receiver) => notify({
+//         type: "found",
+//         receiver: receiver.uuid,
+//         sender: userId,
+//         url: `/boards/missings/${postId}`,
+//         result: found ? "Y" : "N"
+//       }))
+//     })
 
-    return res
-      .status(StatusCodes.OK)
-      .json({ message: "게시글이 상태가 변경 되었습니다." });
-  } catch (error) {
-    if (error instanceof Error)
-      return validateError(res, error);
-  }
-}
+//     return res
+//       .status(StatusCodes.OK)
+//       .json({ message: "게시글이 상태가 변경 되었습니다." });
+//   } catch (error) {
+//     if (error instanceof Error)
+//       return validateError(res, error);
+//   }
+// }

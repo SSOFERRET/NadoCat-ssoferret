@@ -77,10 +77,15 @@ const List: IList[] = [
   }
 ]
 const ChatList = () => {
+  const handleClick = () => {
+    const userName:string = "김지우";
+    const room:string = "asdfghjkl";
+  }
+
   return (
     <div className="chatList">
       <div className="header">
-        <div id='title'>채팅</div>
+        <div id='title'>채팅<p style={{fontSize: "2vh"}} onClick={handleClick}>+</p></div>
         <ChatListC lists={List}/>
       </div>
       

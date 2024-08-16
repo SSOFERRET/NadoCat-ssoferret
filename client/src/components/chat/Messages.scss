@@ -1,0 +1,18 @@
+.messages{
+  width: 400px;
+  max-height: 85vh;
+  overflow-y: scroll;
+  display: flex;
+  scrollbar-width: none;
+  .start{
+    display: flex;
+    justify-content: start;
+  }
+  .end{
+    display: flex;
+    justify-content: end;
+  }
+  &::-webkit-scrollbar{
+    display: none;
+  }
+}

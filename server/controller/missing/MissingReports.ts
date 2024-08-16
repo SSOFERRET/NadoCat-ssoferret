@@ -27,7 +27,7 @@ import { addNewImages } from "../../util/images/addNewImages";
 import { getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
-import { notify } from "../notification/Notifications";
+// import { notify } from "../notification/Notifications";
 import { handleControllerError } from "../../util/errors/errors";
 
 /* CHECKLIST
@@ -126,12 +126,12 @@ export const createMissingReport = async (req: Request, res: Response) => {
           images
         );
 
-      notify({
-        type: "newPost",
-        receiver: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
-        sender: userId,
-        url: `/boards/missings/${missingId}/reports/${post.postId}`
-      });
+      // notify({
+      //   type: "newPost",
+      //   receiver: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
+      //   sender: userId,
+      //   url: `/boards/missings/${missingId}/reports/${post.postId}`
+      // });
     });
 
     return res
@@ -233,12 +233,12 @@ export const updateMissingReport = async (req: Request, res: Response) => {
         await addNewImages(tx, postData, images);
       }
 
-      notify({
-        type: "update",
-        receiver: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
-        sender: userId,
-        url: `/boards/missings/${missingId}/reports/${postId}`
-      });
+      // notify({
+      //   type: "update",
+      //   receiver: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
+      //   sender: userId,
+      //   url: `/boards/missings/${missingId}/reports/${postId}`
+      // });
     });
 
     return res
@@ -268,13 +268,13 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
       }); // NOTE 게시글 작성자 인가 추가
       await updateMissingReportCheckByPostId(tx, postData, match);
 
-      notify({
-        type: "match",
-        receiver: userId,
-        sender: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
-        result: match,
-        url: `/boards/missings/${missingPost.postId}/reports/${postData.postId}`,
-      });
+      // notify({
+      //   type: "match",
+      //   receiver: userId,
+      //   sender: userId, //NOTE userId를 실종고양이 게시글 게시자로 변경(-)
+      //   result: match,
+      //   url: `/boards/missings/${missingPost.postId}/reports/${postData.postId}`,
+      // });
 
       return res
         .status(StatusCodes.OK)

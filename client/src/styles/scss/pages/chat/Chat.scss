@@ -1,3 +1,5 @@
+@import "../../base/common.scss";
+
 .layout{
   display: flex;
   justify-content: center;
@@ -10,5 +12,14 @@
     flex-direction: column;
     align-items: center;
     overflow-x: hidden;
+    .chatlist{
+      width: 100%;
+      height: 80vh;
+      .message{
+        background-color: $orange;
+        font-size: 15em;
+        font-weight: 500;
+      } 
+    }
   }
 }

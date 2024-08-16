@@ -3,6 +3,7 @@ import "./ChatList.scss";
 import "../../styles/css/base/reset.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal from "./Modal";
+import { useNavigate } from 'react-router-dom';
 interface IList{
   img: string;
   nickname: string;
@@ -15,6 +16,9 @@ interface ChatProps {
 }
 const ChatList: React.FC<ChatProps> = ({lists}) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const room = "asdfghjkl";
+  const user = "김지우";
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setModalOpen(false);
@@ -22,7 +26,7 @@ const ChatList: React.FC<ChatProps> = ({lists}) => {
   return (
     <div className="chatlist">
       {lists.map((list) => (
-        <div className="listbox">
+        <div className="listbox" onClick={() => navigate("/chat", {state: {User: user, Room: room }})}>
           <div className="imgbox"><img src={list.img} /></div>
           <div className="contentsbox">
             <div className="nametimebox">

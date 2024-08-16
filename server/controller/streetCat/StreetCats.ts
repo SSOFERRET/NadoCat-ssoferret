@@ -3,7 +3,7 @@ import prisma from "../../client";
 import { IImages, IStreetCatImages } from "../../types/streetCat";
 import { addImage, createFavoriteCat, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, readFavoriteCat, readFavoriteCatPostIds, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, removeComment, removeFavoriteCat, updatePost } from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
-import { notifyNewPostToFriends } from "../notification/Notifications";
+// import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
 
 // CHECKLIST
@@ -100,7 +100,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
         // street_cat_images 데이터 생성
         await createStreetCatImages(tx, getStreetCatImages);
 
-        await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, newPost.postId);
+        // await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, newPost.postId);
       }
 
       res.status(201).json({ message: "동네 고양이 도감 생성" });
