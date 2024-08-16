@@ -9,6 +9,9 @@ import {
 import { StatusCodes } from "http-status-codes";
 import { getUserId } from "../community/Communities";
 import { handleControllerError } from "../../util/errors/errors";
+import { notifyNewComment } from "../notification/Notifications";
+import { CATEGORY } from "../../constants/category";
+
 export const getComments = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.community_id);
@@ -53,7 +56,10 @@ export const createComment = async (req: Request, res: Response) => {
         .json({ message: "입력값을 확인해 주세요." });
     }
 
-    await addComment(postId, userId, comment);
+    const newComment = await addComment(postId, userId, comment);
+
+    if (newComment.eventCommentId)
+      await notifyNewComment(Buffer.from(userId), CATEGORY.EVENTS, postId, newComment.eventCommentId);
 
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {

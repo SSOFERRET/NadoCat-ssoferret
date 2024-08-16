@@ -81,7 +81,7 @@ export const getEventList = async (
       views: event.views,
       createdAt: event.createdAt,
       updatedAt: event.updatedAt,
-      isClosed: !!event.isClosed,
+      isClosed: event.isClosed,
       users: {
         id: event?.users.id,
         uuid: (event?.users.uuid as Buffer).toString("hex"),
@@ -159,7 +159,7 @@ export const getEventById = async (postId: number) => {
     views: event.views,
     createdAt: event.createdAt,
     updatedAt: event.updatedAt,
-    isClosed: !!event.isClosed,
+    isClosed: event.isClosed,
     users: {
       id: event?.users.id,
       uuid: (event?.users.uuid as Buffer).toString("hex"),
@@ -185,7 +185,7 @@ export const addEvent = async (
     data: {
       title,
       content,
-      isClosed: isClosed ? 1 : 0,
+      isClosed,
       categoryId,
       uuid: Buffer.from(userId, "hex"),
       date,
@@ -211,7 +211,7 @@ export const updateEventById = async (
     data: {
       title,
       content,
-      isClosed: isClosed ? 1 : 0,
+      isClosed,
       date,
     },
   });

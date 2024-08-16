@@ -5,6 +5,7 @@ import { TCategoryId } from "../types/category";
 import { IListData, IPostData } from "../types/post";
 import { ILocationBridge } from "../types/location";
 import prisma from "../client";
+import { getCategoryModel } from "./common/model";
 
 export const addMissing = async (
   tx: Prisma.TransactionClient,
@@ -129,21 +130,15 @@ export const removePost = async (
   tx: Prisma.TransactionClient,
   postData: IPostData
 ) => {
-  switch (postData.categoryId) {
-    case 3:
-      return await tx.missings.delete({
-        where: {
-          postId: postData.postId,
-          categoryId: postData.categoryId,
-        },
-      });
-    case 4:
-      return await tx.missingReports.delete({
-        where: {
-          postId: postData.postId,
-          categoryId: postData.categoryId,
-        },
-      });
+  const model = getCategoryModel(postData.categoryId)
+
+  if (model) {
+    return await (tx as any)[model].delete({
+      where: {
+        postId: postData.postId,
+        categoryId: postData.categoryId,
+      },
+    });
   }
 };
 

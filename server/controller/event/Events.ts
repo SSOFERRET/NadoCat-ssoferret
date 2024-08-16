@@ -25,6 +25,7 @@ import { CATEGORY } from "../../constants/category";
 import { ITag } from "../../types/tag";
 import { IImage } from "../../types/image";
 import { removeLikesByIds } from "../../model/like.model";
+import { notifyNewPostToFriends } from "../notification/Notifications";
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 목록 가져오기
@@ -136,6 +137,8 @@ export const createEvent = async (req: Request, res: Response) => {
 
         await addEventImages(tx, formatedImages);
       }
+
+      await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.EVENTS, post.postId);
     });
 
     res

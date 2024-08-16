@@ -9,6 +9,7 @@ import {
   removeFriend,
 } from "../../model/friend.model";
 import { handleControllerError } from "../../util/errors/errors";
+import { notify } from "../notification/Notifications";
 
 export const followings = async (req: Request, res: Response) => {
   try {
@@ -41,6 +42,13 @@ export const follow = async (req: Request, res: Response) => {
     const followingId = req.params.following_id;
 
     await addFriend(userId, followingId);
+
+    notify({
+      type: "follow",
+      receiver: Buffer.from(followingId, "hex"),
+      sender: Buffer.from(userId, "hex"),
+      url: `/users/${followingId}/profile`
+    })
 
     res
       .status(StatusCodes.CREATED)

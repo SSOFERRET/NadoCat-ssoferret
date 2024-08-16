@@ -6,6 +6,7 @@ import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
 import Community from "./pages/community/Community";
+import CommunityDetail from "./pages/community/CommunityDetail";
 import Chat from "./pages/chat/Chat";
 import MyPage from "./pages/mypage/MyPage";
 import ChatList from "./pages/chat/ChatList";
@@ -29,7 +30,11 @@ const routeList = [
   },
   {
     path: "/boards/communities",
-    element: <Community />,
+    elemennt: <Community />,
+  },
+  {
+    path: "/boards/communities/:id",
+    element: <CommunityDetail />,
   },
   {
     path: "/chat",

@@ -9,7 +9,7 @@ export interface IEvent {
   views: number;
   createdAt: Date;
   updatedAt: Date;
-  isClosed: number;
+  isClosed: boolean;
   users: IUser;
   _count: ICount;
   eventImages: IEventImage[] | [];
