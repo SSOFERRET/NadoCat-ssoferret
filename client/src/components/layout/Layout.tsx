@@ -10,13 +10,13 @@ interface ILayoutProps {
 
 const Layout: React.FC<ILayoutProps> = ({ children }) => {
   const location = useLocation();
-  const noHeaderFooter = ["/signup", "/login"];
+  const noHeaderFooter = ["/users/signup", "/users/login"];
   const hideHeaderFooter = noHeaderFooter.includes(location.pathname);
 
   return (
     <>
     {!hideHeaderFooter && <Header />}   
-      <main>{children}</main>
+      <main className={hideHeaderFooter? "no-headerfooter" : ""}>{children}</main>
     {!hideHeaderFooter && <Footer />}   
     </>
   );
