@@ -5,6 +5,7 @@ import { addImage, createFavoriteCat, createPost, createStreetCatImages, deleteA
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 
 // CHECKLIST
 // [ ] 페이지네이션 구현
@@ -101,6 +102,8 @@ export const createStreetCat = async (req: Request, res: Response) => {
         await createStreetCatImages(tx, getStreetCatImages);
 
         await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, newPost.postId);
+
+        await indexOpensearchDocument(CATEGORY.STREET_CATS, name, content, newPost.postId);
       }
 
       res.status(201).json({ message: "동네 고양이 도감 생성" });
@@ -149,6 +152,8 @@ export const updateStreetCat = async (req: Request, res: Response) => {
 
         // street_cat_images 데이터 생성
         await createStreetCatImages(tx, getStreetCatImages);
+
+        await updateOpensearchDocument(categoryId, postId, { content });
       }
 
       res.status(201).json({ message: "동네 고양이 도감 수정" });
@@ -179,6 +184,8 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
       await removeAllComment(postId);
 
       await deletePost(tx, postId, uuid);
+
+      await deleteOpensearchDocument(CATEGORY.STREET_CATS, postId)
 
       // status 204는 message가 보내지지 않아 임시로 200
       res.status(200).json({ message: "동네 고양이 도감 삭제" });

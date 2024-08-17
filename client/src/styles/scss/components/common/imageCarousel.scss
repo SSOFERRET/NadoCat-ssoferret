@@ -1,0 +1,102 @@
+@import "../../base/common.scss";
+
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  height: 380rem;
+  border-radius: $round-5;
+  background-color: lightgray;
+  overflow: hidden;
+  margin: 0 auto;
+  margin-bottom: 13rem;
+
+  .carousel-slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .carousel-item {
+    min-width: 100%;
+    user-select: none;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+  }
+
+  .carousel-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 30rem;
+    height: 30rem;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    color: $white;
+    z-index: 10;
+    top: 50%;
+    cursor: pointer;
+
+    svg {
+      width: 20rem;
+      height: 20rem;
+    }
+
+    &.prev-button {
+      left: 10rem;
+    }
+
+    &.next-button {
+      right: 10rem;
+    }
+
+    &:hover {
+      background-color: rgba(136, 139, 144, 0.4);
+    }
+  }
+
+  .pagination-container {
+    width: 100%;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    margin-top: 16rem;
+    position: absolute;
+    bottom: 12rem;
+
+    &:hover {
+      display: flex;
+    }
+
+    ul {
+      display: flex;
+
+      li {
+        width: 6rem; // 3 * 4px
+        height: 6rem; // 3 * 4px
+        border-radius: 50%;
+        background-color: $gray;
+        margin: 0 4rem; // 1 * 4px
+        cursor: pointer;
+
+        &:hover {
+          background-color: $dimgray;
+        }
+
+        &.active {
+          background-color: $dimgray;
+        }
+      }
+    }
+  }
+}

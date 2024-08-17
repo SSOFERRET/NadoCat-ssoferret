@@ -12,14 +12,20 @@ interface ICommunityPostsParams {
   sort?: Sort;
 }
 
-interface CommunityDetailParams {
+interface ICommunityDetailParams {
   postId: number;
 }
 
-interface CommunityCommentsParams {
+interface ICommunityCommentsParams {
   postId: number;
   pageParam: number;
   limit?: number;
+}
+
+export interface ICommentPostRequest {
+  postId: number;
+  userId: string; // 버퍼일지도..?
+  comment: string;
 }
 
 export const getCommunityPosts = async ({
@@ -42,7 +48,7 @@ export const getCommunityPosts = async ({
 
 export const getCommunityDetail = async ({
   postId,
-}: CommunityDetailParams): Promise<ICommunity> => {
+}: ICommunityDetailParams): Promise<ICommunity> => {
   try {
     const response = await httpClient.get(`/boards/communities/${postId}`);
     return response.data;
@@ -56,7 +62,7 @@ export const getCommunityComments = async ({
   postId,
   pageParam,
   limit,
-}: CommunityCommentsParams) => {
+}: ICommunityCommentsParams) => {
   try {
     const response = await httpClient.get(
       `/boards/communities/${postId}/comments?limit=${
@@ -67,6 +73,27 @@ export const getCommunityComments = async ({
     return response.data;
   } catch (error) {
     console.error("Error fetching community comments:", error);
+    throw error;
+  }
+};
+
+export const createCommunityComment = async ({
+  postId,
+  userId,
+  comment,
+}: ICommentPostRequest) => {
+  try {
+    const response = await httpClient.post(
+      `/boards/communities/${postId}/comments`,
+      { postId, userId, comment }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error creating community comment for post ${postId}:`,
+      error
+    );
     throw error;
   }
 };

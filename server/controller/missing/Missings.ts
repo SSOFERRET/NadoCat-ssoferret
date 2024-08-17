@@ -14,6 +14,10 @@ import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 import { getMissingFavoriteAdders, getMissingReporters } from "../../model/notification.model";
 import { notify, notifyNewPostToFriends } from "../notification/Notifications";
+import jwt from "jsonwebtoken";
+import ensureAuthorization from "../../util/auth/auth";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+
 
 
 /* CHECKLIST
@@ -53,12 +57,12 @@ export const getMissings = async (req: Request, res: Response) => {
  * CHECKLIST
  * [x] 이미지 가져오기
  * [x] location 가져오기
- * [ ] 제보글 가져오기
  */
 
 export const getMissing = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.postId);
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const userId = await getUserId(); // NOTE
       const postData = {
@@ -95,12 +99,39 @@ export const getMissing = async (req: Request, res: Response) => {
  * [x] missing_locations table에 추가 누락
 */
 
+
+
 export const createMissing = async (req: Request, res: Response) => {
   try {
+    //   const authorization = ensureAuthorization(req, res);
+    //   console.log("authorization: ", authorization);
+
+
+    //   if (authorization instanceof jwt.TokenExpiredError) {
+    //     return res.status(StatusCodes.UNAUTHORIZED).json({
+    //       message: "로그인 세션이 만료되었습니다. 다시 로그인해주세요.",
+    //     });
+    //   } else if (authorization instanceof jwt.JsonWebTokenError) {
+    //     return res.status(StatusCodes.BAD_REQUEST).json({
+    //       message: "잘못된 토큰입니다.",
+    //     });
+    //   }
+
+    //   if (!authorization)
+    //     return new Error("인증 과정에 문제 발생");
+
+    //   if (typeof authorization !== 'object' || !('uuid' in authorization))
+    //     return new Error("decodedJwt 반환값이 부적절");
+
+    //   if (typeof authorization.uuid !== 'string')
+    //     return new Error("uuid 타입")
+
     const { missing, location, images } = req.body;
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newLocation = await addLocation(tx, location);
 
+      // const userId = Buffer.from((authorization.uuid as string).split("-").join(""), "hex");
       const userId = await getUserId();
 
       const post = await addMissing(tx,
@@ -126,6 +157,8 @@ export const createMissing = async (req: Request, res: Response) => {
       }
 
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
+
+      await indexOpensearchDocument(CATEGORY.MISSINGS, "", missing.detail, post.postId);
     });
 
     res
@@ -173,6 +206,8 @@ export const deleteMissing = async (req: Request, res: Response) => {
 
       if (images)
         await deleteImagesByImageIds(tx, images);
+
+      await deleteOpensearchDocument(CATEGORY.MISSINGS, postId);
     });
 
     return res
@@ -243,12 +278,18 @@ export const updateMissing = async (req: Request, res: Response) => { // NOTE Fu
           categoryId: CATEGORY.MISSINGS,
         }, images)
       };
+
+      await updateOpensearchDocument(CATEGORY.MISSINGS, postId, {
+        content: missing.detail
+      })
     })
 
     return res
       .status(StatusCodes.OK)
       .json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
+    console.log(error);
+
     if (error instanceof Error)
       return validateError(res, error);
   }

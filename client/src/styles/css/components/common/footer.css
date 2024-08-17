@@ -35,7 +35,10 @@ html {
 /* color palette */
 /* radious */
 body {
-  background-color: #FCF7E0;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
   letter-spacing: -0.7px;
   color: #191919;
 }
@@ -48,8 +51,8 @@ footer {
   align-items: center;
   padding: 10rem 20rem;
   margin: 0 auto;
-  max-width: 390rem;
-  background-color: #FFFFFF;
+  max-width: 430rem;
+  background-color: #ffffff;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -74,10 +77,10 @@ footer {
 }
 .navbar-item.active {
   font-family: bold;
-  color: #F27405;
+  color: #f27405;
 }
 .navbar-item.active svg {
-  fill: #F27405;
+  fill: #f27405;
 }
 .navbar-item svg {
   width: 22rem;

@@ -1,8 +1,8 @@
-import "../../styles/css/components/community/comments.css";
+import "../../styles/css/components/comment/comments.css";
 import useCommunityComment from "../../hooks/useCommunityComment";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import CommentList from "./CommentList";
-import CommentsEmpty from "./CommentsEmpty";
+import CommentList from "../comment/CommentList";
+import CommentsEmpty from "../comment/CommentsEmpty";
 
 interface IProps {
   postId: number;
@@ -20,8 +20,6 @@ const CommunityComments = ({ postId }: IProps) => {
       fetchNextPage();
     }
   });
-
-  console.log(data);
 
   if (isEmpty) {
     return <CommentsEmpty />;

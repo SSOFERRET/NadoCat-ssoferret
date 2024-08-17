@@ -11,6 +11,8 @@ import Community from "./pages/community/Community";
 import CommunityDetail from "./pages/community/CommunityDetail";
 import StreetCatWrite from "./pages/streetCat/StreetCatWrite";
 import StreetCatDetail from "./pages/streetCat/StreetCatDetail";
+import Event from "./pages/event/Event";
+import EventDetail from "./pages/event/EventDetail";
 
 const routeList = [
   {
@@ -44,6 +46,14 @@ const routeList = [
   {
     path: "/boards/communities/:id",
     element: <CommunityDetail />,
+  },
+  {
+    path: "/boards/events",
+    element: <Event />,
+  },
+  {
+    path: "/boards/events/:id",
+    element: <EventDetail />,
   },
 ];
 
