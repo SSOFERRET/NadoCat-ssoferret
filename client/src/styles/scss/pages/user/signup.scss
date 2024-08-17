@@ -1,0 +1,40 @@
+@import "../../base/common.scss";
+
+    .signup-container {
+        overflow-y: hidden;
+        height: 100vh;
+        background: $white;
+    
+        .signup-header {
+        //   padding: 17rem 20rem;
+        // display: flex;
+        // flex-direction: row;
+        }
+        
+        .signup-content {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin: 30rem 0;
+          padding: 0 15rem;
+          height: auto;
+        
+          fieldset {
+            display: flex;
+            flex-direction: column;
+            margin: 30rem;
+        
+            legend {
+              font-size: $size-16;
+              padding-bottom: 10rem;
+            }
+        
+            input {
+              width: 300rem;
+            }
+          }
+        }
+        
+    }
+
