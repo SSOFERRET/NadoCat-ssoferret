@@ -1,0 +1,28 @@
+@import "../../base/common.scss";
+
+.write-btn {
+  background-color: $primary;
+  border: none;
+  border-radius: $rount-30;
+  font-size: 16rem;
+  padding: 16rem 20rem;
+  position: absolute;
+  right: 5%;
+  z-index: 100;
+
+  svg {
+    width: 19rem;
+    height: 19rem;
+    fill: $white;
+    margin-right: 4rem;
+    vertical-align: middle;
+  }
+
+  a {
+    text-decoration: none;
+    font-family: "bold";
+    font-size: $size-18;
+    color: $white;
+    vertical-align: middle;
+  }
+}
