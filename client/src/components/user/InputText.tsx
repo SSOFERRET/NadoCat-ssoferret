@@ -1,5 +1,5 @@
 import React, {ForwardedRef} from "react";
-import "../../styles/scss/components/common/inputText.scss";
+import "../../styles/scss/components/user/inputText.scss";
 
 interface InputTextProps extends React.InputHTMLAttributes<HTMLInputElement>{
     placeholder?: string;

@@ -1,0 +1,11 @@
+@import "../../base/common.scss";
+
+input {
+    // padding: 0.2rem 0.75rem;
+    padding: 3.2rem 1.2rem;
+    border: 1px solid #e3e5e8;
+    border-radius: 4px;
+    font-size: $size-16;
+    line-height: 1.8;
+    color: $black;
+}
