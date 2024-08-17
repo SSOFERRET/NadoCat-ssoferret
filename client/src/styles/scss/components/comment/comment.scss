@@ -2,7 +2,7 @@
 
 .comment-card {
   min-height: 81rem;
-  padding: 18rem 0;
+  padding: 15rem 0;
   border-bottom: 0.5rem solid $lightgray;
 
   .comment {
@@ -24,7 +24,7 @@
         .nickname {
           word-break: break-all;
           font-family: "bold";
-          font-size: $size-14;
+          font-size: $size-12;
         }
 
         .date {
@@ -45,11 +45,11 @@
       .comment-detail {
         white-space: pre-wrap;
         word-break: break-all;
-        margin-top: 11rem;
+        margin-top: 7rem;
         color: $dimgray;
         font-family: "medium";
         font-size: $size-14;
-        line-height: 1.2;
+        line-height: 1.5;
       }
     }
   }

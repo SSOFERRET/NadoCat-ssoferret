@@ -22,6 +22,12 @@ interface ICommunityCommentsParams {
   limit?: number;
 }
 
+export interface ICommentPostRequest {
+  postId: number;
+  userId: string; // 버퍼일지도..?
+  comment: string;
+}
+
 export const getCommunityPosts = async ({
   pageParam,
   limit,
@@ -67,6 +73,27 @@ export const getCommunityComments = async ({
     return response.data;
   } catch (error) {
     console.error("Error fetching community comments:", error);
+    throw error;
+  }
+};
+
+export const createCommunityComment = async ({
+  postId,
+  userId,
+  comment,
+}: ICommentPostRequest) => {
+  try {
+    const response = await httpClient.post(
+      `/boards/communities/${postId}/comments`,
+      { postId, userId, comment }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error creating community comment for post ${postId}:`,
+      error
+    );
     throw error;
   }
 };

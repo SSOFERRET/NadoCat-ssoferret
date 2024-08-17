@@ -1,7 +1,14 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getEventComments } from "../api/event.api";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { createEventComment, getEventComments } from "../api/event.api";
+import { ICreateCommentParams } from "./useCommunityComment";
 
 const useEventComment = (postId: number) => {
+  const queryClient = useQueryClient();
+
   const {
     data,
     isLoading,
@@ -25,6 +32,20 @@ const useEventComment = (postId: number) => {
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];
   const isEmpty = comments.length === 0;
   const commentCount = data?.pages.flatMap((v) => v.pagination.totalCount)[0];
+  console.log(data);
+
+  const { mutate: addEventComment } = useMutation({
+    mutationFn: ({ postId, userId, comment }: ICreateCommentParams) =>
+      createEventComment({ postId, userId, comment }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["eventComment", postId],
+      });
+    },
+    onError: (error) => {
+      console.error("Error creating community comment:", error);
+    },
+  });
 
   return {
     data,
@@ -35,6 +56,7 @@ const useEventComment = (postId: number) => {
     isFetching,
     isEmpty,
     commentCount,
+    addEventComment,
   };
 };
 

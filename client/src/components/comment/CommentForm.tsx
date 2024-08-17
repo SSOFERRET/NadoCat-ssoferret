@@ -1,12 +1,19 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import "../../styles/css/components/comment/commentForm.css";
 import { AiFillHeart } from "react-icons/ai";
+import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 
 // CHECKLIST
 // [ ] 좋아요 버튼 만들기
 // [ ] 댓글 달기 기능
 
-const CommentForm = () => {
+interface IProps {
+  postId: number;
+  userId: string; // 버퍼일지도..? 일단 테스트를 위한 string
+  addComment: ({ postId, userId, comment }: ICreateCommentParams) => void;
+}
+
+const CommentForm = ({ postId, userId, addComment }: IProps) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [value, setValue] = useState("");
 
@@ -18,8 +25,15 @@ const CommentForm = () => {
     }
   };
 
-  const onChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setValue(event.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log({ postId, userId, comment: value });
+    e.preventDefault();
+    addComment({ postId, userId, comment: value });
+    setValue("");
   };
 
   useEffect(() => {
@@ -31,9 +45,9 @@ const CommentForm = () => {
       <button className="post-like">
         <AiFillHeart />
       </button>
-      <form className="comment-form">
+      <form onSubmit={handleSubmit} className="comment-form">
         <textarea
-          onChange={onChange}
+          onChange={handleChange}
           ref={textareaRef}
           maxLength={200}
           rows={1}
