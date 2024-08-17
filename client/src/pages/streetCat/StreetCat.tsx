@@ -5,6 +5,7 @@ import "../../styles/css/base/reset.css";
 import "../../styles/css/pages/streetCat/streetCat.css";
 import { Header } from "../../components/common/Header";
 import { Footer } from "../../components/common/Footer";
+import WriteButton from "../../components/common/WriteButton";
 
 // interface IStreetCatPost {
 //   postId: number;
@@ -49,12 +50,8 @@ import { Footer } from "../../components/common/Footer";
 export const StreetCats: React.FC = () => {
   return (
     <>
-      <button className="write-btn">
-        <FaPlus />
-        <a href="">글쓰기</a>
-      </button>
-
       <section className="street-cat-section">
+        <WriteButton />
         <nav className="street-cat-nav">
           <ul>
             <li className="active">

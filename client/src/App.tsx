@@ -9,6 +9,8 @@ import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
 import Community from "./pages/community/Community";
 import CommunityDetail from "./pages/community/CommunityDetail";
+import StreetCatWrite from "./pages/streetCat/StreetCatWrite";
+import StreetCatDetail from "./pages/streetCat/StreetCatDetail";
 
 const routeList = [
   {
@@ -18,6 +20,14 @@ const routeList = [
   {
     path: "/boards/street-cats",
     element: <StreetCats />,
+  },
+  {
+    path: "/boards/street-cats/:id",
+    element: <StreetCatDetail />,
+  },
+  {
+    path: "/boards/street-cats/write",
+    element: <StreetCatWrite />,
   },
   {
     path: "/users/login",

@@ -43,57 +43,31 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.write-btn {
-  background-color: #F2B705;
-  border: none;
-  border-radius: 30rem;
-  font-size: 16rem;
-  padding: 16rem 20rem;
-  position: fixed;
-  right: 20rem;
-  bottom: 74rem;
-  z-index: 100;
-}
-.write-btn svg {
-  width: 19rem;
-  height: 19rem;
-  fill: #FFFFFF;
-  margin-right: 4rem;
-  vertical-align: middle;
-}
-.write-btn a {
-  text-decoration: none;
-  font-family: "bold";
-  font-size: 18rem !important;
-  color: #FFFFFF;
-  vertical-align: middle;
-}
-
 .street-cat-section {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 0 20rem;
   font-size: 14rem;
+  position: relative;
 }
-
-.street-cat-nav {
+.street-cat-section .street-cat-nav {
   font-family: "regular";
   padding: 7rem 0 14rem 0;
   border-bottom: 0.5rem solid #D9D9D9;
 }
-.street-cat-nav ul {
+.street-cat-section .street-cat-nav ul {
   display: flex;
   justify-content: space-between;
 }
-.street-cat-nav li {
+.street-cat-section .street-cat-nav li {
   position: relative;
 }
-.street-cat-nav li.active {
+.street-cat-section .street-cat-nav li.active {
   font-family: "bold";
   color: #F2B705;
 }
-.street-cat-nav li .nav-bar {
+.street-cat-section .street-cat-nav li .nav-bar {
   display: block;
   width: 100%;
   height: 2rem;
@@ -101,32 +75,29 @@ body {
   position: absolute;
   bottom: -15rem;
 }
-
-.title {
+.street-cat-section .title {
   font-family: "bold";
   font-size: 16rem !important;
   padding: 14rem 0;
 }
-
-.street-cat-list {
+.street-cat-section .street-cat-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
 }
-.street-cat-list a {
+.street-cat-section .street-cat-list a {
   text-decoration: none;
   color: #191919;
 }
-
-.test-box {
+.street-cat-section .test-box {
   width: 190rem;
   height: 190rem;
   background-color: #D9D9D9;
   border-radius: 5rem;
   position: relative;
 }
-.test-box svg {
+.street-cat-section .test-box svg {
   width: 25rem;
   height: 25rem;
   fill: #4C4C4C;
@@ -134,22 +105,21 @@ body {
   right: 10rem;
   bottom: 8rem;
 }
-.test-box svg.active {
+.street-cat-section .test-box svg.active {
   fill: #F2B705;
 }
-
-.street-cat-info {
+.street-cat-section .street-cat-info {
   margin: 10rem 0 18rem 0;
 }
-.street-cat-info span {
+.street-cat-section .street-cat-info span {
   display: block;
 }
-.street-cat-info .name {
+.street-cat-section .street-cat-info .name {
   font-family: "bold";
   font-size: 14rem !important;
   margin-bottom: 4rem;
 }
-.street-cat-info .date {
+.street-cat-section .street-cat-info .date {
   font-family: "medium";
   font-size: 10rem !important;
   color: #B8BCBF;

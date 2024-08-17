@@ -1,0 +1,249 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  background-color: #FCF7E0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.add-image-section {
+  display: flex;
+  padding: 0 20rem;
+  font-size: 14rem;
+  position: relative;
+  overflow: hidden;
+}
+.add-image-section .image-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin-top: 16rem;
+}
+.add-image-section .image-container .add-image-btn {
+  width: 66rem;
+  height: 66rem;
+  background: transparent;
+  border: 2px dashed #B8BCBF;
+  border-radius: 5rem;
+  margin-right: 8rem;
+}
+.add-image-section .image-container svg {
+  width: 24rem;
+  height: 24rem;
+  fill: #B8BCBF;
+}
+.add-image-section .img-box {
+  width: 66rem;
+  width: 66rem;
+  background-color: #D9D9D9;
+  border-radius: 5rem;
+  margin-right: 8rem;
+  position: relative;
+}
+.add-image-section .img-box .img-delete-btn {
+  width: 15rem;
+  height: 15rem;
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  top: -6rem;
+  right: -5rem;
+}
+.add-image-section .img-box .img-delete-btn img {
+  width: 15rem;
+  height: 15rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.street-cat-write-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 20rem;
+  font-size: 14rem;
+  position: relative;
+  margin-top: 33rem;
+}
+.street-cat-write-section .write-form {
+  margin-bottom: 18rem;
+}
+.street-cat-write-section .input-title {
+  display: block;
+  font-family: "bold";
+  font-size: 14rem !important;
+  margin-bottom: 6rem;
+}
+.street-cat-write-section .write-form.name .name-input {
+  width: 360rem;
+  height: 18rem;
+  font-family: "ragular";
+  font-size: 14rem !important;
+  border: 1px solid #D9D9D9;
+  border-radius: 5rem;
+  padding: 10rem 15rem;
+}
+.street-cat-write-section .write-form.name .name-input ::placeholder {
+  font-family: "ragular";
+  font-size: 14rem !important;
+  color: #B8BCBF;
+}
+.street-cat-write-section .write-form.gender input[type=radio],
+.street-cat-write-section .write-form.neutered input[type=radio] {
+  display: none;
+}
+.street-cat-write-section .write-form.gender input[type=radio] + label,
+.street-cat-write-section .write-form.neutered input[type=radio] + label {
+  position: relative;
+  display: inline-block;
+  font-family: "medium";
+  font-size: 12rem !important;
+  color: #191919;
+  background-color: #FFFFFF;
+  border: 1px solid #D9D9D9;
+  border-radius: 30rem;
+  padding: 8rem 14rem 8rem 11rem;
+  margin-right: 6rem;
+}
+.street-cat-write-section .write-form.gender input[type=radio] + label svg,
+.street-cat-write-section .write-form.neutered input[type=radio] + label svg {
+  margin-right: 3rem;
+}
+.street-cat-write-section .write-form.gender input[type=radio]:checked + label,
+.street-cat-write-section .write-form.neutered input[type=radio]:checked + label {
+  position: relative;
+  display: inline-block;
+  font-family: "bold";
+  font-size: 12rem !important;
+  color: #FFFFFF;
+  background-color: #F2B705;
+  border: none;
+  border-radius: 30rem;
+  padding: 9rem 15rem 9rem 12rem;
+  margin-right: 6rem;
+}
+.street-cat-write-section .write-form.gender input[type=radio]:checked + label svg,
+.street-cat-write-section .write-form.neutered input[type=radio]:checked + label svg {
+  margin-right: 3rem;
+}
+.street-cat-write-section .write-form.discovery div {
+  display: flex;
+  align-items: center;
+  width: 284rem;
+  height: 14rem;
+  font-family: "medium";
+  font-size: 12rem !important;
+  color: #4C4C4C;
+  background-color: #F5F5F5;
+  border-radius: 5rem;
+  padding: 12rem;
+}
+.street-cat-write-section .write-form.discovery svg {
+  width: 16rem;
+  height: 16rem;
+  fill: #4C4C4C;
+  margin-right: 10rem;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox] {
+  display: none;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox] + label {
+  display: flex;
+  align-items: center;
+  width: 22rem;
+  height: 22rem;
+  background-color: #F2B705;
+  border-radius: 5rem;
+  position: absolute;
+  right: 15%;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox] + label svg {
+  fill: #FFFFFF;
+  margin: 0 5rem;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox]:checked + label {
+  display: flex;
+  align-items: center;
+  width: 22rem;
+  height: 22rem;
+  background-color: #F2B705;
+  border-radius: 5rem;
+  position: absolute;
+  right: 15%;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox]:checked + label svg {
+  fill: #FFFFFF;
+  margin: 0 5rem;
+}
+.street-cat-write-section .write-form.discovery .check-text {
+  font-family: "regular";
+  position: absolute;
+  right: 9%;
+}
+.street-cat-write-section .write-form.location div {
+  display: flex;
+  align-items: center;
+  width: 284rem;
+  height: 14rem;
+  font-family: "medium";
+  font-size: 12rem !important;
+  color: #B8BCBF;
+  background-color: #F5F5F5;
+  border-radius: 5rem;
+  padding: 12rem;
+}
+.street-cat-write-section .write-form.location svg {
+  width: 16rem;
+  height: 16rem;
+  fill: #4C4C4C;
+  margin-right: 10rem;
+}
+.street-cat-write-section .write-form.description textarea {
+  width: 100%;
+  font-family: "medium";
+  font-size: 16rem !important;
+  margin-bottom: 30rem;
+  border: none;
+  min-height: 100rem;
+  line-height: 1.3;
+}
+
+/*# sourceMappingURL=streetCatWrite.css.map */

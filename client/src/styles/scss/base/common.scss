@@ -83,7 +83,7 @@ body {
 @mixin smallButton($active) {
   width: 121rem;
   height: 44rem;
-  font-family: "Pretendard-Bold";
+  font-family: "bold";
   font-size: $size-16;
   text-align: center;
   line-height: 1;
@@ -103,7 +103,7 @@ body {
 @mixin bigButton($active) {
   width: 390rem;
   height: 50rem;
-  font-family: "Pretendard-Bold";
+  font-family: "bold";
   font-size: $size-16;
   text-align: center;
   line-height: 1;
@@ -123,7 +123,8 @@ body {
 @mixin tag {
   display: inline-block;
   background-color: $pale;
-  font-family: "Pretendard-Regular";
+  font-family: "medium";
+  font-size: $size-14;
   color: $secondary;
   border-radius: $round-5;
   padding: 6rem 8rem;
