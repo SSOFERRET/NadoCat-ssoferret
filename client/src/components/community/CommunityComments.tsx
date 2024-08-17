@@ -21,8 +21,6 @@ const CommunityComments = ({ postId }: IProps) => {
     }
   });
 
-  console.log(data);
-
   if (isEmpty) {
     return <CommentsEmpty />;
   }

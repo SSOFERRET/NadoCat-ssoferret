@@ -28,23 +28,25 @@ const Community = () => {
     }
   });
 
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
-
   return (
     <section className="community-container">
-      <div className="category">
-        <span>커뮤니티</span>
-      </div>
+      {isLoading ? (
+        <div>loading...</div>
+      ) : (
+        <>
+          <div className="category">
+            <span>커뮤니티</span>
+          </div>
 
-      {isEmpty && <PostEmpty />}
+          {isEmpty && <PostEmpty />}
 
-      {data && <PostList posts={data} />}
+          {data && <PostList posts={data} />}
 
-      <div className="more" ref={moreRef}>
-        {isFetchingNextPage && <div>loading...</div>}
-      </div>
+          <div className="more" ref={moreRef}>
+            {isFetchingNextPage && <div>loading...</div>}
+          </div>
+        </>
+      )}
     </section>
   );
 };

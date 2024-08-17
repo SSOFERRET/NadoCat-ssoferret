@@ -1,3 +1,6 @@
+import { IImage } from "./image.model";
+import { ITag } from "./tag.model";
+
 export interface ICommunity {
   postId: number;
   title: string;
@@ -6,21 +9,10 @@ export interface ICommunity {
   views: number;
   createdAt: string;
   updatedAt: string;
-  images: Image[];
-  tags: Tag[];
+  images: IImage[];
+  tags: ITag[];
   users?: Users;
 }
-
-export interface Image {
-  imageId: number;
-  url: string;
-}
-
-export interface Tag {
-  tagId: number;
-  tag: string;
-}
-
 export interface IPagination {
   nextCursor: number;
   totalCount: number;
