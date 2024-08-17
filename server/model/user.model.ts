@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import bcryto from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
+import { indexOpensearchUser } from "../controller/search/Searches";
 
 
 const prisma = new PrismaClient();
@@ -39,6 +40,8 @@ export const createUser = async (email: string, nickname: string, password: stri
           salt: salt,
         },
       });
+
+      await indexOpensearchUser(email, nickname, uuidBuffer.toString("hex"));
 
       return { user, secretUser };
     });
