@@ -1,20 +1,27 @@
-import React from "react";
 import "../../styles/css/components/community/postDetail.css";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { formatDate, formatViews } from "../../utils/format/format";
 import Avartar from "./Avartar";
 import { AiFillHeart } from "react-icons/ai";
 import { PiChatCircleBold } from "react-icons/pi";
+import { MdDateRange } from "react-icons/md";
 import Tags from "../common/Tags";
 import { ICommunity } from "../../models/community.model";
 import ImageCarousel from "../common/ImageCarousel";
+import { IEvent } from "../../models/event.model";
 
 // CHECKLIST
 // [ ] 조회수 기능 구현
+
+type PostType = ICommunity | IEvent;
 interface IProps {
-  post: ICommunity;
+  post: PostType;
   commentCount: number;
 }
+
+const isClosed = (post: PostType): post is IEvent => "isClosed" in post;
+
+const isDate = (post: PostType): post is IEvent => "date" in post;
 
 const PostDetail = ({ post, commentCount }: IProps) => {
   return (
@@ -30,12 +37,32 @@ const PostDetail = ({ post, commentCount }: IProps) => {
               <span className="nickname">{post.users.nickname}</span>
               <span className="date">{formatDate(post.createdAt)}</span>
             </div>
-            <HiOutlineDotsVertical className="options-icon" />
+            <div className="post-status">
+              {isClosed(post) && (
+                <span
+                  className={`is-closed ${post.isClosed ? "close" : "open"}`}
+                >
+                  {post.isClosed ? "마감" : "모집중"}
+                </span>
+              )}
+              <HiOutlineDotsVertical className="options-icon" />
+            </div>
           </div>
         </div>
       )}
       <span className="post-title">{post.title}</span>
       {post.images.length && <ImageCarousel images={post.images} />}
+
+      {/* {isDate(post) && (
+        <div className="post-event-date">
+          <div>
+            <MdDateRange />
+            <span>날짜</span>
+          </div>
+          <span>{formatDate(post.date)}</span>
+        </div>
+      )} */}
+
       <Tags tags={post.tags} />
       <div className="post-info">
         <div className="likes">

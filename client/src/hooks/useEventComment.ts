@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getCommunityComments } from "../api/community.api";
+import { getEventComments } from "../api/event.api";
 
-const useCommunityComment = (postId: number) => {
+const useEventComment = (postId: number) => {
   const {
     data,
     isLoading,
@@ -10,8 +10,8 @@ const useCommunityComment = (postId: number) => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["communityComment", postId],
-    queryFn: ({ pageParam = 0 }) => getCommunityComments({ pageParam, postId }),
+    queryKey: ["eventComment", postId],
+    queryFn: ({ pageParam = 0 }) => getEventComments({ pageParam, postId }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const nextCursor = lastPage.pagination.nextCursor;
@@ -38,4 +38,4 @@ const useCommunityComment = (postId: number) => {
   };
 };
 
-export default useCommunityComment;
+export default useEventComment;

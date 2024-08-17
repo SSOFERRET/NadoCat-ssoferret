@@ -13,6 +13,7 @@
       width: 100%;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       .user-details {
         display: flex;
         flex-direction: column;
@@ -28,11 +29,32 @@
         }
       }
 
-      .options-icon {
-        width: 22rem;
-        height: 22rem;
-        color: $dimgray;
-        margin-left: auto;
+      .post-status {
+        display: flex;
+        align-items: center;
+        gap: 5rem;
+        .is-closed {
+          display: flex;
+          flex-shrink: 0;
+          font-family: "medium";
+          font-size: $size-14;
+        }
+
+        .open {
+          color: $primary;
+        }
+
+        .close {
+          color: $gray;
+        }
+
+        .options-icon {
+          width: 22rem;
+          height: 22rem;
+          color: $dimgray;
+          margin-left: auto;
+          cursor: pointer;
+        }
       }
     }
   }
@@ -52,6 +74,22 @@
     background-color: $lightgray;
     overflow: hidden;
     margin-bottom: 13rem;
+  }
+
+  .post-event-date {
+    display: flex;
+    align-items: center;
+    gap: 10rem;
+    margin: 13rem 0;
+    font-family: "medium";
+    font-size: $size-14;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 9rem;
+      color: $dimgray;
+    }
   }
 
   .post-info {

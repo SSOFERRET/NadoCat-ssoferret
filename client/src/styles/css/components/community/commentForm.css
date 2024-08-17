@@ -64,7 +64,7 @@ body {
   height: 40rem;
   display: flex;
   align-items: center;
-  flex-shrink: 1;
+  flex-shrink: 0;
   color: #f2b705;
   border: none;
   background-color: transparent;

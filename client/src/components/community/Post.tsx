@@ -4,8 +4,12 @@ import { ICommunity } from "../../models/community.model";
 import { formatAgo, formatViews } from "../../utils/format/format";
 import { useLocation, useNavigate } from "react-router-dom";
 import Tags from "../common/Tags";
+import { IEvent } from "../../models/event.model";
+
+// NOTE 타입 이거 맞나..
+type PostType = ICommunity | IEvent;
 interface IProps {
-  post: ICommunity;
+  post: PostType;
 }
 
 // 이게 맞나...
@@ -22,11 +26,13 @@ const calculateLine = (element: HTMLElement | null) => {
   return false;
 };
 
+const isClosed = (post: PostType): post is IEvent => "isClosed" in post;
+
 const Post = ({ post }: IProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const titleRef = useRef<HTMLSpanElement | null>(null);
-  const [isSingleLine, setIsSingleLine] = useState(true);
+  const [isSingleLine, setIsSingleLine] = useState<boolean>(true);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -40,11 +46,20 @@ const Post = ({ post }: IProps) => {
       onClick={() => navigate(`${location.pathname}/${post.postId}`)}
     >
       <div className="board-post-info">
-        <span className="post-title" ref={titleRef}>
-          {post.title}
-        </span>
+        <div className="post-title-container">
+          <span className="post-title" ref={titleRef}>
+            {post.title}
+          </span>
+
+          {isClosed(post) && (
+            <span className={`is-closed ${post.isClosed ? "close" : "open"}`}>
+              {post.isClosed ? "마감" : "모집중"}
+            </span>
+          )}
+        </div>
 
         {isSingleLine && <span className="post-content">{post.content}</span>}
+
         <div className="post-meta">
           <span>{formatAgo(post.createdAt)}</span>
           <span>&middot;</span>
@@ -53,7 +68,7 @@ const Post = ({ post }: IProps) => {
         </div>
       </div>
       <div className="post-image">
-        {post.images.length && (
+        {post.images.length > 0 && (
           <img src={post.images[0].url} alt={post.title} />
         )}
       </div>

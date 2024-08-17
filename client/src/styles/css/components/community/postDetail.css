@@ -59,6 +59,7 @@ body {
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .post-details .user .user-info .user-details {
   display: flex;
@@ -74,11 +75,29 @@ body {
   font-size: 10rem !important;
   color: #b8bcbf;
 }
-.post-details .user .user-info .options-icon {
+.post-details .user .user-info .post-status {
+  display: flex;
+  align-items: center;
+  gap: 5rem;
+}
+.post-details .user .user-info .post-status .is-closed {
+  display: flex;
+  flex-shrink: 0;
+  font-family: "medium";
+  font-size: 14rem !important;
+}
+.post-details .user .user-info .post-status .open {
+  color: #f2b705;
+}
+.post-details .user .user-info .post-status .close {
+  color: #888b90;
+}
+.post-details .user .user-info .post-status .options-icon {
   width: 22rem;
   height: 22rem;
   color: #4c4c4c;
   margin-left: auto;
+  cursor: pointer;
 }
 .post-details .post-title {
   display: inline-block;
@@ -94,6 +113,20 @@ body {
   background-color: #d9d9d9;
   overflow: hidden;
   margin-bottom: 13rem;
+}
+.post-details .post-event-date {
+  display: flex;
+  align-items: center;
+  gap: 10rem;
+  margin: 13rem 0;
+  font-family: "medium";
+  font-size: 14rem !important;
+}
+.post-details .post-event-date div {
+  display: flex;
+  align-items: center;
+  gap: 9rem;
+  color: #4c4c4c;
 }
 .post-details .post-info {
   display: flex;

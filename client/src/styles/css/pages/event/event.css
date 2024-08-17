@@ -46,9 +46,21 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.comment-list {
-  padding: 0 20rem;
-  border-top: 0.5rem solid #d9d9d9;
+.event-container {
+  height: 100%;
+  padding: 20rem;
+  padding-bottom: 64rem;
+  background-color: #ffffff;
+}
+.event-container .category {
+  font-family: "semiBold";
+  font-size: 14rem !important;
+  color: silver;
+  border-bottom: 0.5rem solid #d9d9d9;
+  padding-bottom: 10rem;
+}
+.event-container .more {
+  font-size: 14rem !important;
 }
 
-/*# sourceMappingURL=comments.css.map */
+/*# sourceMappingURL=event.css.map */

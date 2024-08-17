@@ -18,12 +18,12 @@
     height: 40rem;
     display: flex;
     align-items: center;
-    flex-shrink: 1;
+    flex-shrink: 0;
     color: $primary;
     border: none;
     background-color: transparent;
     cursor: pointer;
-    
+
     svg {
       width: 22rem;
       height: 22rem;

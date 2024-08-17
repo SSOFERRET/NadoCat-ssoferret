@@ -9,6 +9,8 @@ import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
 import Community from "./pages/community/Community";
 import CommunityDetail from "./pages/community/CommunityDetail";
+import Event from "./pages/event/Event";
+import EventDetail from "./pages/event/EventDetail";
 
 const routeList = [
   {
@@ -34,6 +36,14 @@ const routeList = [
   {
     path: "/boards/communities/:id",
     element: <CommunityDetail />,
+  },
+  {
+    path: "/boards/events",
+    element: <Event />,
+  },
+  {
+    path: "/boards/events/:id",
+    element: <EventDetail />,
   },
 ];
 

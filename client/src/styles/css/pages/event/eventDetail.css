@@ -46,9 +46,19 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.comment-list {
-  padding: 0 20rem;
-  border-top: 0.5rem solid #d9d9d9;
+.event-detail {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 100rem;
+}
+.event-detail .category {
+  font-family: "semiBold";
+  font-size: 14rem !important;
+  color: silver;
+  border-bottom: 0.5rem solid #d9d9d9;
+  margin: 0 20rem;
+  padding-bottom: 10rem;
 }
 
-/*# sourceMappingURL=comments.css.map */
+/*# sourceMappingURL=eventDetail.css.map */

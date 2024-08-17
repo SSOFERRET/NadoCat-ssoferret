@@ -17,10 +17,30 @@
     margin-right: 16rem;
   }
 
-  .post-title {
-    font-family: "bold";
-    font-size: $size-16;
-    @include ellipsis(2);
+  .post-title-container {
+    display: flex;
+    justify-content: space-between;
+    .post-title {
+      font-family: "bold";
+      font-size: $size-16;
+      @include ellipsis(2);
+      line-height: 1.2;
+    }
+
+    .is-closed {
+      display: flex;
+      flex-shrink: 0;
+      font-family: "medium";
+      font-size: $size-12;
+    }
+
+    .open {
+      color: $primary;
+    }
+
+    .close {
+      color: $gray;
+    }
   }
 
   .post-content {

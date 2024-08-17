@@ -1,11 +1,11 @@
-import "../../styles/css/pages/community/communityDetail.css";
-import useCommunity from "../../hooks/useCommunity";
+import { Suspense } from "react";
+import "../../styles/css/pages/event/eventDetail.css";
 import { useParams } from "react-router-dom";
 import ErrorNotFound from "../../components/error/ErrorNotFound";
 import PostDetail from "../../components/community/PostDetail";
-import { Suspense } from "react";
-import useCommunityComment from "../../hooks/useCommunityComment";
 import CommentForm from "../../components/community/CommentForm";
+import useEvent from "../../hooks/useEvent";
+import useEventComment from "../../hooks/useEventComment";
 import EventComments from "../../components/event/EventComments";
 
 // CHECKLIST
@@ -15,16 +15,16 @@ import EventComments from "../../components/event/EventComments";
 // [ ] 로딩처리
 // [ ] 백버튼 구현
 
-const CommunityDetail = () => {
+const EventDetail = () => {
   const params = useParams();
   const postId = Number(params.id);
-  const { data: post, error, isLoading } = useCommunity(postId);
-  const { commentCount } = useCommunityComment(postId);
+  const { data: post, error, isLoading } = useEvent(postId);
+  const { commentCount } = useEventComment(postId);
 
   return (
-    <div className="community-detail">
+    <div className="event-detail">
       <div className="category">
-        <span>커뮤니티</span>
+        <span>이벤트 &#183; 모임</span>
       </div>
       {isLoading && <div>loading...</div>}
       {error && <ErrorNotFound />}
@@ -41,4 +41,4 @@ const CommunityDetail = () => {
   );
 };
 
-export default CommunityDetail;
+export default EventDetail;

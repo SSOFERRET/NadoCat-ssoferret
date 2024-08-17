@@ -3,6 +3,7 @@ import Post from "./Post";
 import "../../styles/css/components/community/postList.css";
 import { ICommunity, ICommunityPage } from "../../models/community.model";
 import { InfiniteData } from "@tanstack/react-query";
+import { IEvent } from "../../models/event.model";
 
 interface IProps {
   posts: InfiniteData<ICommunityPage> | undefined;
@@ -13,7 +14,7 @@ const PostList = ({ posts }: IProps) => {
     <ul className="list">
       {posts?.pages.map((group: ICommunityPage, i: number) => (
         <React.Fragment key={i}>
-          {group.posts.map((post: ICommunity) => (
+          {group.posts.map((post: ICommunity | IEvent) => (
             <Post key={post.postId} post={post} />
           ))}
         </React.Fragment>
