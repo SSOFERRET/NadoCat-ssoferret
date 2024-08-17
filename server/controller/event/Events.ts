@@ -138,7 +138,11 @@ export const createEvent = async (req: Request, res: Response) => {
         await addEventImages(tx, formatedImages);
       }
 
-      await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.EVENTS, post.postId);
+      await notifyNewPostToFriends(
+        Buffer.from(userId),
+        CATEGORY.EVENTS,
+        post.postId
+      );
     });
 
     res
