@@ -43,13 +43,57 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.street-cat-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0 20rem;
-  font-size: 14rem;
-  position: relative;
+.title {
+  font-family: "bold";
+  font-size: 16rem !important;
+  padding: 14rem 0;
 }
 
-/*# sourceMappingURL=streetCat.css.map */
+.street-cat-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.street-cat-list a {
+  text-decoration: none;
+  color: #191919;
+}
+
+.test-box {
+  width: 190rem;
+  height: 190rem;
+  background-color: #D9D9D9;
+  border-radius: 5rem;
+  position: relative;
+}
+.test-box svg {
+  width: 25rem;
+  height: 25rem;
+  fill: #4C4C4C;
+  position: absolute;
+  right: 10rem;
+  bottom: 8rem;
+}
+.test-box svg.active {
+  fill: #F2B705;
+}
+
+.street-cat-info {
+  margin: 10rem 0 18rem 0;
+}
+.street-cat-info span {
+  display: block;
+}
+.street-cat-info .name {
+  font-family: "bold";
+  font-size: 14rem !important;
+  margin-bottom: 4rem;
+}
+.street-cat-info .date {
+  font-family: "medium";
+  font-size: 10rem !important;
+  color: #B8BCBF;
+}
+
+/*# sourceMappingURL=streetCatPosts.css.map */

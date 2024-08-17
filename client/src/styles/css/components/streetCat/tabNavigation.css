@@ -43,13 +43,30 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.street-cat-section {
+.street-cat-nav {
+  font-family: "regular";
+  padding: 7rem 0 14rem 0;
+  border-bottom: 0.5rem solid #D9D9D9;
+}
+.street-cat-nav ul {
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  padding: 0 20rem;
-  font-size: 14rem;
+}
+.street-cat-nav li {
   position: relative;
+  cursor: pointer;
+}
+.street-cat-nav li.active {
+  font-family: "bold";
+  color: #F2B705;
+}
+.street-cat-nav li .nav-bar {
+  display: block;
+  width: 100%;
+  height: 2rem;
+  background-color: #F2B705;
+  position: absolute;
+  bottom: -15rem;
 }
 
-/*# sourceMappingURL=streetCat.css.map */
+/*# sourceMappingURL=tabNavigation.css.map */

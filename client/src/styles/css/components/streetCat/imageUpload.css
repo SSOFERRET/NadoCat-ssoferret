@@ -1,0 +1,103 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  background-color: #FCF7E0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.add-image-section {
+  display: flex;
+  padding: 0 20rem;
+  font-size: 14rem;
+  position: relative;
+  overflow: hidden;
+  overflow-x: auto;
+  transition: ease-in-out;
+  scrollbar-width: none;
+}
+.add-image-section ::-webkit-scrollbar {
+  display: none;
+}
+.add-image-section .image-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin-top: 16rem;
+}
+.add-image-section .image-container .add-image-btn {
+  width: 66rem;
+  height: 66rem;
+  background: transparent;
+  border: 2px dashed #B8BCBF;
+  border-radius: 5rem;
+  margin-right: 8rem;
+}
+.add-image-section .image-container svg {
+  width: 24rem;
+  height: 24rem;
+  fill: #B8BCBF;
+}
+.add-image-section .img-box {
+  width: 66rem;
+  width: 66rem;
+  background-color: #D9D9D9;
+  border-radius: 5rem;
+  margin-right: 8rem;
+  position: relative;
+}
+.add-image-section .img-box .img-delete-btn {
+  width: 15rem;
+  height: 15rem;
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  top: -6rem;
+  right: -5rem;
+}
+.add-image-section .img-box .img-delete-btn img {
+  width: 15rem;
+  height: 15rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/*# sourceMappingURL=imageUpload.css.map */

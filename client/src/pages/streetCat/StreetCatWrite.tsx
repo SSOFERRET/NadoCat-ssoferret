@@ -6,48 +6,12 @@ import { HiLocationMarker } from "react-icons/hi";
 import deleteBtn from "../../assets/img/deleteBtn.png";
 import "../../styles/css/base/reset.css";
 import "../../styles/css/pages/streetCat/streetCatWrite.css";
+import ImageUpload from "../../components/streetCat/ImageUpload";
 
 const StreetCatWrite: React.FC = () => {
   return (
     <>
-      <section className="add-image-section">
-        <div className="image-container">
-          <button className="add-image-btn">
-            <AiOutlinePlus />
-          </button>
-
-          <div className="img-box">
-            <img src="" alt="" />
-            <button className="img-delete-btn">
-              <img src={deleteBtn} alt="deleteBtn" />
-            </button>
-          </div>
-          <div className="img-box">
-            <img src="" alt="" />
-            <button className="img-delete-btn">
-              <img src={deleteBtn} alt="deleteBtn" />
-            </button>
-          </div>
-          <div className="img-box">
-            <img src="" alt="" />
-            <button className="img-delete-btn">
-              <img src={deleteBtn} alt="deleteBtn" />
-            </button>
-          </div>
-          <div className="img-box">
-            <img src="" alt="" />
-            <button className="img-delete-btn">
-              <img src={deleteBtn} alt="deleteBtn" />
-            </button>
-          </div>
-          <div className="img-box">
-            <img src="" alt="" />
-            <button className="img-delete-btn">
-              <img src={deleteBtn} alt="deleteBtn" />
-            </button>
-          </div>
-        </div>
-      </section>
+      <ImageUpload />
       
       <section className="street-cat-write-section">
         <div className="write-form name">
