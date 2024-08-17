@@ -76,7 +76,7 @@ export const getEventList = async (
     return {
       postId: event.postId,
       categoryId: event.categoryId,
-      title: event.content,
+      title: event.title,
       content: event.content,
       views: event.views,
       createdAt: event.createdAt,
@@ -154,7 +154,7 @@ export const getEventById = async (postId: number) => {
   return {
     postId: event.postId,
     categoryId: event.categoryId,
-    title: event.content,
+    title: event.title,
     content: event.content,
     views: event.views,
     createdAt: event.createdAt,
