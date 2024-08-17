@@ -19,7 +19,8 @@ const EventDetail = () => {
   const params = useParams();
   const postId = Number(params.id);
   const { data: post, error, isLoading } = useEvent(postId);
-  const { commentCount } = useEventComment(postId);
+  const { commentCount, addEventComment } = useEventComment(postId);
+  const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
 
   return (
     <div className="event-detail">
@@ -34,7 +35,11 @@ const EventDetail = () => {
             <PostDetail post={post} commentCount={commentCount} />
             <EventComments postId={postId} />
           </Suspense>
-          <CommentForm />
+          <CommentForm
+            postId={postId}
+            userId={userId}
+            addComment={addEventComment}
+          />
         </>
       )}
     </div>

@@ -4,6 +4,7 @@ import prisma from "../../client";
 import {
   addComment,
   deleteCommentById,
+  getCommentCount,
   getCommunityComments,
   updateCommentById,
 } from "../../model/communityComment.model";
@@ -22,11 +23,7 @@ export const getComments = async (req: Request, res: Response) => {
     const postId = Number(req.params.community_id);
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
-    const count = await prisma.communityComments.count({
-      where: {
-        communityId: postId,
-      },
-    });
+    const count = await getCommentCount(postId);
 
     const comments = await getCommunityComments(postId, limit, cursor);
 
@@ -64,7 +61,12 @@ export const createComment = async (req: Request, res: Response) => {
     const newComment = await addComment(postId, userId, comment);
 
     if (newComment)
-      await notifyNewComment(Buffer.from(userId, "hex"), CATEGORY.COMMUNITIES, postId, newComment.communityCommentId);
+      await notifyNewComment(
+        Buffer.from(userId, "hex"),
+        CATEGORY.COMMUNITIES,
+        postId,
+        newComment.communityCommentId
+      );
 
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {

@@ -1,5 +1,6 @@
 import { ICommunityPage } from "../models/community.model";
 import { IEvent } from "../models/event.model";
+import { ICommentPostRequest } from "./community.api";
 import { httpClient } from "./http";
 
 const LIMIT = 10;
@@ -68,6 +69,24 @@ export const getEventComments = async ({
     return response.data;
   } catch (error) {
     console.error("Error fetching event comments:", error);
+    throw error;
+  }
+};
+
+export const createEventComment = async ({
+  postId,
+  userId,
+  comment,
+}: ICommentPostRequest) => {
+  try {
+    const response = await httpClient.post(
+      `/boards/events/${postId}/comments`,
+      { postId, userId, comment }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error creating event comment for post ${postId}:`, error);
     throw error;
   }
 };
