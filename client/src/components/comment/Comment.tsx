@@ -1,5 +1,5 @@
-import "../../styles/css/components/community/comment.css";
-import Avartar from "./Avartar";
+import "../../styles/css/components/comment/comment.css";
+import Avartar from "../common/Avartar";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IComment } from "../../models/comment.model";
 import { formatAgo } from "../../utils/format/format";

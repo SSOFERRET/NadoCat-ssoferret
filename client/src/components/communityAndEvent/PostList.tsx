@@ -1,6 +1,6 @@
 import React from "react";
 import Post from "./Post";
-import "../../styles/css/components/community/postList.css";
+import "../../styles/css/components/communityAndEvent/postList.css";
 import { ICommunity, ICommunityPage } from "../../models/community.model";
 import { InfiniteData } from "@tanstack/react-query";
 import { IEvent } from "../../models/event.model";

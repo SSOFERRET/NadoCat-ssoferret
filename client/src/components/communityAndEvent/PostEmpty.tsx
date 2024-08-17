@@ -1,4 +1,4 @@
-import "../../styles/css/components/community/postEmpty.css";
+import "../../styles/css/components/communityAndEvent/postEmpty.css";
 import CommentsEmptyCat from "../../assets/img/commentsEmpty.png";
 
 const PostEmpty = () => {

@@ -2,10 +2,10 @@ import "../../styles/css/pages/community/communityDetail.css";
 import useCommunity from "../../hooks/useCommunity";
 import { useParams } from "react-router-dom";
 import ErrorNotFound from "../../components/error/ErrorNotFound";
-import PostDetail from "../../components/community/PostDetail";
+import PostDetail from "../../components/communityAndEvent/PostDetail";
 import { Suspense } from "react";
 import useCommunityComment from "../../hooks/useCommunityComment";
-import CommentForm from "../../components/community/CommentForm";
+import CommentForm from "../../components/comment/CommentForm";
 import EventComments from "../../components/event/EventComments";
 
 // CHECKLIST

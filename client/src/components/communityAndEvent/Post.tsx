@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "../../styles/css/components/community/post.css";
+import "../../styles/css/components/communityAndEvent/post.css";
 import { ICommunity } from "../../models/community.model";
 import { formatAgo, formatViews } from "../../utils/format/format";
 import { useLocation, useNavigate } from "react-router-dom";

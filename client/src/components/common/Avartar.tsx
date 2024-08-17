@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/css/components/community/avartar.css";
+import "../../styles/css/components/common/avartar.css";
 
 interface IProps {
   profileImage: string | null;

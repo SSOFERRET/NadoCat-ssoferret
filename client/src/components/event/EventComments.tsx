@@ -1,9 +1,8 @@
-import React from "react";
-import "../../styles/css/components/community/comments.css";
+import "../../styles/css/components/comment/comments.css";
 import useEventComment from "../../hooks/useEventComment";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import CommentsEmpty from "../community/CommentsEmpty";
-import CommentList from "../community/CommentList";
+import CommentsEmpty from "../comment/CommentsEmpty";
+import CommentList from "../comment/CommentList";
 
 interface IProps {
   postId: number;

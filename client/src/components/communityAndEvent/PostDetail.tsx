@@ -1,10 +1,10 @@
-import "../../styles/css/components/community/postDetail.css";
+import "../../styles/css/components/communityAndEvent/postDetail.css";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { formatDate, formatViews } from "../../utils/format/format";
-import Avartar from "./Avartar";
+import Avartar from "../common/Avartar";
 import { AiFillHeart } from "react-icons/ai";
 import { PiChatCircleBold } from "react-icons/pi";
-import { MdDateRange } from "react-icons/md";
+// import { MdDateRange } from "react-icons/md";
 import Tags from "../common/Tags";
 import { ICommunity } from "../../models/community.model";
 import ImageCarousel from "../common/ImageCarousel";
@@ -21,7 +21,7 @@ interface IProps {
 
 const isClosed = (post: PostType): post is IEvent => "isClosed" in post;
 
-const isDate = (post: PostType): post is IEvent => "date" in post;
+// const isDate = (post: PostType): post is IEvent => "date" in post;
 
 const PostDetail = ({ post, commentCount }: IProps) => {
   return (

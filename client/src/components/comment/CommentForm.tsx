@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import "../../styles/css/components/community/commentForm.css";
+import "../../styles/css/components/comment/commentForm.css";
 import { AiFillHeart } from "react-icons/ai";
 
 // CHECKLIST

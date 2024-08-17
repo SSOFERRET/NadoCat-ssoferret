@@ -1,9 +1,8 @@
-import React from "react";
 import useEvents from "../../hooks/useEvents";
 import "../../styles/css/pages/event/event.css";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import PostEmpty from "../../components/community/PostEmpty";
-import PostList from "../../components/community/PostList";
+import PostEmpty from "../../components/communityAndEvent/PostEmpty";
+import PostList from "../../components/communityAndEvent/PostList";
 
 const Event = () => {
   const {

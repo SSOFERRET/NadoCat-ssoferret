@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/css/components/community/commentsEmpty.css";
+import "../../styles/css/components/comment/commentsEmpty.css";
 import CommentsEmptyCat from "../../assets/img/commentsEmpty.png";
 
 const CommentsEmpty = () => {
