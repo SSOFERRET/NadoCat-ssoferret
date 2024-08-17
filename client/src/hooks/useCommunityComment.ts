@@ -41,7 +41,7 @@ const useCommunityComment = (postId: number) => {
   const isEmpty = comments.length === 0;
   const commentCount = data?.pages.flatMap((v) => v.pagination.totalCount)[0];
 
-  const { mutate: addCommunityComment } = useMutation({
+  const { mutateAsync: addCommunityComment } = useMutation({
     mutationFn: ({ postId, userId, comment }: ICreateCommentParams) =>
       createCommunityComment({ postId, userId, comment }),
     onSuccess: () => {

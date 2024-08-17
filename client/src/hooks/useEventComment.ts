@@ -32,9 +32,8 @@ const useEventComment = (postId: number) => {
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];
   const isEmpty = comments.length === 0;
   const commentCount = data?.pages.flatMap((v) => v.pagination.totalCount)[0];
-  console.log(data);
 
-  const { mutate: addEventComment } = useMutation({
+  const { mutateAsync: addEventComment } = useMutation({
     mutationFn: ({ postId, userId, comment }: ICreateCommentParams) =>
       createEventComment({ postId, userId, comment }),
     onSuccess: () => {
