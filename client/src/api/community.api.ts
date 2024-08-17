@@ -12,11 +12,11 @@ interface ICommunityPostsParams {
   sort?: Sort;
 }
 
-interface CommunityDetailParams {
+interface ICommunityDetailParams {
   postId: number;
 }
 
-interface CommunityCommentsParams {
+interface ICommunityCommentsParams {
   postId: number;
   pageParam: number;
   limit?: number;
@@ -42,7 +42,7 @@ export const getCommunityPosts = async ({
 
 export const getCommunityDetail = async ({
   postId,
-}: CommunityDetailParams): Promise<ICommunity> => {
+}: ICommunityDetailParams): Promise<ICommunity> => {
   try {
     const response = await httpClient.get(`/boards/communities/${postId}`);
     return response.data;
@@ -56,7 +56,7 @@ export const getCommunityComments = async ({
   postId,
   pageParam,
   limit,
-}: CommunityCommentsParams) => {
+}: ICommunityCommentsParams) => {
   try {
     const response = await httpClient.get(
       `/boards/communities/${postId}/comments?limit=${

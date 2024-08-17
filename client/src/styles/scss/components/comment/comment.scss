@@ -1,0 +1,64 @@
+@import "../../base/common.scss";
+
+.comment-card {
+  min-height: 81rem;
+  padding: 18rem 0;
+  border-bottom: 0.5rem solid $lightgray;
+
+  .comment {
+    display: flex;
+    .avatar {
+      width: 32rem;
+      height: 32rem;
+      background-color: $primary;
+      border-radius: 50%;
+      margin-right: 9rem;
+      flex-shrink: 0;
+    }
+
+    .detail {
+      flex: 1;
+      .comment-info {
+        display: flex;
+        align-items: center;
+        .nickname {
+          word-break: break-all;
+          font-family: "bold";
+          font-size: $size-14;
+        }
+
+        .date {
+          font-family: "medium";
+          font-size: $size-10;
+          color: $silver;
+          margin-left: 5rem;
+        }
+
+        .options-icon {
+          margin-left: auto;
+          width: 18rem;
+          height: 18rem;
+          color: $silver;
+        }
+      }
+
+      .comment-detail {
+        white-space: pre-wrap;
+        word-break: break-all;
+        margin-top: 11rem;
+        color: $dimgray;
+        font-family: "medium";
+        font-size: $size-14;
+        line-height: 1.2;
+      }
+    }
+  }
+
+  &:nth-child(odd) .avatar {
+    background-color: $primary;
+  }
+
+  &:nth-child(even) .avatar {
+    background-color: $lightgray;
+  }
+}
