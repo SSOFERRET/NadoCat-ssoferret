@@ -25,6 +25,7 @@ import { IImage } from "../../types/image";
 import { ITag } from "../../types/tag";
 import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 
 // CHECKLIST
 // [x] 이미지 배열로 받아오게 DB 수정
@@ -158,6 +159,8 @@ export const createCommunity = async (req: Request, res: Response) => {
       }
 
       await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.COMMUNITIES, post.postId);
+
+      await indexOpensearchDocument(CATEGORY.COMMUNITIES, title, content, post.postId);
     });
 
     res
@@ -236,6 +239,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
       }));
 
       await addCommunityImages(tx, formatedImages);
+
+      await updateOpensearchDocument(CATEGORY.COMMUNITIES, id, { content });
     });
 
     res
@@ -287,6 +292,8 @@ export const deleteCommunity = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeCommunityById(tx, postId, userId);
+
+      await deleteOpensearchDocument(CATEGORY.COMMUNITIES, postId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
