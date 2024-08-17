@@ -1,7 +1,22 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getCommunityComments } from "../api/community.api";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  createCommunityComment,
+  getCommunityComments,
+} from "../api/community.api";
+
+export interface ICreateCommentParams {
+  postId: number;
+  userId: string;
+  comment: string;
+}
 
 const useCommunityComment = (postId: number) => {
+  const queryClient = useQueryClient();
+
   const {
     data,
     isLoading,
@@ -10,7 +25,7 @@ const useCommunityComment = (postId: number) => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["community", postId],
+    queryKey: ["communityComment", postId],
     queryFn: ({ pageParam = 0 }) => getCommunityComments({ pageParam, postId }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
@@ -24,6 +39,20 @@ const useCommunityComment = (postId: number) => {
 
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];
   const isEmpty = comments.length === 0;
+  const commentCount = data?.pages.flatMap((v) => v.pagination.totalCount)[0];
+
+  const { mutate: addCommunityComment } = useMutation({
+    mutationFn: ({ postId, userId, comment }: ICreateCommentParams) =>
+      createCommunityComment({ postId, userId, comment }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["communityComment", postId],
+      });
+    },
+    onError: (error) => {
+      console.error("Error creating community comment:", error);
+    },
+  });
 
   return {
     data,
@@ -33,6 +62,8 @@ const useCommunityComment = (postId: number) => {
     isFetchingNextPage,
     isFetching,
     isEmpty,
+    commentCount,
+    addCommunityComment,
   };
 };
 

@@ -1,8 +1,8 @@
 import "../../styles/css/pages/community/community.css";
-import PostList from "../../components/community/PostList";
+import PostList from "../../components/communityAndEvent/PostList";
 import useCommunities from "../../hooks/useCommunities";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import PostEmpty from "../../components/community/PostEmpty";
+import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 
 // CHECKLIST
 // [ ] 정렬 기준 동적으로 받아오게 수정
