@@ -1,0 +1,161 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.post-details {
+  margin-bottom: 28rem;
+  padding: 0 20rem;
+}
+.post-details .user {
+  width: 100%;
+  display: flex;
+  padding: 13rem 0;
+}
+.post-details .user .user-info {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.post-details .user .user-info .user-details {
+  display: flex;
+  flex-direction: column;
+}
+.post-details .user .user-info .user-details .nickname {
+  font-family: "bold";
+  font-size: 14rem !important;
+  margin-bottom: 5rem;
+}
+.post-details .user .user-info .user-details .date {
+  font-family: "medium";
+  font-size: 10rem !important;
+  color: #b8bcbf;
+}
+.post-details .user .user-info .post-status {
+  display: flex;
+  align-items: center;
+  gap: 5rem;
+}
+.post-details .user .user-info .post-status .is-closed {
+  display: flex;
+  flex-shrink: 0;
+  font-family: "medium";
+  font-size: 14rem !important;
+}
+.post-details .user .user-info .post-status .open {
+  color: #f2b705;
+}
+.post-details .user .user-info .post-status .close {
+  color: #888b90;
+}
+.post-details .user .user-info .post-status .options-icon {
+  width: 22rem;
+  height: 22rem;
+  color: #4c4c4c;
+  margin-left: auto;
+  cursor: pointer;
+}
+.post-details .post-title {
+  display: inline-block;
+  font-family: "bold";
+  font-size: 16rem !important;
+  line-height: 1.2;
+  margin: 7rem 0 13rem 0;
+}
+.post-details .image {
+  width: 380rem;
+  height: 380rem;
+  border-radius: 5rem;
+  background-color: #d9d9d9;
+  overflow: hidden;
+  margin-bottom: 13rem;
+}
+.post-details .post-event-date {
+  display: flex;
+  align-items: center;
+  gap: 10rem;
+  margin: 13rem 0;
+  font-family: "medium";
+  font-size: 14rem !important;
+}
+.post-details .post-event-date div {
+  display: flex;
+  align-items: center;
+  gap: 9rem;
+  color: #4c4c4c;
+}
+.post-details .post-info {
+  display: flex;
+  align-items: center;
+  gap: 14rem;
+  font-family: "medium";
+  font-size: 14rem !important;
+  color: #4c4c4c;
+  margin: 20rem 0;
+}
+.post-details .post-info svg {
+  width: 17rem;
+  height: 17rem;
+}
+.post-details .post-info div {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+.post-details .post-info .likes svg {
+  color: #f2b705;
+}
+.post-details .post-content {
+  font-family: "medium";
+  font-size: 14rem !important;
+  line-height: 1.5;
+  color: #4c4c4c;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/*# sourceMappingURL=postDetail.css.map */

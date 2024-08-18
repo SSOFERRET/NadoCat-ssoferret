@@ -25,6 +25,8 @@ import { IImage } from "../../types/image";
 import { ITag } from "../../types/tag";
 import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { incrementViewCountAsAllowed } from "../common/Views";
 
 // CHECKLIST
 // [x] 이미지 배열로 받아오게 DB 수정
@@ -90,6 +92,13 @@ export const getCommunity = async (req: Request, res: Response) => {
     const categoryId = CATEGORY.COMMUNITIES;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
     const community = await getCommunityById(postId);
+
+    if (!community) throw new Error("No Post"); //타입가드
+
+    // // redis 서버 연결 필요하여 주석 처리함. 
+    // // 공동의 서버에는 나중에 설치할 예정
+    // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
+    // community.views += viewIncrementResult || 0;
 
     if (!community) {
       return res
@@ -158,6 +167,8 @@ export const createCommunity = async (req: Request, res: Response) => {
       }
 
       await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.COMMUNITIES, post.postId);
+
+      await indexOpensearchDocument(CATEGORY.COMMUNITIES, title, content, post.postId);
     });
 
     res
@@ -236,6 +247,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
       }));
 
       await addCommunityImages(tx, formatedImages);
+
+      await updateOpensearchDocument(CATEGORY.COMMUNITIES, id, { content });
     });
 
     res
@@ -287,6 +300,8 @@ export const deleteCommunity = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeCommunityById(tx, postId, userId);
+
+      await deleteOpensearchDocument(CATEGORY.COMMUNITIES, postId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });

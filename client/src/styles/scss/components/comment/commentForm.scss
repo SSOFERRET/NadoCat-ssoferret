@@ -1,0 +1,74 @@
+@import "../../base/common.scss";
+
+.comment-form-container {
+  box-sizing: border-box;
+  width: 430rem;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  padding: 7rem 20rem;
+  background-color: $white;
+  transform: translateY(-60rem);
+  z-index: 100;
+
+  .post-like {
+    width: 35rem;
+    height: 40rem;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: $primary;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    svg {
+      width: 22rem;
+      height: 22rem;
+    }
+  }
+
+  .comment-form {
+    width: calc(430rem - 55rem);
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    padding: 0 14rem;
+    border-radius: 15rem;
+    border: 1rem solid $lightgray;
+
+    textarea {
+      box-sizing: border-box;
+      width: 100%;
+      height: 40rem;
+      overflow: hidden;
+      font-family: "medium";
+      font-size: $size-14;
+      padding: 12rem 0;
+      border: none;
+      resize: none;
+
+      &::placeholder {
+        color: $silver;
+      }
+
+      &:focus {
+        outline: 0;
+      }
+    }
+
+    .submit-btn {
+      height: 40rem;
+      flex-shrink: 0;
+      font-family: "bold";
+      color: $secondary;
+      font-size: $size-14;
+      padding: 0;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}

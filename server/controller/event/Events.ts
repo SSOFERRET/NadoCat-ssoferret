@@ -26,6 +26,8 @@ import { ITag } from "../../types/tag";
 import { IImage } from "../../types/image";
 import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { incrementViewCountAsAllowed } from "../common/Views";
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 목록 가져오기
@@ -94,6 +96,9 @@ export const getEvent = async (req: Request, res: Response) => {
       liked: !!liked,
     };
 
+    // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
+    //   post.views += viewIncrementResult || 0;
+
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
@@ -139,6 +144,8 @@ export const createEvent = async (req: Request, res: Response) => {
       }
 
       await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.EVENTS, post.postId);
+
+      await indexOpensearchDocument(CATEGORY.EVENTS, title, content, post.postId);
     });
 
     res
@@ -228,6 +235,8 @@ export const updateEvent = async (req: Request, res: Response) => {
       }));
 
       await addEventImages(tx, formatedImages);
+
+      await updateOpensearchDocument(CATEGORY.EVENTS, postId, { content });
     });
 
     res
@@ -278,6 +287,8 @@ export const deleteEvent = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeEventById(tx, postId, userId);
+
+      await deleteOpensearchDocument(CATEGORY.EVENTS, postId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });

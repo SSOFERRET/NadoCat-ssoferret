@@ -1,3 +1,6 @@
+import { IImage } from "./image.model";
+import { ITag } from "./tag.model";
+
 export interface ICommunity {
   postId: number;
   title: string;
@@ -6,16 +9,27 @@ export interface ICommunity {
   views: number;
   createdAt: string;
   updatedAt: string;
-  images: Image[];
-  tags: Tag[];
+  images: IImage[];
+  tags: ITag[];
+  users?: Users;
+}
+export interface IPagination {
+  nextCursor: number;
+  totalCount: number;
 }
 
-export interface Image {
-  imageId: number;
-  url: string;
+export interface ICommunityPage {
+  pagination: IPagination;
+  posts: ICommunity[];
 }
 
-export interface Tag {
-  tagId: number;
-  tag: string;
+export interface ICommunityPost {
+  pageParams: number[];
+  pages: ICommunityPage[];
+}
+
+interface Users {
+  uuid: string;
+  nickname: string;
+  profileImage: string;
 }

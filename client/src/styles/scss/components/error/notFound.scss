@@ -1,0 +1,52 @@
+@import "../../base/common.scss";
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20rem 0;
+  .cat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300rem;
+    height: 300rem;
+    padding: 25rem;
+    margin-bottom: 40rem;
+    background-color: $whitesmoke;
+    border-radius: 50%;
+
+    img {
+      width: 247rem;
+      height: 247rem;
+    }
+  }
+
+  .text {
+    text-align: center;
+    color: $gray;
+    margin-bottom: 40rem;
+    line-height: 1.4;
+    .message {
+      font-family: "medium";
+      font-weight: bold;
+      margin-bottom: 25rem;
+    }
+    .detail {
+      font-size: $size-14;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px;
+    :first-child {
+      @include smallButton(off);
+      cursor: pointer;
+    }
+    :last-child {
+      @include smallButton(on);
+      cursor: pointer;
+    }
+  }
+}

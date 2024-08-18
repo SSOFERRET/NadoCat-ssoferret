@@ -8,27 +8,42 @@ import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
 import Community from "./pages/community/Community";
+import CommunityDetail from "./pages/community/CommunityDetail";
+import Event from "./pages/event/Event";
+import EventDetail from "./pages/event/EventDetail";
 
 const routeList = [
   {
     path: "/users/my",
-    elemet: <MyPage />,
+    element: <MyPage />,
   },
   {
     path: "/boards/street-cats",
-    elemet: <StreetCats />,
+    element: <StreetCats />,
   },
   {
     path: "/users/login",
-    elemet: <Login />,
+    element: <Login />,
   },
   {
     path: "/users/signup",
-    elemet: <Signup />,
+    element: <Signup />,
   },
   {
     path: "/boards/communities",
-    elemet: <Community />,
+    element: <Community />,
+  },
+  {
+    path: "/boards/communities/:id",
+    element: <CommunityDetail />,
+  },
+  {
+    path: "/boards/events",
+    element: <Event />,
+  },
+  {
+    path: "/boards/events/:id",
+    element: <EventDetail />,
   },
 ];
 
@@ -36,7 +51,7 @@ const router = createBrowserRouter(
   routeList.map((item) => {
     return {
       ...item,
-      element: <Layout>{item.elemet}</Layout>,
+      element: <Layout>{item.element}</Layout>,
     };
   })
 );

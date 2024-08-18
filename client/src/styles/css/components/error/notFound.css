@@ -1,0 +1,117 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20rem 0;
+}
+.not-found .cat {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300rem;
+  height: 300rem;
+  padding: 25rem;
+  margin-bottom: 40rem;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+}
+.not-found .cat img {
+  width: 247rem;
+  height: 247rem;
+}
+.not-found .text {
+  text-align: center;
+  color: #888b90;
+  margin-bottom: 40rem;
+  line-height: 1.4;
+}
+.not-found .text .message {
+  font-family: "medium";
+  font-weight: bold;
+  margin-bottom: 25rem;
+}
+.not-found .text .detail {
+  font-size: 14rem !important;
+}
+.not-found .buttons {
+  display: flex;
+  gap: 10px;
+}
+.not-found .buttons :first-child {
+  width: 121rem;
+  height: 44rem;
+  font-family: "Pretendard-Bold";
+  font-size: 16rem !important;
+  text-align: center;
+  line-height: 1;
+  border-radius: 5rem;
+  padding: 13rem;
+  background-color: #ffffff;
+  color: #f2b705;
+  border: #f2b705 solid 2rem;
+  cursor: pointer;
+}
+.not-found .buttons :last-child {
+  width: 121rem;
+  height: 44rem;
+  font-family: "Pretendard-Bold";
+  font-size: 16rem !important;
+  text-align: center;
+  line-height: 1;
+  border-radius: 5rem;
+  padding: 13rem;
+  background-color: #f2b705;
+  color: #ffffff;
+  border: 0;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=notFound.css.map */
