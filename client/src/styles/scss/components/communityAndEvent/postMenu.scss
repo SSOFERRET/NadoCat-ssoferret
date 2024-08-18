@@ -1,0 +1,44 @@
+@import "../../base/common.scss";
+
+.overlay {
+  visibility: visible;
+  position: fixed;
+  top: 0;
+  width: 430rem;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+
+  .comment-menu {
+    width: 430rem;
+    min-height: 100rem; // 145rme
+    position: fixed;
+    bottom: 0;
+    background-color: $white;
+    padding: 22rem;
+    border-radius: 15rem 15rem 0 0;
+    z-index: 1000000;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    transform: translateY(100%);
+    transition: all 500ms ease;
+
+    &.show {
+      transform: translateY(0);
+    }
+
+    li {
+      font-family: "medium";
+      font-size: $size-16;
+      cursor: pointer;
+
+      &:hover {
+        color: $secondary;
+      }
+    }
+  }
+}

@@ -12,7 +12,7 @@ interface ICommunityPostsParams {
   sort?: Sort;
 }
 
-interface ICommunityDetailParams {
+export interface ICommunityDetailParams {
   postId: number;
 }
 
@@ -26,6 +26,11 @@ export interface ICommentPostRequest {
   postId: number;
   userId: string; // 버퍼일지도..?
   comment: string;
+}
+
+export interface ICommentDeleteRequest {
+  postId: number;
+  commentId: string;
 }
 
 export const getCommunityPosts = async ({
@@ -54,6 +59,18 @@ export const getCommunityDetail = async ({
     return response.data;
   } catch (error) {
     console.error("Error fetching community detail:", error);
+    throw error;
+  }
+};
+
+export const deleteCommunityPost = async ({
+  postId,
+}: ICommunityDetailParams): Promise<void> => {
+  try {
+    const response = await httpClient.delete(`/boards/communities/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting community post:", error);
     throw error;
   }
 };
@@ -92,6 +109,25 @@ export const createCommunityComment = async ({
   } catch (error) {
     console.error(
       `Error creating community comment for post ${postId}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const deleteCommunityComment = async ({
+  postId,
+  commentId,
+}: ICommentDeleteRequest) => {
+  try {
+    const response = await httpClient.delete(
+      `/boards/communities/${postId}/comments/${commentId}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error deleting community comment for post ${postId}:`,
       error
     );
     throw error;

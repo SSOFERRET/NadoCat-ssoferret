@@ -3,9 +3,10 @@ import useCommunity from "../../hooks/useCommunity";
 import { useParams } from "react-router-dom";
 import ErrorNotFound from "../../components/error/ErrorNotFound";
 import PostDetail from "../../components/communityAndEvent/PostDetail";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import useCommunityComment from "../../hooks/useCommunityComment";
 import CommentForm from "../../components/comment/CommentForm";
+import PostMenu from "../../components/communityAndEvent/PostMenu";
 import CommunityComments from "../../components/community/CommunityComments";
 
 // CHECKLIST
@@ -18,9 +19,22 @@ import CommunityComments from "../../components/community/CommunityComments";
 const CommunityDetail = () => {
   const params = useParams();
   const postId = Number(params.id);
-  const { data: post, error, isLoading } = useCommunity(postId);
+  const {
+    data: post,
+    error,
+    isLoading,
+    removeCommunityPost,
+  } = useCommunity(postId);
   const { commentCount, addCommunityComment } = useCommunityComment(postId);
+  const [isShowMenu, setIsShowMenu] = useState(false);
+  console.log(isShowMenu);
+
   const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
+
+  const showMenu = () => {
+    // isShowMenu ? setIsShowMenu(false) : setIsShowMenu(true);
+    setIsShowMenu((prev) => !prev);
+  };
 
   return (
     <div className="community-detail">
@@ -32,7 +46,11 @@ const CommunityDetail = () => {
       {post && (
         <>
           <Suspense fallback={<div>loading...</div>}>
-            <PostDetail post={post} commentCount={commentCount} />
+            <PostDetail
+              post={post}
+              commentCount={commentCount}
+              showMenu={showMenu}
+            />
             <CommunityComments postId={postId} />
           </Suspense>
           <CommentForm
@@ -41,6 +59,17 @@ const CommunityDetail = () => {
             addComment={addCommunityComment}
           />
         </>
+      )}
+
+      {isShowMenu && (
+        <PostMenu
+          type="게시글"
+          postId={postId}
+          showMenu={showMenu}
+          isShowMenu={isShowMenu}
+          deletePost={removeCommunityPost}
+          // updatePost={}
+        />
       )}
     </div>
   );
