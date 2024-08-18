@@ -18,7 +18,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
 
   axiosInstance.interceptors.request.use(
     (config) => {
-      config.headers["Authorization"] = `${getGeneralToken()}`;
+      config.headers["Authorization"] = `Bearer ${getGeneralToken()}`;
       return config;
     },
     (error: AxiosError) => {
@@ -33,7 +33,6 @@ export const createClient = (config?: AxiosRequestConfig) => {
     (error) => {
       //로그인 만료
       if (error.response.status === 401) {
-        //로그인 토큰 만료
         removeToken();
         window.location.href = "/users/login";
         return;
