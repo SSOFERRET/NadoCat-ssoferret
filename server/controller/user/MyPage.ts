@@ -6,6 +6,7 @@ import { ensureAutorization } from "../../middleware/auth";
 
 //[x]마이페이지
 export const my = async (req: Request, res: Response, next: NextFunction) => {
+    console.log("my컨트롤러가 호출되었습니다.");
   const authorization = ensureAutorization(req, res, next);
   console.log("authorization: ", authorization);
 

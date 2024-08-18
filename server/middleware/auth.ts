@@ -8,11 +8,12 @@ dotenv.config();
 export const ensureAutorization = (req: Request, res: Response, next: NextFunction) => {
   try {
     const auth = req.headers["authorization"]; 
-    console.log("auth: ", auth);
-
+    console.log("auth------------: ", auth);
+    
     if (auth && auth.startsWith("Bearer ")) {
-      const receivedJwt = auth.substring(7);
-      const decodedJwt = jwt.verify(receivedJwt, process.env.PRIVATE_KEY_GEN as string) as JwtPayload;
+        const receivedJwt = auth.substring(7);
+        const decodedJwt = jwt.verify(receivedJwt, process.env.PRIVATE_KEY_GEN as string) as JwtPayload;
+        console.log("decodedJwt------------: ", decodedJwt);
       req.user = decodedJwt;
       next();
       
