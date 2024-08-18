@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { createClient, RedisClientType } from "redis";
+import { Request } from "express";
+import { RedisClientType } from "redis";
 import connectRedis from "../../redis";
 import { getTimestamp } from "../../util/time/timestamp";
 import { updateView } from "../../model/common/view.model";
@@ -15,7 +15,7 @@ export const incrementViewCountAsAllowed = async (req: Request, tx: Prisma.Trans
   const redis: RedisClientType = await connectRedis();
 
   try {
-    const isIncrementAllowed: boolean = await isViewIncrementAllowed(userIp, redis, key, field);
+    const isIncrementAllowed: boolean = await isViewIncrementAllowed(redis, key, field);
     if (isIncrementAllowed) {
       await updateView(tx, categoryId, postId);
       return await redis.hSet(key, field, getTimestamp());
@@ -27,16 +27,17 @@ export const incrementViewCountAsAllowed = async (req: Request, tx: Prisma.Trans
 
 const getKeyName = (categoryId: number, postId: number) => `views_${categoryId}_${postId}`;
 
-const getFieldName = (userId: string) => `userId_${userId}`;
+const getFieldName = (userIp: string) => `userIp_${userIp}`;
 
-const isViewIncrementAllowed = async (userIp: string, redis: RedisClientType, key: string, field: string): Promise<boolean> => {
+const isViewIncrementAllowed = async (redis: RedisClientType, key: string, field: string): Promise<boolean> => {
   const timestamp = getTimestamp()
 
   try {
-    const viewCheck = await checkView(redis, key, field);
-    const enoughTimePassed = timestamp - await getLastViewTime(redis, key, field) > VIEW_LIMIT_SEC;
+    const viewCheck: boolean = await checkView(redis, key, field);
 
-    return !viewCheck || enoughTimePassed;
+    if (!viewCheck) return true;
+
+    return timestamp - await getLastViewTime(redis, key, field) > VIEW_LIMIT_SEC;
   } catch (error) {
     console.log("isViewIncrementAllowed:", error);
     throw new Error("isViewIncrementAllowed Error");
@@ -49,5 +50,6 @@ const checkView = async (redis: RedisClientType, key: string, field: string) => 
 
 const getLastViewTime = async (redis: RedisClientType, key: string, field: string): Promise<number> => {
   const stringData = await redis.hGet(key, field);
+  console.log(stringData);
   return Number(stringData);
 }
