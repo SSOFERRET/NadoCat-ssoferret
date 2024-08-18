@@ -6,6 +6,7 @@ import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { incrementViewCountAsAllowed } from "../common/Views";
 
 // CHECKLIST
 // [ ] 페이지네이션 구현
@@ -61,6 +62,13 @@ export const getStreetCat = async (req: Request, res: Response) => {
   try {
     await prisma.$transaction(async (tx) => {
       const getPost = await readPost(postId);
+
+      // if (!getPost) throw new Error("No Post"); // 타입 가드 필요해서 추가
+
+      // redis 서버 연결 필요하여 주석 처리함. 
+      // 공동의 서버에는 나중에 설치할 예정
+      // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
+      // getPost.views += viewIncrementResult || 0;
 
       res.status(200).json(getPost);
     })
