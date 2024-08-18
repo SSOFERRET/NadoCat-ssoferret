@@ -10,6 +10,7 @@ import CommunityDetail from "./pages/community/CommunityDetail";
 import Chat from "./pages/chat/Chat";
 import MyPage from "./pages/mypage/MyPage";
 import ChatList from "./pages/chat/ChatList";
+import ChatTest from "./pages/chat/ChatTest";
 
 const routeList = [
   {
@@ -41,6 +42,10 @@ const routeList = [
     element: <Chat />,
   },
   {
+    path: "/chattest",
+    element: <ChatTest />,
+  },
+  {
     path: "/chat/chatlist",
     element: <ChatList />,
   },
@@ -48,7 +53,7 @@ const routeList = [
 
 const router = createBrowserRouter(
   routeList.map((item) => {
-    if (item.path === "/chat") {
+    if (item.path === "/chat" || item.path === "/chattest") {
       return item;
     }
     return {

@@ -85,7 +85,7 @@ const ChatList = () => {
   return (
     <div className="chatList">
       <div className="header">
-        <div id='title'>채팅<p style={{fontSize: "2vh"}} onClick={handleClick}>+</p></div>
+        <div id='title'>채팅</div>
         <ChatListC lists={List}/>
       </div>
       

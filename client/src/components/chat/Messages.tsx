@@ -5,7 +5,7 @@ import "./Messages.scss";
 
 interface MessageData {
   user: string;
-  text: string;
+  message: string;
   time: string;
 }
 
@@ -22,7 +22,7 @@ const Messages: React.FC<Props> = ({ messages}) => {
     <BasicScrollToBottom className="messages">
       {messages.map((message, index) => (
         <div key={index}>
-          {message.user === "John" ? 
+          {message.user === "소영" ? 
           <div className="end"><Message message={message}/></div> :
           <div className="start"><Message message={message}/></div>
           }

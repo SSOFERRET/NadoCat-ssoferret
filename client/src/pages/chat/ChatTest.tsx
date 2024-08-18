@@ -10,7 +10,7 @@ const ENDPOINT = "http://localhost:8080";
 let socket: Socket;
 
 const Chat = () => {
-  const [name, setName] = useState<string>("소영");
+  const [name, setName] = useState<string>("소연");
   const [room, setRoom] = useState<string>("소영-소연");
   const [users, setUsers] = useState<string>("");
   const [message, setMessage] = useState<string>("");

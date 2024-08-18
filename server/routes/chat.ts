@@ -1,10 +1,11 @@
-import { Request, Response } from "express"
+import { Request, Response } from "express";
+import { getChatList, startChat } from "../controller/chat/Chat";
+import express from "express";
 
-const express = require('express')
 const router = express.Router()
 
-router.get('/chat', (req: Request, res: Response) => {
-  res.send({ response: "I am alive" }).status(200)
-})
+router.post("/startchat", startChat);
+
+router.get("/chatlist/:userId", getChatList)
 
 export default router;
