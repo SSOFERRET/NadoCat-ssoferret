@@ -17,7 +17,6 @@ const Signup = () => {
   const navigate = useNavigate();
 
   //[x]이메일 및 비밀번호 유효성 검증
-  //[x]첫번째, 두번째 비밀번호 값 일치하는지 검사 로직 추가!!
   const {
     register,
     setFocus,
@@ -26,12 +25,16 @@ const Signup = () => {
     formState: { errors },
   } = useForm<SignupProps>();
 
+  //[x]여기에서 폼 데이터 백엔드로 보내는 로직 추가!!
   const handleSignup = (data: SignupProps) => {
-    //[ ]여기에서 폼 데이터 백엔드로 보내는 로직 추가!!
     signup(data).then(() => {
-      navigate("/login"); //회원가입 끝나고 login으로 이동
+      navigate("/users/login"); //회원가입 끝나고 login으로 이동
     });
-  };
+};
+
+const handleBack = () => {
+    navigate(-1);
+  }
 
   //[x]첫번째 input에 focus
   useEffect(() => {
@@ -41,7 +44,7 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <div className="signup-header">
-        <IoIosArrowBack className="back-button" />
+        <IoIosArrowBack className="back-button" onClick={handleBack} />
         <h1>회원가입</h1>
       </div>
 
@@ -108,7 +111,6 @@ const Signup = () => {
               <p className="error-message">{errors.confirmPassword.message}</p>
             )}
           </fieldset>
-          <fieldset></fieldset>
 
           <button type="submit">완료</button>
         </form>
