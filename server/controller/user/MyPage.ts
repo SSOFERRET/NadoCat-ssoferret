@@ -1,13 +1,23 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
-import ensureAutorization from "../../util/auth/auth";
+import { ensureAutorization } from "../../middleware/auth";
 
 //[x]마이페이지
-export const my = async (req: Request, res: Response) => {
-  const authorization = ensureAutorization(req, res);
+export const my = async (req: Request, res: Response, next: NextFunction) => {
+  const authorization = ensureAutorization(req, res, next);
   console.log("authorization: ", authorization);
+
+  // user가 없는 경우 또는 user가 문자열일 경우 처리
+  if (!req.user || typeof req.user === "string") {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      message: "사용자 정보가 없습니다.",
+    });
+  }
+
+  const uuid = req.user.uuid;
+  console.log("uuid: ", uuid);
 
   if (authorization instanceof jwt.TokenExpiredError) {
     return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -21,4 +31,3 @@ export const my = async (req: Request, res: Response) => {
     return res.status(StatusCodes.OK).json({ message: "마이페이지입니다." });
   }
 };
-

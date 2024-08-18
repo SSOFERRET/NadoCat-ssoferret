@@ -29,7 +29,7 @@ const Signup = () => {
   const handleSignup = (data: SignupProps) => {
     //[ ]여기에서 폼 데이터 백엔드로 보내는 로직 추가!!
     signup(data).then(() => {
-      navigate("/login"); //회원가입 끝나고 login으로 이동
+      navigate("/users/login"); //회원가입 끝나고 login으로 이동
     });
   };
 
