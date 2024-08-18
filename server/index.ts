@@ -9,6 +9,7 @@ import UserRouter from "./routes/users";
 import InterestsRouter from "./routes/interest";
 import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
+import SearchesRouter from "./routes/searches";
 
 const PORT = process.env.PORT || 3000;
 
@@ -16,7 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.CORS_ALLOW_ORIGIN, 
+    origin: process.env.CORS_ALLOW_ORIGIN,
     credentials: true,
   })
 );
@@ -30,6 +31,7 @@ app.use("/boards/missings", MissingRouter);
 app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
 app.use("/notifications", NotificationsRouter);
+app.use("/searches", SearchesRouter);
 
 app.use((_req: Request, res: Response) => {
   res.sendStatus(404);
