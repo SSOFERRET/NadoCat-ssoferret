@@ -41,7 +41,7 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <div className="signup-header">
-        <IoIosArrowBack />
+        <IoIosArrowBack className="back-button" />
         <h1>회원가입</h1>
       </div>
 
@@ -58,7 +58,7 @@ const Signup = () => {
               })}
             />
             {errors.email && (
-              <p style={{ color: "red" }}>{errors.email.message}</p>
+              <p className="error-message">{errors.email.message}</p>
             )}
           </fieldset>
 
@@ -73,7 +73,7 @@ const Signup = () => {
               })}
             />
             {errors.nickname && (
-              <p style={{ color: "red" }}>{errors.nickname.message}</p>
+              <p className="error-message">{errors.nickname.message}</p>
             )}
           </fieldset>
 
@@ -81,14 +81,14 @@ const Signup = () => {
             <legend>비밀번호</legend>
             <InputText
               type="password"
-              placeholder="4자 이상 입럭해주세요."
+              placeholder="4자 이상 입력해주세요."
               className="input-field"
               {...register("password", {
                 required: "비밀번호를 입력해주세요.",
               })}
             />
             {errors.password && (
-              <p style={{ color: "red" }}>{errors.password.message}</p>
+              <p className="error-message">{errors.password.message}</p>
             )}
             <InputText
               type="password"
@@ -105,7 +105,7 @@ const Signup = () => {
               })}
             />
             {errors.confirmPassword && (
-              <p style={{ color: "red" }}>{errors.confirmPassword.message}</p>
+              <p className="error-message">{errors.confirmPassword.message}</p>
             )}
           </fieldset>
           <fieldset></fieldset>

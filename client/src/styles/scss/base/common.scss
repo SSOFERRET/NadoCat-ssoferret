@@ -42,6 +42,7 @@ html {
 /* font size */
 $size-32: 32rem !important;
 $size-24: 24rem !important;
+$size-21: 21rem !important;
 $size-19: 19rem !important;
 $size-18: 18rem !important;
 $size-16: 16rem !important;
@@ -99,6 +100,25 @@ body {
     border: $primary solid 2rem;
   }
 }
+
+@mixin midiumButton($active){
+    width: 200rem;
+    height: 45rem;
+    font-family: "Pretendard-Bold";
+    font-size: $size-16;
+    text-align: center;
+    line-height: 1;
+    border-radius: $round-5;
+    color: $white;
+    border: 0;
+    @if ($active == 'on') {
+      background-color: $primary;
+    } @else {
+      background-color: $lightgray;
+      color: $white;
+    }
+}
+
 
 @mixin bigButton($active) {
   width: 390rem;
