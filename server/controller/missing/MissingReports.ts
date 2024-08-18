@@ -29,6 +29,7 @@ import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 import { notify } from "../notification/Notifications";
 import { handleControllerError } from "../../util/errors/errors";
+import { incrementViewCountAsAllowed } from "../common/Views";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -83,8 +84,11 @@ export const getMissingReport = async (req: Request, res: Response) => {
         post = { ...post, images };
       }
 
+      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSING_REPORTS, postId);
+      post.views += viewIncrementResult || 0;
+
       return res
-        .status(StatusCodes.CREATED)
+        .status(StatusCodes.OK)
         .json(post);
     });
   } catch (error) {

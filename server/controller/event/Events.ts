@@ -27,6 +27,7 @@ import { IImage } from "../../types/image";
 import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { incrementViewCountAsAllowed } from "../common/Views";
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 목록 가져오기
@@ -94,6 +95,9 @@ export const getEvent = async (req: Request, res: Response) => {
       ...post,
       liked: !!liked,
     };
+
+    // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
+    //   post.views += viewIncrementResult || 0;
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
