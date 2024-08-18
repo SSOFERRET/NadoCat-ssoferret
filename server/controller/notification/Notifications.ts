@@ -6,7 +6,7 @@ import { handleControllerError } from "../../util/errors/errors";
 import { TCategoryId } from "../../types/category";
 import { getFriendList } from "../../model/friend.model";
 import { getCategoryUrlStringById } from "../../constants/category";
-import { getPostAuthorUuid } from "../../model/common/uuid";
+import { getPostAuthorUuid } from "../../model/common/uuid.model";
 
 /* CHECKLIST
 * [x] 알람글 isRead update API
