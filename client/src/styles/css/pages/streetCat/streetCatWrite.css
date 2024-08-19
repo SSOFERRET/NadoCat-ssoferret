@@ -35,7 +35,10 @@ html {
 /* color palette */
 /* radious */
 body {
-  background-color: #FCF7E0;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
   letter-spacing: -0.7px;
   color: #191919;
 }
@@ -66,14 +69,14 @@ body {
   height: 18rem;
   font-family: "ragular";
   font-size: 14rem !important;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #d9d9d9;
   border-radius: 5rem;
   padding: 10rem 15rem;
 }
 .street-cat-write-section .write-form.name .name-input ::placeholder {
   font-family: "ragular";
   font-size: 14rem !important;
-  color: #B8BCBF;
+  color: #b8bcbf;
 }
 .street-cat-write-section .write-form.gender input[type=radio],
 .street-cat-write-section .write-form.neutered input[type=radio] {
@@ -86,8 +89,8 @@ body {
   font-family: "medium";
   font-size: 12rem !important;
   color: #191919;
-  background-color: #FFFFFF;
-  border: 1px solid #D9D9D9;
+  background-color: #ffffff;
+  border: 1px solid #d9d9d9;
   border-radius: 30rem;
   padding: 8rem 14rem 8rem 11rem;
   margin-right: 6rem;
@@ -102,8 +105,8 @@ body {
   display: inline-block;
   font-family: "bold";
   font-size: 12rem !important;
-  color: #FFFFFF;
-  background-color: #F2B705;
+  color: #ffffff;
+  background-color: #f2b705;
   border: none;
   border-radius: 30rem;
   padding: 9rem 15rem 9rem 12rem;
@@ -120,15 +123,15 @@ body {
   height: 14rem;
   font-family: "medium";
   font-size: 12rem !important;
-  color: #4C4C4C;
-  background-color: #F5F5F5;
+  color: #4c4c4c;
+  background-color: #f5f5f5;
   border-radius: 5rem;
   padding: 12rem;
 }
 .street-cat-write-section .write-form.discovery svg {
   width: 16rem;
   height: 16rem;
-  fill: #4C4C4C;
+  fill: #4c4c4c;
   margin-right: 10rem;
 }
 .street-cat-write-section .write-form.discovery input[type=checkbox] {
@@ -139,13 +142,13 @@ body {
   align-items: center;
   width: 22rem;
   height: 22rem;
-  background-color: #F2B705;
+  background-color: #f2b705;
   border-radius: 5rem;
   position: absolute;
   right: 15%;
 }
 .street-cat-write-section .write-form.discovery input[type=checkbox] + label svg {
-  fill: #FFFFFF;
+  fill: #ffffff;
   margin: 0 5rem;
 }
 .street-cat-write-section .write-form.discovery input[type=checkbox]:checked + label {
@@ -153,13 +156,13 @@ body {
   align-items: center;
   width: 22rem;
   height: 22rem;
-  background-color: #F2B705;
+  background-color: #f2b705;
   border-radius: 5rem;
   position: absolute;
   right: 15%;
 }
 .street-cat-write-section .write-form.discovery input[type=checkbox]:checked + label svg {
-  fill: #FFFFFF;
+  fill: #ffffff;
   margin: 0 5rem;
 }
 .street-cat-write-section .write-form.discovery .check-text {
@@ -174,15 +177,15 @@ body {
   height: 14rem;
   font-family: "medium";
   font-size: 12rem !important;
-  color: #B8BCBF;
-  background-color: #F5F5F5;
+  color: #b8bcbf;
+  background-color: #f5f5f5;
   border-radius: 5rem;
   padding: 12rem;
 }
 .street-cat-write-section .write-form.location svg {
   width: 16rem;
   height: 16rem;
-  fill: #4C4C4C;
+  fill: #4c4c4c;
   margin-right: 10rem;
 }
 .street-cat-write-section .write-form.description textarea {

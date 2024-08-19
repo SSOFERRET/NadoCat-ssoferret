@@ -60,12 +60,12 @@ const CommunityDetail = () => {
       )}
 
       <PostMenu
-        type="post"
+        boardType="community"
+        menuType="post"
         postId={postId}
         showMenu={showMenu}
         isShowMenu={isShowMenu}
         deletePost={removeCommunityPost}
-        // updatePost={}
       />
     </div>
   );

@@ -91,5 +91,8 @@ body {
 .overlay .comment-menu li:hover {
   color: #f27405;
 }
+.overlay .comment-menu .delete {
+  color: #d32f2f;
+}
 
 /*# sourceMappingURL=postMenu.css.map */
