@@ -46,10 +46,15 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.title {
+.guide-text {
+  font-family: "medium";
+  font-size: 24rem !important;
+  line-height: 1.4;
+  margin: 30rem 0;
+}
+.guide-text .nickname {
   font-family: "bold";
-  font-size: 16rem !important;
-  padding: 14rem 0;
+  color: #f27405;
 }
 
 .street-cat-list {
@@ -63,32 +68,28 @@ body {
   color: #191919;
 }
 
-li {
-  position: relative;
-}
-li .img-box {
+.img-box {
   width: 190rem;
   height: 190rem;
   background-color: #d9d9d9;
   border-radius: 5rem;
   position: relative;
 }
-li .img-box img {
+.img-box img {
   position: absolute;
   width: 100%;
   height: 100%;
   border-radius: 5rem;
 }
-li svg {
+.img-box svg {
   width: 25rem;
   height: 25rem;
   fill: #4c4c4c;
   position: absolute;
   right: 10rem;
-  bottom: 62rem;
-  z-index: 1;
+  bottom: 8rem;
 }
-li svg.active {
+.img-box svg.active {
   fill: #f2b705;
 }
 
@@ -109,4 +110,4 @@ li svg.active {
   color: #b8bcbf;
 }
 
-/*# sourceMappingURL=streetCatPosts.css.map */
+/*# sourceMappingURL=MyStreetCatPosts.css.map */

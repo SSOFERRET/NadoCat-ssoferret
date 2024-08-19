@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import "../../styles/css/components/streetCat/tabNavigation.css";
 
-interface Tab {   
+interface ITab {   
   id: number;
   label: string;
 }
 
-const tabs: Tab[] = [
+interface ITabNavigationProps {
+  selectedTab: number;
+  onSelectTab: (id: number) => void;
+}
+
+const tabs: ITab[] = [
   { id: 1, label: '동네 고양이 도감' },
   { id: 2, label: '내 도감' },
   { id: 3, label: '동네 고양이 지도' },
 ];
 
-const TabNavigation: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState<number>(tabs[0].id);
-
+const TabNavigation: React.FC<ITabNavigationProps> = ({selectedTab, onSelectTab}) => {
   const handleTabClick = (id: number) => {
-    setSelectedTab(id);
-    console.log(selectedTab);
+    onSelectTab(id);
   };
 
   return (

@@ -5,6 +5,7 @@ import { IImages, IStreetCatImages, IStreetCatPost } from "../types/streetCat"
 // NOTE: 함수명 통일성 필요 (ex. delete | remove 중에 통일)
 
 export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cursor?: number) => {
+  console.log("readPosts()");
   const streetCatsPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
@@ -67,6 +68,7 @@ export const readPost = async (postId: number) => {
       content: true,
       views: true,
       // uuid: true,
+      createdAt: true,
       streetCatImages: {
         select: {
           images: {
@@ -75,6 +77,13 @@ export const readPost = async (postId: number) => {
               url: true,
             }
           }
+        }
+      },
+      users: {
+        select: {
+          uuid: true,
+          nickname: true,
+          profileImage: true
         }
       }
     },

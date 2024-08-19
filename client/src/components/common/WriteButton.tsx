@@ -20,7 +20,6 @@ const WriteButton = () => {
     window.addEventListener("resize", updateBtnPosition);
   }, [])
 
-  console.log(location.pathname)
   return (
     <>
       <button className="write-btn" style={{top: `${btnPosition}rem`}}>

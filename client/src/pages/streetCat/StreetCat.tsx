@@ -1,33 +1,37 @@
-import React from "react";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { FaPlus } from "react-icons/fa6";
+import React, { useState } from "react";
 import "../../styles/css/base/reset.css";
 import "../../styles/css/pages/streetCat/streetCat.css";
-import { Header } from "../../components/common/Header";
-import { Footer } from "../../components/common/Footer";
 import WriteButton from "../../components/common/WriteButton";
 import TabNavigation from "../../components/streetCat/TabNavigation";
 import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
+import MyStreetCatPosts from "../../components/streetCat/MyStreetCatPosts";
+import StreetCatsMap from "../../components/streetCat/StreetCatsMap";
 
-// interface IStreetCatPost {
-//   postId: number;
-//   thumbnail: string;
-//   name: string;
-//   createdAt: string; // api 연결시 Date로 변경
-//   streetCatFavorites: number; // TODO: api 리턴값 1 or 0으로 변경해야함
-// }
+// CHECKLIST
+// [ ] 페이지별 라우터 추가 필요?
+// [x] 페이지별 필요 컴포넌트 불러오기 (동네고양이도감, 내도감, 동네고양이지도)
 
+const StreetCats: React.FC = () => {
+  const [selectedTab, setSelectedTab] = useState<number>(1);
 
-// TODO: 네비게이션 별로 해당 컴포넌트 불러오게 해야함
+  const renderContent = () => {
+    switch (selectedTab) {
+      case 1: return <StreetCatPosts />;
+      case 2: return <MyStreetCatPosts />;
+      case 3: return <StreetCatsMap />;
+      default: return null;
+    }
+  }
 
-export const StreetCats: React.FC = () => {
   return (
     <>
       <section className="street-cat-section">
-        <WriteButton />
-        <TabNavigation />
-        <StreetCatPosts />
+        <TabNavigation selectedTab={selectedTab} onSelectTab={setSelectedTab}/>
+        {renderContent()}
+        {/* <WriteButton /> */}
       </section>
     </>
   )
 }
+
+export default StreetCats;
