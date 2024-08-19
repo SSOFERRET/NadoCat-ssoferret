@@ -1,0 +1,11 @@
+@import "../../base/common.scss";
+
+#map {
+  width: 100%;
+  min-height: calc(100vh - 155rem);
+  background-color: $lightgray;
+}
+
+// .street-cat-section {
+//   padding: 0;
+// }

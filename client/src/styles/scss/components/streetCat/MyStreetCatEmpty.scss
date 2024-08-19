@@ -1,0 +1,52 @@
+@import "../../base/common.scss";
+
+.guide-text {
+  font-family: "medium";
+  font-size: $size-24;
+  line-height: 1.4;
+  margin: 30rem 0;
+
+  .nickname {
+    font-family: "bold";
+    color: $secondary;
+  }
+}
+
+.image-box {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+
+  .circle {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 272rem;
+    height: 272rem;
+    background-color: $pale;
+    border-radius: 50%;
+
+    img {
+      width: 171rem;
+      height: 234rem;
+    }
+  }
+
+  button {
+    width: 54rem;
+    height: 54rem;
+    background-color: $primary;
+    border: none;
+    border-radius: 50%;
+    position: absolute;
+    right: 63rem;
+
+    svg {
+      width: 22rem;
+      height: 22rem;
+      fill: $white;
+      z-index: 10;
+    }
+  }
+}

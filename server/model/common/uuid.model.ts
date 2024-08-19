@@ -7,7 +7,6 @@ export const getPostAuthorUuid = async (
   postId: number
 ): Promise<Buffer> => {
   const model = getCategory(categoryId);
-
   if (!model) throw new Error("부적절한 카테고리");
 
   const authorData = await (prisma as any)[model].findUnique({

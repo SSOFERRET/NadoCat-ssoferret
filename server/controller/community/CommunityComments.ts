@@ -11,7 +11,6 @@ import {
 import { getUserId } from "./Communities";
 import { handleControllerError } from "../../util/errors/errors";
 import { notifyNewComment } from "../notification/Notifications";
-import { getPostAuthorUuid } from "../../model/common/uuid";
 import { CATEGORY } from "../../constants/category";
 
 //  CHECKLIST

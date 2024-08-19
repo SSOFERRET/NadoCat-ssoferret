@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BackButton from '../components/common/BackButton';
 import './MyPage.scss';
 import Posts from '../components/mypage/Posts';
 import test from "../../src/assets/img/test.png";
 
-interface Post {
+export interface Post {
   title: string;
   contents: string;
   time: number;
