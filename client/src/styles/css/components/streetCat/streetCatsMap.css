@@ -46,30 +46,10 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.street-cat-nav {
-  font-family: "regular";
-  padding: 7rem 0 14rem 0;
-  border-bottom: 0.5rem solid #d9d9d9;
-}
-.street-cat-nav ul {
-  display: flex;
-  justify-content: space-between;
-}
-.street-cat-nav li {
-  position: relative;
-  cursor: pointer;
-}
-.street-cat-nav li.active {
-  font-family: "bold";
-  color: #f2b705;
-}
-.street-cat-nav li .nav-bar {
-  display: block;
+#map {
   width: 100%;
-  height: 2rem;
-  background-color: #f2b705;
-  position: absolute;
-  bottom: -15rem;
+  min-height: calc(100vh - 155rem);
+  background-color: #d9d9d9;
 }
 
-/*# sourceMappingURL=tabNavigation.css.map */
+/*# sourceMappingURL=streetCatsMap.css.map */

@@ -46,30 +46,50 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.street-cat-nav {
-  font-family: "regular";
-  padding: 7rem 0 14rem 0;
-  border-bottom: 0.5rem solid #d9d9d9;
+.guide-text {
+  font-family: "medium";
+  font-size: 24rem !important;
+  line-height: 1.4;
+  margin: 30rem 0;
 }
-.street-cat-nav ul {
-  display: flex;
-  justify-content: space-between;
-}
-.street-cat-nav li {
-  position: relative;
-  cursor: pointer;
-}
-.street-cat-nav li.active {
+.guide-text .nickname {
   font-family: "bold";
-  color: #f2b705;
-}
-.street-cat-nav li .nav-bar {
-  display: block;
-  width: 100%;
-  height: 2rem;
-  background-color: #f2b705;
-  position: absolute;
-  bottom: -15rem;
+  color: #f27405;
 }
 
-/*# sourceMappingURL=tabNavigation.css.map */
+.image-box {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+}
+.image-box .circle {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 272rem;
+  height: 272rem;
+  background-color: #fcf7e0;
+  border-radius: 50%;
+}
+.image-box .circle img {
+  width: 171rem;
+  height: 234rem;
+}
+.image-box button {
+  width: 54rem;
+  height: 54rem;
+  background-color: #f2b705;
+  border: none;
+  border-radius: 50%;
+  position: absolute;
+  right: 63rem;
+}
+.image-box button svg {
+  width: 22rem;
+  height: 22rem;
+  fill: #ffffff;
+  z-index: 10;
+}
+
+/*# sourceMappingURL=MyStreetCatEmpty.css.map */

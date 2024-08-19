@@ -1,11 +1,19 @@
 import React from "react";
+import { useParams } from 'react-router-dom';
 import { AiFillHeart } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { PiChatCircleBold } from "react-icons/pi";
 import "../../styles/css/base/reset.css";
 import "../../styles/css/pages/streetCat/streetCatDetail.css";
+import { useStreetCatPost } from "../../hooks/useStreetCat";
 
 const StreetCatDetail: React.FC = () => {
+  const {id} = useParams();
+  const postId = Number(id);
+
+  const {data} = useStreetCatPost(postId);
+  console.log(data);
+
   return (
     <>
       <section className="street-cat-detail-section">
