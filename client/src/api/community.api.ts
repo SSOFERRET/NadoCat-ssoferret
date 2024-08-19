@@ -40,6 +40,10 @@ export interface ICommentDeleteRequest {
   commentId: number;
 }
 
+// CHECKLIST
+// [ ] 게시글 수정
+// [ ] 게시글 작성
+
 export const getCommunityPosts = async ({
   pageParam,
   limit,

@@ -1,6 +1,10 @@
 import { ICommunityPage } from "../models/community.model";
 import { IEvent } from "../models/event.model";
-import { ICommentPostRequest } from "./community.api";
+import {
+  ICommentDeleteRequest,
+  ICommentPostRequest,
+  ICommentPutRequest,
+} from "./community.api";
 import { httpClient } from "./http";
 
 const LIMIT = 10;
@@ -14,7 +18,7 @@ interface IEventPostsParams {
   sort?: Sort;
 }
 
-interface IEventDetailParams {
+export interface IEventDetailParams {
   postId: number;
 }
 
@@ -23,6 +27,10 @@ interface IEventCommentsParams {
   pageParam: number;
   limit?: number;
 }
+
+// CHECKLIST
+// [ ] 게시글 수정
+// [ ] 게시글 작성
 
 export const getEventPosts = async ({
   pageParam,
@@ -50,6 +58,18 @@ export const getEventDetail = async ({
     return response.data;
   } catch (error) {
     console.error("Error fetching event detail:", error);
+    throw error;
+  }
+};
+
+export const deleteEventPost = async ({
+  postId,
+}: IEventDetailParams): Promise<void> => {
+  try {
+    const response = await httpClient.delete(`/boards/events/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting event post:", error);
     throw error;
   }
 };
@@ -87,6 +107,41 @@ export const createEventComment = async ({
     return response.data;
   } catch (error) {
     console.error(`Error creating event comment for post ${postId}:`, error);
+    throw error;
+  }
+};
+
+export const updateEventComment = async ({
+  postId,
+  commentId,
+  comment,
+}: ICommentPutRequest) => {
+  try {
+    // NOTE userId 확인?
+    const response = await httpClient.put(
+      `/boards/events/${postId}/comments/${commentId}`,
+      { postId, commentId, comment }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating event comment for post ${postId}:`, error);
+    throw error;
+  }
+};
+
+export const deleteEventComment = async ({
+  postId,
+  commentId,
+}: ICommentDeleteRequest) => {
+  try {
+    const response = await httpClient.delete(
+      `/boards/events/${postId}/comments/${commentId}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting event comment for post ${postId}:`, error);
     throw error;
   }
 };

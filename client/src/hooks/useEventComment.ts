@@ -3,8 +3,17 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { createEventComment, getEventComments } from "../api/event.api";
+import {
+  createEventComment,
+  deleteEventComment,
+  getEventComments,
+  updateEventComment,
+} from "../api/event.api";
 import { ICreateCommentParams } from "./useCommunityComment";
+import {
+  ICommentDeleteRequest,
+  ICommentPutRequest,
+} from "../api/community.api";
 
 const useEventComment = (postId: number) => {
   const queryClient = useQueryClient();
@@ -42,7 +51,33 @@ const useEventComment = (postId: number) => {
       });
     },
     onError: (error) => {
-      console.error("Error creating community comment:", error);
+      console.error("Error creating event comment:", error);
+    },
+  });
+
+  const { mutateAsync: editEventComment } = useMutation({
+    mutationFn: ({ postId, userId, comment, commentId }: ICommentPutRequest) =>
+      updateEventComment({ postId, commentId, comment, userId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["eventComment", postId],
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting event comment:", error);
+    },
+  });
+
+  const { mutateAsync: removeEventComment } = useMutation({
+    mutationFn: ({ postId, commentId }: ICommentDeleteRequest) =>
+      deleteEventComment({ postId, commentId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["eventComment", postId],
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting event comment:", error);
     },
   });
 
@@ -56,6 +91,8 @@ const useEventComment = (postId: number) => {
     isEmpty,
     commentCount,
     addEventComment,
+    editEventComment,
+    removeEventComment,
   };
 };
 
