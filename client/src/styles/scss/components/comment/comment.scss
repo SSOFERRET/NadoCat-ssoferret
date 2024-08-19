@@ -69,7 +69,7 @@
     margin-top: 10rem;
     border: 1rem solid $lightgray;
     border-radius: 15rem;
-    padding: 10rem;
+    padding: 8rem;
 
     .comment-edit-form {
       width: 100%;
@@ -77,17 +77,16 @@
       flex-direction: column;
       justify-content: center;
       align-items: end;
-      padding: 0 14rem;
       // margin-bottom: 10rem;
 
       textarea {
         box-sizing: border-box;
         width: 100%;
-        height: 80rem;
+        height: 70rem;
         overflow: hidden;
         font-family: "medium";
         font-size: $size-14;
-        padding: 12rem 0;
+        padding: 10rem;
         border: none;
         resize: none;
 
@@ -108,7 +107,7 @@
 
       button {
         height: 25rem;
-        width: 45rem;
+        width: 40rem;
         flex-shrink: 0;
         font-family: "bold";
         color: $secondary;
@@ -118,18 +117,19 @@
         border: none;
         border-radius: $round-5;
         cursor: pointer;
+
+        &:hover {
+          color: $primary;
+        }
       }
 
       .edit-btn {
         background-color: $white;
-        color: $primary;
-        border: $primary solid 1rem;
+        color: $secondary;
       }
 
       .close-btn {
-        background-color: $primary;
-        color: $white;
-        border: 0;
+        color: $gray;
       }
     }
   }
