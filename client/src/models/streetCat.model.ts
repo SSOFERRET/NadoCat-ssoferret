@@ -3,6 +3,17 @@ export interface IStreetCatPost {
   thumbnail: string;
   name: string;
   createdAt: Date;
+  streetCatFavorites?: number;
+}
+
+export interface IPagination {
+  nextCursor: number;
+  totalCount: number;
+}
+
+export interface IStreetCatPage {
+  posts: IStreetCatPost[];
+  pagination: IPagination;
 }
 
 export interface IStreetCat {
@@ -21,6 +32,7 @@ export interface IStreetCat {
   thumbnail?: number;
   // uuid?: Buffer;
 }
+
 
 export interface IStreetCatDetail extends IStreetCat {
   streetCatImages: [

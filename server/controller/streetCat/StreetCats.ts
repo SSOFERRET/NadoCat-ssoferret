@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
-import { IImages, IStreetCatImages } from "../../types/streetCat";
+import { IImages, IStreetCatImages, IStreetCatPosts, IStreetCats } from "../../types/streetCat";
 import { addImage, createFavoriteCat, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, readFavoriteCat, readFavoriteCatPostIds, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, removeComment, removeFavoriteCat, updatePost } from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
@@ -9,7 +9,7 @@ import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocu
 import { incrementViewCountAsAllowed } from "../common/Views";
 
 // CHECKLIST
-// [ ] 페이지네이션 구현
+// [x] 페이지네이션 구현
 // [ ] 썸네일 어떻게 받아올지
 // [ ] 에러 처리
 
@@ -36,6 +36,10 @@ export const getStreetCats = async (req: Request, res: Response) => {
           ? readPostsWithFavorites(tx, uuid, limit)
           : readPostsWithFavorites(tx, uuid, limit, cursor)
         );
+
+        const streetCatPosts: IStreetCatPosts[] = getPostsWithFavorites.streetCatPosts;
+        const thumbnails: (number | null)[] = streetCatPosts.map((post: IStreetCatPosts) => post.thumbnail);
+        // console.log(thumbnails)
 
         res.status(201).json(getPostsWithFavorites);
       } else {

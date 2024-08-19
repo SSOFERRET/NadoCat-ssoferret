@@ -6,24 +6,27 @@ interface IReadStreetCatPostsParams {
   cursor?: number;
 }
 
-interface ICommunityDetailParams {
+interface IStreetCatDetailParams {
   postId: number;
 }
 
 interface IFetchStreetCatPostsResponse {
-  streetCats: IStreetCatPost[];
+  streetCatPosts: IStreetCatPost[] | [undefined];
+  nextCursor?: number;
 }
 
 export const fetchStreetCatPosts = async (params: IReadStreetCatPostsParams) => {
   try {
-    const response = await httpClient.get<IFetchStreetCatPostsResponse>(`/boards/street-cats`, {params});
+    const response = await httpClient.get<IFetchStreetCatPostsResponse>(
+      `/boards/street-cats?limit=${params.limit}&cursor=${params.cursor}`
+    );
     return response.data;
   } catch (error) {
     console.error("Failed to fetch streetCatPost:", error);
   }
 }
 
-export const fetchStreetCatPost = async ({postId}: ICommunityDetailParams): Promise<IStreetCatDetail> => {
+export const fetchStreetCatPost = async ({postId}: IStreetCatDetailParams): Promise<IStreetCatDetail> => {
   console.log("fetchStreetCatPost()")
   const response = await httpClient.get<IStreetCatDetail>(`/boards/street-cats/${postId}`);
   return response.data;

@@ -6,7 +6,7 @@ import { IImages, IStreetCatImages, IStreetCatPost } from "../types/streetCat"
 
 export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cursor?: number) => {
   console.log("readPosts()");
-  const streetCatsPosts = await prisma.streetCats.findMany({
+  const streetCatPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
     ...(cursor && { cursor: { postId: cursor } }),
@@ -22,12 +22,12 @@ export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cur
   })
 
   return {
-    streetCatsPosts
+    streetCatPosts
   }
 }
 
 export const readPostsWithFavorites = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number) => {
-  const streetCatsPosts = await prisma.streetCats.findMany({
+  const streetCatPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
     ...(cursor && { cursor: { postId: cursor } }),
@@ -42,13 +42,16 @@ export const readPostsWithFavorites = async (tx: Prisma.TransactionClient, uuid:
       streetCatFavorites: {
         where: {
           uuid
+        },
+        select: {
+          postId: true,
         }
       }
     }
   })
 
   return {
-    streetCatsPosts
+    streetCatPosts
   }
 }
 
