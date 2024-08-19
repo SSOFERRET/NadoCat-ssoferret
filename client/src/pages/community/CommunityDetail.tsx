@@ -27,12 +27,10 @@ const CommunityDetail = () => {
   } = useCommunity(postId);
   const { commentCount, addCommunityComment } = useCommunityComment(postId);
   const [isShowMenu, setIsShowMenu] = useState(false);
-  console.log(isShowMenu);
 
   const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
 
   const showMenu = () => {
-    // isShowMenu ? setIsShowMenu(false) : setIsShowMenu(true);
     setIsShowMenu((prev) => !prev);
   };
 
@@ -61,16 +59,14 @@ const CommunityDetail = () => {
         </>
       )}
 
-      {isShowMenu && (
-        <PostMenu
-          type="게시글"
-          postId={postId}
-          showMenu={showMenu}
-          isShowMenu={isShowMenu}
-          deletePost={removeCommunityPost}
-          // updatePost={}
-        />
-      )}
+      <PostMenu
+        type="post"
+        postId={postId}
+        showMenu={showMenu}
+        isShowMenu={isShowMenu}
+        deletePost={removeCommunityPost}
+        // updatePost={}
+      />
     </div>
   );
 };

@@ -1,66 +1,98 @@
 import { useNavigate } from "react-router-dom";
 import "../../styles/css/components/communityAndEvent/postMenu.css";
-import { useCallback, useEffect, useRef } from "react";
+import { ICommentDeleteRequest } from "../../api/community.api";
 
 interface IProps {
-  type: "게시글" | "댓글";
+  type: "post" | "comment";
   postId: number;
+  commentId?: number | null;
   isShowMenu: boolean;
   showMenu: () => void;
-  deletePost: ({ postId }: { postId: number }) => Promise<void>;
+  deletePost?: ({ postId }: { postId: number }) => Promise<void>;
+  deleteComment?: ({
+    postId,
+    commentId,
+  }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
+  updateComment?: () => Promise<void>;
 }
-
-// NOTE
 
 const PostMenu = ({
   type,
   postId,
   isShowMenu,
+  commentId,
   showMenu,
   deletePost,
+  deleteComment,
   updatePost,
 }: IProps) => {
   const navigate = useNavigate();
-  const modalRef = useRef<HTMLUListElement | null>(null);
 
-  const menu = [
-    { id: 1, name: `${type} 수정`, fn: updatePost },
-    {
-      id: 2,
-      name: `${type} 삭제`,
-      fn: () =>
-        deletePost({ postId }).then(() => {
-          showMenu();
-          navigate(-1);
-        }),
-    },
-  ];
+  const handlePostDelete = () => {
+    if (!deletePost) {
+      return;
+    }
 
-  const handleOverlayClick = useCallback(
-    (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+    deletePost({ postId }).then(() => {
+      showMenu();
+      navigate(-1);
+    });
+  };
+
+  const handleCommentDelete = ({
+    postId,
+    commentId,
+  }: ICommentDeleteRequest) => {
+    if (!deleteComment || !commentId) {
+      return;
+    }
+
+    deleteComment({ postId, commentId })
+      ?.then(() => {
+        console.log("댓글 삭제 완료");
+      })
+      .catch(() => {
+        console.log("에러발생");
+      })
+      .finally(() => {
+        console.log("마무리");
         showMenu();
-      }
-    },
-    [showMenu]
-  );
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleOverlayClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOverlayClick);
-    };
-  }, [handleOverlayClick]);
+      });
+  };
 
   return (
-    <div className={`overlay`}>
-      <ul className={`comment-menu ${isShowMenu ? "show" : ""}`} ref={modalRef}>
-        {menu.map((item) => (
-          <li key={item.id} onClick={item.fn}>
-            {item.name}
-          </li>
-        ))}
+    <div
+      className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          showMenu();
+        }
+      }}
+    >
+      <ul
+        className={`comment-menu ${isShowMenu ? "show" : "hide"}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            showMenu();
+          }
+        }}
+      >
+        {type === "post" && (
+          <>
+            <li>게시글 수정</li>
+            <li onClick={handlePostDelete}>게시글 삭제</li>
+          </>
+        )}
+
+        {type === "comment" && commentId && (
+          <>
+            <li>댓글 수정</li>
+            <li onClick={() => handleCommentDelete({ postId, commentId })}>
+              댓글 삭제
+            </li>
+          </>
+        )}
       </ul>
     </div>
   );

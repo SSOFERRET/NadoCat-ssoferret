@@ -5,7 +5,9 @@ import {
 } from "@tanstack/react-query";
 import {
   createCommunityComment,
+  deleteCommunityComment,
   getCommunityComments,
+  ICommentDeleteRequest,
 } from "../api/community.api";
 
 export interface ICreateCommentParams {
@@ -54,6 +56,19 @@ const useCommunityComment = (postId: number) => {
     },
   });
 
+  const { mutateAsync: removeCommunityComment } = useMutation({
+    mutationFn: ({ postId, commentId }: ICommentDeleteRequest) =>
+      deleteCommunityComment({ postId, commentId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["communityComment", postId],
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting community comment:", error);
+    },
+  });
+
   return {
     data,
     isLoading,
@@ -64,6 +79,7 @@ const useCommunityComment = (postId: number) => {
     isEmpty,
     commentCount,
     addCommunityComment,
+    removeCommunityComment,
   };
 };
 

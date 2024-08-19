@@ -30,7 +30,7 @@ export interface ICommentPostRequest {
 
 export interface ICommentDeleteRequest {
   postId: number;
-  commentId: string;
+  commentId: number;
 }
 
 export const getCommunityPosts = async ({

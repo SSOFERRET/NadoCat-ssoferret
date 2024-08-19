@@ -9,10 +9,16 @@ import { formatAgo } from "../../utils/format/format";
 // [ ] 댓글 수정 삭제 구현
 interface IProps {
   comment: IComment;
+  getCommentId: (commentId: number) => void;
+  showMenu: () => void;
 }
 
-const Comment = ({ comment }: IProps) => {
+const Comment = ({ comment, getCommentId, showMenu }: IProps) => {
   const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
+  const handleComment = (commentId: number) => {
+    getCommentId(commentId);
+    showMenu();
+  };
 
   return (
     <>
@@ -27,7 +33,10 @@ const Comment = ({ comment }: IProps) => {
               <span className="nickname">{comment.users.nickname}</span>
               <span className="date">{formatAgo(comment.updatedAt)}</span>
               {userId === comment.users.uuid && (
-                <HiOutlineDotsVertical className="options-icon" />
+                <HiOutlineDotsVertical
+                  className="options-icon"
+                  onClick={() => handleComment(comment.commentId)}
+                />
               )}
             </div>
             <pre className="comment-detail">{comment.comment}</pre>

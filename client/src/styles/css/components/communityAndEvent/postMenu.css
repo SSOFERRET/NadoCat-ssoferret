@@ -54,13 +54,19 @@ body {
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 10000;
+  transition: background-color 0.3s ease;
+}
+.overlay.hidden {
+  background-color: transparent;
+  pointer-events: none;
 }
 .overlay .comment-menu {
-  width: 430rem;
+  width: 100%;
+  max-width: 430rem;
   min-height: 100rem;
+  background-color: #ffffff;
   position: fixed;
   bottom: 0;
-  background-color: #ffffff;
   padding: 22rem;
   border-radius: 15rem 15rem 0 0;
   z-index: 1000000;
@@ -69,10 +75,13 @@ body {
   justify-content: space-between;
   align-items: center;
   transform: translateY(100%);
-  transition: all 500ms ease;
+  transition: transform 0.3s ease-in-out;
 }
 .overlay .comment-menu.show {
   transform: translateY(0);
+}
+.overlay .comment-menu.hide {
+  transform: translateY(100%);
 }
 .overlay .comment-menu li {
   font-family: "medium";

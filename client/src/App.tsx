@@ -11,8 +11,10 @@ import Community from "./pages/community/Community";
 import CommunityDetail from "./pages/community/CommunityDetail";
 import Event from "./pages/event/Event";
 import EventDetail from "./pages/event/EventDetail";
+import Home from "./pages/Home/Home";
 
 const routeList = [
+  { path: "/", element: <Home /> },
   {
     path: "/users/my",
     element: <MyPage />,
