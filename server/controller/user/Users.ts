@@ -10,11 +10,11 @@ import { IUsers, IUserSecrets } from "../../types/user";
 
 //[x]회원가입
 export const signup = async (req: Request, res: Response) => {
-  const { email, nickname, password, authtype } = req.body;
+  const { email, nickname, password} = req.body;
 
   //DB저장
   try {
-    const result: { user: IUsers, secretUser: IUserSecrets } = await createUser(email, nickname, password, authtype);
+    const result: { user: IUsers, secretUser: IUserSecrets } = await createUser(email, nickname, password);
 
     if (result.user && result.secretUser) {
       return res.status(StatusCodes.CREATED).json({

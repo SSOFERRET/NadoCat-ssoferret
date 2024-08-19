@@ -17,6 +17,7 @@ import { notify, notifyNewPostToFriends } from "../notification/Notifications";
 import jwt from "jsonwebtoken";
 import ensureAuthorization from "../../util/auth/auth";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { incrementViewCountAsAllowed } from "../common/Views";
 
 
 
@@ -85,11 +86,15 @@ export const getMissing = async (req: Request, res: Response) => {
         post = { ...post, images };
       }
 
+      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
+      post.views += viewIncrementResult || 0;
+
       return res
         .status(StatusCodes.CREATED)
         .json(post);
     });
   } catch (error) {
+    console.log(error);
     if (error instanceof Error)
       validateError(res, error);
   }

@@ -1,6 +1,7 @@
-import { SignupProps } from "../pages/user/Signup";
 import { httpClient } from "../api/http";
+import { SignupProps } from "../pages/user/Signup";
 import { LoginProps } from "../pages/user/Login";
+import  {Post}  from "../pages/MyPage";
 
 export const signup = async(userData: SignupProps) => {
     try {
@@ -28,5 +29,16 @@ export const login = async(data: LoginProps) => {
     } catch (error) {
         console.error("login error:", error);
         throw error;
+    }
+}
+
+export const my = async() => {
+    try {
+        const response = await httpClient.get("/users/my");
+        return response.data;
+    } catch (error) {
+        console.error("my error:", error);
+        throw error;
+        
     }
 }

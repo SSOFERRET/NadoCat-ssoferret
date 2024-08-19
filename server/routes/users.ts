@@ -9,6 +9,7 @@ import {
   deleteFavoriteCat
 } from "../controller/streetCat/StreetCatsFavorite"
 import { follow, followings, unfollow } from "../controller/friend/Friends";
+import { ensureAutorization } from "../middleware/auth";
 
 const router= express.Router();
 
@@ -17,7 +18,7 @@ router.post("/signup", signupValidator, signup);
 router.post("/login", loginValidator, login);
 router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
-router.post("/my", my);
+router.get("/my", ensureAutorization, my); //마이페이지
 
 // 동네 고양이 도감 즐겨찾기(내 도감)
 router.get("/street-cats", getFavoriteCats);

@@ -8,7 +8,7 @@ import { indexOpensearchUser } from "../controller/search/Searches";
 const prisma = new PrismaClient();
 
 //[x]회원가입
-export const createUser = async (email: string, nickname: string, password: string, authType: string) => {
+export const createUser = async (email: string, nickname: string, password: string) => {
 
   const hashing = async (password: string) => {
     const saltRound = 10;
@@ -28,7 +28,7 @@ export const createUser = async (email: string, nickname: string, password: stri
           uuid: uuidBuffer,
           email: email,
           nickname: nickname,
-          authType: "",
+          authType: "general",
           status: "active",
         },
       });

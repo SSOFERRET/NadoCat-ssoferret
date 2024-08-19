@@ -11,3 +11,8 @@ main {
   background-color: $white;
   min-height: calc(100vh - 61rem);
 }
+
+.no-header {
+    margin-top: 0;
+    margin-bottom: 0;
+}

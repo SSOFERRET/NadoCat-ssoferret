@@ -8,7 +8,7 @@ export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cur
   const streetCatsPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
-    ...(cursor && {cursor: {postId: cursor}}),
+    ...(cursor && { cursor: { postId: cursor } }),
     orderBy: {
       createdAt: "desc"
     },
@@ -29,7 +29,7 @@ export const readPostsWithFavorites = async (tx: Prisma.TransactionClient, uuid:
   const streetCatsPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
-    ...(cursor && {cursor: {postId: cursor}}),
+    ...(cursor && { cursor: { postId: cursor } }),
     orderBy: {
       createdAt: "desc"
     },
@@ -65,6 +65,7 @@ export const readPost = async (postId: number) => {
       discoveryDate: true,
       locationId: true,
       content: true,
+      views: true,
       // uuid: true,
       streetCatImages: {
         select: {
@@ -79,7 +80,7 @@ export const readPost = async (postId: number) => {
     },
   })
 
-  if (!streetCatPost) {return null};
+  if (!streetCatPost) { return null };
 
   const steetCatImages = streetCatPost.streetCatImages.map((image) => ({
     imageId: image.images.imageId,
@@ -92,7 +93,7 @@ export const readPost = async (postId: number) => {
   }
 }
 
-export const createPost = async (tx: Prisma.TransactionClient,{
+export const createPost = async (tx: Prisma.TransactionClient, {
   categoryId,
   name,
   gender,
@@ -117,7 +118,7 @@ export const createPost = async (tx: Prisma.TransactionClient,{
   });
 }
 
-export const updatePost = async (tx: Prisma.TransactionClient,{
+export const updatePost = async (tx: Prisma.TransactionClient, {
   postId,
   categoryId,
   name,
@@ -211,7 +212,7 @@ export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: B
   const favoriteCatPosts = await prisma.streetCats.findMany({
     where: {
       uuid,
-      postId: {in: postIds}
+      postId: { in: postIds }
     },
     select: {
       postId: true,
@@ -229,8 +230,8 @@ export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: B
 export const readFavoriteCatPostIds = async (tx: Prisma.TransactionClient, uuid: Buffer) => {
   return await prisma.streetCatFavorites.findMany({
     where: {
-        uuid,
-      },
+      uuid,
+    },
     select: {
       postId: true
     }
@@ -284,7 +285,7 @@ export const readComments = async (tx: Prisma.TransactionClient, streetCatId: nu
   const streetCatComments = await prisma.streetCatComments.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
-    ...(cursor && {cursor: {streetCatCommentId: cursor}}),
+    ...(cursor && { cursor: { streetCatCommentId: cursor } }),
     where: {
       streetCatId,
     },
@@ -301,7 +302,7 @@ export const readComments = async (tx: Prisma.TransactionClient, streetCatId: nu
           profileImage: true,
         }
       },
-      
+
     }
   })
 
