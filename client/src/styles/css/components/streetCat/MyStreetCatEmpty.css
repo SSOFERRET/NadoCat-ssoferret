@@ -1,0 +1,95 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.guide-text {
+  font-family: "medium";
+  font-size: 24rem !important;
+  line-height: 1.4;
+  margin: 30rem 0;
+}
+.guide-text .nickname {
+  font-family: "bold";
+  color: #f27405;
+}
+
+.image-box {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+}
+.image-box .circle {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 272rem;
+  height: 272rem;
+  background-color: #fcf7e0;
+  border-radius: 50%;
+}
+.image-box .circle img {
+  width: 171rem;
+  height: 234rem;
+}
+.image-box button {
+  width: 54rem;
+  height: 54rem;
+  background-color: #f2b705;
+  border: none;
+  border-radius: 50%;
+  position: absolute;
+  right: 63rem;
+}
+.image-box button svg {
+  width: 22rem;
+  height: 22rem;
+  fill: #ffffff;
+  z-index: 10;
+}
+
+/*# sourceMappingURL=MyStreetCatEmpty.css.map */

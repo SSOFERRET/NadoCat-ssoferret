@@ -3,12 +3,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./api/queryClient";
 import MyPage from "./pages/MyPage";
-import { StreetCats } from "./pages/streetCat/StreetCat";
+import StreetCats from "./pages/streetCat/StreetCat";
 import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
 import Community from "./pages/community/Community";
 import CommunityDetail from "./pages/community/CommunityDetail";
+import StreetCatWrite from "./pages/streetCat/StreetCatWrite";
+import StreetCatDetail from "./pages/streetCat/StreetCatDetail";
 import Event from "./pages/event/Event";
 import EventDetail from "./pages/event/EventDetail";
 
@@ -20,6 +22,14 @@ const routeList = [
   {
     path: "/boards/street-cats",
     element: <StreetCats />,
+  },
+  {
+    path: "/boards/street-cats/:id",
+    element: <StreetCatDetail />,
+  },
+  {
+    path: "/boards/street-cats/write",
+    element: <StreetCatWrite />,
   },
   {
     path: "/users/login",
