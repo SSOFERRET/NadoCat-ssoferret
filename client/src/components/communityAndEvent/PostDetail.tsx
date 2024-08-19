@@ -17,13 +17,14 @@ type PostType = ICommunity | IEvent;
 interface IProps {
   post: PostType;
   commentCount: number;
+  showMenu: () => void;
 }
 
 const isClosed = (post: PostType): post is IEvent => "isClosed" in post;
 
 // const isDate = (post: PostType): post is IEvent => "date" in post;
 
-const PostDetail = ({ post, commentCount }: IProps) => {
+const PostDetail = ({ post, commentCount, showMenu }: IProps) => {
   return (
     <section className="post-details">
       {post?.users && (
@@ -45,7 +46,10 @@ const PostDetail = ({ post, commentCount }: IProps) => {
                   {post.isClosed ? "마감" : "모집중"}
                 </span>
               )}
-              <HiOutlineDotsVertical className="options-icon" />
+              <HiOutlineDotsVertical
+                className="options-icon"
+                onClick={showMenu}
+              />
             </div>
           </div>
         </div>

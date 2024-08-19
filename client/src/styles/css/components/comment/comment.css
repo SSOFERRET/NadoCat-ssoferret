@@ -66,6 +66,7 @@ body {
   flex: 1;
 }
 .comment-card .comment .detail .comment-info {
+  min-height: 18rem;
   display: flex;
   align-items: center;
 }
@@ -81,10 +82,12 @@ body {
   margin-left: 5rem;
 }
 .comment-card .comment .detail .comment-info .options-icon {
+  position: static;
   margin-left: auto;
   width: 18rem;
   height: 18rem;
   color: #b8bcbf;
+  cursor: pointer;
 }
 .comment-card .comment .detail .comment-detail {
   white-space: pre-wrap;
@@ -100,6 +103,64 @@ body {
 }
 .comment-card:nth-child(even) .avatar {
   background-color: #d9d9d9;
+}
+.comment-card .comment-edit-form-container {
+  margin-top: 10rem;
+  border: 1rem solid #d9d9d9;
+  border-radius: 15rem;
+  padding: 8rem;
+}
+.comment-card .comment-edit-form-container .comment-edit-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+}
+.comment-card .comment-edit-form-container .comment-edit-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 70rem;
+  overflow: hidden;
+  font-family: "medium";
+  font-size: 14rem !important;
+  padding: 10rem;
+  border: none;
+  resize: none;
+}
+.comment-card .comment-edit-form-container .comment-edit-form textarea::placeholder {
+  color: #b8bcbf;
+}
+.comment-card .comment-edit-form-container .comment-edit-form textarea:focus {
+  outline: 0;
+}
+.comment-card .comment-edit-form-container .buttons {
+  display: flex;
+  justify-content: end;
+  gap: 10rem;
+}
+.comment-card .comment-edit-form-container .buttons button {
+  height: 25rem;
+  width: 40rem;
+  flex-shrink: 0;
+  font-family: "bold";
+  color: #f27405;
+  font-size: 14rem !important;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 5rem;
+  cursor: pointer;
+}
+.comment-card .comment-edit-form-container .buttons button:hover {
+  color: #f2b705;
+}
+.comment-card .comment-edit-form-container .buttons .edit-btn {
+  background-color: #ffffff;
+  color: #f27405;
+}
+.comment-card .comment-edit-form-container .buttons .close-btn {
+  color: #888b90;
 }
 
 /*# sourceMappingURL=comment.css.map */
