@@ -19,6 +19,7 @@
     .detail {
       flex: 1;
       .comment-info {
+        min-height: 18rem;
         display: flex;
         align-items: center;
         .nickname {
@@ -35,6 +36,7 @@
         }
 
         .options-icon {
+          position: static;
           margin-left: auto;
           width: 18rem;
           height: 18rem;
@@ -61,5 +63,74 @@
 
   &:nth-child(even) .avatar {
     background-color: $lightgray;
+  }
+
+  .comment-edit-form-container {
+    margin-top: 10rem;
+    border: 1rem solid $lightgray;
+    border-radius: 15rem;
+    padding: 10rem;
+
+    .comment-edit-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: end;
+      padding: 0 14rem;
+      // margin-bottom: 10rem;
+
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        height: 80rem;
+        overflow: hidden;
+        font-family: "medium";
+        font-size: $size-14;
+        padding: 12rem 0;
+        border: none;
+        resize: none;
+
+        &::placeholder {
+          color: $silver;
+        }
+
+        &:focus {
+          outline: 0;
+        }
+      }
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: end;
+      gap: 10rem;
+
+      button {
+        height: 25rem;
+        width: 45rem;
+        flex-shrink: 0;
+        font-family: "bold";
+        color: $secondary;
+        font-size: $size-14;
+        padding: 0;
+        background-color: transparent;
+        border: none;
+        border-radius: $round-5;
+        cursor: pointer;
+      }
+
+      .edit-btn {
+        background-color: $white;
+        color: $primary;
+        border: $primary solid 1rem;
+      }
+
+      .close-btn {
+        background-color: $primary;
+        color: $white;
+        border: 0;
+      }
+    }
   }
 }

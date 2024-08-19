@@ -14,6 +14,7 @@ import StreetCatDetail from "./pages/streetCat/StreetCatDetail";
 import Event from "./pages/event/Event";
 import EventDetail from "./pages/event/EventDetail";
 import Home from "./pages/Home/Home";
+import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 
 const routeList = [
   { path: "/", element: <Home /> },
@@ -48,6 +49,10 @@ const routeList = [
   {
     path: "/boards/communities/:id",
     element: <CommunityDetail />,
+  },
+  {
+    path: "/boards/communities/edit/:id",
+    element: <CommunityPostEdit />,
   },
   {
     path: "/boards/events",

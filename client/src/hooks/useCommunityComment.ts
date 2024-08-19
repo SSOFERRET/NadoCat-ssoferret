@@ -8,6 +8,8 @@ import {
   deleteCommunityComment,
   getCommunityComments,
   ICommentDeleteRequest,
+  ICommentPutRequest,
+  updateCommunityComment,
 } from "../api/community.api";
 
 export interface ICreateCommentParams {
@@ -56,6 +58,19 @@ const useCommunityComment = (postId: number) => {
     },
   });
 
+  const { mutateAsync: editCommunityComment } = useMutation({
+    mutationFn: ({ postId, userId, comment, commentId }: ICommentPutRequest) =>
+      updateCommunityComment({ postId, commentId, comment, userId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["communityComment", postId],
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting community comment:", error);
+    },
+  });
+
   const { mutateAsync: removeCommunityComment } = useMutation({
     mutationFn: ({ postId, commentId }: ICommentDeleteRequest) =>
       deleteCommunityComment({ postId, commentId }),
@@ -80,6 +95,7 @@ const useCommunityComment = (postId: number) => {
     commentCount,
     addCommunityComment,
     removeCommunityComment,
+    editCommunityComment,
   };
 };
 

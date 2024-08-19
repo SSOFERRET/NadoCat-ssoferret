@@ -28,6 +28,13 @@ export interface ICommentPostRequest {
   comment: string;
 }
 
+export interface ICommentPutRequest {
+  postId: number;
+  userId: string; // 버퍼일지도..?
+  commentId: number;
+  comment: string;
+}
+
 export interface ICommentDeleteRequest {
   postId: number;
   commentId: number;
@@ -109,6 +116,28 @@ export const createCommunityComment = async ({
   } catch (error) {
     console.error(
       `Error creating community comment for post ${postId}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const updateCommunityComment = async ({
+  postId,
+  commentId,
+  comment,
+}: ICommentPutRequest) => {
+  try {
+    // NOTE userId 확인?
+    const response = await httpClient.put(
+      `/boards/communities/${postId}/comments/${commentId}`,
+      { postId, commentId, comment }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error updating community comment for post ${postId}:`,
       error
     );
     throw error;

@@ -18,13 +18,13 @@ const CommunityComments = ({ postId }: IProps) => {
     isFetchingNextPage,
     isEmpty,
     removeCommunityComment,
+    editCommunityComment,
   } = useCommunityComment(postId);
 
   const [isShowMenu, setIsShowMenu] = useState(false);
-  const [commentId, setCommentId] = useState<number | null>(null);
+  const [isCommentEdit, setIsCommentEdit] = useState(false);
 
   const showMenu = () => {
-    console.log("설마..?");
     setIsShowMenu((prev) => !prev);
   };
 
@@ -37,22 +37,25 @@ const CommunityComments = ({ postId }: IProps) => {
     }
   });
 
-  const getCommentId = (commentId: number) => {
-    setCommentId(commentId);
+  const handelCommentFormOpen = () => {
+    showMenu();
+    setIsCommentEdit(true);
   };
 
   if (isEmpty) {
     return <CommentsEmpty />;
   }
 
-  console.log(isShowMenu);
   return (
     <>
       <section className="comment-list">
         <CommentList
+          postId={postId}
           comments={data}
-          getCommentId={getCommentId}
           showMenu={showMenu}
+          isCommentEdit={isCommentEdit}
+          setIsCommentEdit={setIsCommentEdit}
+          editComment={editCommunityComment}
         />
 
         <div className="more" ref={moreRef}>
@@ -61,13 +64,13 @@ const CommunityComments = ({ postId }: IProps) => {
       </section>
 
       <PostMenu
-        type="comment"
+        boardType="community"
+        menuType="comment"
         postId={postId}
-        commentId={commentId}
         showMenu={showMenu}
         isShowMenu={isShowMenu}
         deleteComment={removeCommunityComment}
-        // updatePost={}
+        handelCommentFormOpen={handelCommentFormOpen}
       />
     </>
   );
