@@ -1,5 +1,4 @@
 import sharp from "sharp";
-import { IReqImageFile } from "../../types/reqImageFile";
 
 const RESIZE_WIDTH = 1080;
 const MAXIMUM_MB = 1 * 1024 * 1024;
