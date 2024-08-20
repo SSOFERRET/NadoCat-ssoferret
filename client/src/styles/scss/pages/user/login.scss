@@ -55,9 +55,6 @@
       flex-direction: column;
       margin-bottom: 20rem;
 
-
-
-
       input {
         width: 340rem;
         padding: 7rem;
@@ -92,7 +89,7 @@
       a {
         text-decoration: none;
         color: black;
-        flex-grow: 1;  
+        flex-grow: 1;
       }
 
       a:hover {
@@ -100,7 +97,7 @@
       }
 
       &.kakao {
-        background-color: #FEE500;
+        background-color: #fee500;
         color: black;
       }
 
@@ -111,19 +108,17 @@
       }
     }
 
-
     .check-field {
-        .auto-login {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            font-size: $size-11;
-    
-            input {
-                margin-right: 5px; /* 체크박스와 텍스트 사이의 간격 조절 */
-              }
-          }
-    }
+      .auto-login {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-size: $size-11;
 
+        input {
+          margin-right: 5px; /* 체크박스와 텍스트 사이의 간격 조절 */
+        }
+      }
+    }
   }
 }

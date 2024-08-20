@@ -12,7 +12,7 @@ interface ICommunityPostsParams {
   sort?: Sort;
 }
 
-interface ICommunityDetailParams {
+export interface ICommunityDetailParams {
   postId: number;
 }
 
@@ -27,6 +27,22 @@ export interface ICommentPostRequest {
   userId: string; // 버퍼일지도..?
   comment: string;
 }
+
+export interface ICommentPutRequest {
+  postId: number;
+  userId: string; // 버퍼일지도..?
+  commentId: number;
+  comment: string;
+}
+
+export interface ICommentDeleteRequest {
+  postId: number;
+  commentId: number;
+}
+
+// CHECKLIST
+// [ ] 게시글 수정
+// [ ] 게시글 작성
 
 export const getCommunityPosts = async ({
   pageParam,
@@ -54,6 +70,18 @@ export const getCommunityDetail = async ({
     return response.data;
   } catch (error) {
     console.error("Error fetching community detail:", error);
+    throw error;
+  }
+};
+
+export const deleteCommunityPost = async ({
+  postId,
+}: ICommunityDetailParams): Promise<void> => {
+  try {
+    const response = await httpClient.delete(`/boards/communities/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting community post:", error);
     throw error;
   }
 };
@@ -92,6 +120,47 @@ export const createCommunityComment = async ({
   } catch (error) {
     console.error(
       `Error creating community comment for post ${postId}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const updateCommunityComment = async ({
+  postId,
+  commentId,
+  comment,
+}: ICommentPutRequest) => {
+  try {
+    // NOTE userId 확인?
+    const response = await httpClient.put(
+      `/boards/communities/${postId}/comments/${commentId}`,
+      { postId, commentId, comment }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error updating community comment for post ${postId}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const deleteCommunityComment = async ({
+  postId,
+  commentId,
+}: ICommentDeleteRequest) => {
+  try {
+    const response = await httpClient.delete(
+      `/boards/communities/${postId}/comments/${commentId}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error deleting community comment for post ${postId}:`,
       error
     );
     throw error;

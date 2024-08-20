@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { deleteImages } from "../../model/image.model";
+import { deleteImages, getImageById } from "../../model/image.model";
 import { IImageBridge } from "../../types/image";
 import {
   deleteImageFormats,

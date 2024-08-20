@@ -19,4 +19,6 @@ export const addNewImages = async (
   }));
 
   await addImageFormats(tx, postData.categoryId, formattedImages);
+
+  return formattedImages.map(image => image.imageId);
 };
