@@ -51,8 +51,8 @@ export const deleteS3Test = async (req: Request, res: Response) => {
       const images = await getAndDeleteImageFormats(tx, postData);
 
       if (images) {
-        const imageDatas = await deleteImagesByImageIds(tx, images);
-        deleteImageFromS3(3, 2, imageDatas.length);
+        const deleteResult = await deleteImagesByImageIds(tx, images);
+        deleteImageFromS3(3, 2, deleteResult.count);
       }
     });
 
