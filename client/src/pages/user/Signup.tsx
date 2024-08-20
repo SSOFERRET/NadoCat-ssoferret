@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import InputText from "../../components/user/InputText";
 import { signup } from "../../api/user.api";
 import "../../styles/scss/pages/user/signup.scss";
 import { IoIosArrowBack } from "react-icons/io";
+import CustomModal from "../../components/user/CustomModal";
+import WelcomeCatImage from "../../assets/img/welcomeCat.png";
 
 export interface SignupProps {
   email: string;
@@ -15,6 +17,7 @@ export interface SignupProps {
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   //[x]이메일 및 비밀번호 유효성 검증
   const {
@@ -26,15 +29,20 @@ const Signup = () => {
   } = useForm<SignupProps>();
 
   //[x]여기에서 폼 데이터 백엔드로 보내는 로직 추가!!
-  const handleSignup = (data: SignupProps) => {
+  const handleModalOpen = (data: SignupProps) => {
     signup(data).then(() => {
-      navigate("/users/login"); //회원가입 끝나고 login으로 이동
+      setIsOpenModal(true);//회원가입 끝나면 modal open
     });
-};
+  };
 
-const handleBack = () => {
+  const handleModalClose = () => {
+    setIsOpenModal(false);
+    navigate("/users/login"); //modal 닫으면 login 이동
+  };
+
+  const handleBack = () => {
     navigate(-1);
-  }
+  };
 
   //[x]첫번째 input에 focus
   useEffect(() => {
@@ -49,7 +57,7 @@ const handleBack = () => {
       </div>
 
       <div className="signup-content">
-        <form onSubmit={handleSubmit(handleSignup)}>
+        <form onSubmit={handleSubmit(handleModalOpen)}>
           <fieldset>
             <legend>이메일</legend>
             <InputText
@@ -115,6 +123,11 @@ const handleBack = () => {
           <button type="submit">완료</button>
         </form>
       </div>
+
+      <CustomModal isOpen={isOpenModal} onClose={handleModalClose} title="가입이 완료되었습니다." 
+      message={["동네 고양이 정보부터 커뮤니티까지", "로그인 후 다양한 서비스를 이용해보세요!"]}
+      imageUrl={WelcomeCatImage} />
+
     </div>
   );
 };
