@@ -1,6 +1,14 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
 
+export const getCommentCount = async (postId: number) => {
+  return prisma.eventComments.count({
+    where: {
+      eventId: postId,
+    },
+  });
+};
+
 export const getEventComments = async (
   postId: number,
   limit: number,

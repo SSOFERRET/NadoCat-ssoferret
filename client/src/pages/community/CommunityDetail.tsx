@@ -1,72 +1,72 @@
 import "../../styles/css/pages/community/communityDetail.css";
-import { formatDate, formatViews } from "../../utils/format/format";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import { AiFillHeart } from "react-icons/ai";
-import { PiChatCircleBold } from "react-icons/pi";
-import CommunityComments from "../../components/community/CommunityComments";
-import Avartar from "../../components/community/Avartar";
 import useCommunity from "../../hooks/useCommunity";
 import { useParams } from "react-router-dom";
-import Tags from "../../components/common/Tags";
 import ErrorNotFound from "../../components/error/ErrorNotFound";
+import PostDetail from "../../components/communityAndEvent/PostDetail";
+import { Suspense, useState } from "react";
+import useCommunityComment from "../../hooks/useCommunityComment";
+import CommentForm from "../../components/comment/CommentForm";
+import PostMenu from "../../components/communityAndEvent/PostMenu";
+import CommunityComments from "../../components/community/CommunityComments";
 
 // CHECKLIST
-// [ ] 댓글 컴포넌트 분리
-// [ ] 유저 정보 컴포넌트 분리(user)
-// [ ] 댓글 수 동적으로..
-// [ ] 이미지 캐러셀로
+// [x] 댓글 컴포넌트 분리
+// [x] 댓글 수 동적으로.. -> 아마도 될듯..?
+// [x] 이미지 캐러셀로
+// [ ] 로딩처리
+// [ ] 백버튼 구현
 
 const CommunityDetail = () => {
   const params = useParams();
   const postId = Number(params.id);
-  const { data: post, error, isLoading } = useCommunity(postId);
+  const {
+    data: post,
+    error,
+    isLoading,
+    removeCommunityPost,
+  } = useCommunity(postId);
+  const { commentCount, addCommunityComment } = useCommunityComment(postId);
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
+  const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
+
+  const showMenu = () => {
+    setIsShowMenu((prev) => !prev);
+  };
 
   return (
     <div className="community-detail">
+      <div className="category">
+        <span>커뮤니티</span>
+      </div>
       {isLoading && <div>loading...</div>}
       {error && <ErrorNotFound />}
       {post && (
         <>
-          <div className="category">
-            <span>커뮤니티</span>
-          </div>
-          <section className="contents">
-            {post?.users && (
-              <div className="user">
-                <Avartar
-                  profileImage={post.users.profileImage}
-                  nickname={post.users.nickname}
-                />
-                <div className="user-info">
-                  <div className="user-details">
-                    <span className="nickname">{post.users.nickname}</span>
-                    <span className="date">{formatDate(post.createdAt)}</span>
-                  </div>
-                  <HiOutlineDotsVertical className="options-icon" />
-                </div>
-              </div>
-            )}
-            <span className="post-title">{post.title}</span>
-            <div className="image"></div>
-            <Tags tags={post.tags} />
-            <div className="post-info">
-              <div className="likes">
-                <AiFillHeart />
-                <span>{post.likes}</span>
-              </div>
-              <div className="comment-count">
-                <PiChatCircleBold />
-                <span>댓글 수</span>
-              </div>
-              <div className="views">
-                조회수 <span>{formatViews(post.views)}</span>
-              </div>
-            </div>
-            <pre className="post-content">{post.content}</pre>
-          </section>
-          <CommunityComments postId={postId} />
+          <Suspense fallback={<div>loading...</div>}>
+            <PostDetail
+              post={post}
+              commentCount={commentCount}
+              showMenu={showMenu}
+            />
+            <CommunityComments postId={postId} />
+          </Suspense>
+          <CommentForm
+            postId={postId}
+            userId={userId}
+            addComment={addCommunityComment}
+          />
         </>
       )}
+
+      <PostMenu
+        boardType="community"
+        menuType="post"
+        postId={postId}
+        showMenu={showMenu}
+        isShowMenu={isShowMenu}
+        deletePost={removeCommunityPost}
+      />
     </div>
   );
 };

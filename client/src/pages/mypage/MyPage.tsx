@@ -4,7 +4,7 @@ import '../../styles/scss/pages/mypage/MyPage.scss';
 import "../../styles/css/base/reset.css";
 import Posts from '../../components/mypage/Posts';
 
-interface Post {
+export interface Post {
   title: string;
   contents: string;
   time: number;

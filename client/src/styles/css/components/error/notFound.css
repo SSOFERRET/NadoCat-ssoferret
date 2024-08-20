@@ -35,7 +35,10 @@ html {
 /* color palette */
 /* radious */
 body {
-  background-color: #FCF7E0;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
   letter-spacing: -0.7px;
   color: #191919;
 }
@@ -47,6 +50,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 20rem 0;
 }
 .not-found .cat {
   display: flex;
@@ -56,7 +60,7 @@ body {
   height: 300rem;
   padding: 25rem;
   margin-bottom: 40rem;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   border-radius: 50%;
 }
 .not-found .cat img {
@@ -65,7 +69,7 @@ body {
 }
 .not-found .text {
   text-align: center;
-  color: #888B90;
+  color: #888b90;
   margin-bottom: 40rem;
   line-height: 1.4;
 }
@@ -84,28 +88,28 @@ body {
 .not-found .buttons :first-child {
   width: 121rem;
   height: 44rem;
-  font-family: "Pretendard-Bold";
+  font-family: "bold";
   font-size: 16rem !important;
   text-align: center;
   line-height: 1;
   border-radius: 5rem;
   padding: 13rem;
-  background-color: #FFFFFF;
-  color: #F2B705;
-  border: #F2B705 solid 2rem;
+  background-color: #ffffff;
+  color: #f2b705;
+  border: #f2b705 solid 2rem;
   cursor: pointer;
 }
 .not-found .buttons :last-child {
   width: 121rem;
   height: 44rem;
-  font-family: "Pretendard-Bold";
+  font-family: "bold";
   font-size: 16rem !important;
   text-align: center;
   line-height: 1;
   border-radius: 5rem;
   padding: 13rem;
-  background-color: #F2B705;
-  color: #FFFFFF;
+  background-color: #f2b705;
+  color: #ffffff;
   border: 0;
   cursor: pointer;
 }

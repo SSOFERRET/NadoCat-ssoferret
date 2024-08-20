@@ -1,8 +1,8 @@
 import "../../styles/css/pages/community/community.css";
-import PostList from "../../components/community/PostList";
+import PostList from "../../components/communityAndEvent/PostList";
 import useCommunities from "../../hooks/useCommunities";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import PostEmpty from "../../components/community/PostEmpty";
+import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 
 // CHECKLIST
 // [ ] 정렬 기준 동적으로 받아오게 수정
@@ -28,23 +28,25 @@ const Community = () => {
     }
   });
 
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
-
   return (
     <section className="community-container">
-      <div className="category">
-        <span>커뮤니티</span>
-      </div>
+      {isLoading ? (
+        <div>loading...</div>
+      ) : (
+        <>
+          <div className="category">
+            <span>커뮤니티</span>
+          </div>
 
-      {isEmpty && <PostEmpty />}
+          {isEmpty && <PostEmpty />}
 
-      {data && <PostList posts={data} />}
+          {data && <PostList posts={data} />}
 
-      <div className="more" ref={moreRef}>
-        {isFetchingNextPage && <div>loading...</div>}
-      </div>
+          <div className="more" ref={moreRef}>
+            {isFetchingNextPage && <div>loading...</div>}
+          </div>
+        </>
+      )}
     </section>
   );
 };

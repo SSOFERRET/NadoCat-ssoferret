@@ -2,12 +2,13 @@ import { PrismaClient } from "@prisma/client";
 import bcryto from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
+import { indexOpensearchUser } from "../controller/search/Searches";
 
 
 const prisma = new PrismaClient();
 
 //[x]회원가입
-export const createUser = async (email: string, nickname: string, password: string, authType: string) => {
+export const createUser = async (email: string, nickname: string, password: string) => {
 
   const hashing = async (password: string) => {
     const saltRound = 10;
@@ -27,7 +28,7 @@ export const createUser = async (email: string, nickname: string, password: stri
           uuid: uuidBuffer,
           email: email,
           nickname: nickname,
-          authType: "",
+          authType: "general",
           status: "active",
         },
       });
@@ -39,6 +40,8 @@ export const createUser = async (email: string, nickname: string, password: stri
           salt: salt,
         },
       });
+
+      await indexOpensearchUser(email, nickname, uuidBuffer.toString("hex"));
 
       return { user, secretUser };
     });

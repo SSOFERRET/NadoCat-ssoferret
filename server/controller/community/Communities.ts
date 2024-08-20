@@ -1,296 +1,311 @@
-// import { Request, Response } from "express";
-// import { StatusCodes } from "http-status-codes";
-// import { Prisma } from "@prisma/client";
-// import prisma from "../../client";
-// import {
-//   addCommunity,
-//   addCommunityTags,
-//   addCommunityImages,
-//   getCommunitiesCount,
-//   getCommunityById,
-//   getCommunityList,
-//   removeCommunityById,
-//   updateCommunityById,
-//   removeImagesByIds,
-//   removeTagsByIds,
-//   removeLikesById,
-//   getLikeIds,
-// } from "../../model/community.model";
-// import { addImage, deleteImages } from "../../model/image.model";
-// import { addTag, deleteTags } from "../../model/tag.model";
-// import { deleteCommentsById } from "../../model/communityComment.model";
-// import { handleControllerError } from "../../util/errors/errors";
-// import { CATEGORY } from "../../constants/category";
-// import { IImage } from "../../types/image";
-// import { ITag } from "../../types/tag";
-// import { removeLikesByIds } from "../../model/like.model";
-// // import { notifyNewPostToFriends } from "../notification/Notifications";
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { Prisma } from "@prisma/client";
+import prisma from "../../client";
+import {
+  addCommunity,
+  addCommunityTags,
+  addCommunityImages,
+  getCommunitiesCount,
+  getCommunityById,
+  getCommunityList,
+  removeCommunityById,
+  updateCommunityById,
+  removeImagesByIds,
+  removeTagsByIds,
+  removeLikesById,
+  getLikeIds,
+} from "../../model/community.model";
+import { addImage, deleteImages } from "../../model/image.model";
+import { addTag, deleteTags } from "../../model/tag.model";
+import { deleteCommentsById } from "../../model/communityComment.model";
+import { handleControllerError } from "../../util/errors/errors";
+import { CATEGORY } from "../../constants/category";
+import { IImage } from "../../types/image";
+import { ITag } from "../../types/tag";
+import { removeLikesByIds } from "../../model/like.model";
+import { notifyNewPostToFriends } from "../notification/Notifications";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { incrementViewCountAsAllowed } from "../common/Views";
 
-// // CHECKLIST
-// // [x] 이미지 배열로 받아오게 DB 수정
-// // [x] 페이지네이션 추가
-// // [x] 최신순 정렬
-// // [x] 조회순 정렬
-// // [x] 인기순 정렬
-// // [ ] 에러처리 자세하게 구현하기
+// CHECKLIST
+// [x] 이미지 배열로 받아오게 DB 수정
+// [x] 페이지네이션 추가
+// [x] 최신순 정렬
+// [x] 조회순 정렬
+// [x] 인기순 정렬
+// [ ] 에러처리 자세하게 구현하기
 
-// //NOTE 사용자 정보를 받아오기 위한 임시 함수
-// export const getUserId = async () => {
-//   const result = await prisma.$queryRaw<{ HEX: string }[]>`
-//     SELECT HEX(uuid) AS HEX
-//     FROM users
-//     WHERE id = 1;
-//   `;
+//NOTE 사용자 정보를 받아오기 위한 임시 함수
+export const getUserId = async () => {
+  const result = await prisma.$queryRaw<{ HEX: string }[]>`
+    SELECT HEX(uuid) AS HEX
+    FROM users
+    WHERE id = 1;
+  `;
 
-//   if (!result) {
-//     throw new Error("사용자 정보 없음");
-//   }
+  if (!result) {
+    throw new Error("사용자 정보 없음");
+  }
 
-//   return result[0].HEX;
-// };
+  return result[0].HEX;
+};
 
-// export const getCommunities = async (req: Request, res: Response) => {
-//   try {
-//     const limit = Number(req.query.limit) || 5;
-//     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
-//     const sort = req.query.sort?.toString() ?? "latest";
-//     const count = await getCommunitiesCount();
+export const getCommunities = async (req: Request, res: Response) => {
+  try {
+    const limit = Number(req.query.limit) || 5;
+    const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
+    const sort = req.query.sort?.toString() ?? "latest";
+    const count = await getCommunitiesCount();
 
-//     const communities = await getCommunityList(limit, sort, cursor);
+    const communities = await getCommunityList(limit, sort, cursor);
 
-//     const nextCursor =
-//       communities.length === limit
-//         ? communities[communities.length - 1].postId
-//         : null;
+    const nextCursor =
+      communities.length === limit
+        ? communities[communities.length - 1].postId
+        : null;
 
-//     const result = {
-//       posts: communities,
-//       pagination: {
-//         nextCursor,
-//         totalCount: count,
-//       },
-//     };
+    const result = {
+      posts: communities,
+      pagination: {
+        nextCursor,
+        totalCount: count,
+      },
+    };
 
-//     res.status(StatusCodes.OK).json(result);
-//   } catch (error) {
-//     handleControllerError(error, res);
-//   }
-// };
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    handleControllerError(error, res);
+  }
+};
 
-// // CHECKLIST
-// // [x] 이미지 배열로 받아오게 DB 수정
-// // [x] likes, liked 추가
-// // [x] 좋아요 수 구현
-// // [ ] 좋아요 관련 부분 코드 분리
-// // [ ] 에러처리 자세하게 구현하기
+// CHECKLIST
+// [x] 이미지 배열로 받아오게 DB 수정
+// [x] likes, liked 추가
+// [x] 좋아요 수 구현
+// [ ] 좋아요 관련 부분 코드 분리
+// [ ] 에러처리 자세하게 구현하기
 
-// export const getCommunity = async (req: Request, res: Response) => {
-//   try {
-//     const postId = Number(req.params.community_id);
-//     const categoryId = CATEGORY.COMMUNITIES;
-//     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
-//     const community = await getCommunityById(postId);
+export const getCommunity = async (req: Request, res: Response) => {
+  try {
+    const postId = Number(req.params.community_id);
+    const categoryId = CATEGORY.COMMUNITIES;
+    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const community = await getCommunityById(postId);
 
-//     if (!community) {
-//       return res
-//         .status(StatusCodes.NOT_FOUND)
-//         .json({ message: "게시글을 찾을 수 없습니다." });
-//     }
+    if (!community) throw new Error("No Post"); //타입가드
 
-//     // 좋아요 여부
-//     const liked = await prisma.likes.findFirst({
-//       where: {
-//         postId,
-//         categoryId,
-//         uuid: Buffer.from(userId, "hex"), // NOTE 타입 변환
-//       },
-//     });
+    // // redis 서버 연결 필요하여 주석 처리함. 
+    // // 공동의 서버에는 나중에 설치할 예정
+    // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
+    // community.views += viewIncrementResult || 0;
 
-//     const result = {
-//       ...community,
-//       liked: !!liked,
-//     };
+    if (!community) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "게시글을 찾을 수 없습니다." });
+    }
 
-//     res.status(StatusCodes.OK).json(result);
-//   } catch (error) {
-//     handleControllerError(error, res);
-//   }
-// };
+    // 좋아요 여부
+    const liked = await prisma.likes.findFirst({
+      where: {
+        postId,
+        categoryId,
+        uuid: Buffer.from(userId, "hex"), // NOTE 타입 변환
+      },
+    });
 
-// // CHECKLIST
-// // [ ] 이미지 저장 구현 필요
-// // [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
-// // [ ] 에러처리 자세하게 구현하기
-// // [ ] 사용자 정보 받아오는 부분 구현 필요
+    const result = {
+      ...community,
+      liked: !!liked,
+    };
 
-// export const createCommunity = async (req: Request, res: Response) => {
-//   try {
-//     const { title, content, tags, images } = req.body;
-//     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    handleControllerError(error, res);
+  }
+};
 
-//     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-//       const post = await addCommunity(tx, userId, title, content);
+// CHECKLIST
+// [ ] 이미지 저장 구현 필요
+// [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
+// [ ] 에러처리 자세하게 구현하기
+// [ ] 사용자 정보 받아오는 부분 구현 필요
 
-//       if (tags.length > 0) {
-//         const newTags = await Promise.all(
-//           tags.map((tag: string) => addTag(tx, tag))
-//         );
+export const createCommunity = async (req: Request, res: Response) => {
+  try {
+    const { title, content, tags, images } = req.body;
+    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
-//         const formatedTags = newTags.map((tag: ITag) => ({
-//           tagId: tag.tagId,
-//           postId: post.postId,
-//         }));
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const post = await addCommunity(tx, userId, title, content);
 
-//         await addCommunityTags(tx, formatedTags);
-//       }
+      if (tags.length > 0) {
+        const newTags = await Promise.all(
+          tags.map((tag: string) => addTag(tx, tag))
+        );
 
-//       if (images.length > 0) {
-//         const newImages = await Promise.all(
-//           images.map((url: string) => addImage(tx, url))
-//         );
+        const formatedTags = newTags.map((tag: ITag) => ({
+          tagId: tag.tagId,
+          postId: post.postId,
+        }));
 
-//         const formatedImages = newImages.map((image: IImage) => ({
-//           imageId: image.imageId,
-//           postId: post.postId,
-//         }));
+        await addCommunityTags(tx, formatedTags);
+      }
 
-//         await addCommunityImages(tx, formatedImages);
-//       }
+      if (images.length > 0) {
+        const newImages = await Promise.all(
+          images.map((url: string) => addImage(tx, url))
+        );
 
-//       // await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.COMMUNITIES, post.postId);
-//     });
+        const formatedImages = newImages.map((image: IImage) => ({
+          imageId: image.imageId,
+          postId: post.postId,
+        }));
 
-//     res
-//       .status(StatusCodes.CREATED)
-//       .json({ message: "게시글이 등록되었습니다." });
-//   } catch (error) {
-//     handleControllerError(error, res);
-//   }
-// };
+        await addCommunityImages(tx, formatedImages);
+      }
 
-// // CHECKLIST
-// // [ ] 이미지 저장 구현 필요
-// // [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
-// // [ ] 에러처리 자세하게 구현하기
-// // [ ] 사용자 정보 받아오는 부분 구현 필요
-// export const updateCommunity = async (req: Request, res: Response) => {
-//   try {
-//     const id = Number(req.params.communityId);
-//     const userId = await getUserId();
+      await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.COMMUNITIES, post.postId);
 
-//     const {
-//       title,
-//       content,
-//       images,
-//       tags,
-//       newTags,
-//       deleteTagIds,
-//       newImages,
-//       deleteimageIds,
-//     } = req.body;
+      await indexOpensearchDocument(CATEGORY.COMMUNITIES, title, content, post.postId);
+    });
 
-//     if (
-//       !title ||
-//       !content ||
-//       !images ||
-//       !tags ||
-//       !newTags ||
-//       !deleteTagIds ||
-//       !newImages ||
-//       !deleteimageIds
-//     ) {
-//       return res
-//         .status(StatusCodes.BAD_REQUEST)
-//         .json({ message: "입력값을 확인해 주세요." });
-//     }
+    res
+      .status(StatusCodes.CREATED)
+      .json({ message: "게시글이 등록되었습니다." });
+  } catch (error) {
+    handleControllerError(error, res);
+  }
+};
 
-//     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-//       await updateCommunityById(tx, id, userId, title, content);
+// CHECKLIST
+// [ ] 이미지 저장 구현 필요
+// [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
+// [ ] 에러처리 자세하게 구현하기
+// [ ] 사용자 정보 받아오는 부분 구현 필요
+export const updateCommunity = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.communityId);
+    const userId = await getUserId();
 
-//       await removeTagsByIds(tx, deleteTagIds);
+    const {
+      title,
+      content,
+      images,
+      tags,
+      newTags,
+      deleteTagIds,
+      newImages,
+      deleteimageIds,
+    } = req.body;
 
-//       await deleteTags(tx, deleteTagIds);
+    if (
+      !title ||
+      !content ||
+      !images ||
+      !tags ||
+      !newTags ||
+      !deleteTagIds ||
+      !newImages ||
+      !deleteimageIds
+    ) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "입력값을 확인해 주세요." });
+    }
 
-//       const tags = await Promise.all(
-//         newTags.map((tag: string) => addTag(tx, tag))
-//       );
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      await updateCommunityById(tx, id, userId, title, content);
 
-//       const formatedTags = tags.map((tag: ITag) => ({
-//         tagId: tag.tagId,
-//         postId: id,
-//       }));
+      await removeTagsByIds(tx, deleteTagIds);
 
-//       await addCommunityTags(tx, formatedTags);
+      await deleteTags(tx, deleteTagIds);
 
-//       await removeTagsByIds(tx, deleteimageIds);
+      const tags = await Promise.all(
+        newTags.map((tag: string) => addTag(tx, tag))
+      );
 
-//       await deleteImages(tx, deleteimageIds);
+      const formatedTags = tags.map((tag: ITag) => ({
+        tagId: tag.tagId,
+        postId: id,
+      }));
 
-//       const images = await Promise.all(
-//         newImages.map((url: string) => addImage(tx, url))
-//       );
+      await addCommunityTags(tx, formatedTags);
 
-//       const formatedImages = images.map((image: IImage) => ({
-//         imageId: image.imageId,
-//         postId: id,
-//       }));
+      await removeTagsByIds(tx, deleteimageIds);
 
-//       await addCommunityImages(tx, formatedImages);
-//     });
+      await deleteImages(tx, deleteimageIds);
 
-//     res
-//       .status(StatusCodes.CREATED)
-//       .json({ message: "게시글이 수정되었습니다." });
-//   } catch (error) {
-//     handleControllerError(error, res);
-//   }
-// };
+      const images = await Promise.all(
+        newImages.map((url: string) => addImage(tx, url))
+      );
 
-// // CHECKLIST
-// // [ ] 에러처리 자세하게 구현하기
-// // [ ] 사용자 정보 받아오는 부분 구현 필요
-// // [x] 테이블 변경에 따른 태그, 이미지 삭제 수정
-// // [x] 게시글 삭제 시 댓글 삭제 구현
-// export const deleteCommunity = async (req: Request, res: Response) => {
-//   try {
-//     const postId = Number(req.params.community_id);
-//     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+      const formatedImages = images.map((image: IImage) => ({
+        imageId: image.imageId,
+        postId: id,
+      }));
 
-//     const post = await getCommunityById(postId);
+      await addCommunityImages(tx, formatedImages);
 
-//     const likeIds = await getLikeIds(postId);
+      await updateOpensearchDocument(CATEGORY.COMMUNITIES, id, { content });
+    });
 
-//     if (!post) {
-//       return res
-//         .status(StatusCodes.NOT_FOUND)
-//         .json({ message: "게시글을 찾을 수 없습니다." });
-//     }
+    res
+      .status(StatusCodes.CREATED)
+      .json({ message: "게시글이 수정되었습니다." });
+  } catch (error) {
+    handleControllerError(error, res);
+  }
+};
 
-//     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-//       if (post.tags?.length) {
-//         const tagIds = post.tags.map((item: ITag) => item.tagId);
-//         await removeTagsByIds(tx, tagIds);
-//         await deleteTags(tx, tagIds);
-//       }
+// CHECKLIST
+// [ ] 에러처리 자세하게 구현하기
+// [ ] 사용자 정보 받아오는 부분 구현 필요
+// [x] 테이블 변경에 따른 태그, 이미지 삭제 수정
+// [x] 게시글 삭제 시 댓글 삭제 구현
+export const deleteCommunity = async (req: Request, res: Response) => {
+  try {
+    const postId = Number(req.params.community_id);
+    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
-//       if (post.images?.length) {
-//         const imageIds = post.images.map((item: IImage) => item.imageId);
-//         await removeImagesByIds(tx, imageIds);
-//         await deleteImages(tx, imageIds);
-//       }
+    const post = await getCommunityById(postId);
 
-//       if (likeIds.length) {
-//         await removeLikesById(tx, postId);
-//         await removeLikesByIds(tx, likeIds);
-//       }
+    const likeIds = await getLikeIds(postId);
 
-//       await deleteCommentsById(tx, postId);
+    if (!post) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "게시글을 찾을 수 없습니다." });
+    }
 
-//       await removeCommunityById(tx, postId, userId);
-//     });
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      if (post.tags?.length) {
+        const tagIds = post.tags.map((item: ITag) => item.tagId);
+        await removeTagsByIds(tx, tagIds);
+        await deleteTags(tx, tagIds);
+      }
 
-//     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
-//   } catch (error) {
-//     handleControllerError(error, res);
-//   }
-// };
+      if (post.images?.length) {
+        const imageIds = post.images.map((item: IImage) => item.imageId);
+        await removeImagesByIds(tx, imageIds);
+        await deleteImages(tx, imageIds);
+      }
+
+      if (likeIds.length) {
+        await removeLikesById(tx, postId);
+        await removeLikesByIds(tx, likeIds);
+      }
+
+      await deleteCommentsById(tx, postId);
+
+      await removeCommunityById(tx, postId, userId);
+
+      await deleteOpensearchDocument(CATEGORY.COMMUNITIES, postId);
+    });
+
+    res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
+  } catch (error) {
+    handleControllerError(error, res);
+  }
+};

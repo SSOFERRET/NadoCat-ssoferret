@@ -6,13 +6,13 @@ html {
 
 @media screen and (min-width: 430px) {
   html {
-      font-size: 1px;
+    font-size: 1px;
   }
 }
 
 @media screen and (max-width: 429px) {
   html {
-      font-size: calc(1vw / 4.3);
+    font-size: calc(1vw / 4.3);
   }
 }
 
@@ -42,6 +42,7 @@ html {
 /* font size */
 $size-32: 32rem !important;
 $size-24: 24rem !important;
+$size-21: 21rem !important;
 $size-19: 19rem !important;
 $size-18: 18rem !important;
 $size-16: 16rem !important;
@@ -53,20 +54,20 @@ $size-10: 10rem !important;
 
 /* color palette */
 // yellow color
-$primary: #F2B705;
-$secondary: #F27405;
-$orange: #F29F05;
-$lemon: #F6E58D;
-$pale: #FCF7E0;
+$primary: #f2b705;
+$secondary: #f27405;
+$orange: #f29f05;
+$lemon: #f6e58d;
+$pale: #fcf7e0;
 
 // achromatic color
 $black: #191919;
-$dimgray: #4C4C4C;
-$gray: #888B90;
-$silver: #B8BCBF;
-$lightgray: #D9D9D9;
-$whitesmoke: #F5F5F5;
-$white: #FFFFFF;
+$dimgray: #4c4c4c;
+$gray: #888b90;
+$silver: #b8bcbf;
+$lightgray: #d9d9d9;
+$whitesmoke: #f5f5f5;
+$white: #ffffff;
 
 /* radious */
 $round-5: 5rem;
@@ -74,6 +75,9 @@ $round-10: 10rem;
 $rount-30: 30rem;
 
 body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
   background-color: $pale;
   letter-spacing: -0.7px;
   color: $black;
@@ -83,13 +87,13 @@ body {
 @mixin smallButton($active) {
   width: 121rem;
   height: 44rem;
-  font-family: "Pretendard-Bold";
+  font-family: "bold";
   font-size: $size-16;
   text-align: center;
   line-height: 1;
   border-radius: $round-5;
   padding: 13rem;
-  @if ($active == 'on') {
+  @if ($active == "on") {
     background-color: $primary;
     color: $white;
     border: 0;
@@ -100,10 +104,29 @@ body {
   }
 }
 
+@mixin midiumButton($active){
+    width: 200rem;
+    height: 45rem;
+    font-family: "Pretendard-Bold";
+    font-size: $size-16;
+    text-align: center;
+    line-height: 1;
+    border-radius: $round-5;
+    color: $white;
+    border: 0;
+    @if ($active == 'on') {
+      background-color: $primary;
+    } @else {
+      background-color: $lightgray;
+      color: $white;
+    }
+}
+
+
 @mixin bigButton($active) {
   width: 390rem;
   height: 50rem;
-  font-family: "Pretendard-Bold";
+  font-family: "bold";
   font-size: $size-16;
   text-align: center;
   line-height: 1;
@@ -111,7 +134,7 @@ body {
   padding: 16rem;
   color: $white;
   border: 0;
-  @if ($active == 'on') {
+  @if ($active == "on") {
     background-color: $primary;
   } @else {
     background-color: $lightgray;
@@ -123,7 +146,8 @@ body {
 @mixin tag {
   display: inline-block;
   background-color: $pale;
-  font-family: "Pretendard-Regular";
+  font-family: "medium";
+  font-size: $size-14;
   color: $secondary;
   border-radius: $round-5;
   padding: 6rem 8rem;

@@ -35,7 +35,10 @@ html {
 /* color palette */
 /* radious */
 body {
-  background-color: #FCF7E0;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
   letter-spacing: -0.7px;
   color: #191919;
 }
@@ -51,9 +54,10 @@ body {
 
 .tag {
   display: inline-block;
-  background-color: #FCF7E0;
-  font-family: "Pretendard-Regular";
-  color: #F27405;
+  background-color: #fcf7e0;
+  font-family: "medium";
+  font-size: 14rem !important;
+  color: #f27405;
   border-radius: 5rem;
   padding: 6rem 8rem;
   margin-right: 4rem;
