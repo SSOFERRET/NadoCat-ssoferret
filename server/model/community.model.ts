@@ -46,6 +46,7 @@ export const getCommunityList = async (
         },
       },
       communityImages: {
+        take: 1,
         select: {
           images: {
             select: {
@@ -89,9 +90,10 @@ export const getCommunityList = async (
         profileImage: community?.users.profileImage,
       },
       tags: community.communityTags.map((item: ICommunityTag) => item.tags),
-      images: community.communityImages.map(
-        (item: ICommunityImage) => item.images
-      ),
+      thumbnail:
+        community.communityImages
+          .map((item: ICommunityImage) => item.images.url)
+          .join("") ?? null,
       likes: community._count.communityLikes,
     };
   });
