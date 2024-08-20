@@ -9,10 +9,11 @@ interface MessageData {
 
 interface Props {
   message: MessageData; 
+  myName?: string;
 }
 
-const Message: React.FC<Props> = ({ message: { user, message, time } }) => {
-  const isSentByCurrentUser = user === "소영";
+const Message: React.FC<Props> = ({ message: { user, message, time }, myName }) => {
+  const isSentByCurrentUser = user === myName;
 
   return isSentByCurrentUser ? (
     <div className="messageWrapper justifyEnd">

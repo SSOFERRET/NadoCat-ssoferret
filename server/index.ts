@@ -30,22 +30,19 @@ const io = new Server(server, {
 io.on("connection", (socket: Socket) => {
   console.log("새로운 유저가 접속했습니다. ");
 
-  socket.on("join", ({ name, room}) => {
-    socket.join(room);
-    console.log(`${name}님이 ${room}에 접속했습니다. `);
+  socket.on("join", ({ name, roomId}) => {
+    socket.join(roomId);
 
-    socket.to(room).emit('message', {
+    socket.to(roomId).emit('message', {
     user: 'admin',
     message: `${name} has joined the chat`,
     time: new Date().toLocaleTimeString(),
   });
   })
   
-  socket.on("sendMessage", ({ time, message, user }) => {
-    const roomId = "소영-소연";
+  socket.on("sendMessage", ({ time, message, user, roomId }) => {
     const newMessage = { user, message, time};
     io.to(roomId).emit("message", newMessage);
-    console.log(`${user}님이 ${message}라고 메세지를 보냈습니다.`)
   })
 
   socket.on('disconnect', () => {

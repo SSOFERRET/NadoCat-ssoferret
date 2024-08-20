@@ -11,9 +11,10 @@ interface MessageData {
 
 interface Props {
   messages: MessageData[];
+  user: string;
 }
 
-const Messages: React.FC<Props> = ({ messages}) => {
+const Messages: React.FC<Props> = ({ messages, user}) => {
   useEffect(() => {
     console.log(messages);
   }, [messages]);
@@ -22,8 +23,8 @@ const Messages: React.FC<Props> = ({ messages}) => {
     <BasicScrollToBottom className="messages">
       {messages.map((message, index) => (
         <div key={index}>
-          {message.user === "소영" ? 
-          <div className="end"><Message message={message}/></div> :
+          {message.user === user ? 
+          <div className="end"><Message message={message} myName={user}/></div> :
           <div className="start"><Message message={message}/></div>
           }
         </div>
