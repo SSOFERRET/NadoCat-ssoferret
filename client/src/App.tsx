@@ -13,6 +13,7 @@ import StreetCatWrite from "./pages/streetCat/StreetCatWrite";
 import StreetCatDetail from "./pages/streetCat/StreetCatDetail";
 import Event from "./pages/event/Event";
 import EventDetail from "./pages/event/EventDetail";
+import ImageUploadTest from "./components/imageUploadTest";
 import Home from "./pages/Home/Home";
 import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
@@ -58,6 +59,12 @@ const router = createBrowserRouter([
               { path: ":id", element: <EventDetail /> },
             ],
           },
+          {
+            path: "imageUploadTest",
+            children: [
+              { path: "", element:  <ImageUploadTest /> },
+            ],
+          }
         ],
       },
     ],
