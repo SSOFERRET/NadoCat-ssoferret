@@ -258,7 +258,10 @@ export const getLocationFormatsByPostId = async (
 
 export const getImageFormatsByPostId = async (
   tx: Prisma.TransactionClient,
-  postData: IPostData
+  postData: {
+    categoryId: number;
+    postId: number;
+  }
 ) => {
   switch (postData.categoryId) {
     case 3:
