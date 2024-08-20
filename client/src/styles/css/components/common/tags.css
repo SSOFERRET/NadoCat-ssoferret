@@ -55,7 +55,8 @@ body {
 .tag {
   display: inline-block;
   background-color: #fcf7e0;
-  font-family: "Pretendard-Regular";
+  font-family: "medium";
+  font-size: 14rem !important;
   color: #f27405;
   border-radius: 5rem;
   padding: 6rem 8rem;

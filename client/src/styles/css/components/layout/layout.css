@@ -57,9 +57,9 @@ main {
   min-height: calc(100vh - 61rem);
 }
 
-.no-headerfooter {
-    margin-top: 0;
-    margin-bottom: 0;
+.no-header {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 /*# sourceMappingURL=layout.css.map */
