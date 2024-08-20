@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../../styles/css/components/common/imageCarousel.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IImage } from "../../models/image.model";
