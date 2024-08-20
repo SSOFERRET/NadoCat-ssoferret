@@ -10,9 +10,13 @@ main {
   padding-bottom: 60rem;
   background-color: $white;
   min-height: calc(100vh - 61rem);
-}
 
-.no-header {
+
+  .no-headerfooter {
     margin-top: 0;
     margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
 }
+

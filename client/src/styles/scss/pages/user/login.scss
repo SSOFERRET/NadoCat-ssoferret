@@ -1,11 +1,7 @@
 @import "../../base/common.scss";
 
-html, body {
-    overflow: hidden; /* 스크롤 없애기 */
-}
-
 .login-container {
-//   overflow-y: hidden;
+  overflow-y: hidden;
   height: 100vh;
   background: $white;
 
