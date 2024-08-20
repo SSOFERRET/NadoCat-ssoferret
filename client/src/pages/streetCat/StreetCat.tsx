@@ -8,7 +8,7 @@ import MyStreetCatPosts from "../../components/streetCat/MyStreetCatPosts";
 import StreetCatsMap from "../../components/streetCat/StreetCatsMap";
 
 // CHECKLIST
-// [ ] 페이지별 라우터 추가 필요?
+// [ ] 페이지별 라우터를 나눠야할듯..
 // [x] 페이지별 필요 컴포넌트 불러오기 (동네고양이도감, 내도감, 동네고양이지도)
 
 const StreetCats: React.FC = () => {
@@ -28,7 +28,6 @@ const StreetCats: React.FC = () => {
       <section className="street-cat-section">
         <TabNavigation selectedTab={selectedTab} onSelectTab={setSelectedTab}/>
         {renderContent()}
-        {/* <WriteButton /> */}
       </section>
     </>
   )

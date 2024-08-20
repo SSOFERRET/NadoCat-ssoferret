@@ -15,6 +15,11 @@ interface IFetchStreetCatPostsResponse {
   nextCursor?: number;
 }
 
+interface IFetchMyStreetCatPostsResponse {
+  favoriteCatPosts: IStreetCatPost[] | [undefined];
+  nextCursor?: number;
+}
+
 export const fetchStreetCatPosts = async (params: IReadStreetCatPostsParams) => {
   try {
     const response = await httpClient.get<IFetchStreetCatPostsResponse>(
@@ -26,8 +31,28 @@ export const fetchStreetCatPosts = async (params: IReadStreetCatPostsParams) => 
   }
 }
 
-export const fetchStreetCatPost = async ({postId}: IStreetCatDetailParams): Promise<IStreetCatDetail> => {
-  console.log("fetchStreetCatPost()")
+export const getStreetCatPost = async ({postId}: IStreetCatDetailParams): Promise<IStreetCatDetail> => {
   const response = await httpClient.get<IStreetCatDetail>(`/boards/street-cats/${postId}`);
+  return response.data;
+}
+
+export const fetchMyStreetCatPosts = async (params: IReadStreetCatPostsParams) => {
+  try {
+    const response = await httpClient.get<IFetchMyStreetCatPostsResponse>(
+      `/users/street-cats?limit=${params.limit}&cursor=${params.cursor}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch myStreetCatPost:", error);
+  }
+}
+
+export const createFavoriteCat = async (postId: number) => {
+  const response = await httpClient.post(`/users/street-cats/${postId}`);
+  return response.data;
+}
+
+export const deleteFavoriteCat = async (postId: number) => {
+  const response = await httpClient.delete(`/users/street-cats/${postId}`);
   return response.data;
 }

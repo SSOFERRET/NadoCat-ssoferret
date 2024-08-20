@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client"
-import { IImages, IStreetCatImages, IStreetCatPost } from "../types/streetCat"
+import { IImages, IStreetCatImages, IStreetCatPost, IStreetCats } from "../types/streetCat"
 
 // NOTE: 함수명 통일성 필요 (ex. delete | remove 중에 통일)
 
@@ -13,11 +13,17 @@ export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cur
     orderBy: {
       createdAt: "desc"
     },
-    select: {
-      postId: true,
-      thumbnail: true,
-      name: true,
-      createdAt: true
+    include: {
+      streetCatImages: {
+        take: 1,
+        select: {
+          images: {
+            select: {
+              url: true
+            }
+          }
+        }
+      },
     }
   })
 
@@ -34,22 +40,39 @@ export const readPostsWithFavorites = async (tx: Prisma.TransactionClient, uuid:
     orderBy: {
       createdAt: "desc"
     },
-    select: {
-      postId: true,
-      thumbnail: true,
-      name: true,
-      createdAt: true,
+    include: {
+      streetCatImages: {
+        take: 1,
+        select: {
+          images: {
+            select: {
+              url: true
+            }
+          }
+        }
+      },
       streetCatFavorites: {
         where: {
           uuid
         },
         select: {
-          postId: true,
+          postId: true
         }
       }
     }
   })
 
+  // return streetCatPosts.map((post) => {
+  //   return {
+  //     postId: post.postId,
+  //     categoryId: post.categoryId,
+  //     createdAt: post.createdAt,
+  //     gender: post.gender,
+  //     name: post.name,
+  //     thumbnail: post.streetCatImages.length > 0 ? post.streetCatImages[0].images.url : null,
+  //     isFavorite: post.streetCatFavorites.length > 0,
+  //   }
+  // });
   return {
     streetCatPosts
   }
@@ -88,7 +111,15 @@ export const readPost = async (postId: number) => {
           nickname: true,
           profileImage: true
         }
-      }
+      },
+      streetCatFavorites: {
+        where: {
+          postId
+        },
+        select: {
+          postId: true
+        }
+      },
     },
   })
 
@@ -103,6 +134,19 @@ export const readPost = async (postId: number) => {
     ...streetCatPost,
     streetCatImages: steetCatImages
   }
+}
+
+export const readLocation = async (tx: Prisma.TransactionClient, locationId: number) => {
+  return await tx.locations.findUnique({
+    where: {
+      locationId
+    },
+    select: {
+      longitude: true,
+      latitude: true,
+      detail: true
+    }
+  })
 }
 
 export const createPost = async (tx: Prisma.TransactionClient, {
@@ -220,11 +264,13 @@ export const deleteImages = async (
   });
 };
 
-export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: Buffer, postIds: number[]) => {
+export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number) => {
   const favoriteCatPosts = await prisma.streetCats.findMany({
+    take: limit,
+    skip: cursor ? 1 : 0,
+    ...(cursor && { cursor: { postId: cursor} }),
     where: {
       uuid,
-      postId: { in: postIds }
     },
     select: {
       postId: true,
@@ -252,12 +298,10 @@ export const readFavoriteCatPostIds = async (tx: Prisma.TransactionClient, uuid:
 
 
 export const readFavoriteCat = async (uuid: Buffer, postId: number) => {
-  return await prisma.streetCatFavorites.findUnique({
+  return await prisma.streetCatFavorites.findMany({
     where: {
-      uuid_postId: {
-        uuid,
-        postId
-      }
+      uuid,
+      postId
     },
     select: {
       postId: true
@@ -275,12 +319,10 @@ export const createFavoriteCat = async (uuid: Buffer, postId: number) => {
 }
 
 export const removeFavoriteCat = async (uuid: Buffer, postId: number) => {
-  return await prisma.streetCatFavorites.delete({
+  return await prisma.streetCatFavorites.deleteMany({
     where: {
-      uuid_postId: {
-        uuid,
-        postId
-      }
+      uuid,
+      postId
     }
   })
 }

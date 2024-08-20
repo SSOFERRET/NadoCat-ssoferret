@@ -46,71 +46,28 @@ body {
 /* buttons */
 /* tags */
 /* others */
-.title {
+.discovery-container {
+  padding: 20rem 0;
+  border-bottom: 0.5rem solid #d9d9d9;
+}
+.discovery-container .title {
+  display: block;
   font-family: "bold";
   font-size: 16rem !important;
-  padding: 14rem 0;
+  margin-bottom: 7rem;
 }
-
-.street-cat-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
+.discovery-container .location {
+  display: block;
+  font-family: "medium";
+  font-size: 14rem !important;
+  color: #b8bcbf;
+  margin-bottom: 8rem;
 }
-.street-cat-list a {
-  text-decoration: none;
-  color: #191919;
-}
-
-li {
-  position: relative;
-}
-li .img-box {
-  width: 190rem;
-  height: 190rem;
+.discovery-container .map {
+  width: 100%;
+  height: 200rem;
   background-color: #d9d9d9;
   border-radius: 5rem;
-  position: relative;
-}
-li .img-box img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-li svg {
-  width: 25rem;
-  height: 25rem;
-  fill: #b8bcbf;
-  position: absolute;
-  right: 10rem;
-  bottom: 62rem;
-  z-index: 1;
-}
-li svg.active {
-  fill: #f2b705;
 }
 
-.street-cat-info {
-  margin: 10rem 0 18rem 0;
-}
-.street-cat-info span {
-  display: block;
-}
-.street-cat-info .name {
-  font-family: "bold";
-  font-size: 14rem !important;
-  margin-bottom: 4rem;
-}
-.street-cat-info .date {
-  font-family: "medium";
-  font-size: 10rem !important;
-  color: #b8bcbf;
-}
-
-.load-more {
-  height: 2rem;
-}
-
-/*# sourceMappingURL=streetCatPosts.css.map */
+/*# sourceMappingURL=discoveryLocation.css.map */

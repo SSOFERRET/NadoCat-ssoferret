@@ -64,111 +64,11 @@ body {
   font-size: 12rem !important;
   color: #b8bcbf;
 }
-.street-cat-detail-section .cat-container {
-  padding-bottom: 20rem;
-  border-bottom: 0.5rem solid #d9d9d9;
+.street-cat-detail-section .carousel-container {
+  background-color: #ffffff;
 }
-.street-cat-detail-section .cat-container .cat-name {
-  display: block;
-  font-family: "bold";
-  font-size: 16rem !important;
-  margin: 10rem 0;
-}
-.street-cat-detail-section .cat-container .img-box {
-  width: 100%;
-  height: 390rem;
-  background-color: #d9d9d9;
-  border-radius: 5rem;
-  margin-bottom: 11rem;
-}
-.street-cat-detail-section .cat-container .cat-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.street-cat-detail-section .cat-container .cat-info .cat-tag {
-  display: inline-block;
-}
-.street-cat-detail-section .cat-container .cat-info .cat-tag span {
-  display: inline-block;
-  background-color: #fcf7e0;
-  font-family: "medium";
-  font-size: 14rem !important;
-  color: #f27405;
-  border-radius: 5rem;
-  padding: 6rem 8rem;
-  margin-right: 4rem;
-}
-.street-cat-detail-section .cat-container .cat-info .btn-box {
-  display: inline-block;
-}
-.street-cat-detail-section .cat-container .cat-info .btn-box .like svg {
-  width: 25rem;
-  height: 25rem;
-  fill: #d9d9d9;
-  margin-right: 6rem;
-}
-.street-cat-detail-section .cat-container .cat-info .btn-box .more-btn svg {
-  width: 18rem;
-  height: 18rem;
-  fill: #4c4c4c;
-  margin-bottom: 2rem;
-}
-.street-cat-detail-section .cat-container .cat-content {
-  font-family: "medium";
-  font-size: 14rem !important;
-  line-height: 1.4;
-  margin-top: 20rem;
-}
-.street-cat-detail-section .discovery-container {
-  padding: 20rem 0;
-  border-bottom: 0.5rem solid #d9d9d9;
-}
-.street-cat-detail-section .discovery-container .title {
-  display: block;
-  font-family: "bold";
-  font-size: 16rem !important;
-  margin-bottom: 7rem;
-}
-.street-cat-detail-section .discovery-container .location {
-  display: block;
-  font-family: "medium";
-  font-size: 14rem !important;
-  color: #b8bcbf;
-  margin-bottom: 8rem;
-}
-.street-cat-detail-section .discovery-container .map {
-  width: 100%;
-  height: 200rem;
-  background-color: #d9d9d9;
-  border-radius: 5rem;
-}
-.street-cat-detail-section .user-container {
-  display: flex;
-  align-items: center;
-  padding: 20rem 0;
-}
-.street-cat-detail-section .user-container .user-img {
-  display: inline-block;
-  width: 36rem;
-  height: 36rem;
-  background-color: #f2b705;
-  border-radius: 50%;
-  margin-right: 13rem;
-}
-.street-cat-detail-section .user-container .user-info {
-  display: flex;
-  flex-direction: column;
-}
-.street-cat-detail-section .user-container .user-info .user-nickname {
-  font-family: "bold";
-  font-size: 16rem !important;
-  margin-bottom: 3rem;
-}
-.street-cat-detail-section .user-container .user-info .created-date {
-  font-family: "medium";
-  font-size: 12rem !important;
-  color: #b8bcbf;
+.street-cat-detail-section .carousel-container img {
+  object-fit: cover;
 }
 
 .separation {

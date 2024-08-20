@@ -47,10 +47,6 @@ body {
 /* buttons */
 /* tags */
 /* others */
-html, body {
-  overflow: hidden; /* 스크롤 없애기 */
-}
-
 .login-container {
   height: 100vh;
   background: #ffffff;
