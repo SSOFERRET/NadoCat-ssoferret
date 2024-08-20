@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
 import { StatusCodes } from "http-status-codes";
-import { deleteImageFromS3, getImageUrlsFromDb, uploadImageToS3 } from "../util/images/s3ImageHandler";
+import { deleteImageFromS3, getImageUrlsFromDb, uploadImagesToS3 } from "../util/images/s3ImageHandler";
 import { Request, Response } from "express";
 import { addNewImages } from "../util/images/addNewImages";
 import { getUserId } from "./missing/Missings";
@@ -16,7 +16,7 @@ export const updateS3Test = async (req: Request, res: Response) => {
       const userId = await getUserId();
 
       if (req.files) {
-        const imageUrls = await uploadImageToS3(req, 3, 2) as any;
+        const imageUrls = await uploadImagesToS3(req, 3, 2) as any;
         console.log("결과 출력", imageUrls);
         await addNewImages(tx, {
           userId,
