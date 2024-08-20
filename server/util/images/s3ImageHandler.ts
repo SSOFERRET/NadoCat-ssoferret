@@ -10,7 +10,7 @@ import { getImageById } from "../../model/image.model";
 
 dotenv.config();
 
-export const uploadImageToS3 = async (req: Request, categoryId: number, postId: number) => {
+export const uploadImagesToS3 = async (req: Request, categoryId: number, postId: number) => {
   if (!req.files) return;
   const images = req.files as Express.Multer.File[];
   try {
