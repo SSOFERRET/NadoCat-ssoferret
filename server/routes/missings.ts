@@ -2,13 +2,14 @@ import express from "express";
 import { getMissingFavorites, postMissingFavorites, deleteMissingFavorites } from "../controller/missing/MissingsFavorites";
 import { createMissing, deleteMissing, getMissing, getMissings, updateFoundState, updateMissing } from "../controller/missing/Missings";
 import { createMissingReport, deleteMissingReport, deleteMissingReportHandler, getMissingReport, getMissingReports, updateMissingReport, updateMissingReportCheck } from "../controller/missing/MissingReports";
+import uploadImages from "../multer";
 
 const router = express.Router();
 router.use(express.json());
 
 router.get("", getMissings);
 router.get("/:postId", getMissing);
-router.post("", createMissing);
+router.post("", uploadImages.array("images"), createMissing);
 router.delete("/:postId", deleteMissing);
 router.put("/:postId", updateMissing);
 router.patch("/:postId", updateFoundState);
