@@ -1,4 +1,4 @@
-import { ICommunity, ICommunityPage } from "../models/community.model";
+import { ICommunityDetail, ICommunityPage } from "../models/community.model";
 import { httpClient } from "./http";
 
 const LIMIT = 10;
@@ -64,7 +64,7 @@ export const getCommunityPosts = async ({
 
 export const getCommunityDetail = async ({
   postId,
-}: ICommunityDetailParams): Promise<ICommunity> => {
+}: ICommunityDetailParams): Promise<ICommunityDetail> => {
   try {
     const response = await httpClient.get(`/boards/communities/${postId}`);
     return response.data;
@@ -76,7 +76,7 @@ export const getCommunityDetail = async ({
 
 export const deleteCommunityPost = async ({
   postId,
-}: ICommunityDetailParams): Promise<void> => {
+}: ICommunityDetailParams) => {
   try {
     const response = await httpClient.delete(`/boards/communities/${postId}`);
     return response.data;

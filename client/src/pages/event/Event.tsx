@@ -3,6 +3,7 @@ import "../../styles/css/pages/event/event.css";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import PostList from "../../components/communityAndEvent/PostList";
+import LoadingCat from "../../components/loading/LoadingCat";
 
 const Event = () => {
   const {
@@ -26,7 +27,7 @@ const Event = () => {
   return (
     <section className="event-container">
       {isLoading ? (
-        <div>loading...</div>
+        <LoadingCat />
       ) : (
         <>
           <div className="category">

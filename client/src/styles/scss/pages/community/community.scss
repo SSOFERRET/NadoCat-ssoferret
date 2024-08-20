@@ -1,11 +1,10 @@
 @import "../../base/common.scss";
 
 .community-container {
-  // min-height: 100vh;
   height: 100%;
   // min-height: calc(100vh - 61rem);
   padding: 20rem;
-  padding-bottom: 64rem;
+  // padding-bottom: 64rem;
   background-color: $white;
 
   .category {
@@ -18,5 +17,29 @@
 
   .more {
     font-size: $size-14;
+  }
+
+  .write-btn {
+    position: sticky;
+    bottom: 73rem;
+    right: 20rem;
+    float: right;
+    width: 107rem;
+    height: 54rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50rem;
+    background-color: $primary;
+    color: $white;
+    border: none;
+    font-family: "bold";
+    font-size: $size-18;
+    z-index: 10000;
+    cursor: pointer;
+
+    svg {
+      margin-right: 6rem;
+    }
   }
 }

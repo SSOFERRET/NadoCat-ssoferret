@@ -68,9 +68,7 @@ const Post = ({ post }: IProps) => {
         </div>
       </div>
       <div className="post-image">
-        {post.images.length > 0 && (
-          <img src={post.images[0].url} alt={post.title} />
-        )}
+        {post.thumbnail && <img src={post.thumbnail} alt={post.title} />}
       </div>
     </li>
   );

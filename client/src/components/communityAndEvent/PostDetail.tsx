@@ -6,23 +6,23 @@ import { AiFillHeart } from "react-icons/ai";
 import { PiChatCircleBold } from "react-icons/pi";
 // import { MdDateRange } from "react-icons/md";
 import Tags from "../common/Tags";
-import { ICommunity } from "../../models/community.model";
+import { ICommunityDetail } from "../../models/community.model";
+import { IEventDetail } from "../../models/event.model";
 import ImageCarousel from "../common/ImageCarousel";
-import { IEvent } from "../../models/event.model";
 
 // CHECKLIST
 // [ ] 조회수 기능 구현
 
-type PostType = ICommunity | IEvent;
+type PostType = ICommunityDetail | IEventDetail;
 interface IProps {
   post: PostType;
   commentCount: number;
   showMenu: () => void;
 }
 
-const isClosed = (post: PostType): post is IEvent => "isClosed" in post;
+const isClosed = (post: PostType): post is IEventDetail => "isClosed" in post;
 
-// const isDate = (post: PostType): post is IEvent => "date" in post;
+// const isDate = (post: PostType): post is IEventDetail => "date" in post;
 
 const PostDetail = ({ post, commentCount, showMenu }: IProps) => {
   return (

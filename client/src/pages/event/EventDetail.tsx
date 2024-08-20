@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import "../../styles/css/pages/event/eventDetail.css";
 import { useParams } from "react-router-dom";
 import ErrorNotFound from "../../components/error/ErrorNotFound";
@@ -8,6 +8,7 @@ import useEvent from "../../hooks/useEvent";
 import useEventComment from "../../hooks/useEventComment";
 import EventComments from "../../components/event/EventComments";
 import PostMenu from "../../components/communityAndEvent/PostMenu";
+import LoadingCat from "../../components/loading/LoadingCat";
 
 // CHECKLIST
 // [x] 댓글 컴포넌트 분리
@@ -34,18 +35,17 @@ const EventDetail = () => {
       <div className="category">
         <span>이벤트 &#183; 모임</span>
       </div>
-      {isLoading && <div>loading...</div>}
+      {isLoading && <LoadingCat />}
       {error && <ErrorNotFound />}
       {post && (
         <>
-          <Suspense fallback={<div>loading...</div>}>
-            <PostDetail
-              post={post}
-              commentCount={commentCount}
-              showMenu={showMenu}
-            />
-            <EventComments postId={postId} />
-          </Suspense>
+          <PostDetail
+            post={post}
+            commentCount={commentCount}
+            showMenu={showMenu}
+          />
+          <EventComments postId={postId} />
+
           <CommentForm
             postId={postId}
             userId={userId}

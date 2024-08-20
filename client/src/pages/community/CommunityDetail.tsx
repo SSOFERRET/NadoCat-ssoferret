@@ -1,13 +1,14 @@
+import { useState } from "react";
 import "../../styles/css/pages/community/communityDetail.css";
 import useCommunity from "../../hooks/useCommunity";
 import { useParams } from "react-router-dom";
 import ErrorNotFound from "../../components/error/ErrorNotFound";
 import PostDetail from "../../components/communityAndEvent/PostDetail";
-import { Suspense, useState } from "react";
 import useCommunityComment from "../../hooks/useCommunityComment";
 import CommentForm from "../../components/comment/CommentForm";
 import PostMenu from "../../components/communityAndEvent/PostMenu";
 import CommunityComments from "../../components/community/CommunityComments";
+import LoadingCat from "../../components/loading/LoadingCat";
 
 // CHECKLIST
 // [x] 댓글 컴포넌트 분리
@@ -34,23 +35,24 @@ const CommunityDetail = () => {
     setIsShowMenu((prev) => !prev);
   };
 
+  if (error) {
+    return <ErrorNotFound />;
+  }
+
   return (
     <div className="community-detail">
       <div className="category">
         <span>커뮤니티</span>
       </div>
-      {isLoading && <div>loading...</div>}
-      {error && <ErrorNotFound />}
+      {isLoading && <LoadingCat />}
       {post && (
         <>
-          <Suspense fallback={<div>loading...</div>}>
-            <PostDetail
-              post={post}
-              commentCount={commentCount}
-              showMenu={showMenu}
-            />
-            <CommunityComments postId={postId} />
-          </Suspense>
+          <PostDetail
+            post={post}
+            commentCount={commentCount}
+            showMenu={showMenu}
+          />
+          <CommunityComments postId={postId} />
           <CommentForm
             postId={postId}
             userId={userId}
