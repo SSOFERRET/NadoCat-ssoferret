@@ -1,0 +1,115 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.comment-form-container {
+  box-sizing: border-box;
+  width: 430rem;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  padding: 7rem 20rem;
+  background-color: #ffffff;
+  transform: translateY(-60rem);
+  z-index: 100;
+}
+.comment-form-container .post-like {
+  width: 35rem;
+  height: 40rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: #f2b705;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.comment-form-container .post-like svg {
+  width: 22rem;
+  height: 22rem;
+}
+.comment-form-container .comment-form {
+  width: 375rem;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  padding: 0 14rem;
+  border-radius: 15rem;
+  border: 1rem solid #d9d9d9;
+}
+.comment-form-container .comment-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40rem;
+  overflow: hidden;
+  font-family: "medium";
+  font-size: 14rem !important;
+  padding: 12rem 0;
+  border: none;
+  resize: none;
+}
+.comment-form-container .comment-form textarea::placeholder {
+  color: #b8bcbf;
+}
+.comment-form-container .comment-form textarea:focus {
+  outline: 0;
+}
+.comment-form-container .comment-form .submit-btn {
+  height: 40rem;
+  flex-shrink: 0;
+  font-family: "bold";
+  color: #f27405;
+  font-size: 14rem !important;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=commentForm.css.map */

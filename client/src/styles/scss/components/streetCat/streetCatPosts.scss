@@ -1,0 +1,72 @@
+@import "../../base/common.scss";
+
+.title {
+  font-family: "bold";
+  font-size: $size-16;
+  padding: 14rem 0;
+}
+
+.street-cat-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  a {
+    text-decoration: none;
+    color: $black;
+  }
+}
+
+li {
+  position: relative;
+
+  .img-box {
+    width: 190rem;
+    height: 190rem;
+    background-color: $lightgray;
+    border-radius: $round-5;
+    position: relative;
+  
+    img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 5rem;
+    }
+  }
+
+  svg {
+    width: 25rem;
+    height: 25rem;
+    fill: $dimgray;
+    position: absolute;
+    right: 10rem;
+    bottom: 62rem;
+    z-index: 1;
+
+    &.active {
+      fill: $primary;
+    }
+  }
+}
+
+.street-cat-info {
+  margin: 10rem 0 18rem 0;
+
+  span {
+    display: block;
+    
+  }
+
+  .name {
+    font-family: "bold";
+    font-size: $size-14;
+    margin-bottom: 4rem;
+  }
+  .date {
+    font-family: "medium";
+    font-size: $size-10;
+    color: $silver;
+  }
+}

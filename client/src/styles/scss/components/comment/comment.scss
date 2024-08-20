@@ -1,0 +1,136 @@
+@import "../../base/common.scss";
+
+.comment-card {
+  min-height: 81rem;
+  padding: 15rem 0;
+  border-bottom: 0.5rem solid $lightgray;
+
+  .comment {
+    display: flex;
+    .avatar {
+      width: 32rem;
+      height: 32rem;
+      background-color: $primary;
+      border-radius: 50%;
+      margin-right: 9rem;
+      flex-shrink: 0;
+    }
+
+    .detail {
+      flex: 1;
+      .comment-info {
+        min-height: 18rem;
+        display: flex;
+        align-items: center;
+        .nickname {
+          word-break: break-all;
+          font-family: "bold";
+          font-size: $size-12;
+        }
+
+        .date {
+          font-family: "medium";
+          font-size: $size-10;
+          color: $silver;
+          margin-left: 5rem;
+        }
+
+        .options-icon {
+          position: static;
+          margin-left: auto;
+          width: 18rem;
+          height: 18rem;
+          color: $silver;
+          cursor: pointer;
+        }
+      }
+
+      .comment-detail {
+        white-space: pre-wrap;
+        word-break: break-all;
+        margin-top: 7rem;
+        color: $dimgray;
+        font-family: "medium";
+        font-size: $size-14;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  &:nth-child(odd) .avatar {
+    background-color: $primary;
+  }
+
+  &:nth-child(even) .avatar {
+    background-color: $lightgray;
+  }
+
+  .comment-edit-form-container {
+    margin-top: 10rem;
+    border: 1rem solid $lightgray;
+    border-radius: 15rem;
+    padding: 8rem;
+
+    .comment-edit-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: end;
+      // margin-bottom: 10rem;
+
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        height: 70rem;
+        overflow: hidden;
+        font-family: "medium";
+        font-size: $size-14;
+        padding: 10rem;
+        border: none;
+        resize: none;
+
+        &::placeholder {
+          color: $silver;
+        }
+
+        &:focus {
+          outline: 0;
+        }
+      }
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: end;
+      gap: 10rem;
+
+      button {
+        height: 25rem;
+        width: 40rem;
+        flex-shrink: 0;
+        font-family: "bold";
+        color: $secondary;
+        font-size: $size-14;
+        padding: 0;
+        background-color: transparent;
+        border: none;
+        border-radius: $round-5;
+        cursor: pointer;
+
+        &:hover {
+          color: $primary;
+        }
+      }
+
+      .edit-btn {
+        background-color: $white;
+        color: $secondary;
+      }
+
+      .close-btn {
+        color: $gray;
+      }
+    }
+  }
+}
