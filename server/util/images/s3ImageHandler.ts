@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { convertToWebpAndBase64 } from "./convertToWebpAndBase64";
+import { convertToWebpBuffer } from "./convertToWebpBuffer";
 import s3 from "../../s3";
 import dotenv from "dotenv";
 import { TCategoryId } from "../../types/category";
@@ -18,7 +18,7 @@ export const uploadImageToS3 = async (req: Request, categoryId: number, postId: 
       const result = await s3.upload({
         Bucket: "nadocat",
         Key: `${categoryId}_${postId}_${idx}`,
-        Body: await convertToWebpAndBase64(image),
+        Body: await convertToWebpBuffer(image),
         ContentType: image.mimetype,
       }, (error, data) => {
         if (error) throw error;
