@@ -14,12 +14,12 @@ export const signup = async(userData: SignupProps) => {
 }
 
 //비밀번호 변경요청
-
 //비밀번호 변경
 
 interface ILoginResponse {
     generalToken: string;
-    refreshToken: string;
+    refreshToken: string | null;
+    authLogin: boolean;
 }
 
 export const login = async(data: LoginProps) => {
