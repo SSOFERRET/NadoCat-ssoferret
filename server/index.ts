@@ -10,9 +10,7 @@ import InterestsRouter from "./routes/interest";
 import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
-import { uploadImageToS3 } from "./util/images/s3ImageHandler";
-import { updateS3Test } from "./controller/s3HandleTest";
-import uploadImages from "./multer";
+
 import S3TestRouter from "./routes/s3test"
 
 const PORT = process.env.PORT || 3000;
