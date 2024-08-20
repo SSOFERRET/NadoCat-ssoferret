@@ -128,5 +128,12 @@ body {
   font-size: 14rem !important;
   color: #4c4c4c;
 }
+.tag-form-container .overlay .new-tag-container .tag-error {
+  display: inline-block;
+  font-family: "medium";
+  font-size: 12rem !important;
+  color: #d32f2f;
+  padding-bottom: 9rem;
+}
 
 /*# sourceMappingURL=newTagForm.css.map */

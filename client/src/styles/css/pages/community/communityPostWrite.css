@@ -59,6 +59,7 @@ body {
   cursor: pointer;
 }
 .post-form .title {
+  width: 100%;
   font-family: "bold";
   font-size: 20rem !important;
   border: none;

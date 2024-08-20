@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import "../../styles/css/pages/community/communityPostWrite.css";
-import { AiOutlineClose } from "react-icons/ai";
 import NewTagForm from "../../components/communityAndEvent/NewTagForm";
 import NewTags from "../../components/communityAndEvent/NewTags";
 
@@ -8,14 +7,13 @@ import NewTags from "../../components/communityAndEvent/NewTags";
 // [ ] 푸터 삭제
 // [ ] 헤터 백버튼으로 변경
 // [ ] 이미지 업로드 구현
-// [ ] 해시테크 폼 만들기
+// [x] 해시테크 폼 만들기
 
 const CommunityPostWrite = () => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [content, setContent] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [newTags, setNewTags] = useState<string[]>([]);
-  const [newImages, setNewImages] = useState([]);
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -71,7 +69,7 @@ const CommunityPostWrite = () => {
             placeholder="내용을 입력해 주세요."
             required
           ></textarea>
-          <div>이미지 자리</div>
+          <div></div>
 
           <button
             type="button"

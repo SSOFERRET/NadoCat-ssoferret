@@ -91,6 +91,14 @@
           color: $dimgray;
         }
       }
+
+      .tag-error {
+        display: inline-block;
+        font-family: "medium";
+        font-size: $size-12;
+        color: #d32f2f;
+        padding-bottom: 9rem;
+      }
     }
   }
 }

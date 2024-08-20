@@ -4,6 +4,9 @@ import ModalPotal from "../modal/ModalPotal";
 import { AiOutlineClose } from "react-icons/ai";
 import NewTags from "./NewTags";
 
+// CHECKLIST
+// [x] 해시태그 수 글자수 제한
+// [ ] 해시태그 수 제한
 interface IProps {
   initialTags: string[];
   addNewTags: (tags: string[]) => void;
@@ -14,6 +17,7 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [tags, setTags] = useState<string[]>(initialTags);
   const [tag, setTag] = useState<string>("");
+  const [error, setError] = useState("");
 
   const removeTags = (indexToRemove: number) => {
     const filter = tags.filter((_, index) => index !== indexToRemove);
@@ -21,7 +25,12 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
   };
 
   const addTags = (value: string) => {
-    if (value.trim() !== "") {
+    if (tags.length >= 20) {
+      setError("태그는 20개까지 입력 가능합니다.");
+      return;
+    }
+
+    if (value.trim() !== "" && !error.length) {
       setTags([...tags, value]);
       setTag("");
 
@@ -42,10 +51,22 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTag(e.currentTarget.value);
+    const value = e.target.value;
+
+    if (value.length > 21) {
+      setError("태그는 1 ~ 20글자까지 입력 가능합니다.");
+    } else {
+      setError("");
+      setTag(value);
+    }
   };
 
   const handleSubmit = () => {
+    if (tags.length > 20) {
+      setError("태그는 20개까지 입력 가능합니다.");
+      return;
+    }
+
     addNewTags(tags);
     handleTagFormOpen();
   };
@@ -74,6 +95,8 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
                 className="tag-input"
                 type="text"
                 name="newTag"
+                min={1}
+                // maxLength={20}
                 placeholder="&#035; 해시태그"
                 value={tag}
                 onChange={handleChange}
@@ -88,6 +111,7 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
                 추가
               </button>
             </div>
+            {!!error && <span className="tag-error">{error}</span>}
             <NewTags tags={tags} removeTags={removeTags} />
           </section>
         </div>
