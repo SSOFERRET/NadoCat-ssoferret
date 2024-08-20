@@ -59,13 +59,11 @@ const router = createBrowserRouter([
               { path: ":id", element: <EventDetail /> },
             ],
           },
-          {
-            path: "imageUploadTest",
-            children: [
-              { path: "", element:  <ImageUploadTest /> },
-            ],
-          }
         ],
+      },
+      {
+        path: "imageUploadTest",
+        children: [{ path: "", element: <ImageUploadTest /> }],
       },
     ],
   },
