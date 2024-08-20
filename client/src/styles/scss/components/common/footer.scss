@@ -19,7 +19,6 @@ footer {
   justify-content: space-between;
   align-items: center;
   width: 430rem;
-  
 }
 
 .navbar-item {
@@ -29,7 +28,7 @@ footer {
   color: $black;
   text-align: center;
   text-decoration: none;
-  
+
   &.active {
     font-family: bold;
     color: $secondary;

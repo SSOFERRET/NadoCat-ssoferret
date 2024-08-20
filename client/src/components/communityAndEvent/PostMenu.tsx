@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/css/components/communityAndEvent/postMenu.css";
 import { ICommentDeleteRequest } from "../../api/community.api";
 import useCommentStore from "../../store/comment";
+import { useEffect } from "react";
 
 type BoardType = "community" | "event" | "streetCat" | "missingCat";
 type MenuType = "post" | "comment";

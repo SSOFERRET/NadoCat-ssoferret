@@ -1,0 +1,132 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.tag-form-container {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+.tag-form-container .overlay {
+  width: 430rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.tag-form-container .overlay .new-tag-container {
+  width: 350rem;
+  min-height: 270rem;
+  padding: 14rem 20rem;
+  background-color: #ffffff;
+  border-radius: 10rem;
+}
+.tag-form-container .overlay .new-tag-container button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.tag-form-container .overlay .new-tag-container .new-tag-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 51rem;
+}
+.tag-form-container .overlay .new-tag-container .new-tag-buttons .tag-form-close-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tag-form-container .overlay .new-tag-container .new-tag-buttons .tag-form-close-btn svg {
+  width: 22rem;
+  height: 22rem;
+}
+.tag-form-container .overlay .new-tag-container .new-tag-buttons .done-btn {
+  font-family: "bold";
+  font-size: 14rem !important;
+  color: #f27405;
+}
+.tag-form-container .overlay .new-tag-container .description {
+  font-family: "bold";
+  font-size: 16rem !important;
+}
+.tag-form-container .overlay .new-tag-container .tag-input-form {
+  width: 100%;
+  height: 39rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10rem;
+  margin: 9rem 0;
+  border-radius: 15rem;
+  border: 0.5rem solid #d9d9d9;
+  display: flex;
+  align-items: center;
+}
+.tag-form-container .overlay .new-tag-container .tag-input-form .tag-input {
+  flex-grow: 1;
+  font-family: "medium";
+  font-size: 14rem !important;
+  outline: none;
+  border: none;
+  margin-right: 6rem;
+}
+.tag-form-container .overlay .new-tag-container .tag-input-form .tag-input::placeholder {
+  color: #b8bcbf;
+}
+.tag-form-container .overlay .new-tag-container .tag-input-form .tag-add-btn {
+  font-family: "bold";
+  font-size: 14rem !important;
+  color: #4c4c4c;
+}
+
+/*# sourceMappingURL=newTagForm.css.map */

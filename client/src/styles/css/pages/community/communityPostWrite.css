@@ -1,0 +1,111 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.post-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - 120rem);
+  padding: 41rem 20rem 0 20rem;
+}
+.post-form button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.post-form .title {
+  font-family: "bold";
+  font-size: 20rem !important;
+  border: none;
+  outline: none;
+}
+.post-form .title::placeholder {
+  color: #b8bcbf;
+}
+.post-form textarea {
+  width: 100%;
+  height: 19rem;
+  font-family: "medium";
+  font-size: 16rem !important;
+  line-height: 1.5;
+  overflow: hidden;
+  margin-bottom: 18rem;
+  border: none;
+  outline: none;
+  resize: none;
+}
+.post-form textarea::placeholder {
+  font-family: "bold";
+  color: #b8bcbf;
+}
+.post-form .hash-tag-btn {
+  background-color: transparent;
+  border: none;
+  font-family: "bold";
+  font-size: 16rem !important;
+  color: #4c4c4c;
+  margin-bottom: 22rem;
+  cursor: pointer;
+}
+.post-form .post-submit {
+  width: 390rem;
+  height: 50rem;
+  font-family: "bold";
+  font-size: 16rem !important;
+  text-align: center;
+  line-height: 1;
+  border-radius: 5rem;
+  padding: 16rem;
+  color: #ffffff;
+  border: 0;
+  background-color: #f2b705;
+  font-family: "bold";
+  margin-bottom: 14rem;
+}
+
+/*# sourceMappingURL=communityPostWrite.css.map */
