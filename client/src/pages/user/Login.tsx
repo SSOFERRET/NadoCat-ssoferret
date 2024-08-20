@@ -24,6 +24,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [autoLogin, setAutoLogin] = useState(false);
     const {register, setFocus, handleSubmit, formState: {errors}} = useForm<LoginProps>();
+    
     const handleLogin = (data: LoginProps) => {
         login({...data, autoLogin}).then(() => {
             navigate("/home");
