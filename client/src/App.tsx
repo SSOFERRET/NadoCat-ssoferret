@@ -13,6 +13,7 @@ import StreetCatWrite from "./pages/streetCat/StreetCatWrite";
 import StreetCatDetail from "./pages/streetCat/StreetCatDetail";
 import Event from "./pages/event/Event";
 import EventDetail from "./pages/event/EventDetail";
+import ImageUploadTest from "./components/imageUploadTest";
 
 const routeList = [
   {
@@ -54,6 +55,10 @@ const routeList = [
   {
     path: "/boards/events/:id",
     element: <EventDetail />,
+  },
+  {
+    path: "/imageUploadTest",
+    element: <ImageUploadTest />,
   },
 ];
 
