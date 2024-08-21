@@ -133,19 +133,18 @@ export const createCommunity = async (req: Request, res: Response) => {
   try {
     const { title, content, tags } = req.body;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const tagList = JSON.parse(tags);
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await addCommunity(tx, userId, title, content);
       const postId = post.postId;
 
-      if (tags.length > 0) {
-        const newTags = await Promise.all(tags.map((tag: string) => addTag(tx, tag)));
-
+      if (tagList.length > 0) {
+        const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
           postId,
         }));
-
         await addCommunityTags(tx, formatedTags);
       }
 
@@ -160,12 +159,10 @@ export const createCommunity = async (req: Request, res: Response) => {
           },
           imageUrls
         );
-
         const formatedImages = newImages.map((imageId: number) => ({
           imageId,
           postId,
         }));
-
         await addCommunityImages(tx, formatedImages);
       }
 

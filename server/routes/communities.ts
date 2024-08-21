@@ -9,6 +9,7 @@ import {
 import { createComment, deleteComment, getComments, updateComment } from "../controller/community/CommunityComments";
 import { body, param } from "express-validator";
 import { validate } from "../middleware/validator";
+import uploadImages from "../multer";
 
 const validatePostId = [
   param("community_id").notEmpty().isInt().withMessage("community_id는 숫자로 입력해주세요."),
@@ -76,7 +77,7 @@ const router = express.Router();
 
 router.get("/", getCommunities);
 
-router.post("/", validatePostCreate, createCommunity);
+router.post("/", uploadImages.array("images"), createCommunity);
 
 router.get("/:community_id", validatePostId, getCommunity);
 
