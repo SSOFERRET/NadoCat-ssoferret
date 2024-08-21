@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import deleteBtn from "../../assets/img/deleteBtn.png";
-import "../../styles/css/components/streetCat/imageUpload.css";
+import "../../styles/scss/components/streetCat/imageUpload.scss";
 
 const AddImage: React.FC = () => {
   return (

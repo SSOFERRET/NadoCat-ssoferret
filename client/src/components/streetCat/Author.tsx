@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/css/components/streetCat/author.css";
+import "../../styles/scss/components/streetCat/author.scss";
 
 interface IUsers {
   users?: {

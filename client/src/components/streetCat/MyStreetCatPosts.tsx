@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/css/components/streetCat/MyStreetCatPosts.css";
+import "../../styles/scss/components/streetCat/MyStreetCatPosts.scss";
 import { AiFillHeart } from "react-icons/ai";
 import MyStreetCatEmpty from "./MyStreetCatEmpty";
 import { useMyStreetCatPosts } from "../../hooks/useMyStreetCats";

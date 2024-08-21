@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/css/components/streetCat/tabNavigation.css";
+import "../../styles/scss/components/streetCat/tabNavigation.scss";
 
 interface ITab {   
   id: number;

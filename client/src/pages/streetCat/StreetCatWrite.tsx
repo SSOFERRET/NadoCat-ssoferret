@@ -5,7 +5,7 @@ import { AiFillClockCircle } from "react-icons/ai";
 import { HiLocationMarker } from "react-icons/hi";
 import deleteBtn from "../../assets/img/deleteBtn.png";
 import "../../styles/css/base/reset.css";
-import "../../styles/css/pages/streetCat/streetCatWrite.css";
+import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import ImageUpload from "../../components/streetCat/ImageUpload";
 
 const StreetCatWrite: React.FC = () => {

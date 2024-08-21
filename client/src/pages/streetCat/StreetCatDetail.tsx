@@ -4,12 +4,13 @@ import { AiFillHeart } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { PiChatCircleBold } from "react-icons/pi";
 import "../../styles/css/base/reset.css";
-import "../../styles/css/pages/streetCat/streetCatDetail.css";
+import "../../styles/scss/pages/streetCat/streetCatDetail.scss";
 import { useStreetCatPost } from "../../hooks/useStreetCat";
 import PostDetail from "../../components/streetCat/PostDetail";
 import DiscoveryLocation from "../../components/streetCat/DiscoveryLocation";
 import Author from "../../components/streetCat/Author";
 import CommentsEmpty from "../../components/comment/CommentsEmpty";
+import StreetCatComments from "../../components/streetCat/StreetCatComments";
 
 const StreetCatDetail: React.FC = () => {
   const {id} = useParams();
@@ -38,7 +39,7 @@ const StreetCatDetail: React.FC = () => {
           <span>조회수</span><span className="view-count">29</span>
         </div>
       
-        <CommentsEmpty />
+        <StreetCatComments postId={postId}/>
       </section>
     </>
   )

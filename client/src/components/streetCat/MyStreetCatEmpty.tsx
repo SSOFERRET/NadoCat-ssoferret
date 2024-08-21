@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/css/components/streetCat/MyStreetCatEmpty.css";
+import "../../styles/scss/components/streetCat/MyStreetCatEmpty.scss";
 import heartCat from "../../assets/img/heartCat.png";
 import { AiOutlinePlus } from "react-icons/ai";
 import { Link } from "react-router-dom";

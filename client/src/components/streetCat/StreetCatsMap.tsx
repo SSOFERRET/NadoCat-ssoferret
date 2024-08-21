@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "../../styles/css/components/streetCat/streetCatsMap.css";
+import "../../styles/scss/components/streetCat/streetCatsMap.scss";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 declare global {

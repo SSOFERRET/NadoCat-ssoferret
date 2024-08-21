@@ -1,9 +1,15 @@
-import { IStreetCatDetail, IStreetCatPost } from "../models/streetCat.model";
+import { IStreetCatComment, IStreetCatDetail, IStreetCatPost } from "../models/streetCat.model";
 import { httpClient } from "./http";
 
 interface IReadStreetCatPostsParams {
   limit: number;
   cursor?: number;
+}
+
+interface IReadStreetCatCommentsParams {
+  limit: number;
+  cursor?: number;
+  postId: number;
 }
 
 interface IStreetCatDetailParams {
@@ -17,6 +23,11 @@ interface IFetchStreetCatPostsResponse {
 
 interface IFetchMyStreetCatPostsResponse {
   favoriteCatPosts: IStreetCatPost[] | [undefined];
+  nextCursor?: number;
+}
+
+interface IFetchStreetCatCommentsResponse {
+  streetCatComments: IStreetCatComment[] | [undefined];
   nextCursor?: number;
 }
 
@@ -55,4 +66,15 @@ export const createFavoriteCat = async (postId: number) => {
 export const deleteFavoriteCat = async (postId: number) => {
   const response = await httpClient.delete(`/users/street-cats/${postId}`);
   return response.data;
+}
+
+export const fetchStreetCatComments = async (params: IReadStreetCatCommentsParams) => {
+  try {
+    const response = await httpClient.get<IFetchStreetCatCommentsResponse>(
+      `/boards/street-cats/${params.postId}/comments?limit=${params.limit}&cursor=${params.cursor}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch streetCatComments:", error);
+  }
 }

@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from "react";
 import { AiFillHeart } from "react-icons/ai";
-import "../../styles/css/components/streetCat/postDetail.css";
+import "../../styles/scss/components/streetCat/postDetail.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IStreetCatDetail } from "../../models/streetCat.model";
 import ImageCarousel from "../common/ImageCarousel";
@@ -22,7 +22,6 @@ interface IProps {
 }
 
 const PostDetail = (props: IProps) => {
-  console.log("props.streetCatFavorites?.postId", props.streetCatFavorites?.length);
   const images: IImage[] = props.streetCatImages || [];
   return (
     <>

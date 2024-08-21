@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { AiOutlineHeart } from "react-icons/ai";
-import "../../styles/css/components/streetCat/streetCatPosts.css";
+import "../../styles/scss/components/streetCat/streetCatPosts.scss";
 import { useStreetCatPosts } from "../../hooks/useStreetCats";
 import { useIntersectionObserver } from "./IntersectionObserver";
 import FavoriteButton from "../common/FavoriteButton";

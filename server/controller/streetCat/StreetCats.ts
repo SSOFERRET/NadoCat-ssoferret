@@ -77,8 +77,6 @@ export const getStreetCat = async (req: Request, res: Response) => {
       // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
       // getPost.views += viewIncrementResult || 0;
 
-      console.log(postData)
-
       res.status(200).json(postData);
     })
   } catch (error) {

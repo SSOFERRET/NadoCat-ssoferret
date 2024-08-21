@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from "react";
-import "../../styles/css/components/streetCat/discoveryLocation.css";
+import "../../styles/scss/components/streetCat/discoveryLocation.scss";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 // NOTE center의 lat, lng 값 변수로 넣었을때 지도 하얗게 보이는 이슈
@@ -21,9 +21,6 @@ interface ILocationProps {
 const DiscoveryLocation = (props: ILocationProps) => {
   const latitude = props.location?.latitude ?? 37.5665;
   const longitude = props.location?.longitude ?? 126.9780;
-  console.log(latitude)
-  console.log(longitude)
-  console.log(typeof 37.5665);
 
   return (
     <>

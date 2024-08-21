@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/css/base/reset.css";
-import "../../styles/css/pages/streetCat/streetCat.css";
+import "../../styles/scss/pages/streetCat/streetCat.scss";
 import WriteButton from "../../components/common/WriteButton";
 import TabNavigation from "../../components/streetCat/TabNavigation";
 import StreetCatPosts from "../../components/streetCat/StreetCatPosts";

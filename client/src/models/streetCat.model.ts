@@ -77,3 +77,13 @@ export interface IStreetCatDetail extends IStreetCat {
     detail: string;
   };
 }
+
+export interface IStreetCatComment {
+  streetCatCommentId: number;
+  comment: string;
+  createdAt: Date;
+  users: {
+    nickname: string;
+    profileImages: string;
+  }
+}
