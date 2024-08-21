@@ -20,6 +20,7 @@ import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
+import EventPostEdit from "./pages/event/EventPostEdit";
 
 const router = createBrowserRouter([
   {
@@ -53,8 +54,8 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <Community /> },
               { path: ":id", element: <CommunityDetail /> },
-              { path: "edit/:id", element: <CommunityPostEdit /> },
               { path: "write", element: <CommunityPostWrite /> },
+              { path: "edit/:id", element: <CommunityPostEdit /> },
             ],
           },
           {
@@ -63,6 +64,7 @@ const router = createBrowserRouter([
               { path: "", element: <Event /> },
               { path: ":id", element: <EventDetail /> },
               { path: "write", element: <EventPostWrite /> },
+              { path: "edit/:id", element: <EventPostEdit /> },
             ],
           },
         ],

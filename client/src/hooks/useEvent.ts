@@ -1,9 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  deleteEventPost,
-  getEventDetail,
-  IEventDetailParams,
-} from "../api/event.api";
+import { deleteEventPost, getEventDetail, IEventDetailParams, updateEventPost } from "../api/event.api";
 
 const useEvent = (postId: number) => {
   const queryClient = useQueryClient();
@@ -23,11 +19,22 @@ const useEvent = (postId: number) => {
     },
   });
 
+  const { mutateAsync: editEventPost } = useMutation({
+    mutationFn: ({ formData, postId }: { formData: FormData; postId: number }) => updateEventPost({ formData, postId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["eventDetail", postId] });
+    },
+    onError: (error) => {
+      console.error("Error updating event post:", error);
+    },
+  });
+
   return {
     data,
     isLoading,
     error,
     removeEventPost,
+    editEventPost,
   };
 };
 

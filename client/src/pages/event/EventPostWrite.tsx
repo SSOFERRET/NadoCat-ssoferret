@@ -16,7 +16,7 @@ const EventPostWrite = () => {
   const [isClosed, setIsClosed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [newTags, setNewTags] = useState<string[]>([]);
-  const [newImages, setNewImages] = useState<File[]>([]);
+  const [newImages, setNewImages] = useState<(string | File)[]>([]);
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -51,7 +51,7 @@ const EventPostWrite = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const setNewImageFiles = (images: File[]) => {
+  const setNewImageFiles = <T extends string | File>(images: T[]) => {
     setNewImages([...images]);
   };
 
