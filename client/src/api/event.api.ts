@@ -59,6 +59,21 @@ export const deleteEventPost = async ({ postId }: IEventDetailParams) => {
   }
 };
 
+export const createEventPost = async (formData: FormData) => {
+  console.log(formData);
+  try {
+    const response = await httpClient.post(`/boards/events`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating event post:", error);
+    throw error;
+  }
+};
+
 export const getEventComments = async ({ postId, pageParam, limit }: IEventCommentsParams) => {
   try {
     const response = await httpClient.get(

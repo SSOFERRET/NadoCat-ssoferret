@@ -151,7 +151,7 @@ model Events {
   categoryId      Int             @default(2) @map("category_id")
   title           String          @db.VarChar(100)
   isClosed        Boolean         @default(false) @map("is_closed")
-  date            String          @db.VarChar(45)
+  date            String?         @db.VarChar(45)
   content         String          @db.LongText
   views           Int             @default(0)
   createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamp(0)

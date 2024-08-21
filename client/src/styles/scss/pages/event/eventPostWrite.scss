@@ -1,0 +1,49 @@
+@import "../../base/common.scss";
+
+.status-selection {
+  display: flex;
+  flex-direction: column;
+  padding: 20rem;
+  margin-bottom: 10rem;
+
+  .status-title {
+    display: inline-block;
+    font-family: "bold";
+    font-size: $size-14;
+    margin-bottom: 10rem;
+  }
+
+  .status-buttons {
+    display: flex;
+
+    input[type="radio"] {
+      display: none;
+    }
+
+    label {
+      position: relative;
+      display: inline-block;
+      font-family: "medium";
+      font-size: $size-12;
+      color: $black;
+      background-color: $white;
+      border: 1rem solid $lightgray;
+      border-radius: $rount-30;
+      padding: 8rem 14rem;
+      margin-right: 6rem;
+      cursor: pointer;
+
+      svg {
+        margin-right: 3rem;
+      }
+    }
+
+    input[type="radio"]:checked + label {
+      font-family: "bold";
+      color: $white;
+      background-color: $primary;
+      border: none;
+      padding: 9rem 15rem;
+    }
+  }
+}

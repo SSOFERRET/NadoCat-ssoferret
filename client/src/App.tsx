@@ -19,6 +19,7 @@ import Home from "./pages/Home/Home";
 import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
+import EventPostWrite from "./pages/event/EventPostWrite";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <Event /> },
               { path: ":id", element: <EventDetail /> },
+              { path: "write", element: <EventPostWrite /> },
             ],
           },
         ],

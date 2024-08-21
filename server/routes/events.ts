@@ -1,11 +1,12 @@
 import express from "express";
 import { createComment, deleteComment, getComments, updateComment } from "../controller/event/EventComments";
 import { createEvent, deleteEvent, getEvent, getEvents, updateEvent } from "../controller/event/Events";
+import uploadImages from "../multer";
 const router = express.Router();
 
 router.get("/", getEvents);
 
-router.post("/", createEvent);
+router.post("/", uploadImages.array("images"), createEvent);
 
 router.get("/:event_id", getEvent);
 

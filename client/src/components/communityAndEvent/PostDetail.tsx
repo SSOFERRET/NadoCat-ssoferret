@@ -22,8 +22,6 @@ interface IProps {
 
 const isClosed = (post: PostType): post is IEventDetail => "isClosed" in post;
 
-// const isDate = (post: PostType): post is IEventDetail => "date" in post;
-
 const PostDetail = ({ post, commentCount, showMenu }: IProps) => {
   return (
     <section className="post-details">
@@ -48,16 +46,6 @@ const PostDetail = ({ post, commentCount, showMenu }: IProps) => {
       )}
       <span className="post-title">{post.title}</span>
       {post.images.length && <ImageCarousel images={post.images} />}
-
-      {/* {isDate(post) && (
-        <div className="post-event-date">
-          <div>
-            <MdDateRange />
-            <span>날짜</span>
-          </div>
-          <span>{formatDate(post.date)}</span>
-        </div>
-      )} */}
 
       <Tags tags={post.tags} />
       <div className="post-info">

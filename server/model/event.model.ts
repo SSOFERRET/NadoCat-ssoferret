@@ -78,7 +78,6 @@ export const getEventList = async (limit: number, sort: string, cursor: number |
       views: event.views,
       createdAt: event.createdAt,
       updatedAt: event.updatedAt,
-      date: event.date,
       isClosed: event.isClosed,
       users: {
         id: event?.users.id,

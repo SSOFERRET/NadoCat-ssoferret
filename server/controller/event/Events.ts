@@ -28,6 +28,8 @@ import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
+import { uploadImageToS3 } from "../../util/images/s3ImageHandler";
+import { addNewImages } from "../../util/images/addNewImages";
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 목록 가져오기
@@ -101,19 +103,22 @@ export const getEvent = async (req: Request, res: Response) => {
 };
 
 // CHECKLIST
+// [x] 이미지 저장 구현
 // [x] 이벤트 게시판 게시글 등록
 // [ ] 예외 처리
 // [ ] 에러처리
 export const createEvent = async (req: Request, res: Response) => {
   try {
-    const { title, content, isClosed, date, tags, images } = req.body;
+    const { title, content, isClosed, date, tags } = req.body;
+    const tagList = JSON.parse(tags);
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const post = await addEvent(tx, userId, title, content, isClosed, date);
+    const newPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const post = await addEvent(tx, userId, title, content, !!isClosed, date);
+      const postId = post.postId;
 
-      if (tags.length > 0) {
-        const newTags = await Promise.all(tags.map((tag: string) => addTag(tx, tag)));
+      if (tagList.length > 0) {
+        const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
 
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
@@ -123,12 +128,20 @@ export const createEvent = async (req: Request, res: Response) => {
         await addEventTags(tx, formatedTags);
       }
 
-      if (images.length > 0) {
-        const newImages = await Promise.all(images.map((url: string) => addImage(tx, url)));
-
-        const formatedImages = newImages.map((image: IImage) => ({
-          imageId: image.imageId,
-          postId: post.postId,
+      if (req.files) {
+        const imageUrls = (await uploadImageToS3(req, CATEGORY.COMMUNITIES, postId)) as any;
+        const newImages = await addNewImages(
+          tx,
+          {
+            userId,
+            postId,
+            categoryId: CATEGORY.COMMUNITIES,
+          },
+          imageUrls
+        );
+        const formatedImages = newImages.map((imageId: number) => ({
+          imageId,
+          postId,
         }));
 
         await addEventImages(tx, formatedImages);
@@ -137,9 +150,11 @@ export const createEvent = async (req: Request, res: Response) => {
       await notifyNewPostToFriends(userId, CATEGORY.EVENTS, post.postId);
 
       await indexOpensearchDocument(CATEGORY.EVENTS, title, content, post.postId);
+
+      return post;
     });
 
-    res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다." });
+    res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientValidationError) {

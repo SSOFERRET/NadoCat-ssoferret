@@ -10,7 +10,7 @@ export interface IEvent {
   createdAt: Date;
   updatedAt: Date;
   isClosed: boolean;
-  date: string;
+  date?: string | null;
   users: IUser;
   _count: ICount;
   eventImages: IEventImage[] | [];
