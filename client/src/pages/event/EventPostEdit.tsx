@@ -23,7 +23,7 @@ const EventPostEdit = () => {
 
       {isLoading && <LoadingCat />}
 
-      {post && <PostEditForm post={post} editPost={editPost} />}
+      {post && <PostEditForm boardCategory="event" post={post} editPost={editPost} />}
     </div>
   );
 };
