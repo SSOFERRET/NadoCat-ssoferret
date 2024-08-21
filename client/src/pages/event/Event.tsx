@@ -4,6 +4,7 @@ import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import PostList from "../../components/communityAndEvent/PostList";
 import LoadingCat from "../../components/loading/LoadingCat";
+import NewPostButton from "../../components/common/WriteButtonVer2";
 
 const Event = () => {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useEvents("views");
@@ -34,6 +35,8 @@ const Event = () => {
           <div className="more" ref={moreRef}>
             {isFetchingNextPage && <div>loading...</div>}
           </div>
+
+          <NewPostButton path="/boards/events/write" />
         </>
       )}
     </section>
