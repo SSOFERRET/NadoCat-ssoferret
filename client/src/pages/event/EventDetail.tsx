@@ -9,13 +9,15 @@ import useEventComment from "../../hooks/useEventComment";
 import EventComments from "../../components/event/EventComments";
 import PostMenu from "../../components/communityAndEvent/PostMenu";
 import LoadingCat from "../../components/loading/LoadingCat";
+import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
+import { Footer } from "../../components/common/Footer";
 
 // CHECKLIST
 // [x] 댓글 컴포넌트 분리
 // [x] 댓글 수 동적으로.. -> 아마도 될듯..?
 // [x] 이미지 캐러셀로
 // [ ] 로딩처리
-// [ ] 백버튼 구현
+// [x] 백버튼 구현
 
 const EventDetail = () => {
   const params = useParams();
@@ -32,6 +34,7 @@ const EventDetail = () => {
 
   return (
     <div className="event-detail">
+      <HeaderWithBackButton />
       <div className="category">
         <span>이벤트 &#183; 모임</span>
       </div>
@@ -54,6 +57,7 @@ const EventDetail = () => {
         isShowMenu={isShowMenu}
         deletePost={removeEventPost}
       />
+      <Footer />
     </div>
   );
 };
