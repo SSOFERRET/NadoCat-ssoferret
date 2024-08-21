@@ -1,4 +1,4 @@
-import "../../styles/css/components/comment/comments.css";
+import "../../styles/scss/components/comment/comments.scss";
 import useEventComment from "../../hooks/useEventComment";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import CommentsEmpty from "../comment/CommentsEmpty";
@@ -11,15 +11,8 @@ interface IProps {
 }
 
 const EventComments = ({ postId }: IProps) => {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isEmpty,
-    removeEventComment,
-    editEventComment,
-  } = useEventComment(postId);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty, removeEventComment, editEventComment } =
+    useEventComment(postId);
 
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [isCommentEdit, setIsCommentEdit] = useState(false);

@@ -1,4 +1,4 @@
-import "../../styles/css/components/comment/comment.css";
+import "../../styles/scss/components/comment/comment.scss";
 import Avartar from "../common/Avartar";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IComment } from "../../models/comment.model";
@@ -19,24 +19,11 @@ interface IProps {
   showMenu: () => void;
   isCommentEdit: boolean;
   setIsCommentEdit: React.Dispatch<React.SetStateAction<boolean>>;
-  editComment: ({
-    postId,
-    userId,
-    comment,
-    commentId,
-  }: ICommentPutRequest) => Promise<void>;
+  editComment: ({ postId, userId, comment, commentId }: ICommentPutRequest) => Promise<void>;
 }
 
-const Comment = ({
-  postId,
-  comment,
-  showMenu,
-  isCommentEdit,
-  setIsCommentEdit,
-  editComment,
-}: IProps) => {
-  const { selectedCommentId, setSelectedCommentId, clearSelectedCommentId } =
-    useCommentStore();
+const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, editComment }: IProps) => {
+  const { selectedCommentId, setSelectedCommentId, clearSelectedCommentId } = useCommentStore();
   const [commentText, setCommentText] = useState(comment.comment);
   const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
 
@@ -76,26 +63,19 @@ const Comment = ({
 
   const canShowOptionsIcon = userId === comment.users.uuid;
   const isEditingCurrentComment = selectedCommentId === comment.commentId;
-  const showOptionsIcon =
-    canShowOptionsIcon && !isEditingCurrentComment && !isCommentEdit;
+  const showOptionsIcon = canShowOptionsIcon && !isEditingCurrentComment && !isCommentEdit;
 
   return (
     <li className="comment-card">
       <div className="comment">
-        <Avartar
-          profileImage={comment.users.profileImage}
-          nickname={comment.users.nickname}
-        />
+        <Avartar profileImage={comment.users.profileImage} nickname={comment.users.nickname} />
 
         <div className="detail">
           <div className="comment-info">
             <span className="nickname">{comment.users.nickname}</span>
             <span className="date">{formatAgo(comment.updatedAt)}</span>
             {showOptionsIcon && (
-              <HiOutlineDotsVertical
-                className="options-icon"
-                onClick={() => handleComment(comment.commentId)}
-              />
+              <HiOutlineDotsVertical className="options-icon" onClick={() => handleComment(comment.commentId)} />
             )}
           </div>
 

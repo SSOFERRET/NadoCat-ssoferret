@@ -4,7 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./api/queryClient";
 // import MyPage from "./pages/MyPage";
 import StreetCats from "./pages/streetCat/StreetCat";
-import {My} from "./pages/user/My";
+import { My } from "./pages/user/My";
 import Login from "./pages/user/Login";
 import Signup from "./pages/user/Signup";
 import Layout from "./components/layout/Layout";
@@ -18,6 +18,7 @@ import ImageUploadTest from "./components/imageUploadTest";
 import Home from "./pages/Home/Home";
 import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
+import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
       {
         path: "users",
         children: [
-         // { path: "my", element: <MyPage /> },
+          // { path: "my", element: <MyPage /> },
           { path: "my", element: <My /> },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
               { path: "", element: <Community /> },
               { path: ":id", element: <CommunityDetail /> },
               { path: "edit/:id", element: <CommunityPostEdit /> },
+              { path: "write", element: <CommunityPostWrite /> },
             ],
           },
           {

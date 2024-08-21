@@ -1,5 +1,5 @@
-import { ICommunityPage } from "../models/community.model";
-import { IEvent } from "../models/event.model";
+import { ICommentPage } from "../models/comment.model";
+import { IEventDetail, IEventPage } from "../models/event.model";
 import {
   ICommentDeleteRequest,
   ICommentPostRequest,
@@ -36,7 +36,7 @@ export const getEventPosts = async ({
   pageParam,
   limit,
   sort,
-}: IEventPostsParams): Promise<ICommunityPage> => {
+}: IEventPostsParams): Promise<IEventPage> => {
   try {
     const response = await httpClient.get(
       `/boards/events?limit=${limit ?? LIMIT}&cursor=${pageParam}&sort=${
@@ -52,7 +52,7 @@ export const getEventPosts = async ({
 
 export const getEventDetail = async ({
   postId,
-}: IEventDetailParams): Promise<IEvent> => {
+}: IEventDetailParams): Promise<IEventDetail> => {
   try {
     const response = await httpClient.get(`/boards/events/${postId}`);
     return response.data;
@@ -62,9 +62,7 @@ export const getEventDetail = async ({
   }
 };
 
-export const deleteEventPost = async ({
-  postId,
-}: IEventDetailParams): Promise<void> => {
+export const deleteEventPost = async ({ postId }: IEventDetailParams) => {
   try {
     const response = await httpClient.delete(`/boards/events/${postId}`);
     return response.data;
@@ -78,7 +76,7 @@ export const getEventComments = async ({
   postId,
   pageParam,
   limit,
-}: IEventCommentsParams) => {
+}: IEventCommentsParams): Promise<ICommentPage> => {
   try {
     const response = await httpClient.get(
       `/boards/events/${postId}/comments?limit=${

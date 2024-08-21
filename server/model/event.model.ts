@@ -45,6 +45,7 @@ export const getEventList = async (
         },
       },
       eventImages: {
+        take: 1,
         select: {
           images: {
             select: {
@@ -90,7 +91,10 @@ export const getEventList = async (
         profileImage: event?.users.profileImage,
       },
       tags: event.eventTags.map((item: IEventTag) => item.tags),
-      images: event.eventImages.map((item: IEventImage) => item.images),
+      thumbnail:
+        event.eventImages
+          .map((item: IEventImage) => item.images.url)
+          .join("") ?? null,
       likes: event._count.eventLikes,
     };
   });

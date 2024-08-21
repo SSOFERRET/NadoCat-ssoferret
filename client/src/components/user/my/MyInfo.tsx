@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../../styles/scss/components/user/myInfo.scss";
+// import "../../../styles/scss/components/user/myInfo.scss";
 import { IoIosSettings } from "react-icons/io";
 
 interface MyInfoProps {

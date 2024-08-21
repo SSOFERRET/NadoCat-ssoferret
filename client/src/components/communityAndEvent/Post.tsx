@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "../../styles/css/components/communityAndEvent/post.css";
+import "../../styles/scss/components/communityAndEvent/post.scss";
 import { ICommunity } from "../../models/community.model";
 import { formatAgo, formatViews } from "../../utils/format/format";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -15,10 +15,7 @@ interface IProps {
 // 이게 맞나...
 const calculateLine = (element: HTMLElement | null) => {
   if (element) {
-    const lineHeight = parseInt(
-      window.getComputedStyle(element).lineHeight,
-      10
-    );
+    const lineHeight = parseInt(window.getComputedStyle(element).lineHeight, 10);
     const height = element.clientHeight;
     const lines = Math.round(height / lineHeight);
     return lines === 1;
@@ -41,10 +38,7 @@ const Post = ({ post }: IProps) => {
   }, [post.title]);
 
   return (
-    <li
-      className="board-post"
-      onClick={() => navigate(`${location.pathname}/${post.postId}`)}
-    >
+    <li className="board-post" onClick={() => navigate(`${location.pathname}/${post.postId}`)}>
       <div className="board-post-info">
         <div className="post-title-container">
           <span className="post-title" ref={titleRef}>
@@ -52,9 +46,7 @@ const Post = ({ post }: IProps) => {
           </span>
 
           {isClosed(post) && (
-            <span className={`is-closed ${post.isClosed ? "close" : "open"}`}>
-              {post.isClosed ? "마감" : "모집중"}
-            </span>
+            <span className={`is-closed ${post.isClosed ? "close" : "open"}`}>{post.isClosed ? "마감" : "모집중"}</span>
           )}
         </div>
 
@@ -67,11 +59,7 @@ const Post = ({ post }: IProps) => {
           <Tags tags={post.tags.slice(0, 2)} size="sm" />
         </div>
       </div>
-      <div className="post-image">
-        {post.images.length > 0 && (
-          <img src={post.images[0].url} alt={post.title} />
-        )}
-      </div>
+      <div className="post-image">{post.thumbnail && <img src={post.thumbnail} alt={post.title} />}</div>
     </li>
   );
 };
