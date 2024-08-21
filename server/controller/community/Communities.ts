@@ -124,7 +124,7 @@ export const getCommunity = async (req: Request, res: Response) => {
 };
 
 // CHECKLIST
-// [ ] 이미지 저장 구현 필요
+// [x] 이미지 저장 구현 필요
 // [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
 // [ ] 에러처리 자세하게 구현하기
 // [ ] 사용자 정보 받아오는 부분 구현 필요
@@ -135,7 +135,7 @@ export const createCommunity = async (req: Request, res: Response) => {
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
     const tagList = JSON.parse(tags);
 
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const newPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await addCommunity(tx, userId, title, content);
       const postId = post.postId;
 
@@ -169,9 +169,11 @@ export const createCommunity = async (req: Request, res: Response) => {
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
       await indexOpensearchDocument(CATEGORY.COMMUNITIES, title, content, post.postId);
+
+      return post;
     });
 
-    res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다." });
+    res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {
     handleControllerError(error, res);
   }

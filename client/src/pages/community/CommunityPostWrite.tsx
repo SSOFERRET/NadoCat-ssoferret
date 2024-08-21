@@ -4,6 +4,8 @@ import NewTagForm from "../../components/communityAndEvent/NewTagForm";
 import NewTags from "../../components/communityAndEvent/NewTags";
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 import ImageUploader from "../../components/communityAndEvent/ImageUploader";
+import useCommunities from "../../hooks/useCommunities";
+import { useNavigate } from "react-router-dom";
 
 // CHECKLIST
 // [x] 푸터 삭제
@@ -16,7 +18,10 @@ import ImageUploader from "../../components/communityAndEvent/ImageUploader";
 // [x] 이미지 삭제
 
 const CommunityPostWrite = () => {
+  const navigate = useNavigate();
+  const { addCommunityPost } = useCommunities();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [newTags, setNewTags] = useState<string[]>([]);
@@ -35,6 +40,8 @@ const CommunityPostWrite = () => {
 
     if (name === "content") {
       setContent(value);
+    } else if (name === "title") {
+      setTitle(value);
     }
   };
 
@@ -51,25 +58,50 @@ const CommunityPostWrite = () => {
     setIsOpen((prev) => !prev);
   };
 
-  // NOTE 게시글 작성 버튼에 들어갈 함수
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
   const setNewImageFiles = (images: File[]) => {
     setNewImages([...images]);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("tags", JSON.stringify(newTags));
+
+    Array.from(newImages).forEach((image) => {
+      formData.append("images", image);
+    });
+
+    addCommunityPost(formData)
+      .then((data) => {
+        console.log(data);
+        navigate(`/boards/communities/${data.postId}`);
+      })
+      .catch(console.error)
+      .finally();
+  };
+
   useEffect(() => {
     handleResizeHeight();
-  }, [content]);
+  }, [textareaRef.current?.value]);
 
   return (
     <div className="community-post-write">
       <HeaderWithBackButton />
       <form onSubmit={handleSubmit} className="post-form">
         <div>
-          <input className="title" type="text" placeholder="제목" required />
+          <input
+            className="title"
+            name="title"
+            onChange={handleChange}
+            min={1}
+            type="text"
+            placeholder="제목"
+            required
+          />
           <textarea
             onChange={handleChange}
             ref={textareaRef}

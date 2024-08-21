@@ -1,9 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  deleteCommunityPost,
-  getCommunityDetail,
-  ICommunityDetailParams,
-} from "../api/community.api";
+import { deleteCommunityPost, getCommunityDetail, ICommunityDetailParams } from "../api/community.api";
 
 const useCommunity = (postId: number) => {
   const queryClient = useQueryClient();
@@ -14,12 +10,8 @@ const useCommunity = (postId: number) => {
   });
 
   const { mutateAsync: removeCommunityPost } = useMutation({
-    mutationFn: ({ postId }: ICommunityDetailParams) =>
-      deleteCommunityPost({ postId }),
+    mutationFn: ({ postId }: ICommunityDetailParams) => deleteCommunityPost({ postId }),
     onSuccess: () => {
-      // queryClient.invalidateQueries({
-      //   queryKey: ["communityDetail", postId],
-      // });
       queryClient.removeQueries({ queryKey: ["communityDetail", postId] });
     },
     onError: (error) => {
