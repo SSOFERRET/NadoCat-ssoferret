@@ -13,23 +13,6 @@
   transform: translateY(-60rem);
   z-index: 100;
 
-  .post-like {
-    width: 35rem;
-    height: 40rem;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    color: $primary;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-
-    svg {
-      width: 22rem;
-      height: 22rem;
-    }
-  }
-
   .comment-form {
     display: flex;
     width: 100%;
@@ -44,7 +27,6 @@
 
       textarea {
         flex: 1;
-        // height: 40rem;
         min-height: 14rem;
         overflow: hidden;
         font-family: "medium";
