@@ -1,15 +1,13 @@
-import React, { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import "../../styles/scss/pages/community/communityPostWrite.scss";
 import NewTagForm from "../../components/communityAndEvent/NewTagForm";
 import NewTags from "../../components/communityAndEvent/NewTags";
-import DeleteButton from "../../assets/img/delete_button.svg";
-import { AiOutlinePlus } from "react-icons/ai";
-import { useThrottle } from "../../hooks/useThrottle";
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
+import ImageUploader from "../../components/communityAndEvent/ImageUploader";
 
 // CHECKLIST
-// [ ] 푸터 삭제
-// [ ] 헤더 백버튼으로 변경
+// [x] 푸터 삭제
+// [x] 헤더 백버튼으로 변경
 // [ ] 이미지 업로드 구현
 // [x] 해시테크 폼 만들기
 // [x] 이미지 슬라이드(?) UI 만들기
@@ -18,16 +16,11 @@ import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 // [x] 이미지 삭제
 
 const CommunityPostWrite = () => {
-  const throttle = useThrottle();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [isDrag, setIsDrag] = useState<boolean>(false);
-  const [startX, setStartX] = useState<number | undefined>(undefined);
   const [content, setContent] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [newTags, setNewTags] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
-  const [error, setError] = useState("");
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -63,63 +56,13 @@ const CommunityPostWrite = () => {
     e.preventDefault();
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (newImages.length >= 10) {
-      setError("이미지는 최대 10개까지 선택 가능합니다.");
-      return;
-    }
-
-    setError("");
-
-    const files = e.target.files;
-
-    if (files && files[0]) {
-      setNewImages([...newImages, files[0]]);
-    }
-  };
-
-  const handleDeleteImage = (index: number) => {
-    setNewImages((prevImages) => prevImages.filter((_, i) => i !== index));
-
-    if (newImages.length - 1 <= 10) {
-      console.log(newImages.length);
-      setError("");
-      return;
-    }
+  const setNewImageFiles = (images: File[]) => {
+    setNewImages([...images]);
   };
 
   useEffect(() => {
     handleResizeHeight();
   }, [content]);
-
-  const onDragStart = (e: MouseEvent) => {
-    e.preventDefault();
-    setIsDrag(true);
-    if (scrollRef.current) {
-      setStartX(e.pageX + scrollRef.current.scrollLeft);
-    }
-  };
-
-  const onDragEnd = () => {
-    setIsDrag(false);
-  };
-
-  const onDragMove = (e: MouseEvent) => {
-    if (isDrag && scrollRef.current && startX !== undefined) {
-      const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
-
-      scrollRef.current.scrollLeft = startX - e.pageX;
-
-      if (scrollLeft === 0) {
-        setStartX(e.pageX);
-      } else if (scrollWidth <= clientWidth + scrollLeft) {
-        setStartX(e.pageX + scrollLeft);
-      }
-    }
-  };
-
-  const onThrottleDragMove = throttle(onDragMove, 100);
 
   return (
     <div className="community-post-write">
@@ -138,39 +81,7 @@ const CommunityPostWrite = () => {
             required
           ></textarea>
 
-          <section className="images-container">
-            <div className="add-images" ref={scrollRef}>
-              <div
-                className="image-list"
-                onMouseDown={onDragStart}
-                onMouseMove={isDrag ? onThrottleDragMove : undefined}
-                onMouseUp={onDragEnd}
-                onMouseLeave={onDragEnd}
-                ref={scrollRef}
-              >
-                <label htmlFor="input-file" className="upload-label">
-                  <input
-                    type="file"
-                    id="input-file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileChange}
-                    className="file-input"
-                  />
-                  <AiOutlinePlus className="add-icon" />
-                </label>
-                {newImages.map((image, index) => (
-                  <div key={index} className="image-preview">
-                    <img src={URL.createObjectURL(image)} alt={`image-${index}`} />
-                    <button type="button" onClick={() => handleDeleteImage(index)} className="delete-button">
-                      <img src={DeleteButton} alt="deleteButton" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {!!error && <span className="image-error">{error}</span>}
-          </section>
+          <ImageUploader newImages={newImages} setNewImageFiles={setNewImageFiles} />
 
           <div className="hash-tag-wrapper">
             <button type="button" className="hash-tag-btn" onClick={handleTagFormOpen}>
