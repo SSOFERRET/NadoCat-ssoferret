@@ -4,7 +4,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IComment } from "../../models/comment.model";
 import { formatAgo } from "../../utils/format/format";
 import useCommentStore from "../../store/comment";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ICommentPutRequest } from "../../api/community.api";
 
 //CHECKLIST
@@ -23,9 +23,19 @@ interface IProps {
 }
 
 const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, editComment }: IProps) => {
+  const oldComment = comment.comment;
   const { selectedCommentId, setSelectedCommentId, clearSelectedCommentId } = useCommentStore();
-  const [commentText, setCommentText] = useState(comment.comment);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [commentText, setCommentText] = useState(oldComment);
   const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
+
+  const handleResizeHeight = () => {
+    if (textareaRef.current) {
+      const textarea = textareaRef.current;
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    }
+  };
 
   const handleComment = (commentId: number) => {
     setSelectedCommentId(commentId);
@@ -33,7 +43,13 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
   };
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setCommentText(event.target.value);
+    const text = event.target.value;
+    const lines = (text.match(/\n/g) || []).length;
+    if (lines > 6) {
+      return;
+    }
+
+    setCommentText(text);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -61,6 +77,20 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
       });
   };
 
+  const onClose = () => {
+    setIsCommentEdit(false);
+    clearSelectedCommentId();
+    setCommentText(oldComment);
+  };
+
+  useEffect(() => {
+    handleResizeHeight();
+
+    return () => {
+      handleResizeHeight();
+    };
+  }, [commentText, showMenu]);
+
   const canShowOptionsIcon = userId === comment.users.uuid;
   const isEditingCurrentComment = selectedCommentId === comment.commentId;
   const showOptionsIcon = canShowOptionsIcon && !isEditingCurrentComment && !isCommentEdit;
@@ -82,27 +112,22 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
           {isEditingCurrentComment && isCommentEdit ? (
             <div className="comment-edit-form-container">
               <form onSubmit={handleSubmit} className="comment-edit-form">
-                <textarea
-                  onChange={handleChange}
-                  value={commentText}
-                  maxLength={200}
-                  placeholder="댓글 달기"
-                  minLength={1}
-                  required
-                ></textarea>
-
+                <div className="textarea-container">
+                  <textarea
+                    ref={textareaRef}
+                    onChange={handleChange}
+                    value={commentText}
+                    maxLength={200}
+                    placeholder="댓글 달기"
+                    minLength={1}
+                    required
+                  ></textarea>
+                </div>
                 <div className="buttons">
                   <button type="submit" className="edit-btn">
                     수정
                   </button>
-                  <button
-                    type="button"
-                    className="close-btn"
-                    onClick={() => {
-                      setIsCommentEdit(false);
-                      clearSelectedCommentId();
-                    }}
-                  >
+                  <button type="button" className="close-btn" onClick={onClose}>
                     닫기
                   </button>
                 </div>

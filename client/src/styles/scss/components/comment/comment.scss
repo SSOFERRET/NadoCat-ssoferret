@@ -76,26 +76,24 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: end;
-      // margin-bottom: 10rem;
+      .textarea-container {
+        textarea {
+          box-sizing: border-box;
+          width: 100%;
+          overflow: hidden;
+          font-family: "medium";
+          font-size: $size-14;
+          padding: 10rem;
+          border: none;
+          resize: none;
 
-      textarea {
-        box-sizing: border-box;
-        width: 100%;
-        height: 70rem;
-        overflow: hidden;
-        font-family: "medium";
-        font-size: $size-14;
-        padding: 10rem;
-        border: none;
-        resize: none;
+          &::placeholder {
+            color: $silver;
+          }
 
-        &::placeholder {
-          color: $silver;
-        }
-
-        &:focus {
-          outline: 0;
+          &:focus {
+            outline: 0;
+          }
         }
       }
     }
