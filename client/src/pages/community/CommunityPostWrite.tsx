@@ -1,16 +1,11 @@
-import React, {
-  ChangeEvent,
-  MouseEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import "../../styles/css/pages/community/communityPostWrite.css";
 import NewTagForm from "../../components/communityAndEvent/NewTagForm";
 import NewTags from "../../components/communityAndEvent/NewTags";
 import DeleteButton from "../../assets/img/delete_button.svg";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useThrottle } from "../../hooks/useThrottle";
+import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 
 // CHECKLIST
 // [ ] 푸터 삭제
@@ -42,9 +37,7 @@ const CommunityPostWrite = () => {
     }
   };
 
-  const handleChange = (
-    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { name, value } = event.target;
 
     if (name === "content") {
@@ -129,7 +122,8 @@ const CommunityPostWrite = () => {
   const onThrottleDragMove = throttle(onDragMove, 100);
 
   return (
-    <>
+    <div className="community-post-write">
+      <HeaderWithBackButton />
       <form onSubmit={handleSubmit} className="post-form">
         <div>
           <input className="title" type="text" placeholder="제목" required />
@@ -167,15 +161,8 @@ const CommunityPostWrite = () => {
                 </label>
                 {newImages.map((image, index) => (
                   <div key={index} className="image-preview">
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt={`image-${index}`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteImage(index)}
-                      className="delete-button"
-                    >
+                    <img src={URL.createObjectURL(image)} alt={`image-${index}`} />
+                    <button type="button" onClick={() => handleDeleteImage(index)} className="delete-button">
                       <img src={DeleteButton} alt="deleteButton" />
                     </button>
                   </div>
@@ -186,11 +173,7 @@ const CommunityPostWrite = () => {
           </section>
 
           <div className="hash-tag-wrapper">
-            <button
-              type="button"
-              className="hash-tag-btn"
-              onClick={handleTagFormOpen}
-            >
+            <button type="button" className="hash-tag-btn" onClick={handleTagFormOpen}>
               &#035; 해시태그를 입력해주세요 &#62;
             </button>
 
@@ -200,14 +183,8 @@ const CommunityPostWrite = () => {
         <button className="post-submit">작성완료</button>
       </form>
 
-      {isOpen && (
-        <NewTagForm
-          initialTags={newTags}
-          addNewTags={addNewTags}
-          handleTagFormOpen={handleTagFormOpen}
-        />
-      )}
-    </>
+      {isOpen && <NewTagForm initialTags={newTags} addNewTags={addNewTags} handleTagFormOpen={handleTagFormOpen} />}
+    </div>
   );
 };
 

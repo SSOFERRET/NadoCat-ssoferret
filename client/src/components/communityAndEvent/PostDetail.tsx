@@ -29,10 +29,7 @@ const PostDetail = ({ post, commentCount, showMenu }: IProps) => {
     <section className="post-details">
       {post?.users && (
         <div className="user">
-          <Avartar
-            profileImage={post.users.profileImage}
-            nickname={post.users.nickname}
-          />
+          <Avartar profileImage={post.users.profileImage} nickname={post.users.nickname} />
           <div className="user-info">
             <div className="user-details">
               <span className="nickname">{post.users.nickname}</span>
@@ -40,16 +37,11 @@ const PostDetail = ({ post, commentCount, showMenu }: IProps) => {
             </div>
             <div className="post-status">
               {isClosed(post) && (
-                <span
-                  className={`is-closed ${post.isClosed ? "close" : "open"}`}
-                >
+                <span className={`is-closed ${post.isClosed ? "close" : "open"}`}>
                   {post.isClosed ? "마감" : "모집중"}
                 </span>
               )}
-              <HiOutlineDotsVertical
-                className="options-icon"
-                onClick={showMenu}
-              />
+              <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />
             </div>
           </div>
         </div>

@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/css/components/communityAndEvent/postMenu.css";
 import { ICommentDeleteRequest } from "../../api/community.api";
 import useCommentStore from "../../store/comment";
-import { useEffect } from "react";
 
 type BoardType = "community" | "event" | "streetCat" | "missingCat";
 type MenuType = "post" | "comment";
@@ -16,10 +15,7 @@ interface IProps {
   isShowMenu: boolean;
   showMenu: () => void;
   deletePost?: ({ postId }: DeletePost) => Promise<void>;
-  deleteComment?: ({
-    postId,
-    commentId,
-  }: ICommentDeleteRequest) => Promise<void>;
+  deleteComment?: ({ postId, commentId }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
   handelCommentFormOpen?: () => void;
 }
@@ -35,12 +31,9 @@ const PostMenu = ({
   handelCommentFormOpen,
 }: IProps) => {
   const navigate = useNavigate();
-  const { selectedCommentId: commentId, clearSelectedCommentId } =
-    useCommentStore();
+  const { selectedCommentId: commentId, clearSelectedCommentId } = useCommentStore();
 
-  const handleMenu = (
-    e: React.MouseEvent<HTMLDivElement | HTMLUListElement>
-  ) => {
+  const handleMenu = (e: React.MouseEvent<HTMLDivElement | HTMLUListElement>) => {
     if (e.target === e.currentTarget) {
       showMenu();
       clearSelectedCommentId();
@@ -110,14 +103,8 @@ const PostMenu = ({
   };
 
   return (
-    <div
-      className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
-      onClick={handleMenu}
-    >
-      <ul
-        className={`comment-menu ${isShowMenu ? "show" : "hide"}`}
-        onClick={handleMenu}
-      >
+    <div className={`overlay ${isShowMenu ? "visible" : "hidden"}`} onClick={handleMenu}>
+      <ul className={`comment-menu ${isShowMenu ? "show" : "hide"}`} onClick={handleMenu}>
         {menuType === "post" && (
           <>
             <li onClick={handleUpdatePost}>게시글 수정</li>
@@ -130,12 +117,7 @@ const PostMenu = ({
         {menuType === "comment" && (
           <>
             <li onClick={handelUpdateComment}>댓글 수정</li>
-            <li
-              className="delete"
-              onClick={() =>
-                commentId && handleCommentDelete(postId, commentId)
-              }
-            >
+            <li className="delete" onClick={() => commentId && handleCommentDelete(postId, commentId)}>
               댓글 삭제
             </li>
           </>

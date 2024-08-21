@@ -9,6 +9,7 @@ import CommentForm from "../../components/comment/CommentForm";
 import PostMenu from "../../components/communityAndEvent/PostMenu";
 import CommunityComments from "../../components/community/CommunityComments";
 import LoadingCat from "../../components/loading/LoadingCat";
+import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 
 // CHECKLIST
 // [x] 댓글 컴포넌트 분리
@@ -20,12 +21,7 @@ import LoadingCat from "../../components/loading/LoadingCat";
 const CommunityDetail = () => {
   const params = useParams();
   const postId = Number(params.id);
-  const {
-    data: post,
-    error,
-    isLoading,
-    removeCommunityPost,
-  } = useCommunity(postId);
+  const { data: post, error, isLoading, removeCommunityPost } = useCommunity(postId);
   const { commentCount, addCommunityComment } = useCommunityComment(postId);
   const [isShowMenu, setIsShowMenu] = useState(false);
 
@@ -41,23 +37,16 @@ const CommunityDetail = () => {
 
   return (
     <div className="community-detail">
+      <HeaderWithBackButton />
       <div className="category">
         <span>커뮤니티</span>
       </div>
       {isLoading && <LoadingCat />}
       {post && (
         <>
-          <PostDetail
-            post={post}
-            commentCount={commentCount}
-            showMenu={showMenu}
-          />
+          <PostDetail post={post} commentCount={commentCount} showMenu={showMenu} />
           <CommunityComments postId={postId} />
-          <CommentForm
-            postId={postId}
-            userId={userId}
-            addComment={addCommunityComment}
-          />
+          <CommentForm postId={postId} userId={userId} addComment={addCommunityComment} />
         </>
       )}
 
