@@ -1,10 +1,8 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import "../../styles/scss/components/comment/commentForm.scss";
-import { AiFillHeart } from "react-icons/ai";
 import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 
 // CHECKLIST
-// [ ] 좋아요 버튼 만들기
 // [x] 댓글 달기 기능
 
 interface IProps {
@@ -61,9 +59,6 @@ const CommentForm = ({ postId, userId, addComment }: IProps) => {
 
   return (
     <section className="comment-form-container">
-      <button className="post-like">
-        <AiFillHeart />
-      </button>
       <form onSubmit={handleSubmit} className="comment-form">
         <div className="textarea-container">
           <textarea
