@@ -1,25 +1,35 @@
-import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import "../../styles/scss/components/communityAndEvent/newTagForm.scss";
+import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import ModalPotal from "../modal/ModalPotal";
 import { AiOutlineClose } from "react-icons/ai";
 import NewTags from "./NewTags";
 
 // CHECKLIST
 // [x] 해시태그 수 글자수 제한
-// [ ] 해시태그 수 제한
+// [x] 해시태그 수 제한
+// [x] 삭제될 태그 저장
 interface IProps {
   initialTags: string[];
+  addTagsToDelete?: (ids: string[]) => void;
   addNewTags: (tags: string[]) => void;
   handleTagFormOpen: () => void;
 }
 
-const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
+const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags, addTagsToDelete }: IProps) => {
+  const oldTags = initialTags;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [tags, setTags] = useState<string[]>(initialTags);
   const [tag, setTag] = useState<string>("");
   const [error, setError] = useState("");
+  const [saveTags, setSaveTags] = useState<string[]>([]);
 
-  const removeTags = (indexToRemove: number) => {
+  const removeTags = (indexToRemove: number, tag: string) => {
+    const foundTag = oldTags.find((item) => item === tag);
+
+    if (foundTag) {
+      setSaveTags([...saveTags, foundTag]);
+    }
+
     const filter = tags.filter((_, index) => index !== indexToRemove);
     setTags(filter);
   };
@@ -30,7 +40,17 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
       return;
     }
 
-    if (value.trim() !== "" && !error.length) {
+    if (value.trim() === "") {
+      setError("한 글자 이상 입력해 주세요.");
+      return;
+    }
+
+    if (tags.includes(value)) {
+      setError("같은 태그는 중복으로 사용할 수 없습니다. 다른 태그를 입력해 주세요.");
+      return;
+    }
+
+    if (!error.length) {
       setTags([...tags, value]);
       setTag("");
 
@@ -66,6 +86,8 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
       setError("태그는 20개까지 입력 가능합니다.");
       return;
     }
+
+    addTagsToDelete && addTagsToDelete(saveTags);
 
     addNewTags(tags);
     handleTagFormOpen();

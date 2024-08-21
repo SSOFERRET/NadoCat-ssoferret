@@ -10,7 +10,7 @@ router.post("/", uploadImages.array("images"), createEvent);
 
 router.get("/:event_id", getEvent);
 
-router.put("/:event_id", updateEvent);
+router.put("/:event_id", uploadImages.array("images"), updateEvent);
 
 router.delete("/:event_id", deleteEvent);
 

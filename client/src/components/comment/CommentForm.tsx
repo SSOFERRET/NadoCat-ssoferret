@@ -19,7 +19,6 @@ const CommentForm = ({ postId, userId, addComment }: IProps) => {
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
-      console.log(textareaRef.current.style.height);
       const textarea = textareaRef.current;
       textarea.style.height = "auto";
       textarea.style.height = textarea.scrollHeight + "px";

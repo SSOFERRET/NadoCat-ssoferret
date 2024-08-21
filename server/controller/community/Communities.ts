@@ -27,7 +27,7 @@ import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
-import { uploadImageToS3 } from "../../util/images/s3ImageHandler";
+import { deleteImageFromS3, uploadImageToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 
 // CHECKLIST
@@ -180,51 +180,69 @@ export const createCommunity = async (req: Request, res: Response) => {
 };
 
 // CHECKLIST
-// [ ] 이미지 저장 구현 필요
+// [x] 이미지 저장 구현 필요
 // [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
 // [ ] 에러처리 자세하게 구현하기
 // [ ] 사용자 정보 받아오는 부분 구현 필요
+// [x] 원래 이미지, 태그는 받아오지 않기
 export const updateCommunity = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.communityId);
+    const postId = Number(req.params.community_id);
     const userId = await getUserId();
 
-    const { title, content, images, tags, newTags, deleteTagIds, newImages, deleteimageIds } = req.body;
+    const { title, content, tags, deleteTagIds, deleteImageIds } = req.body;
 
-    if (!title || !content || !images || !tags || !newTags || !deleteTagIds || !newImages || !deleteimageIds) {
+    if (!title || !content || !tags || !deleteTagIds || !deleteImageIds) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
+    const tagList = JSON.parse(tags);
+    const tagIds = JSON.parse(deleteTagIds);
+    const imageIds = JSON.parse(deleteImageIds);
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      await updateCommunityById(tx, id, userId, title, content);
+      await updateCommunityById(tx, postId, userId, title, content);
 
-      await removeTagsByIds(tx, deleteTagIds);
+      await removeTagsByIds(tx, tagIds);
 
-      await deleteTags(tx, deleteTagIds);
+      await deleteTags(tx, tagIds);
 
-      const tags = await Promise.all(newTags.map((tag: string) => addTag(tx, tag)));
+      const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
 
-      const formatedTags = tags.map((tag: ITag) => ({
+      const formatedTags = newTags.map((tag: ITag) => ({
         tagId: tag.tagId,
-        postId: id,
+        postId,
       }));
 
       await addCommunityTags(tx, formatedTags);
 
-      await removeTagsByIds(tx, deleteimageIds);
+      if (req.files) {
+        const imageUrls = (await uploadImageToS3(req, CATEGORY.COMMUNITIES, postId)) as any;
+        const newImages = await addNewImages(
+          tx,
+          {
+            userId,
+            postId,
+            categoryId: CATEGORY.COMMUNITIES,
+          },
+          imageUrls
+        );
 
-      await deleteImages(tx, deleteimageIds);
+        const formatedImages = newImages.map((imageId: number) => ({
+          imageId,
+          postId,
+        }));
 
-      const images = await Promise.all(newImages.map((url: string) => addImage(tx, url)));
+        await addCommunityImages(tx, formatedImages);
+      }
 
-      const formatedImages = images.map((image: IImage) => ({
-        imageId: image.imageId,
-        postId: id,
-      }));
+      await deleteImageFromS3(CATEGORY.COMMUNITIES, postId, imageIds.length);
 
-      await addCommunityImages(tx, formatedImages);
+      await removeImagesByIds(tx, imageIds);
 
-      await updateOpensearchDocument(CATEGORY.COMMUNITIES, id, { content });
+      await deleteImages(tx, imageIds);
+
+      await updateOpensearchDocument(CATEGORY.COMMUNITIES, postId, { content });
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 // CHECKLIST
 // [x] 푸터 삭제
 // [x] 헤더 백버튼으로 변경
-// [ ] 이미지 업로드 구현
+// [x] 이미지 업로드 구현
 // [x] 해시테크 폼 만들기
 // [x] 이미지 슬라이드(?) UI 만들기
 // [x] 로컬 이미지 받아오기
@@ -25,7 +25,7 @@ const CommunityPostWrite = () => {
   const [content, setContent] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [newTags, setNewTags] = useState<string[]>([]);
-  const [newImages, setNewImages] = useState<File[]>([]);
+  const [newImages, setNewImages] = useState<(string | File)[]>([]);
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -58,7 +58,7 @@ const CommunityPostWrite = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const setNewImageFiles = (images: File[]) => {
+  const setNewImageFiles = <T extends string | File>(images: T[]) => {
     setNewImages([...images]);
   };
 

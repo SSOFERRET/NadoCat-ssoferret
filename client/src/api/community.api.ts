@@ -42,7 +42,7 @@ export interface ICommentDeleteRequest {
 
 // CHECKLIST
 // [ ] 게시글 수정
-// [ ] 게시글 작성
+// [x] 게시글 작성
 
 export const getCommunityPosts = async ({ pageParam, limit, sort }: ICommunityPostsParams): Promise<ICommunityPage> => {
   try {
@@ -86,6 +86,20 @@ export const createCommunityPost = async (formData: FormData) => {
     return response.data;
   } catch (error) {
     console.error("Error creating community post:", error);
+    throw error;
+  }
+};
+
+export const updateCommunityPost = async ({ formData, postId }: { formData: FormData; postId: number }) => {
+  try {
+    const response = await httpClient.put(`/boards/communities/${postId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating community post:", error);
     throw error;
   }
 };

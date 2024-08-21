@@ -4,12 +4,16 @@ import { useThrottle } from "../../hooks/useThrottle";
 import { AiOutlinePlus } from "react-icons/ai";
 import DeleteButton from "../../assets/img/delete_button.svg";
 
-interface IProps {
-  newImages: File[];
-  setNewImageFiles: (images: File[]) => void;
+//CHECKLIST
+// [x] 로컬 이미지와 서버에서 받아온 이미지를 둘다 보여주기
+// [x] 로컬 이미지 배열에 저장
+// [x] 로컬 이미지가 삭제 되면 필터링
+interface IProps<T> {
+  newImages: T[];
+  setNewImageFiles: <T extends string | File>(images: T[]) => void;
 }
 
-const ImageUploader = ({ newImages, setNewImageFiles }: IProps) => {
+const ImageUploader = <T extends string | File>({ newImages, setNewImageFiles }: IProps<T>) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [isDrag, setIsDrag] = useState<boolean>(false);
   const [startX, setStartX] = useState<number | undefined>(undefined);
@@ -96,7 +100,11 @@ const ImageUploader = ({ newImages, setNewImageFiles }: IProps) => {
 
           {newImages.map((image, index) => (
             <div key={index} className="image-preview">
-              <img src={URL.createObjectURL(image)} alt={`image-${index}`} />
+              {typeof image === "string" ? (
+                <img src={image} alt={`image-${index}`} />
+              ) : (
+                <img src={URL.createObjectURL(image)} alt={`image-${index}`} />
+              )}
               <button type="button" onClick={() => handleDeleteImage(index)} className="delete-button">
                 <img src={DeleteButton} alt="deleteButton" />
               </button>

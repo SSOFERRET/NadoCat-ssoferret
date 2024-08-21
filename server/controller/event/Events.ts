@@ -173,20 +173,9 @@ export const updateEvent = async (req: Request, res: Response) => {
     const id = Number(req.params.community_id);
     const postId = Number(req.params.event_id);
 
-    const { title, content, isClosed, date, images, tags, newTags, deleteTagIds, newImages, deleteimageIds } = req.body;
+    const { title, content, isClosed, date, images, tags, newTags, deleteTagIds, newImages, deleteImageIds } = req.body;
 
-    if (
-      !title ||
-      !content ||
-      !isClosed ||
-      !date ||
-      !images ||
-      !tags ||
-      !newTags ||
-      !deleteTagIds ||
-      !newImages ||
-      !deleteimageIds
-    ) {
+    if (!title || !content || !isClosed || !date || !newTags || !deleteTagIds || !deleteImageIds) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
@@ -206,9 +195,9 @@ export const updateEvent = async (req: Request, res: Response) => {
 
       await addEventTags(tx, formatedTags);
 
-      await removeImagesByIds(tx, deleteimageIds);
+      await removeImagesByIds(tx, deleteImageIds);
 
-      await deleteImages(tx, deleteimageIds);
+      await deleteImages(tx, deleteImageIds);
 
       const images = await Promise.all(newImages.map((url: string) => addImage(tx, url)));
 

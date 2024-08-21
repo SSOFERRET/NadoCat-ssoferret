@@ -40,10 +40,8 @@ const validatePostPut = [
     .isLength({ min: 1 })
     .withMessage("제목은 한 글자 이상 입력해야 합니다."),
   body("content").optional(),
-  body("tags").isArray().withMessage("배열로 입력해 주세요."),
   body("newTags").isArray().withMessage("배열로 입력해 주세요."),
   body("deleteTagIds").isArray().withMessage("배열로 입력해 주세요."),
-  body("images").isArray().withMessage("배열로 입력해 주세요."),
   body("newImages").isArray().withMessage("배열로 입력해 주세요."),
   body("deleteimageIds").isArray().withMessage("배열로 입력해 주세요."),
   validate,
@@ -81,9 +79,9 @@ router.post("/", uploadImages.array("images"), createCommunity);
 
 router.get("/:community_id", validatePostId, getCommunity);
 
-router.put("/:community_id", validatePostPut, updateCommunity);
+router.put("/:community_id", uploadImages.array("images"), updateCommunity);
 
-router.delete("/:community_id", validatePostId, deleteCommunity);
+router.delete("/:community_id", deleteCommunity);
 
 router.get("/:community_id/comments", validatePostId, getComments);
 
