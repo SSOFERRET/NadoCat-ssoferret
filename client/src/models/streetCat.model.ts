@@ -1,8 +1,41 @@
 export interface IStreetCatPost {
   postId: number;
-  thumbnail: string;
-  name: string;
+  categoryId: number;
   createdAt: Date;
+  gender: string;
+  name: string;
+  thumbnail: string | null;
+  streetCatFavorites: IStreetCatFavorite[];
+  streetCatImages: IStreetCatImage[];
+  location: ILocation
+}
+
+interface ILocation {
+  longitude: number;
+  latitude: number;
+  detail: string;
+}
+
+interface IStreetCatImage {
+  images: IImage;
+}
+
+interface IImage {
+  url: string;
+}
+
+interface IStreetCatFavorite {
+  postId?: number;
+}
+
+export interface IPagination {
+  nextCursor: number;
+  totalCount: number;
+}
+
+export interface IStreetCatPage {
+  posts: IStreetCatPost[];
+  pagination: IPagination;
 }
 
 export interface IStreetCat {
@@ -11,16 +44,17 @@ export interface IStreetCat {
   name: string;
   gender: string;
   neutered: string;
-  // neuteredDate?: Date;
+  neuteredDate?: Date;
   discoveryDate: Date;
   locationId: number;
   content: string;
   views: number;
   createdAt: Date;
-  // updatedAt?: Date;
+  updatedAt?: Date;
   thumbnail?: number;
-  // uuid?: Buffer;
+  uuid?: Buffer;
 }
+
 
 export interface IStreetCatDetail extends IStreetCat {
   streetCatImages: [
@@ -36,5 +70,20 @@ export interface IStreetCatDetail extends IStreetCat {
     }
     nickname: string;
     profileImage: string;
+  }
+  location: {
+    longitude: number;
+    latitude: number;
+    detail: string;
+  };
+}
+
+export interface IStreetCatComment {
+  streetCatCommentId: number;
+  comment: string;
+  createdAt: Date;
+  users: {
+    nickname: string;
+    profileImages: string;
   }
 }

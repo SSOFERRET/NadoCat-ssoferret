@@ -202,6 +202,7 @@ model HomeCats {
 model Images {
   imageId             Int                  @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
   url                 String               @db.VarChar(2048)
+  thumbnail           Int                  @default(0) @db.TinyInt
   communityImages     CommunityImages?
   eventImages         EventImages?
   events              Events[]
@@ -414,12 +415,13 @@ model StreetCatComments {
 }
 
 model StreetCatFavorites {
-  uuid       Bytes      @db.Binary(16)
-  postId     Int        @map("post_id")
-  streetCats StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
-  users      Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
+  streetCatFavoriteId Int        @id @unique(map: "street_cat_favorite_id_UNIQUE") @default(autoincrement()) @map("street_cat_favorite_id")
+  uuid                Bytes      @db.Binary(16)
+  postId              Int        @map("post_id")
+  createdAt           DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
+  streetCats          StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
+  users               Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
 
-  @@id([uuid, postId])
   @@index([postId], map: "street_cat_favorites_post_id_fk_idx")
   @@map("street_cat_favorites")
 }
