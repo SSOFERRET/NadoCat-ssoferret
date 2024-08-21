@@ -1,0 +1,96 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.overlay {
+  visibility: visible;
+  position: fixed;
+  top: 0;
+  width: 430rem;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  transition: background-color 0.3s ease;
+}
+.overlay.hidden {
+  background-color: transparent;
+  pointer-events: none;
+}
+.overlay .comment-menu {
+  width: 100%;
+  max-width: 430rem;
+  min-height: 100rem;
+  background-color: #ffffff;
+  position: fixed;
+  bottom: 0;
+  padding: 22rem;
+  border-radius: 15rem 15rem 0 0;
+  z-index: 1000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+}
+.overlay .comment-menu.show {
+  transform: translateY(0);
+}
+.overlay .comment-menu.hide {
+  transform: translateY(100%);
+}
+.overlay .comment-menu li {
+  font-family: "medium";
+  font-size: 16rem !important;
+  cursor: pointer;
+}
+.overlay .comment-menu li:hover {
+  color: #f27405;
+}
+.overlay .comment-menu .delete {
+  color: #d32f2f;
+}/*# sourceMappingURL=postMenu.css.map */

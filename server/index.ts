@@ -13,6 +13,7 @@ import ChatRouter from "./routes/chat";
 import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
+import { handleJoinRoom, handleMessage } from "./controller/chat/Chat";
 
 const PORT = process.env.PORT || 8080;
 
@@ -31,20 +32,9 @@ const io = new Server(server, {
 io.on("connection", (socket: Socket) => {
   console.log("새로운 유저가 접속했습니다. ");
 
-  socket.on("join", ({ name, roomId}) => {
-    socket.join(roomId);
-
-    socket.to(roomId).emit('message', {
-    user: 'admin',
-    message: `${name} has joined the chat`,
-    time: new Date().toLocaleTimeString(),
-  });
-  })
+  handleJoinRoom(socket, io);
   
-  socket.on("sendMessage", ({ time, message, user, roomId }) => {
-    const newMessage = { user, message, time};
-    io.to(roomId).emit("message", newMessage);
-  })
+  handleMessage(socket, io);
 
   socket.on('disconnect', () => {
     console.log('유저가 나감.');

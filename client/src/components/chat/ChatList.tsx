@@ -4,29 +4,34 @@ import "../../styles/css/base/reset.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal from "./Modal";
 import { useNavigate } from 'react-router-dom';
+
 interface IList{
   img: string;
   nickname: string;
   contents: string;
   time: string;
+  uuid: string;
+  roomId: string;
 }
 
 interface ChatProps {
-  lists: IList[]
+  lists: IList[];
 }
-const ChatList: React.FC<ChatProps> = ({lists}) => {
+
+const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const room = "asdfghjkl";
-  const user = "김지우";
   const navigate = useNavigate();
 
   const handleClose = () => {
     setModalOpen(false);
   }
+  const handleChatClick = (uuid: string, roomId: string) => {
+    navigate("/chats/chat", { state: { uuid, roomId } });
+  }
   return (
     <div className="chatlist">
       {lists.map((list) => (
-        <div className="listbox" onClick={() => navigate("/chat", {state: {User: user, Room: room }})}>
+        <div className="listbox" onClick={ () =>handleChatClick(list.uuid, list.roomId) }>
           <div className="imgbox"><img src={list.img} /></div>
           <div className="contentsbox">
             <div className="nametimebox">

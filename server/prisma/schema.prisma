@@ -23,7 +23,7 @@ model BoardCategories {
 
 model Chats {
   chatId    Int        @id @unique(map: "chat_id_UNIQUE") @default(autoincrement()) @map("chat_id")
-  chatName  String     @map("chat_name") @db.VarChar(45)
+  otherUuid Bytes      @db.Binary(16)
   uuid      Bytes      @db.Binary(16)
   createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
   users     Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "chats_uuid_fk")

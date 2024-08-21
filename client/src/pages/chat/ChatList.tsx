@@ -1,7 +1,8 @@
 import "../../styles/scss/pages/chat/ChatList.scss";
-import BackButton from "../../components/common/BackButton";
 import ChatListC from "../../components/chat/ChatList";
 import Test from "../../assets/img/test.png";
+import { useState, useEffect } from "react";
+import axios from "axios";
 interface IList{
   img: string;
   nickname: string;
@@ -77,16 +78,29 @@ const List: IList[] = [
   }
 ]
 const ChatList = () => {
-  const handleClick = () => {
-    const userName:string = "김지우";
-    const room:string = "asdfghjkl";
-  }
+  const [list, setList] = useState([]);
 
+  useEffect(() => {
+    const fetchChatList = async () => {
+      try {
+        const response = await axios.get('/chatlist', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("generalToken")}`, 
+          },
+        });
+        setList(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchChatList();
+  }, []);
   return (
     <div className="chatList">
       <div className="header">
         <div id='title'>채팅</div>
-        <ChatListC lists={List}/>
+        <ChatListC lists={list}/>
       </div>
       
     </div>

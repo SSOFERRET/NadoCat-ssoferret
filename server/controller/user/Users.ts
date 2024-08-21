@@ -38,7 +38,7 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 
-// //[x]로그인
+//[x]로그인
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
   const isAutoLogin = (autoLogin === 'true' || autoLogin === true);
