@@ -4,7 +4,7 @@ import useCommunities from "../../hooks/useCommunities";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import LoadingCat from "../../components/loading/LoadingCat";
-import NewPostButton from "../../components/common/WriteButtonVer2";
+import NewPostButton from "../../components/common/NewPostButton";
 
 // CHECKLIST
 // [ ] 정렬 기준 동적으로 받아오게 수정
