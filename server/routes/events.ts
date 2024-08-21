@@ -1,28 +1,17 @@
 import express from "express";
-import {
-  createComment,
-  deleteComment,
-  getComments,
-  updateComment,
-} from "../controller/event/EventComments";
-import {
-  createEvent,
-  deleteEvent,
-  getEvent,
-  getEvents,
-  updateEvent,
-} from "../controller/event/Events";
+import { createComment, deleteComment, getComments, updateComment } from "../controller/event/EventComments";
+import { createEvent, deleteEvent, getEvent, getEvents, updateEvent } from "../controller/event/Events";
 const router = express.Router();
 
 router.get("/", getEvents);
 
 router.post("/", createEvent);
 
-router.get("/:evnet_id", getEvent);
+router.get("/:event_id", getEvent);
 
-router.put("/:evnet_id", updateEvent);
+router.put("/:event_id", updateEvent);
 
-router.delete("/:evnet_id", deleteEvent);
+router.delete("/:event_id", deleteEvent);
 
 router.get("/:community_id/comments", getComments);
 

@@ -45,8 +45,7 @@ export const getEvents = async (req: Request, res: Response) => {
 
     const posts = await getEventList(limit, sort, cursor);
 
-    const nextCursor =
-      posts.length === limit ? posts[posts.length - 1].postId : null;
+    const nextCursor = posts.length === limit ? posts[posts.length - 1].postId : null;
 
     const result = {
       posts,
@@ -59,9 +58,7 @@ export const getEvents = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
   }
 };
 
@@ -71,15 +68,13 @@ export const getEvents = async (req: Request, res: Response) => {
 // [ ] 에러처리
 export const getEvent = async (req: Request, res: Response) => {
   try {
-    const postId = Number(req.params.evnet_id);
+    const postId = Number(req.params.event_id);
     const categoryId = CATEGORY.EVENTS;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
     const post = await getEventById(postId);
 
     if (!post) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "게시글을 찾을 수 없습니다." });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "게시글을 찾을 수 없습니다." });
     }
 
     // 좋아요 여부
@@ -118,9 +113,7 @@ export const createEvent = async (req: Request, res: Response) => {
       const post = await addEvent(tx, userId, title, content, isClosed, date);
 
       if (tags.length > 0) {
-        const newTags = await Promise.all(
-          tags.map((tag: string) => addTag(tx, tag))
-        );
+        const newTags = await Promise.all(tags.map((tag: string) => addTag(tx, tag)));
 
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
@@ -131,9 +124,7 @@ export const createEvent = async (req: Request, res: Response) => {
       }
 
       if (images.length > 0) {
-        const newImages = await Promise.all(
-          images.map((url: string) => addImage(tx, url))
-        );
+        const newImages = await Promise.all(images.map((url: string) => addImage(tx, url)));
 
         const formatedImages = newImages.map((image: IImage) => ({
           imageId: image.imageId,
@@ -148,19 +139,13 @@ export const createEvent = async (req: Request, res: Response) => {
       await indexOpensearchDocument(CATEGORY.EVENTS, title, content, post.postId);
     });
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "게시글이 등록되었습니다." });
+    res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientValidationError) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
   }
 };
 
@@ -171,20 +156,9 @@ export const updateEvent = async (req: Request, res: Response) => {
   try {
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
     const id = Number(req.params.community_id);
-    const postId = Number(req.params.evnet_id);
+    const postId = Number(req.params.event_id);
 
-    const {
-      title,
-      content,
-      isClosed,
-      date,
-      images,
-      tags,
-      newTags,
-      deleteTagIds,
-      newImages,
-      deleteimageIds,
-    } = req.body;
+    const { title, content, isClosed, date, images, tags, newTags, deleteTagIds, newImages, deleteimageIds } = req.body;
 
     if (
       !title ||
@@ -198,9 +172,7 @@ export const updateEvent = async (req: Request, res: Response) => {
       !newImages ||
       !deleteimageIds
     ) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -210,9 +182,7 @@ export const updateEvent = async (req: Request, res: Response) => {
 
       await deleteTags(tx, deleteTagIds);
 
-      const tags = await Promise.all(
-        newTags.map((tag: string) => addTag(tx, tag))
-      );
+      const tags = await Promise.all(newTags.map((tag: string) => addTag(tx, tag)));
 
       const formatedTags = tags.map((tag: ITag) => ({
         tagId: tag.tagId,
@@ -225,9 +195,7 @@ export const updateEvent = async (req: Request, res: Response) => {
 
       await deleteImages(tx, deleteimageIds);
 
-      const images = await Promise.all(
-        newImages.map((url: string) => addImage(tx, url))
-      );
+      const images = await Promise.all(newImages.map((url: string) => addImage(tx, url)));
 
       const formatedImages = images.map((image: IImage) => ({
         imageId: image.imageId,
@@ -239,9 +207,7 @@ export const updateEvent = async (req: Request, res: Response) => {
       await updateOpensearchDocument(CATEGORY.EVENTS, postId, { content });
     });
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "게시글이 수정되었습니다." });
+    res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
   }
@@ -253,7 +219,7 @@ export const updateEvent = async (req: Request, res: Response) => {
 // [ ] 에러처리
 export const deleteEvent = async (req: Request, res: Response) => {
   try {
-    const postId = Number(req.params.evnet_id);
+    const postId = Number(req.params.event_id);
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     const post = await getEventById(postId);
@@ -261,9 +227,7 @@ export const deleteEvent = async (req: Request, res: Response) => {
     const likeIds = await getLikeIds(postId);
 
     if (!post) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "게시글을 찾을 수 없습니다." });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "게시글을 찾을 수 없습니다." });
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
