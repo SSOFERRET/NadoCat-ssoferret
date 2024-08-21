@@ -28,7 +28,7 @@ const locations = [
     title: "고등어",
     latlng: { lat: 33.451393, lng: 126.570738 },
   },
-]
+];
 
 const StreetCatsMap: React.FC = () => {
   return (
@@ -49,14 +49,14 @@ const StreetCatsMap: React.FC = () => {
             src: "https://lh3.google.com/u/0/d/1oxnGR7Fqzu6EgddS18uKrpK62jqTUGHe=w1062-h918-iv2",
             size: {
               width: 30,
-              height: 30
+              height: 30,
             },
           }}
           title={location.title}
         />
       ))}
     </Map>
-  )
-}
+  );
+};
 
 export default StreetCatsMap;

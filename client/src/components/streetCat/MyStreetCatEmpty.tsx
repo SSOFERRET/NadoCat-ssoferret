@@ -8,7 +8,7 @@ const MyStreetCatEmpty: React.FC = () => {
   return (
     <>
       <p className="guide-text">
-        <span className="nickname">사용자</span>님 도감에 <br/>
+        <span className="nickname">사용자</span>님 도감에 <br />
         동네 고양이를 등록해 보세요!
       </p>
 
@@ -17,11 +17,13 @@ const MyStreetCatEmpty: React.FC = () => {
           <img src={heartCat} alt="heartCat" />
         </div>
         <button>
-          <a href={location.pathname}><AiOutlinePlus /></a>
+          <a href={location.pathname}>
+            <AiOutlinePlus />
+          </a>
         </button>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default MyStreetCatEmpty;

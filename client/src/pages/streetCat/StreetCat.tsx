@@ -16,21 +16,25 @@ const StreetCats: React.FC = () => {
 
   const renderContent = () => {
     switch (selectedTab) {
-      case 1: return <StreetCatPosts />;
-      case 2: return <MyStreetCatPosts />;
-      case 3: return <StreetCatsMap />;
-      default: return null;
+      case 1:
+        return <StreetCatPosts />;
+      case 2:
+        return <MyStreetCatPosts />;
+      case 3:
+        return <StreetCatsMap />;
+      default:
+        return null;
     }
-  }
+  };
 
   return (
     <>
       <section className="street-cat-section">
-        <TabNavigation selectedTab={selectedTab} onSelectTab={setSelectedTab}/>
+        <TabNavigation selectedTab={selectedTab} onSelectTab={setSelectedTab} />
         {renderContent()}
       </section>
     </>
-  )
-}
+  );
+};
 
 export default StreetCats;

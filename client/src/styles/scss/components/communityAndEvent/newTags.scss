@@ -1,0 +1,37 @@
+@import "../../base/common.scss";
+
+.new-tags {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 4rem;
+  gap: 7rem;
+
+  .tag {
+    display: flex;
+    align-items: center;
+    font-family: "medium";
+    font-size: $size-14;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 0;
+
+    span {
+      margin-right: 1rem;
+    }
+
+    .tag-delete-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: $secondary;
+      svg {
+        width: 12rem;
+        height: 12rem;
+        position: static;
+        fill: $secondary;
+      }
+    }
+  }
+}

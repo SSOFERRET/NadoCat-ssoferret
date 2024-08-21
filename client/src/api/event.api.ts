@@ -1,6 +1,10 @@
-import { ICommunityPage } from "../models/community.model";
-import { IEvent } from "../models/event.model";
-import { ICommentPostRequest } from "./community.api";
+import { ICommentPage } from "../models/comment.model";
+import { IEventDetail, IEventPage } from "../models/event.model";
+import {
+  ICommentDeleteRequest,
+  ICommentPostRequest,
+  ICommentPutRequest,
+} from "./community.api";
 import { httpClient } from "./http";
 
 const LIMIT = 10;
@@ -14,7 +18,7 @@ interface IEventPostsParams {
   sort?: Sort;
 }
 
-interface IEventDetailParams {
+export interface IEventDetailParams {
   postId: number;
 }
 
@@ -24,11 +28,15 @@ interface IEventCommentsParams {
   limit?: number;
 }
 
+// CHECKLIST
+// [ ] 게시글 수정
+// [ ] 게시글 작성
+
 export const getEventPosts = async ({
   pageParam,
   limit,
   sort,
-}: IEventPostsParams): Promise<ICommunityPage> => {
+}: IEventPostsParams): Promise<IEventPage> => {
   try {
     const response = await httpClient.get(
       `/boards/events?limit=${limit ?? LIMIT}&cursor=${pageParam}&sort=${
@@ -44,7 +52,7 @@ export const getEventPosts = async ({
 
 export const getEventDetail = async ({
   postId,
-}: IEventDetailParams): Promise<IEvent> => {
+}: IEventDetailParams): Promise<IEventDetail> => {
   try {
     const response = await httpClient.get(`/boards/events/${postId}`);
     return response.data;
@@ -54,11 +62,21 @@ export const getEventDetail = async ({
   }
 };
 
+export const deleteEventPost = async ({ postId }: IEventDetailParams) => {
+  try {
+    const response = await httpClient.delete(`/boards/events/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting event post:", error);
+    throw error;
+  }
+};
+
 export const getEventComments = async ({
   postId,
   pageParam,
   limit,
-}: IEventCommentsParams) => {
+}: IEventCommentsParams): Promise<ICommentPage> => {
   try {
     const response = await httpClient.get(
       `/boards/events/${postId}/comments?limit=${
@@ -87,6 +105,41 @@ export const createEventComment = async ({
     return response.data;
   } catch (error) {
     console.error(`Error creating event comment for post ${postId}:`, error);
+    throw error;
+  }
+};
+
+export const updateEventComment = async ({
+  postId,
+  commentId,
+  comment,
+}: ICommentPutRequest) => {
+  try {
+    // NOTE userId 확인?
+    const response = await httpClient.put(
+      `/boards/events/${postId}/comments/${commentId}`,
+      { postId, commentId, comment }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating event comment for post ${postId}:`, error);
+    throw error;
+  }
+};
+
+export const deleteEventComment = async ({
+  postId,
+  commentId,
+}: ICommentDeleteRequest) => {
+  try {
+    const response = await httpClient.delete(
+      `/boards/events/${postId}/comments/${commentId}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting event comment for post ${postId}:`, error);
     throw error;
   }
 };

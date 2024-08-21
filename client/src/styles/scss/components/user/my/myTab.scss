@@ -1,0 +1,33 @@
+@import "../../base/common.scss";
+
+.tab-container {
+    display: flex;
+    flex-direction: column;
+
+    .tab-header {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 1rem;
+        align-items: center;
+    
+        button { 
+            cursor: pointer;
+            padding: 10rem 20rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-size: $size-16;
+            width: 200rem;
+        }
+    
+        button.active-btn {
+            border-bottom: 2px solid #ffcc00;
+        }
+    }
+    
+    .tab-content {
+        padding: 20rem;
+        background-color: aqua;
+        font-size: $size-16;
+    }
+}

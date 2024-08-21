@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { PiChatCircleBold } from "react-icons/pi";
@@ -13,7 +13,7 @@ import CommentsEmpty from "../../components/comment/CommentsEmpty";
 import StreetCatComments from "../../components/streetCat/StreetCatComments";
 
 const StreetCatDetail: React.FC = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const postId = Number(id);
 
   const {data} = useStreetCatPost(postId);
@@ -42,7 +42,7 @@ const StreetCatDetail: React.FC = () => {
         <StreetCatComments postId={postId}/>
       </section>
     </>
-  )
-}
+  );
+};
 
 export default StreetCatDetail;

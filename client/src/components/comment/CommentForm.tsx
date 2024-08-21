@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import "../../styles/css/components/comment/commentForm.css";
+import "../../styles/scss/components/comment/commentForm.scss";
 import { AiFillHeart } from "react-icons/ai";
 import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 
@@ -10,12 +10,12 @@ import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 interface IProps {
   postId: number;
   userId: string; // 버퍼일지도..? 일단 테스트를 위한 string
-  addComment: ({ postId, userId, comment }: ICreateCommentParams) => void;
+  addComment: ({ postId, userId, comment }: ICreateCommentParams) => Promise<void>;
 }
 
 const CommentForm = ({ postId, userId, addComment }: IProps) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [value, setValue] = useState("");
+  const [comment, setComment] = useState("");
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -26,19 +26,34 @@ const CommentForm = ({ postId, userId, addComment }: IProps) => {
   };
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
+    setComment(event.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log({ postId, userId, comment: value });
     e.preventDefault();
-    addComment({ postId, userId, comment: value });
-    setValue("");
+
+    if (comment.trim().length === 0) {
+      return;
+    }
+
+    // 여기 UI로 보여주기
+    addComment({ postId, userId, comment })
+      .then(() => {
+        console.log("댓글이 성공적으로 등록되었습니다!");
+        setComment("");
+      })
+      .catch(() => {
+        console.log("댓글 등록에 실패했습니다.");
+      })
+      .finally(() => {
+        console.log("마무리!");
+        setComment("");
+      });
   };
 
   useEffect(() => {
     handleResizeHeight();
-  }, [value]);
+  }, [comment]);
 
   return (
     <section className="comment-form-container">
@@ -51,7 +66,7 @@ const CommentForm = ({ postId, userId, addComment }: IProps) => {
           ref={textareaRef}
           maxLength={200}
           rows={1}
-          value={value}
+          value={comment}
           placeholder="댓글 달기"
         ></textarea>
         <button className="submit-btn">게시</button>
