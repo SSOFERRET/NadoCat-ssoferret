@@ -82,7 +82,7 @@ export const getEvent = async (req: Request, res: Response) => {
       where: {
         postId,
         categoryId,
-        uuid: Buffer.from(userId, "hex"), // NOTE 타입 변환
+        uuid: userId,
       },
     });
 
@@ -134,7 +134,7 @@ export const createEvent = async (req: Request, res: Response) => {
         await addEventImages(tx, formatedImages);
       }
 
-      await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.EVENTS, post.postId);
+      await notifyNewPostToFriends(userId, CATEGORY.EVENTS, post.postId);
 
       await indexOpensearchDocument(CATEGORY.EVENTS, title, content, post.postId);
     });

@@ -27,6 +27,8 @@ import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
+import { uploadImageToS3 } from "../../util/images/s3ImageHandler";
+import { addNewImages } from "../../util/images/addNewImages";
 
 // CHECKLIST
 // [x] 이미지 배열로 받아오게 DB 수정
@@ -38,8 +40,8 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 
 //NOTE 사용자 정보를 받아오기 위한 임시 함수
 export const getUserId = async () => {
-  const result = await prisma.$queryRaw<{ HEX: string }[]>`
-    SELECT HEX(uuid) AS HEX
+  const result = await prisma.$queryRaw<{ HEX: Buffer }[]>`
+    SELECT uuid AS HEX
     FROM users
     WHERE id = 1;
   `;
@@ -60,10 +62,7 @@ export const getCommunities = async (req: Request, res: Response) => {
 
     const communities = await getCommunityList(limit, sort, cursor);
 
-    const nextCursor =
-      communities.length === limit
-        ? communities[communities.length - 1].postId
-        : null;
+    const nextCursor = communities.length === limit ? communities[communities.length - 1].postId : null;
 
     const result = {
       posts: communities,
@@ -95,15 +94,13 @@ export const getCommunity = async (req: Request, res: Response) => {
 
     if (!community) throw new Error("No Post"); //타입가드
 
-    // // redis 서버 연결 필요하여 주석 처리함. 
+    // // redis 서버 연결 필요하여 주석 처리함.
     // // 공동의 서버에는 나중에 설치할 예정
     // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
     // community.views += viewIncrementResult || 0;
 
     if (!community) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "게시글을 찾을 수 없습니다." });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "게시글을 찾을 수 없습니다." });
     }
 
     // 좋아요 여부
@@ -111,7 +108,7 @@ export const getCommunity = async (req: Request, res: Response) => {
       where: {
         postId,
         categoryId,
-        uuid: Buffer.from(userId, "hex"), // NOTE 타입 변환
+        uuid: userId, // NOTE 타입 변환
       },
     });
 
@@ -134,46 +131,50 @@ export const getCommunity = async (req: Request, res: Response) => {
 
 export const createCommunity = async (req: Request, res: Response) => {
   try {
-    const { title, content, tags, images } = req.body;
+    const { title, content, tags } = req.body;
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await addCommunity(tx, userId, title, content);
+      const postId = post.postId;
 
       if (tags.length > 0) {
-        const newTags = await Promise.all(
-          tags.map((tag: string) => addTag(tx, tag))
-        );
+        const newTags = await Promise.all(tags.map((tag: string) => addTag(tx, tag)));
 
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
-          postId: post.postId,
+          postId,
         }));
 
         await addCommunityTags(tx, formatedTags);
       }
 
-      if (images.length > 0) {
-        const newImages = await Promise.all(
-          images.map((url: string) => addImage(tx, url))
+      if (req.files) {
+        const imageUrls = (await uploadImageToS3(req, CATEGORY.COMMUNITIES, postId)) as any;
+        const newImages = await addNewImages(
+          tx,
+          {
+            userId,
+            postId,
+            categoryId: CATEGORY.COMMUNITIES,
+          },
+          imageUrls
         );
 
-        const formatedImages = newImages.map((image: IImage) => ({
-          imageId: image.imageId,
-          postId: post.postId,
+        const formatedImages = newImages.map((imageId: number) => ({
+          imageId,
+          postId,
         }));
 
         await addCommunityImages(tx, formatedImages);
       }
 
-      await notifyNewPostToFriends(Buffer.from(userId), CATEGORY.COMMUNITIES, post.postId);
+      await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
       await indexOpensearchDocument(CATEGORY.COMMUNITIES, title, content, post.postId);
     });
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "게시글이 등록되었습니다." });
+    res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
   }
@@ -189,30 +190,10 @@ export const updateCommunity = async (req: Request, res: Response) => {
     const id = Number(req.params.communityId);
     const userId = await getUserId();
 
-    const {
-      title,
-      content,
-      images,
-      tags,
-      newTags,
-      deleteTagIds,
-      newImages,
-      deleteimageIds,
-    } = req.body;
+    const { title, content, images, tags, newTags, deleteTagIds, newImages, deleteimageIds } = req.body;
 
-    if (
-      !title ||
-      !content ||
-      !images ||
-      !tags ||
-      !newTags ||
-      !deleteTagIds ||
-      !newImages ||
-      !deleteimageIds
-    ) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+    if (!title || !content || !images || !tags || !newTags || !deleteTagIds || !newImages || !deleteimageIds) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -222,9 +203,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
 
       await deleteTags(tx, deleteTagIds);
 
-      const tags = await Promise.all(
-        newTags.map((tag: string) => addTag(tx, tag))
-      );
+      const tags = await Promise.all(newTags.map((tag: string) => addTag(tx, tag)));
 
       const formatedTags = tags.map((tag: ITag) => ({
         tagId: tag.tagId,
@@ -237,9 +216,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
 
       await deleteImages(tx, deleteimageIds);
 
-      const images = await Promise.all(
-        newImages.map((url: string) => addImage(tx, url))
-      );
+      const images = await Promise.all(newImages.map((url: string) => addImage(tx, url)));
 
       const formatedImages = images.map((image: IImage) => ({
         imageId: image.imageId,
@@ -251,9 +228,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
       await updateOpensearchDocument(CATEGORY.COMMUNITIES, id, { content });
     });
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: "게시글이 수정되었습니다." });
+    res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
   }
@@ -274,9 +249,7 @@ export const deleteCommunity = async (req: Request, res: Response) => {
     const likeIds = await getLikeIds(postId);
 
     if (!post) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "게시글을 찾을 수 없습니다." });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "게시글을 찾을 수 없습니다." });
     }
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
