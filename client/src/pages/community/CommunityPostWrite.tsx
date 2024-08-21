@@ -1,5 +1,5 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
-import "../../styles/css/pages/community/communityPostWrite.css";
+import "../../styles/scss/pages/community/communityPostWrite.scss";
 import NewTagForm from "../../components/communityAndEvent/NewTagForm";
 import NewTags from "../../components/communityAndEvent/NewTags";
 import DeleteButton from "../../assets/img/delete_button.svg";

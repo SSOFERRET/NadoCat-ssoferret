@@ -1,4 +1,4 @@
-import "../../styles/css/components/communityAndEvent/postDetail.css";
+import "../../styles/scss/components/communityAndEvent/postDetail.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { formatDate, formatViews } from "../../utils/format/format";
 import Avartar from "../common/Avartar";

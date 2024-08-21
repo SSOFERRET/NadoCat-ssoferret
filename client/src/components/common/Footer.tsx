@@ -4,7 +4,7 @@ import { PiCat, PiChatCircleBold } from "react-icons/pi";
 import { RiSearchLine } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa6";
 import "../../styles/css/base/reset.css";
-import "../../styles/css/components/common/footer.css";
+import "../../styles/scss/components/common/footer.scss";
 import { Link } from "react-router-dom";
 
 export const Footer: React.FC = () => {

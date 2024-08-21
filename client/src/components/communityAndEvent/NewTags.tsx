@@ -1,4 +1,4 @@
-import "../../styles/css/components/communityAndEvent/newTags.css";
+import "../../styles/scss/components/communityAndEvent/newTags.scss";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface IProsp {
@@ -12,11 +12,7 @@ const NewTags = ({ tags, removeTags }: IProsp) => {
       {tags.map((tag: string, index: number) => (
         <li className="tag" key={index}>
           <span> &#035; {tag}</span>
-          <button
-            onClick={() => removeTags(index)}
-            type="button"
-            className="tag-delete-btn"
-          >
+          <button onClick={() => removeTags(index)} type="button" className="tag-delete-btn">
             <AiOutlineClose />
           </button>
         </li>

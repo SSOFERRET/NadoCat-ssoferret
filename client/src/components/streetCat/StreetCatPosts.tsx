@@ -1,7 +1,7 @@
 import React from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { AiOutlineHeart } from "react-icons/ai";
-import "../../styles/css/components/streetCat/streetCatPosts.css";
+import "../../styles/scss/components/streetCat/streetCatPosts.scss";
 import { useStreetCatPosts } from "../../hooks/useStreetCats";
 
 interface IStreetCatPost {
@@ -24,152 +24,145 @@ const testData: IStreetCatPost[] = [
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 1",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 1
+    streetCatFavorites: 1,
   },
   {
     postId: 2,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 2",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 3,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 3",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 1
+    streetCatFavorites: 1,
   },
   {
     postId: 4,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 4",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 1
+    streetCatFavorites: 1,
   },
   {
     postId: 5,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 5",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 6,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 6",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 7,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 7",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 8,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 8",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 9,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 9",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 10,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 10",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 11,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 11",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 12,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 12",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 13,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 13",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 14,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 14",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 15,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 15",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 16,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 16",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 17,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 17",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 18,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 18",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 19,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 19",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
   {
     postId: 20,
     thumbnail: "https://cdn.pixabay.com/photo/2018/05/25/18/04/nature-3429700_1280.jpg",
     name: "테스트 20",
     createdAt: "2024년 8월 10일",
-    streetCatFavorites: 0
+    streetCatFavorites: 0,
   },
-]
+];
 
 const StreetCatPosts: React.FC = () => {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-    isLoading
-  } = useStreetCatPosts();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, isLoading } = useStreetCatPosts();
 
   if (isLoading) {
     return <div>Loading...</div>; // 데이터를 불러오는 동안 로딩 상태를 표시
@@ -181,29 +174,27 @@ const StreetCatPosts: React.FC = () => {
     <>
       <p className="title">우리 동네 고양이</p>
       <ul className="street-cat-list">
-        {
-          testData.map((data) => (
-            <li key={data.postId} className="street-cat">
-              {
-                data.streetCatFavorites
-                ? <AiFillHeart className="active" onClick={() => alert("click")}/>
-                : <AiOutlineHeart onClick={() => alert("click")}/>
-              }
-              <a href={`${location.pathname}/${data.postId}`}>
-                <div className="img-box">
-                  <img src={data.thumbnail} />
-                </div>
-                <div className="street-cat-info">
-                  <span className="name">{data.name}</span>
-                  <span className="date">{data.createdAt}</span>
-                </div>
-              </a>
-            </li>
-          ))
-        }
+        {testData.map((data) => (
+          <li key={data.postId} className="street-cat">
+            {data.streetCatFavorites ? (
+              <AiFillHeart className="active" onClick={() => alert("click")} />
+            ) : (
+              <AiOutlineHeart onClick={() => alert("click")} />
+            )}
+            <a href={`${location.pathname}/${data.postId}`}>
+              <div className="img-box">
+                <img src={data.thumbnail} />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">{data.name}</span>
+                <span className="date">{data.createdAt}</span>
+              </div>
+            </a>
+          </li>
+        ))}
       </ul>
     </>
-  )
-}
+  );
+};
 
 export default StreetCatPosts;

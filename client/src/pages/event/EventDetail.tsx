@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../styles/css/pages/event/eventDetail.css";
+import "../../styles/scss/pages/event/eventDetail.scss";
 import { useParams } from "react-router-dom";
 import ErrorNotFound from "../../components/error/ErrorNotFound";
 import PostDetail from "../../components/communityAndEvent/PostDetail";
@@ -39,18 +39,10 @@ const EventDetail = () => {
       {error && <ErrorNotFound />}
       {post && (
         <>
-          <PostDetail
-            post={post}
-            commentCount={commentCount}
-            showMenu={showMenu}
-          />
+          <PostDetail post={post} commentCount={commentCount} showMenu={showMenu} />
           <EventComments postId={postId} />
 
-          <CommentForm
-            postId={postId}
-            userId={userId}
-            addComment={addEventComment}
-          />
+          <CommentForm postId={postId} userId={userId} addComment={addEventComment} />
         </>
       )}
 

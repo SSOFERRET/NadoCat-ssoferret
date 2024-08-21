@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../styles/css/pages/community/communityDetail.css";
+import "../../styles/scss/pages/community/communityDetail.scss";
 import useCommunity from "../../hooks/useCommunity";
 import { useParams } from "react-router-dom";
 import ErrorNotFound from "../../components/error/ErrorNotFound";

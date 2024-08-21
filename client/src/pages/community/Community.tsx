@@ -1,4 +1,4 @@
-import "../../styles/css/pages/community/community.css";
+import "../../styles/scss/pages/community/community.scss";
 import PostList from "../../components/communityAndEvent/PostList";
 import useCommunities from "../../hooks/useCommunities";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
@@ -14,14 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const Community = () => {
   const navigate = useNavigate();
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isEmpty,
-  } = useCommunities("views");
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useCommunities("views");
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
@@ -49,10 +42,7 @@ const Community = () => {
           <div className="more" ref={moreRef}>
             {isFetchingNextPage && <div>loading...</div>}
           </div>
-          <button
-            className="write-btn"
-            onClick={() => navigate("/boards/communities/write")}
-          >
+          <button className="write-btn" onClick={() => navigate("/boards/communities/write")}>
             <FaPlus />
             글쓰기
           </button>

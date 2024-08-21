@@ -1,19 +1,12 @@
 import useEvents from "../../hooks/useEvents";
-import "../../styles/css/pages/event/event.css";
+import "../../styles/scss/pages/event/event.scss";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import PostList from "../../components/communityAndEvent/PostList";
 import LoadingCat from "../../components/loading/LoadingCat";
 
 const Event = () => {
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isEmpty,
-  } = useEvents("views");
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useEvents("views");
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {

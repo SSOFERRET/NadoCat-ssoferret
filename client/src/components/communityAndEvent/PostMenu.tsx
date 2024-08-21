@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "../../styles/css/components/communityAndEvent/postMenu.css";
+import "../../styles/scss/components/communityAndEvent/postMenu.scss";
 import { ICommentDeleteRequest } from "../../api/community.api";
 import useCommentStore from "../../store/comment";
 

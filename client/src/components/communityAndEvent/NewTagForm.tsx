@@ -1,5 +1,5 @@
 import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
-import "../../styles/css/components/communityAndEvent/newTagForm.css";
+import "../../styles/scss/components/communityAndEvent/newTagForm.scss";
 import ModalPotal from "../modal/ModalPotal";
 import { AiOutlineClose } from "react-icons/ai";
 import NewTags from "./NewTags";
@@ -77,11 +77,7 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
         <div className="overlay">
           <section className="new-tag-container">
             <div className="new-tag-buttons">
-              <button
-                type="button"
-                className="tag-form-close-btn"
-                onClick={handleTagFormOpen}
-              >
+              <button type="button" className="tag-form-close-btn" onClick={handleTagFormOpen}>
                 <AiOutlineClose />
               </button>
               <button className="done-btn" onClick={handleSubmit}>
@@ -103,11 +99,7 @@ const NewTagForm = ({ initialTags, handleTagFormOpen, addNewTags }: IProps) => {
                 onKeyUp={handleKeyUp}
                 autoFocus
               />
-              <button
-                type="button"
-                className="tag-add-btn"
-                onClick={handleButtonClick}
-              >
+              <button type="button" className="tag-add-btn" onClick={handleButtonClick}>
                 추가
               </button>
             </div>

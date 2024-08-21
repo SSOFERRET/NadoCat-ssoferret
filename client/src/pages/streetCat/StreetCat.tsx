@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/css/base/reset.css";
-import "../../styles/css/pages/streetCat/streetCat.css";
+import "../../styles/scss/pages/streetCat/streetCat.scss";
 import WriteButton from "../../components/common/WriteButton";
 import TabNavigation from "../../components/streetCat/TabNavigation";
 import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
@@ -16,22 +16,26 @@ const StreetCats: React.FC = () => {
 
   const renderContent = () => {
     switch (selectedTab) {
-      case 1: return <StreetCatPosts />;
-      case 2: return <MyStreetCatPosts />;
-      case 3: return <StreetCatsMap />;
-      default: return null;
+      case 1:
+        return <StreetCatPosts />;
+      case 2:
+        return <MyStreetCatPosts />;
+      case 3:
+        return <StreetCatsMap />;
+      default:
+        return null;
     }
-  }
+  };
 
   return (
     <>
       <section className="street-cat-section">
-        <TabNavigation selectedTab={selectedTab} onSelectTab={setSelectedTab}/>
+        <TabNavigation selectedTab={selectedTab} onSelectTab={setSelectedTab} />
         {renderContent()}
         {/* <WriteButton /> */}
       </section>
     </>
-  )
-}
+  );
+};
 
 export default StreetCats;

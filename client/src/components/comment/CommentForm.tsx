@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import "../../styles/css/components/comment/commentForm.css";
+import "../../styles/scss/components/comment/commentForm.scss";
 import { AiFillHeart } from "react-icons/ai";
 import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 
@@ -10,11 +10,7 @@ import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 interface IProps {
   postId: number;
   userId: string; // 버퍼일지도..? 일단 테스트를 위한 string
-  addComment: ({
-    postId,
-    userId,
-    comment,
-  }: ICreateCommentParams) => Promise<void>;
+  addComment: ({ postId, userId, comment }: ICreateCommentParams) => Promise<void>;
 }
 
 const CommentForm = ({ postId, userId, addComment }: IProps) => {
