@@ -31,44 +31,51 @@
   }
 
   .comment-form {
-    width: calc(430rem - 55rem);
     display: flex;
-    justify-content: center;
-    align-items: end;
-    padding: 0 14rem;
+    width: 100%;
+    justify-content: space-between;
+    padding: 13rem;
     border-radius: 15rem;
     border: 1rem solid $lightgray;
 
-    textarea {
-      box-sizing: border-box;
+    .textarea-container {
       width: 100%;
-      height: 40rem;
-      overflow: hidden;
-      font-family: "medium";
-      font-size: $size-14;
-      padding: 12rem 0;
-      border: none;
-      resize: none;
+      display: flex;
 
-      &::placeholder {
-        color: $silver;
-      }
+      textarea {
+        flex: 1;
+        // height: 40rem;
+        min-height: 14rem;
+        overflow: hidden;
+        font-family: "medium";
+        font-size: $size-14;
+        border: none;
+        resize: none;
+        margin-right: 11rem;
 
-      &:focus {
-        outline: 0;
+        &::placeholder {
+          color: $silver;
+        }
+
+        &:focus {
+          outline: 0;
+        }
       }
     }
 
-    .submit-btn {
-      height: 40rem;
-      flex-shrink: 0;
-      font-family: "bold";
-      color: $secondary;
-      font-size: $size-14;
-      padding: 0;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
+    .submit-btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: end;
+      .submit-btn {
+        flex-shrink: 0;
+        font-family: "bold";
+        color: $secondary;
+        font-size: $size-14;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
     }
   }
 }

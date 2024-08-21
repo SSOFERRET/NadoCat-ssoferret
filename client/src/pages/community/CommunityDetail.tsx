@@ -10,6 +10,7 @@ import PostMenu from "../../components/communityAndEvent/PostMenu";
 import CommunityComments from "../../components/community/CommunityComments";
 import LoadingCat from "../../components/loading/LoadingCat";
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
+import { Footer } from "../../components/common/Footer";
 
 // CHECKLIST
 // [x] 댓글 컴포넌트 분리
@@ -58,6 +59,7 @@ const CommunityDetail = () => {
         isShowMenu={isShowMenu}
         deletePost={removeCommunityPost}
       />
+      <Footer />
     </div>
   );
 };

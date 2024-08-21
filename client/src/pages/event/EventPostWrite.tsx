@@ -1,31 +1,22 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import "../../styles/scss/pages/community/communityPostWrite.scss";
+import "../../styles/scss/pages/event/eventPostWrite.scss";
+import { useNavigate } from "react-router-dom";
+import ImageUploader from "../../components/communityAndEvent/ImageUploader";
+import useEvents from "../../hooks/useEvents";
+import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 import NewTagForm from "../../components/communityAndEvent/NewTagForm";
 import NewTags from "../../components/communityAndEvent/NewTags";
-import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
-import ImageUploader from "../../components/communityAndEvent/ImageUploader";
-import useCommunities from "../../hooks/useCommunities";
-import { useNavigate } from "react-router-dom";
 
-// CHECKLIST
-// [x] 푸터 삭제
-// [x] 헤더 백버튼으로 변경
-// [x] 이미지 업로드 구현
-// [x] 해시테크 폼 만들기
-// [x] 이미지 슬라이드(?) UI 만들기
-// [x] 로컬 이미지 받아오기
-// [x] 로컬 이미지 UI로 보여주기
-// [x] 이미지 삭제
-
-const CommunityPostWrite = () => {
+const EventPostWrite = () => {
   const navigate = useNavigate();
-  const { addCommunityPost } = useCommunities();
+  const { addEventPost } = useEvents();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [isClosed, setIsClosed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [newTags, setNewTags] = useState<string[]>([]);
-  const [newImages, setNewImages] = useState<(string | File)[]>([]);
+  const [newImages, setNewImages] = useState<File[]>([]);
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -42,6 +33,8 @@ const CommunityPostWrite = () => {
       setContent(value);
     } else if (name === "title") {
       setTitle(value);
+    } else if (name === "status") {
+      setIsClosed((prev) => !prev);
     }
   };
 
@@ -58,7 +51,7 @@ const CommunityPostWrite = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const setNewImageFiles = <T extends string | File>(images: T[]) => {
+  const setNewImageFiles = (images: File[]) => {
     setNewImages([...images]);
   };
 
@@ -69,16 +62,16 @@ const CommunityPostWrite = () => {
 
     formData.append("title", title);
     formData.append("content", content);
+    formData.append("isClosed", isClosed ? "true" : "");
     formData.append("tags", JSON.stringify(newTags));
 
     Array.from(newImages).forEach((image) => {
       formData.append("images", image);
     });
 
-    addCommunityPost(formData)
+    addEventPost(formData)
       .then((data) => {
-        console.log(data);
-        navigate(`/boards/communities/${data.postId}`);
+        navigate(`/boards/events/${data.postId}`);
       })
       .catch(console.error)
       .finally();
@@ -102,6 +95,7 @@ const CommunityPostWrite = () => {
             placeholder="제목"
             required
           />
+
           <textarea
             onChange={handleChange}
             ref={textareaRef}
@@ -114,6 +108,33 @@ const CommunityPostWrite = () => {
           ></textarea>
 
           <ImageUploader newImages={newImages} setNewImageFiles={setNewImageFiles} />
+
+          <div className="status-selection">
+            <span className="status-title">모집</span>
+            <div className="status-buttons">
+              <input
+                className="open"
+                onChange={handleChange}
+                type="radio"
+                id="open"
+                name="status"
+                checked={!isClosed}
+                value="open"
+              />
+              <label htmlFor="open">모집</label>
+
+              <input
+                className="closed"
+                onChange={handleChange}
+                type="radio"
+                id="closed"
+                name="status"
+                checked={isClosed}
+                value="closed"
+              />
+              <label htmlFor="closed">마감</label>
+            </div>
+          </div>
 
           <div className="hash-tag-wrapper">
             <button type="button" className="hash-tag-btn" onClick={handleTagFormOpen}>
@@ -131,4 +152,4 @@ const CommunityPostWrite = () => {
   );
 };
 
-export default CommunityPostWrite;
+export default EventPostWrite;

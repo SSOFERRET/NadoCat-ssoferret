@@ -2,22 +2,18 @@ import { Prisma } from "@prisma/client";
 import prisma from "../client";
 import { getUserId } from "../controller/community/Communities";
 
-export const getFriendCounts = async (userId: string) => {
+export const getFriendCounts = async (userId: Buffer) => {
   return await prisma.friends.count({
     where: {
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
     },
   });
 };
 
-export const getFriends = async (
-  userId: string,
-  limit: number,
-  cursor: number | undefined
-) => {
+export const getFriends = async (userId: Buffer, limit: number, cursor: number | undefined) => {
   const friends = await prisma.friends.findMany({
     where: {
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
     },
     take: limit,
     skip: cursor ? 1 : 0,
@@ -48,30 +44,28 @@ export const getFriends = async (
   });
 };
 
-export const getFriendById = async (userId: string, followingId: string) => {
+export const getFriendById = async (userId: Buffer, followingId: Buffer) => {
   return await prisma.friends.findFirst({
     where: {
-      uuid: Buffer.from(userId, "hex"),
-      followingId: Buffer.from(followingId, "hex"),
+      uuid: userId,
+      followingId: followingId,
     },
   });
 };
 
-export const getFriendList = async (
-  userId: Buffer
-) => {
+export const getFriendList = async (userId: Buffer) => {
   return await prisma.friends.findMany({
     where: {
-      uuid: userId
-    }
-  })
+      uuid: userId,
+    },
+  });
 };
 
-export const addFriend = async (userId: string, followingId: string) => {
+export const addFriend = async (userId: Buffer, followingId: Buffer) => {
   return await prisma.friends.create({
     data: {
-      followingId: Buffer.from(followingId, "hex"),
-      uuid: Buffer.from(userId, "hex"),
+      followingId: followingId,
+      uuid: userId,
     },
   });
 };

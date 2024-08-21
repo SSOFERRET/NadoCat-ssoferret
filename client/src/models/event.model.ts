@@ -8,7 +8,6 @@ export interface IEvent extends ICommunity {
 
 export interface IEventDetail extends ICommunityDetail {
   isClosed: boolean;
-  date: string;
 }
 
 export interface IEventPage {

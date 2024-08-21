@@ -5,7 +5,7 @@ import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 
 // CHECKLIST
 // [ ] 좋아요 버튼 만들기
-// [ ] 댓글 달기 기능
+// [x] 댓글 달기 기능
 
 interface IProps {
   postId: number;
@@ -21,7 +21,7 @@ const CommentForm = ({ postId, userId, addComment }: IProps) => {
     if (textareaRef.current) {
       const textarea = textareaRef.current;
       textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "rem";
+      textarea.style.height = textarea.scrollHeight + "px";
     }
   };
 
@@ -53,6 +53,10 @@ const CommentForm = ({ postId, userId, addComment }: IProps) => {
 
   useEffect(() => {
     handleResizeHeight();
+
+    return () => {
+      handleResizeHeight();
+    };
   }, [comment]);
 
   return (
@@ -61,15 +65,19 @@ const CommentForm = ({ postId, userId, addComment }: IProps) => {
         <AiFillHeart />
       </button>
       <form onSubmit={handleSubmit} className="comment-form">
-        <textarea
-          onChange={handleChange}
-          ref={textareaRef}
-          maxLength={200}
-          rows={1}
-          value={comment}
-          placeholder="댓글 달기"
-        ></textarea>
-        <button className="submit-btn">게시</button>
+        <div className="textarea-container">
+          <textarea
+            onChange={handleChange}
+            ref={textareaRef}
+            maxLength={200}
+            rows={1}
+            value={comment}
+            placeholder="댓글 달기"
+          ></textarea>
+        </div>
+        <div className="submit-btn-container">
+          <button className="submit-btn">게시</button>
+        </div>
       </form>
     </section>
   );

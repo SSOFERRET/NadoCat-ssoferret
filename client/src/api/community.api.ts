@@ -42,18 +42,12 @@ export interface ICommentDeleteRequest {
 
 // CHECKLIST
 // [ ] 게시글 수정
-// [ ] 게시글 작성
+// [x] 게시글 작성
 
-export const getCommunityPosts = async ({
-  pageParam,
-  limit,
-  sort,
-}: ICommunityPostsParams): Promise<ICommunityPage> => {
+export const getCommunityPosts = async ({ pageParam, limit, sort }: ICommunityPostsParams): Promise<ICommunityPage> => {
   try {
     const response = await httpClient.get(
-      `/boards/communities?limit=${limit ?? LIMIT}&cursor=${pageParam}&sort=${
-        sort ?? SORT
-      }`
+      `/boards/communities?limit=${limit ?? LIMIT}&cursor=${pageParam}&sort=${sort ?? SORT}`
     );
     return response.data;
   } catch (error) {
@@ -62,9 +56,7 @@ export const getCommunityPosts = async ({
   }
 };
 
-export const getCommunityDetail = async ({
-  postId,
-}: ICommunityDetailParams): Promise<ICommunityDetail> => {
+export const getCommunityDetail = async ({ postId }: ICommunityDetailParams): Promise<ICommunityDetail> => {
   try {
     const response = await httpClient.get(`/boards/communities/${postId}`);
     return response.data;
@@ -74,9 +66,7 @@ export const getCommunityDetail = async ({
   }
 };
 
-export const deleteCommunityPost = async ({
-  postId,
-}: ICommunityDetailParams) => {
+export const deleteCommunityPost = async ({ postId }: ICommunityDetailParams) => {
   try {
     const response = await httpClient.delete(`/boards/communities/${postId}`);
     return response.data;
@@ -86,16 +76,38 @@ export const deleteCommunityPost = async ({
   }
 };
 
-export const getCommunityComments = async ({
-  postId,
-  pageParam,
-  limit,
-}: ICommunityCommentsParams) => {
+export const createCommunityPost = async (formData: FormData) => {
+  try {
+    const response = await httpClient.post(`/boards/communities`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating community post:", error);
+    throw error;
+  }
+};
+
+export const updateCommunityPost = async ({ formData, postId }: { formData: FormData; postId: number }) => {
+  try {
+    const response = await httpClient.put(`/boards/communities/${postId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating community post:", error);
+    throw error;
+  }
+};
+
+export const getCommunityComments = async ({ postId, pageParam, limit }: ICommunityCommentsParams) => {
   try {
     const response = await httpClient.get(
-      `/boards/communities/${postId}/comments?limit=${
-        limit ?? LIMIT
-      }&cursor=${pageParam}`
+      `/boards/communities/${postId}/comments?limit=${limit ?? LIMIT}&cursor=${pageParam}`
     );
 
     return response.data;
@@ -105,64 +117,40 @@ export const getCommunityComments = async ({
   }
 };
 
-export const createCommunityComment = async ({
-  postId,
-  userId,
-  comment,
-}: ICommentPostRequest) => {
+export const createCommunityComment = async ({ postId, userId, comment }: ICommentPostRequest) => {
   try {
-    const response = await httpClient.post(
-      `/boards/communities/${postId}/comments`,
-      { postId, userId, comment }
-    );
+    const response = await httpClient.post(`/boards/communities/${postId}/comments`, { postId, userId, comment });
 
     return response.data;
   } catch (error) {
-    console.error(
-      `Error creating community comment for post ${postId}:`,
-      error
-    );
+    console.error(`Error creating community comment for post ${postId}:`, error);
     throw error;
   }
 };
 
-export const updateCommunityComment = async ({
-  postId,
-  commentId,
-  comment,
-}: ICommentPutRequest) => {
+export const updateCommunityComment = async ({ postId, commentId, comment }: ICommentPutRequest) => {
   try {
     // NOTE userId 확인?
-    const response = await httpClient.put(
-      `/boards/communities/${postId}/comments/${commentId}`,
-      { postId, commentId, comment }
-    );
+    const response = await httpClient.put(`/boards/communities/${postId}/comments/${commentId}`, {
+      postId,
+      commentId,
+      comment,
+    });
 
     return response.data;
   } catch (error) {
-    console.error(
-      `Error updating community comment for post ${postId}:`,
-      error
-    );
+    console.error(`Error updating community comment for post ${postId}:`, error);
     throw error;
   }
 };
 
-export const deleteCommunityComment = async ({
-  postId,
-  commentId,
-}: ICommentDeleteRequest) => {
+export const deleteCommunityComment = async ({ postId, commentId }: ICommentDeleteRequest) => {
   try {
-    const response = await httpClient.delete(
-      `/boards/communities/${postId}/comments/${commentId}`
-    );
+    const response = await httpClient.delete(`/boards/communities/${postId}/comments/${commentId}`);
 
     return response.data;
   } catch (error) {
-    console.error(
-      `Error deleting community comment for post ${postId}:`,
-      error
-    );
+    console.error(`Error deleting community comment for post ${postId}:`, error);
     throw error;
   }
 };
