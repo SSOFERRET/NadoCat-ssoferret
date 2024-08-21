@@ -1,6 +1,7 @@
 @import "../../base/common.scss";
 
 .cat-container {
+  padding: 0 20rem;
   padding-bottom: 20rem;
   border-bottom: 0.5rem solid $lightgray;
 
@@ -49,7 +50,7 @@
       .more-btn svg {
         width: 18rem;
         height: 18rem;
-        fill: $dimgray;
+        color: $dimgray;
         margin-bottom: 2rem;
       }
     }

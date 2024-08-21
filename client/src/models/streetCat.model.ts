@@ -82,8 +82,29 @@ export interface IStreetCatComment {
   streetCatCommentId: number;
   comment: string;
   createdAt: Date;
-  users: {
-    nickname: string;
-    profileImages: string;
-  }
+  users: IUsers;
+}
+
+interface IUsers {
+  uuid?: Buffer;
+  nickname: string;
+  profileImage: string;
+}
+
+export interface ICommentPostRequest {
+  postId: number;
+  uuid: Buffer;
+  comment: string;
+}
+
+export interface ICommentPutRequest {
+  postId: number;
+  // uuid: Buffer;
+  commentId: number;
+  comment: string;
+}
+
+export interface ICommentDeleteRequest {
+  postId: number;
+  commentId: number;
 }

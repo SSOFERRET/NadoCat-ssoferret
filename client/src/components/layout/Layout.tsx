@@ -3,16 +3,21 @@ import { Header } from "../common/Header";
 import { Footer } from "../common/Footer";
 import { Outlet, useLocation } from "react-router-dom";
 import "../../styles/scss/components/layout/layout.scss";
+import { authPaths, postPaths, boardsDetailRegex } from "./LayoutRouter";
 
 const Layout: React.FC = () => {
   const location = useLocation();
-  const noHeaderFooterPaths = ["/users/signup", "/users/login"];
-  const isHeaderFooterHidden = noHeaderFooterPaths.includes(location.pathname);
-  const isPostFormPage = location.pathname.includes("/write") || location.pathname.includes("/edit");
-  const boardsDetailRegex = /\/boards\/(communities|events)\/\d+$/;
-  const isBoardsDetailPath = boardsDetailRegex.test(location.pathname);
+  const { pathname } = location;
+  
+  const shouldHideHeaderFooter = () => {
+    const isAuthPath = authPaths.includes(pathname);
+    const isPostFormPage = postPaths.some(path => pathname.includes(path));
+    const isBoardsDetailPath = boardsDetailRegex.test(pathname);
+  
+    return isAuthPath || isPostFormPage || isBoardsDetailPath;
+  };
 
-  const hideHeaderFooter = isHeaderFooterHidden || isPostFormPage || isBoardsDetailPath;
+  const hideHeaderFooter = shouldHideHeaderFooter();
 
   return (
     <>

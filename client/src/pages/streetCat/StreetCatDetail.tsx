@@ -11,6 +11,7 @@ import DiscoveryLocation from "../../components/streetCat/DiscoveryLocation";
 import Author from "../../components/streetCat/Author";
 import CommentsEmpty from "../../components/comment/CommentsEmpty";
 import StreetCatComments from "../../components/streetCat/StreetCatComments";
+import CommentForm from "../../components/comment/CommentForm";
 
 const StreetCatDetail: React.FC = () => {
   const { id } = useParams();
@@ -22,13 +23,14 @@ const StreetCatDetail: React.FC = () => {
   return (
     <>
       <section className="street-cat-detail-section">
-        <div className="page-guide-box">
-          <span className="page-guide">동네 고양이 도감</span>
+        <div className="detial-section">
+          <div className="page-guide-box">
+            <span className="page-guide">동네 고양이 도감</span>
+          </div>
+          <PostDetail {...data}/>
+          <DiscoveryLocation location={data?.location}/>
+          <Author users={data?.users} createdAt={data?.createdAt} name={data?.name}/>
         </div>
-        
-        <PostDetail {...data}/>
-        <DiscoveryLocation location={data?.location}/>
-        <Author users={data?.users} createdAt={data?.createdAt} name={data?.name}/>
       </section>
 
       <div className="separation"></div>

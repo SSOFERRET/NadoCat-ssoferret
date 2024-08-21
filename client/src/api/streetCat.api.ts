@@ -26,9 +26,22 @@ interface IFetchMyStreetCatPostsResponse {
   nextCursor?: number;
 }
 
-interface IFetchStreetCatCommentsResponse {
-  streetCatComments: IStreetCatComment[] | [undefined];
-  nextCursor?: number;
+export interface ICommentCreateRequest {
+  uuid: Buffer;
+  postId: number;
+  comment: string;
+}
+
+export interface ICommentUpdateRequest {
+  uuid: Buffer;
+  postId: number;
+  comment: string;
+}
+
+export interface ICommentDeleteRequest {
+  uuid: Buffer;
+  postId: number;
+  commentId: number;
 }
 
 export const fetchStreetCatPosts = async (params: IReadStreetCatPostsParams) => {
@@ -70,11 +83,26 @@ export const deleteFavoriteCat = async (postId: number) => {
 
 export const fetchStreetCatComments = async (params: IReadStreetCatCommentsParams) => {
   try {
-    const response = await httpClient.get<IFetchStreetCatCommentsResponse>(
+    const response = await httpClient.get(
       `/boards/street-cats/${params.postId}/comments?limit=${params.limit}&cursor=${params.cursor}`
     );
     return response.data;
   } catch (error) {
     console.error("Failed to fetch streetCatComments:", error);
   }
+}
+
+export const createStreetCatComment = async ({uuid, postId, comment}: ICommentCreateRequest) => {
+  const response = await httpClient.post(`/boards/street-cats/${postId}/comments`, {uuid, postId, comment});
+  return response.data;
+}
+
+export const updateStreetCatComment = async ({postId, comment}: ICommentUpdateRequest) => {
+  const response = await httpClient.put(`/boards/street-cats/${postId}.comments`, {postId, comment});
+  return response.data;
+}
+
+export const deleteStreetCatComment = async ({postId, commentId}: ICommentDeleteRequest) => {
+  const response = await httpClient.delete(`/boards/street-cats/${postId}.comments/${commentId}`);
+  return response.data;
 }
