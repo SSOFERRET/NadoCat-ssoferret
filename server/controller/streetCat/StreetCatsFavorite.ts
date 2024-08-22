@@ -12,13 +12,19 @@ import { createFavoriteCat, readFavoriteCat, readFavoriteCatPostIds, readFavorit
 // TODO: 테이블에 created_At 컬럼 추가되면 최신순 정렬
 export const getFavoriteCats = async (req: Request, res: Response) => {
   const uuid = await getUuid();
+  const limit = Number(req.query.limit);
+  const cursor = Number(req.query.cursor);
 
   await prisma.$transaction(async (tx) => {
-    const getFavoritePostIds = await readFavoriteCatPostIds(tx, uuid);
+    // const getFavoritePostIds = await readFavoriteCatPostIds(tx, uuid);
 
-    const postIds = getFavoritePostIds.map((post) => {return post.postId});
+    // const postIds = getFavoritePostIds.map((post) => {return post.postId});
 
-    const getFavoriteCatPosts = await readFavoriteCatPosts(tx, uuid, postIds);
+    // const getFavoriteCatPosts = await readFavoriteCatPosts(tx, uuid, postIds);
+    const getFavoriteCatPosts = await (isNaN(cursor)
+          ? readFavoriteCatPosts(tx, uuid, limit)
+          : readFavoriteCatPosts(tx, uuid, limit, cursor)
+        );
     
     res.status(200).json(getFavoriteCatPosts);
   })

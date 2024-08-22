@@ -28,9 +28,11 @@ const Event = () => {
             <span>이벤트 &#183; 모임</span>
           </div>
 
-          {isEmpty && <PostEmpty />}
+          <div className="event-post-list">
+            {isEmpty && <PostEmpty />}
 
-          {data && <PostList posts={data} />}
+            {data && <PostList posts={data} />}
+          </div>
 
           <div className="more" ref={moreRef}>
             {isFetchingNextPage && <div>loading...</div>}

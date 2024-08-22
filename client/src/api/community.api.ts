@@ -41,7 +41,7 @@ export interface ICommentDeleteRequest {
 }
 
 // CHECKLIST
-// [ ] 게시글 수정
+// [x] 게시글 수정
 // [x] 게시글 작성
 
 export const getCommunityPosts = async ({ pageParam, limit, sort }: ICommunityPostsParams): Promise<ICommunityPage> => {

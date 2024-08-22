@@ -10,6 +10,7 @@ import InterestsRouter from "./routes/interest";
 import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
+import LikesRouter from "./routes/likes";
 
 const PORT = process.env.PORT || 3000;
 
@@ -32,6 +33,7 @@ app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
 app.use("/notifications", NotificationsRouter);
 app.use("/searches", SearchesRouter);
+app.use("/posts", LikesRouter);
 
 app.use((_req: Request, res: Response) => {
   res.sendStatus(404);

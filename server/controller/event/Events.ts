@@ -109,12 +109,12 @@ export const getEvent = async (req: Request, res: Response) => {
 // [ ] 에러처리
 export const createEvent = async (req: Request, res: Response) => {
   try {
-    const { title, content, isClosed, date, tags } = req.body;
+    const { title, content, isClosed, tags } = req.body;
     const tagList = JSON.parse(tags);
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     const newPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const post = await addEvent(tx, userId, title, content, !!isClosed, date);
+      const post = await addEvent(tx, userId, title, content, !!isClosed);
       const postId = post.postId;
 
       if (tagList.length > 0) {
@@ -166,49 +166,66 @@ export const createEvent = async (req: Request, res: Response) => {
 
 // CHECKLIST
 // [x] 이벤트 게시판 게시글 수정
+// [x] 이미지 업로드 구현
 // [ ] 에러처리
 export const updateEvent = async (req: Request, res: Response) => {
   try {
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
-    const id = Number(req.params.community_id);
     const postId = Number(req.params.event_id);
 
-    const { title, content, isClosed, date, images, tags, newTags, deleteTagIds, newImages, deleteImageIds } = req.body;
+    const { title, content, tags, deleteTagIds, deleteImageIds, isClosed } = req.body;
 
-    if (!title || !content || !isClosed || !date || !newTags || !deleteTagIds || !deleteImageIds) {
+    if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
+    const tagList = JSON.parse(tags);
+    const tagIds = JSON.parse(deleteTagIds);
+    const imageIds = JSON.parse(deleteImageIds);
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      await updateEventById(tx, userId, postId, title, content, isClosed, date);
+      await updateEventById(tx, userId, postId, title, content, !!isClosed);
 
-      await removeTagsByIds(tx, deleteTagIds);
+      await removeTagsByIds(tx, tagIds);
 
-      await deleteTags(tx, deleteTagIds);
+      await deleteTags(tx, tagIds);
 
-      const tags = await Promise.all(newTags.map((tag: string) => addTag(tx, tag)));
+      const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
 
-      const formatedTags = tags.map((tag: ITag) => ({
+      const formatedTags = newTags.map((tag: ITag) => ({
         tagId: tag.tagId,
-        postId: id,
+        postId,
       }));
 
       await addEventTags(tx, formatedTags);
 
       await deleteImageFromS3ByImageId(tx, deleteImageIds);
-
       await removeImagesByIds(tx, deleteImageIds);
+      
+      if (req.files) {
+        const imageUrls = (await uploadImagesToS3(req)) as any;
+        const newImages = await addNewImages(
+          tx,
+          {
+            userId,
+            postId,
+            categoryId: CATEGORY.COMMUNITIES,
+          },
+          imageUrls
+        );
+        const formatedImages = newImages.map((imageId: number) => ({
+          imageId,
+          postId,
+        }));
 
-      await deleteImages(tx, deleteImageIds);
+        await addEventImages(tx, formatedImages);
+      }
 
-      const images = await Promise.all(newImages.map((url: string) => addImage(tx, url)));
+      await deleteImageFromS3(CATEGORY.EVENTS, postId, imageIds.length);
 
-      const formatedImages = images.map((image: IImage) => ({
-        imageId: image.imageId,
-        postId: id,
-      }));
+      await removeImagesByIds(tx, imageIds);
 
-      await addEventImages(tx, formatedImages);
+      await deleteImages(tx, imageIds);
 
       await updateOpensearchDocument(CATEGORY.EVENTS, postId, { content });
     });

@@ -8,10 +8,11 @@ export interface MyProps {
     profileImageUrl: string;
 }
 
-export const My = ({nickname, profileImageUrl}:MyProps) => {
+export const My = () => {
   return (
     <div className="my-container">
-        <MyInfo nickname={nickname} profileImageUrl={profileImageUrl}></MyInfo>
+        {/* <MyInfo nickname={nickname} profileImageUrl={profileImageUrl}></MyInfo> */}
+        <MyInfo nickname="김땡떙" profileImageUrl="url"></MyInfo>
         <MyTab></MyTab>
     </div>
   );

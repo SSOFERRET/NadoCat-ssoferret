@@ -3,23 +3,27 @@ import ImageUploader from "./ImageUploader";
 import NewTags from "./NewTags";
 import NewTagForm from "./NewTagForm";
 import { ICommunityDetail } from "../../models/community.model";
+import { IEventDetail } from "../../models/event.model";
 
-interface IProps {
-  post: ICommunityDetail;
+type Post = ICommunityDetail | IEventDetail;
+
+const isClosedType = (post: Post): post is IEventDetail => "isClosed" in post;
+interface IProps<T> {
+  boardCategory: "community" | "event";
+  post: T;
   editPost: (formData: FormData) => void;
 }
 
-const PostEditForm = ({ post, editPost }: IProps) => {
+const PostEditForm = <T extends Post>({ boardCategory, post, editPost }: IProps<T>) => {
   const oldImages = post.images.map((image) => image.url);
   const oldTags = post.tags.map((tag) => tag.tag);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
   const [newTags, setNewTags] = useState<string[]>([...oldTags]);
   const [newImages, setNewImages] = useState<(string | File)[]>(oldImages);
-
+  const [isClosed, setIsClosed] = useState(false);
   const [tagsToDelete, setTagsToDelete] = useState<string[]>([]);
 
   const handleResizeHeight = () => {
@@ -37,6 +41,8 @@ const PostEditForm = ({ post, editPost }: IProps) => {
       setContent(value);
     } else if (name === "title") {
       setTitle(value);
+    } else if (name === "status") {
+      setIsClosed((prev) => !prev);
     }
   };
 
@@ -89,6 +95,7 @@ const PostEditForm = ({ post, editPost }: IProps) => {
 
     formData.append("title", title);
     formData.append("content", content);
+    boardCategory === "event" && formData.append("isClosed", isClosed ? "true" : "");
     formData.append("deleteTagIds", JSON.stringify(filteredTagIds) ?? []);
     formData.append("tags", JSON.stringify(filteredTags) ?? []);
     formData.append("deleteImageIds", JSON.stringify(filteredImageIds) ?? []);
@@ -119,6 +126,7 @@ const PostEditForm = ({ post, editPost }: IProps) => {
             required
           />
           <textarea
+            className="post-textarea"
             onChange={handleChange}
             ref={textareaRef}
             name="content"
@@ -129,8 +137,36 @@ const PostEditForm = ({ post, editPost }: IProps) => {
             required
           ></textarea>
 
-          {/* 이미지 업로드 부분 */}
           <ImageUploader newImages={newImages} setNewImageFiles={setNewImageFiles} />
+
+          {isClosedType(post) && (
+            <div className="status-selection">
+              <span className="status-title">모집</span>
+              <div className="status-buttons">
+                <input
+                  className="open"
+                  onChange={handleChange}
+                  type="radio"
+                  id="open"
+                  name="status"
+                  checked={!isClosed}
+                  value="open"
+                />
+                <label htmlFor="open">모집</label>
+
+                <input
+                  className="closed"
+                  onChange={handleChange}
+                  type="radio"
+                  id="closed"
+                  name="status"
+                  checked={isClosed}
+                  value="closed"
+                />
+                <label htmlFor="closed">마감</label>
+              </div>
+            </div>
+          )}
 
           <div className="hash-tag-wrapper">
             <button type="button" className="hash-tag-btn" onClick={handleTagFormOpen}>

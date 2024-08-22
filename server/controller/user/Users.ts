@@ -72,8 +72,8 @@ export const login = async (req: Request, res: Response) => {
       user: {
         email: result.selectUser.email,
         nickname: result.selectUser.nickname,
-        password: result.selectUserSecret.hashPassword,
         uuid: userUuidString,
+        // password: result.selectUserSecret.hashPassword,
       },
       tokens: {
         accessToken: generalToken,
@@ -83,7 +83,7 @@ export const login = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.log("로그인 error:", error);
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: "로그인 처리 중 오류가 발생했습니다." });
+    return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인 처리 중 오류가 발생했습니다." });
   }
 };
 

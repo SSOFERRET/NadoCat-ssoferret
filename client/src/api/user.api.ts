@@ -17,9 +17,20 @@ export const signup = async(userData: SignupProps) => {
 //비밀번호 변경
 
 interface ILoginResponse {
-    generalToken: string;
+    // generalToken: string;
+    // refreshToken: string | null;
+    // authLogin: boolean;
+    // uuid: string;
+    message: string;
+  user: {
+    email: string;
+    nickname: string;
+    uuid: string;
+  };
+  tokens: {
+    accessToken: string;
     refreshToken: string | null;
-    authLogin: boolean;
+  };
 }
 
 export const login = async(data: LoginProps) => {

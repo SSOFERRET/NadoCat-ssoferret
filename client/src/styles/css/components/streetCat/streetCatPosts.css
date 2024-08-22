@@ -77,12 +77,12 @@ li .img-box img {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 5rem;
+  object-fit: cover;
 }
 li svg {
   width: 25rem;
   height: 25rem;
-  fill: #4c4c4c;
+  fill: #b8bcbf;
   position: absolute;
   right: 10rem;
   bottom: 62rem;
@@ -107,6 +107,10 @@ li svg.active {
   font-family: "medium";
   font-size: 10rem !important;
   color: #b8bcbf;
+}
+
+.load-more {
+  height: 2rem;
 }
 
 /*# sourceMappingURL=streetCatPosts.css.map */
