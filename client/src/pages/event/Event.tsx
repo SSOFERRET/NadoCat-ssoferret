@@ -1,18 +1,13 @@
 import useEvents from "../../hooks/useEvents";
-import "../../styles/css/pages/event/event.css";
+import "../../styles/scss/pages/event/event.scss";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import PostList from "../../components/communityAndEvent/PostList";
+import LoadingCat from "../../components/loading/LoadingCat";
+import NewPostButton from "../../components/common/NewPostButton";
 
 const Event = () => {
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isEmpty,
-  } = useEvents("views");
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useEvents("views");
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
@@ -26,7 +21,7 @@ const Event = () => {
   return (
     <section className="event-container">
       {isLoading ? (
-        <div>loading...</div>
+        <LoadingCat />
       ) : (
         <>
           <div className="category">
@@ -40,6 +35,8 @@ const Event = () => {
           <div className="more" ref={moreRef}>
             {isFetchingNextPage && <div>loading...</div>}
           </div>
+
+          <NewPostButton path="/boards/events/write" />
         </>
       )}
     </section>

@@ -47,7 +47,6 @@ body {
 /* tags */
 /* others */
 .signup-container {
-  overflow-y: hidden;
   height: 100vh;
   background: #ffffff;
 }

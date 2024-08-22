@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/css/components/common/tags.css";
+import "../../styles/scss/components/common/tags.scss";
 import { ITag } from "../../models/tag.model";
 
 type Size = "sm" | "md";

@@ -9,11 +9,7 @@ export const getCommentCount = async (postId: number) => {
   });
 };
 
-export const getEventComments = async (
-  postId: number,
-  limit: number,
-  cursor: number | undefined
-) => {
+export const getEventComments = async (postId: number, limit: number, cursor: number | undefined) => {
   const result = await prisma.eventComments.findMany({
     where: {
       eventId: postId,
@@ -58,31 +54,22 @@ export const getEventComments = async (
   });
 };
 
-export const addComment = async (
-  postId: number,
-  userId: string,
-  comment: string
-) => {
+export const addComment = async (postId: number, userId: Buffer, comment: string) => {
   return await prisma.eventComments.create({
     data: {
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
       eventId: postId,
       comment,
     },
   });
 };
 
-export const updateCommentById = async (
-  postId: number,
-  userId: string,
-  commentId: number,
-  comment: string
-) => {
+export const updateCommentById = async (postId: number, userId: Buffer, commentId: number, comment: string) => {
   return await prisma.eventComments.update({
     where: {
       eventId: postId,
       eventCommentId: commentId,
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
     },
     data: {
       comment,
@@ -90,24 +77,17 @@ export const updateCommentById = async (
   });
 };
 
-export const deleteCommentById = async (
-  postId: number,
-  userId: string,
-  commentId: number
-) => {
+export const deleteCommentById = async (postId: number, userId: Buffer, commentId: number) => {
   return await prisma.eventComments.delete({
     where: {
       eventId: postId,
       eventCommentId: commentId,
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
     },
   });
 };
 
-export const deleteCommentsById = async (
-  tx: Prisma.TransactionClient,
-  postId: number
-) => {
+export const deleteCommentsById = async (tx: Prisma.TransactionClient, postId: number) => {
   return await tx.eventComments.deleteMany({
     where: {
       eventId: postId,

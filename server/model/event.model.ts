@@ -7,11 +7,7 @@ import { SortOrder } from "../types/sort";
 
 export const getEventsCount = async () => await prisma.events.count();
 
-export const getEventList = async (
-  limit: number,
-  sort: string,
-  cursor: number | undefined
-) => {
+export const getEventList = async (limit: number, sort: string, cursor: number | undefined) => {
   const categoryId = CATEGORY.EVENTS;
   const orderBy = getOrderBy(sort);
   const orderOptions = [];
@@ -45,6 +41,7 @@ export const getEventList = async (
         },
       },
       eventImages: {
+        take: 1,
         select: {
           images: {
             select: {
@@ -81,7 +78,6 @@ export const getEventList = async (
       views: event.views,
       createdAt: event.createdAt,
       updatedAt: event.updatedAt,
-      date: event.date,
       isClosed: event.isClosed,
       users: {
         id: event?.users.id,
@@ -90,7 +86,7 @@ export const getEventList = async (
         profileImage: event?.users.profileImage,
       },
       tags: event.eventTags.map((item: IEventTag) => item.tags),
-      images: event.eventImages.map((item: IEventImage) => item.images),
+      thumbnail: event.eventImages.map((item: IEventImage) => item.images.url).join("") ?? null,
       likes: event._count.eventLikes,
     };
   });
@@ -177,7 +173,7 @@ export const getEventById = async (postId: number) => {
 
 export const addEvent = async (
   tx: Prisma.TransactionClient,
-  userId: string,
+  userId: Buffer,
   title: string,
   content: string,
   isClosed: boolean,
@@ -190,14 +186,14 @@ export const addEvent = async (
       content,
       isClosed,
       categoryId,
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
       date,
     },
   });
 };
 export const updateEventById = async (
   tx: Prisma.TransactionClient,
-  userId: string,
+  userId: Buffer,
   postId: number,
   title: string,
   content: string,
@@ -208,7 +204,7 @@ export const updateEventById = async (
   return await tx.events.update({
     where: {
       postId,
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
       categoryId,
     },
     data: {
@@ -220,16 +216,12 @@ export const updateEventById = async (
   });
 };
 
-export const removeEventById = async (
-  tx: Prisma.TransactionClient,
-  postId: number,
-  userId: string
-) => {
+export const removeEventById = async (tx: Prisma.TransactionClient, postId: number, userId: Buffer) => {
   const categoryId = CATEGORY.EVENTS;
   return await tx.events.delete({
     where: {
       postId,
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
       categoryId,
     },
   });
@@ -259,10 +251,7 @@ export const addEventImages = async (
   });
 };
 
-export const removeTagsByIds = async (
-  tx: Prisma.TransactionClient,
-  tagIds: number[]
-) => {
+export const removeTagsByIds = async (tx: Prisma.TransactionClient, tagIds: number[]) => {
   return await tx.eventTags.deleteMany({
     where: {
       tagId: {
@@ -272,10 +261,7 @@ export const removeTagsByIds = async (
   });
 };
 
-export const removeImagesByIds = async (
-  tx: Prisma.TransactionClient,
-  imageIds: number[]
-) => {
+export const removeImagesByIds = async (tx: Prisma.TransactionClient, imageIds: number[]) => {
   return await tx.eventImages.deleteMany({
     where: {
       imageId: {
@@ -296,10 +282,7 @@ export const getLikeIds = async (postId: number) => {
   });
 };
 
-export const removeLikesById = async (
-  tx: Prisma.TransactionClient,
-  postId: number
-) => {
+export const removeLikesById = async (tx: Prisma.TransactionClient, postId: number) => {
   return await tx.eventLikes.deleteMany({
     where: {
       postId,
