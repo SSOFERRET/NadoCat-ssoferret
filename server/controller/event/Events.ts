@@ -129,7 +129,7 @@ export const createEvent = async (req: Request, res: Response) => {
       }
 
       if (req.files) {
-        const imageUrls = (await uploadImageToS3(req, CATEGORY.COMMUNITIES, postId)) as any;
+        const imageUrls = (await uploadImageToS3(req, CATEGORY.EVENTS, postId)) as any;
         const newImages = await addNewImages(
           tx,
           {
@@ -182,7 +182,6 @@ export const updateEvent = async (req: Request, res: Response) => {
     const tagList = JSON.parse(tags);
     const tagIds = JSON.parse(deleteTagIds);
     const imageIds = JSON.parse(deleteImageIds);
-    console.log(typeof isClosed);
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await updateEventById(tx, userId, postId, title, content, !!isClosed);
@@ -260,6 +259,7 @@ export const deleteEvent = async (req: Request, res: Response) => {
 
       if (post.images?.length) {
         const imageIds = post.images.map((item: IImage) => item.imageId);
+        await deleteImageFromS3(CATEGORY.EVENTS, postId, imageIds.length);
         await removeImagesByIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }

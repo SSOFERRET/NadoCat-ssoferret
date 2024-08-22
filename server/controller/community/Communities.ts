@@ -278,6 +278,7 @@ export const deleteCommunity = async (req: Request, res: Response) => {
 
       if (post.images?.length) {
         const imageIds = post.images.map((item: IImage) => item.imageId);
+        await deleteImageFromS3(CATEGORY.COMMUNITIES, postId, imageIds.length);
         await removeImagesByIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }
