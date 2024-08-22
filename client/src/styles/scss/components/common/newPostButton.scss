@@ -1,0 +1,25 @@
+@import "../../base/common.scss";
+
+.new-post-button {
+  position: sticky;
+  bottom: 73rem;
+  right: 20rem;
+  float: right;
+  width: 107rem;
+  height: 54rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50rem;
+  background-color: $primary;
+  color: $white;
+  border: none;
+  font-family: "bold";
+  font-size: $size-18;
+  z-index: 10000;
+  cursor: pointer;
+
+  svg {
+    margin-right: 6rem;
+  }
+}

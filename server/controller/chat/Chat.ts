@@ -16,11 +16,11 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
         OR: [
           {
             uuid: userUuidBuffer,
-            other_uuid: otherUserUuidBuffer
+            otherUuid: otherUserUuidBuffer
           },
           {
             uuid: otherUserUuid,
-            other_uuid: otherUserUuidBuffer
+            otherUuid: otherUserUuidBuffer
           }
         ]
       }
@@ -29,7 +29,7 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
       chat = await prisma.chats.create({
         data: {
           uuid: userUuidBuffer,
-          other_uuid: otherUserUuidBuffer,
+          otherUuid: otherUserUuidBuffer,
           messages: {
           create: [] 
         }
