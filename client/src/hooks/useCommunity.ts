@@ -27,9 +27,9 @@ const useCommunity = (postId: number) => {
   const { mutateAsync: editCommunityPost } = useMutation({
     mutationFn: ({ formData, postId }: { formData: FormData; postId: number }) =>
       updateCommunityPost({ formData, postId }),
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries({ queryKey: ["communityDetail", postId] });
-    // },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["communityDetail", postId] });
+    },
     onError: (error) => {
       console.error("Error updating community post:", error);
     },
