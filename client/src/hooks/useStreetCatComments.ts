@@ -35,12 +35,24 @@ export const useStreetCatComments = (postId: number) => {
       }
       return lastPage.streetCatComments[LIMIT - 1]?.streetCatCommentId;
     },
+    // queryFn: ({ pageParam = 0 }) => fetchStreetCatComments({ postId: postId, limit: LIMIT, cursor: pageParam, }),
+    // initialPageParam: 0,
+    // getNextPageParam: (lastPage) => {
+    //   const nextCursor = lastPage.pagination.nextCursor;
+    //   if (nextCursor) {
+    //     return nextCursor;
+    //   }
+    //   return undefined;
+    // },
   });
 
-  const streetCatComments = data
-    ? data.pages.flatMap((page) => page?.streetCatComments)
-    : [];
-  const isEmpty = streetCatComments.length === 0;
+  // const streetCatComments = data
+  //   ? data.pages.flatMap((page) => page?.streetCatComments)
+  //   : [];
+  // const isEmpty = streetCatComments.length === 0;
+  const comments = data ? data.pages.flatMap((page) => page.comments) : [];
+  const isEmpty = comments.length === 0;
+  // const commentCount = data?.pages.flatMap((v) => v.pagination.totalCount)[0];
 
   const { mutateAsync: addStreetCatComment } = useMutation({
     mutationFn: ({ postId, uuid, comment }: ICreateCommentParams) =>
@@ -55,19 +67,19 @@ export const useStreetCatComments = (postId: number) => {
     },
   });
 
-  // // Editing an existing comment
-  // const { mutateAsync: editStreetCatComment } = useMutation({
-  //   mutationFn: ({ postId, userId, comment, commentId }: ICommentPutRequest) =>
-  //     updateStreetCatComment({ postId, commentId, comment, uuid }),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["streetCatComments", postId],
-  //     });
-  //   },
-  //   onError: (error) => {
-  //     console.error("Error editing street cat comment:", error);
-  //   },
-  // });
+  // 수정해야됨
+  const { mutateAsync: editStreetCatComment } = useMutation({
+    mutationFn: ({ postId, uuid, comment, commentId }: ICommentPutRequest) =>
+      updateStreetCatComment({ postId, commentId, comment, uuid }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["streetCatComments", postId],
+      });
+    },
+    onError: (error) => {
+      console.error("Error editing street cat comment:", error);
+    },
+  });
 
   const { mutateAsync: removeStreetCatComment } = useMutation({
     mutationFn: ({ postId, commentId }: ICommentDeleteRequest) =>
@@ -90,10 +102,11 @@ export const useStreetCatComments = (postId: number) => {
     isFetchingNextPage,
     status,
     isLoading,
-    streetCatComments,
+    // streetCatComments,
     isEmpty,
+    // commentCount,
     addStreetCatComment,
-    // editStreetCatComment,
+    editStreetCatComment,
     removeStreetCatComment,
   };
 };

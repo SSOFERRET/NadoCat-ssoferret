@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
 import { IImages, IStreetCatImages, IStreetCatPosts, IStreetCats } from "../../types/streetCat";
-import { addImage, createFavoriteCat, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, readFavoriteCat, readFavoriteCatPostIds, readLocation, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, removeComment, removeFavoriteCat, updatePost } from "../../model/streetCat.model";
+import { addImage, createFavoriteCat, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, deleteThumbnail, readFavoriteCat, readFavoriteCatPostIds, readLocation, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, removeComment, removeFavoriteCat, updatePost } from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
@@ -191,6 +191,8 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
       const deleteImageIds = getStreetCatImages.map(image => image.imageId);
 
       await deleteAllStreetCatImages(tx, postId);
+
+      await deleteThumbnail(tx, postId);
 
       await deleteImages(tx, deleteImageIds);
 
