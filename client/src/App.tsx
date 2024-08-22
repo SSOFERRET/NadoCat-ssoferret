@@ -18,6 +18,7 @@ import ImageUploadTest from "./components/imageUploadTest";
 import Home from "./pages/Home/Home";
 import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
+import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
 
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
         path: "users",
         children: [
           // { path: "my", element: <MyPage /> },
+          { path: "user", element: <UserProfile /> },
           { path: "my", element: <My /> },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
