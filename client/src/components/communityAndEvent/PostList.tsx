@@ -6,6 +6,7 @@ import { InfiniteData } from "@tanstack/react-query";
 import { IEvent } from "../../models/event.model";
 import { IMissing, IMissingPosts } from "../../models/missing.model";
 import MissingPost from "../missing/MissingPost";
+import { Sort } from "../../api/community.api";
 
 // PostList 실종고양이 게시판에서도 공유하면 좋겠다는 생각에 조건부 렌더링으로 수정했습니다. 혹시 문제 생길 때를 대비에 원래 코드를 아래 주석으로 남겼습니다.
 
@@ -16,8 +17,7 @@ interface IProps {
 type TCategory = IMissingPosts | ICommunityPage;
 
 const PostList = ({ posts }: IProps) => {
-  const isMissing = (post: IMissing | ICommunity | IEvent): boolean =>
-    (post as IMissing).missingCats ? true : false;
+  const isMissing = (post: IMissing | ICommunity | IEvent): boolean => ((post as IMissing).missingCats ? true : false);
 
   return (
     <ul className="list">
