@@ -7,17 +7,20 @@ import { getImageFormatsByPostId } from "../../model/missing.model";
 import prisma from "../../client";
 import { Prisma } from "@prisma/client";
 import { getImageById } from "../../model/image.model";
+import { IImage } from "../../types/image";
+import { compressToEncodedURIComponent } from "lz-string";
 
 dotenv.config();
 
-export const uploadImagesToS3 = async (req: Request, categoryId: number, postId: number) => {
+export const uploadImagesToS3 = async (req: Request) => {
   if (!req.files) return;
   const images = req.files as Express.Multer.File[];
   try {
-    const results = await Promise.all(images.map(async (image, idx) => {
+    const results = await Promise.all(images.map(async (image) => {
+      const keyName = `${compressToEncodedURIComponent(image.originalname)}_${Date.now()}`;
       const result = await s3.upload({
         Bucket: "nadocat",
-        Key: `${categoryId}_${postId}_${idx}`,
+        Key: keyName,
         Body: await convertToWebpBuffer(image),
         ContentType: image.mimetype,
       }, (error, data) => {
@@ -32,16 +35,27 @@ export const uploadImagesToS3 = async (req: Request, categoryId: number, postId:
   }
 };
 
-export const deleteImageFromS3 = async (categoryId: TCategoryId, postId: number, imageCount: number) => {
+const deleteImageFromS3 = async (images: IImage[]) => {
   try {
-    for (let idx = 0; idx < imageCount; idx++)
+    await Promise.all(images.map(async (image) => {
+      const urlSplit = image.url.split("/");
+      const keyName = urlSplit[urlSplit.length - 1];
       await s3.deleteObject({
         Bucket: process.env.S3_BUCKET_NAME as string,
-        Key: `${categoryId}_${postId}_${idx}`
-      }).promise();
+        Key: keyName
+      }).promise()
+    }))
   } catch (error) {
     throw error;
   }
+}
+
+export const deleteImageFromS3ByImageId = async (
+  tx: Prisma.TransactionClient,
+  imageIds: number[]
+) => {
+  const imageDatasToDelete = await Promise.all(imageIds.map(async (imageId: number) => await getImageById(tx, imageId)));
+  await deleteImageFromS3(imageDatasToDelete as IImage[]);
 }
 
 export const getImageUrlsFromDb = async (categoryId: TCategoryId, postId: number) => {
