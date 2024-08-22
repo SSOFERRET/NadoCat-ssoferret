@@ -1,21 +1,21 @@
 import React from "react";
 import "../../styles/scss/pages/user/my.scss";
-import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
+import Profile from "../../components/user/Profile";
 
-export interface MyProps {
+export interface UserProfileProps {
     nickname: string;
     profileImageUrl: string;
 }
 
-export const My = () => {
+export const UserProfile = () => {
   return (
-    <div className="my-container">
+    <div className="user-container">
         {/* <MyInfo nickname={nickname} profileImageUrl={profileImageUrl}></MyInfo> */}
-        <MyInfo nickname="김땡떙" profileImageUrl="url"></MyInfo>
+        <Profile nickname="김땡떙" profileImageUrl="url"></Profile>
         <MyTab></MyTab>
     </div>
   );
 };
 
-export default My;
+export default UserProfile;

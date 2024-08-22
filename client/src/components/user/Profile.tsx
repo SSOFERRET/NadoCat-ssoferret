@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import "../../../styles/scss/components/user/my/myInfo.scss";
-import { IoIosSettings } from "react-icons/io";
-import ProfileChangeModal from "./ProfileChangeModal";
+import "../../styles/scss/components/user/profile.scss";
+// import { IoIosSettings } from "react-icons/io";
 
-interface MyInfoProps {
+interface ProfileProps {
   nickname: string;
   profileImageUrl: string;
 }
 
-const MyInfo = ({ nickname, profileImageUrl }: MyInfoProps) => {
+const MyInfo = ({ nickname, profileImageUrl }: ProfileProps) => {
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const handleOpenProfileChange = () => {
@@ -23,20 +22,20 @@ const MyInfo = ({ nickname, profileImageUrl }: MyInfoProps) => {
     <div className="info-container">
       <div className="circle-container">
         <div className="circle"/>
-        <img src={profileImageUrl} alt="profileImage" className="cat-circle" />
+        <img src={profileImageUrl} alt="profileImage" className="user-circle" />
       </div>
 
       <div className="nickname-container">
         <div className="nickname-text">
           <p>{nickname}</p> 
-          <IoIosSettings />
+          {/* <IoIosSettings /> */}
         </div>
         <div className="change-profile-btn">
-          <button onClick={handleOpenProfileChange}>프로필변경</button>
+          <button onClick={handleOpenProfileChange}>채팅하기</button>
         </div>
       </div>
 
-        {isOpenModal && <ProfileChangeModal closeModal={handleCloseProfileChange} />}
+        {/* {isOpenModal && <ProfileChangeModal closeModal={handleCloseProfileChange} />} */}
 
     </div>
   );
