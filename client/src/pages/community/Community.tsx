@@ -1,4 +1,4 @@
-import "../../styles/css/pages/community/community.css";
+import "../../styles/scss/pages/community/community.scss";
 import PostList from "../../components/communityAndEvent/PostList";
 import useCommunities from "../../hooks/useCommunities";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
