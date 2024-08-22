@@ -177,7 +177,9 @@ const PostEditForm = <T extends Post>({ boardCategory, post, editPost }: IProps<
             <NewTags tags={newTags} removeTags={removeTags} />
           </div>
         </div>
-        <button className="post-submit">수정완료</button>
+        <button className={`post-submit ${!title || !content ? "submit-disabled" : ""}`} disabled={!title || !content}>
+          수정완료
+        </button>
       </form>
 
       {isOpen && (
