@@ -5,6 +5,7 @@ import { IListData } from "../../types/post";
 import { getImageById } from "../../model/image.model";
 import prisma from "../../client";
 import { Prisma } from "@prisma/client";
+import { getLocationById } from "../../model/location.model";
 
 export const getPosts = async (req: Request, res: Response, postData: IListData) => {
   try {
@@ -13,25 +14,19 @@ export const getPosts = async (req: Request, res: Response, postData: IListData)
 
     const count = await getPostsCount(categoryId);
 
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      let postList = await getPostList(listData);
-      if (postList.thumbnail) {
-        const image = await getImageById(tx, postList.thumbnail);
-        postList = { ...postList, image };
+    let posts = await getPostList(listData);
+
+    const nextCursor = posts.length === limit ? posts[posts.length - 1].postId : null;
+
+    const result = {
+      posts,
+      pagination: {
+        nextCursor,
+        totalCount: count
       }
+    };
 
-      const nextCursor = postList.length === limit ? postList[postList.length - 1].postId : null;
-
-      const result = {
-        posts: postList,
-        pagination: {
-          nextCursor,
-          totalCount: count
-        }
-      };
-
-      res.status(StatusCodes.OK).json(result);
-    })
+    res.status(StatusCodes.OK).send(result);
   } catch (error) {
     console.error(error);
     res

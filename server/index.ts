@@ -12,8 +12,6 @@ import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
 import LikesRouter from "./routes/likes";
 
-import S3TestRouter from "./routes/s3test";
-
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -36,9 +34,6 @@ app.use("/boards/events", EventsRouter);
 app.use("/notifications", NotificationsRouter);
 app.use("/searches", SearchesRouter);
 app.use("/posts", LikesRouter);
-
-// s3 이미지 저장 테스트용. 삭제 예정
-app.use("/s3test", S3TestRouter);
 
 app.use((_req: Request, res: Response) => {
   res.sendStatus(404);

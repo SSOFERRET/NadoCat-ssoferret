@@ -18,6 +18,7 @@ import ImageUploadTest from "./components/imageUploadTest";
 import Home from "./pages/Home/Home";
 import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
+import Missings from "./pages/missing/Missings";
 import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
               { path: "write", element: <EventPostWrite /> },
               { path: "edit/:id", element: <EventPostEdit /> },
             ],
+          },
+          {
+            path: "missings",
+            children: [{ path: "", element: <Missings /> }],
           },
         ],
       },

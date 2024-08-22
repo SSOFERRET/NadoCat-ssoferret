@@ -1,0 +1,49 @@
+@import "../../base/common.scss";
+
+.post-info {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 12rem;
+  font-family: "medium";
+  font-size: $size-14;
+  color: $gray;
+  margin: 12rem 0 0 0;
+
+  svg {
+    width: 16rem;
+    height: 16rem;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  & .liked-false {
+    svg {
+      color: $white;
+      stroke: $primary;
+      stroke-width: 2px;
+    }
+  }
+
+  & .liked-true {
+    svg {
+      color: $primary;
+    }
+  }
+
+  .reports {
+    svg {
+      color: $gray;
+    }
+  }
+
+  .views {
+    svg {
+      color: $gray;
+    }
+  }
+}
