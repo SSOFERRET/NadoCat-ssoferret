@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import PostMenu from "../communityAndEvent/PostMenu";
+import { useDeleteComment } from "../../hooks/useStreetCat";
+import useCommentStore from "../../store/comment";
 
 interface IUser {
   uuid: {
@@ -22,14 +24,63 @@ interface IStreetCatCmmentProps {
   postId: number;
 }
 
-const StreetCatCmment: React.FC<IStreetCatCmmentProps> = ({ comments, postId }) => {
-  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
-  const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
+const StreetCatComment: React.FC<IStreetCatCmmentProps> = ({ comments, postId }) => {
+  // const oldComment = comments.comment;
+  const { selectedCommentId, setSelectedCommentId, clearSelectedCommentId } = useCommentStore();
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  // const [commentText, setCommentText] = useState(oldComment);
 
-  const toggleMenu = (commentId: number | null) => {
-    setSelectedCommentId(commentId);
-    setMenuOpen((prev) => !prev);
+
+  const {mutateAsync: removeComment} = useDeleteComment();
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
+  const showMenu = () => {
+    setIsShowMenu((prev) => !prev);
   };
+
+  const handelCommentFormOpen = () => {
+    showMenu();
+    // setCommentText(true);
+  };
+
+  const handleComment = (commentId: number) => {
+    setSelectedCommentId(commentId);
+    showMenu();
+  };
+
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+
+  //   if (!commentText.trim().length || comment.comment === commentText) {
+  //     return;
+  //   }
+
+  //   editComment({
+  //     postId,
+  //     userId,
+  //     comment: commentText,
+  //     commentId: comment.commentId,
+  //   })
+  //     .then(() => {
+  //       console.log("수정 완료!");
+  //     })
+  //     .catch(() => {
+  //       console.error("에러닷..!!");
+  //     })
+  //     .finally(() => {
+  //       setIsCommentEdit(false);
+  //       clearSelectedCommentId();
+  //     });
+  // };
+
+  // const onClose = () => {
+  //   setIsCommentEdit(false);
+  //   clearSelectedCommentId();
+  //   setCommentText(oldComment);
+  // };
+
+  console.log("selectedCommentId: ", selectedCommentId)
+  console.log(".........")
 
   return (
     <>
@@ -48,21 +99,21 @@ const StreetCatCmment: React.FC<IStreetCatCmmentProps> = ({ comments, postId }) 
             </div>
             <p className="content">{comment.comment}</p>
           </div>
-          <HiOutlineDotsVertical className="comment-more" onClick={() => toggleMenu(comment.streetCatCommentId)}/>
-            {isMenuOpen && selectedCommentId === comment.streetCatCommentId && (
-              <PostMenu
-                boardType="streetCat"
-                menuType="comment"
-                postId={postId}
-                commentId={comment.streetCatCommentId}
-                isShowMenu={isMenuOpen}
-                showMenu={() => setMenuOpen(false)}
-              />
-            )}
+          <HiOutlineDotsVertical className="comment-more" onClick={() => handleComment(comment.streetCatCommentId)}/>
         </div>
       ))}
+      {/* <PostMenu
+        boardType="streetCat"
+        menuType="comment"
+        postId={postId}
+        commentId={selectedCommentId}
+        showMenu={showMenu}
+        isShowMenu={isShowMenu}
+        deleteComment={removeComment}
+        handelCommentFormOpen={handelCommentFormOpen}
+      /> */}
     </>
   );
 };
 
-export default StreetCatCmment;
+export default StreetCatComment;
