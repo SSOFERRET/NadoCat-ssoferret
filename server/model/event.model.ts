@@ -177,7 +177,7 @@ export const addEvent = async (
   title: string,
   content: string,
   isClosed: boolean,
-  date: string
+  date?: string
 ) => {
   const categoryId = CATEGORY.EVENTS;
   return await tx.events.create({
@@ -198,7 +198,7 @@ export const updateEventById = async (
   title: string,
   content: string,
   isClosed: boolean,
-  date: string
+  date?: string
 ) => {
   const categoryId = CATEGORY.EVENTS;
   return await tx.events.update({

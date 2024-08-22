@@ -10,8 +10,9 @@ import InterestsRouter from "./routes/interest";
 import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
+import LikesRouter from "./routes/likes";
 
-import S3TestRouter from "./routes/s3test"
+import S3TestRouter from "./routes/s3test";
 
 const PORT = process.env.PORT || 3000;
 
@@ -34,6 +35,7 @@ app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
 app.use("/notifications", NotificationsRouter);
 app.use("/searches", SearchesRouter);
+app.use("/posts", LikesRouter);
 
 // s3 이미지 저장 테스트용. 삭제 예정
 app.use("/s3test", S3TestRouter);

@@ -8,8 +8,8 @@ import { IEvent } from "../../models/event.model";
 
 // NOTE 타입 이거 맞나..
 type PostType = ICommunity | IEvent;
-interface IProps {
-  post: PostType;
+interface IProps<T> {
+  post: T;
 }
 
 // 이게 맞나...
@@ -25,7 +25,7 @@ const calculateLine = (element: HTMLElement | null) => {
 
 const isClosed = (post: PostType): post is IEvent => "isClosed" in post;
 
-const Post = ({ post }: IProps) => {
+const Post = <T extends PostType>({ post }: IProps<T>) => {
   const location = useLocation();
   const navigate = useNavigate();
   const titleRef = useRef<HTMLSpanElement | null>(null);

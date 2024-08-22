@@ -33,9 +33,11 @@ const Community = () => {
             <span>커뮤니티</span>
           </div>
 
-          {isEmpty && <PostEmpty />}
+          <section className="community-post-list">
+            {isEmpty && <PostEmpty />}
 
-          {data && <PostList posts={data} />}
+            {data && <PostList posts={data} />}
+          </section>
 
           <div className="more" ref={moreRef}>
             {isFetchingNextPage && <div>loading...</div>}
