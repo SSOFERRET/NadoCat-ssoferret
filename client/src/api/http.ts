@@ -43,7 +43,11 @@ export const createClient = (config?: AxiosRequestConfig) => {
   axiosInstance.interceptors.request.use(
     //request
     (config) => {
-      config.headers["Authorization"] = `Bearer ${getGeneralToken()}`;
+      const token = getGeneralToken();
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+    //   config.headers["Authorization"] = `Bearer ${getGeneralToken()}`;
       return config;
     },
     (error: AxiosError) => {
