@@ -1,4 +1,11 @@
 import { ILocation } from "./location";
+export interface IMissingCat {
+  name: string;
+  detail?: string;
+  gender?: string;
+  age?: number;
+  uuid: Buffer;
+}
 
 export interface IMissingCreate {
   catId: number;
