@@ -1,21 +1,16 @@
-import { ICommunity } from "./community.model";
+import { ICommunity, ICommunityDetail } from "./community.model";
+import { ICursorBasedPagination } from "./pagination.model";
 
 export interface IEvent extends ICommunity {
   isClosed: boolean;
   date: string;
 }
 
-export interface IPagination {
-  nextCursor: number;
-  totalCount: number;
+export interface IEventDetail extends ICommunityDetail {
+  isClosed: boolean;
 }
 
 export interface IEventPage {
-  pagination: IPagination;
+  pagination: ICursorBasedPagination;
   posts: IEvent[];
-}
-
-export interface IEventPost {
-  pageParams: number[];
-  pages: IEvent[];
 }

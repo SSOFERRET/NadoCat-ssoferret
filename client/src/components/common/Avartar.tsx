@@ -9,6 +9,7 @@ interface IProps {
 const DEFAULT_PROFILE: string = "/src/assets/img/profileImg1.png";
 
 const Avartar = ({ profileImage, nickname }: IProps) => {
+
   return (
     <div className="avatar">
       {/* {profileImage && <img src={profileImage} alt={nickname} />} */}

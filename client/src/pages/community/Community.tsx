@@ -3,6 +3,8 @@ import PostList from "../../components/communityAndEvent/PostList";
 import useCommunities from "../../hooks/useCommunities";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
+import LoadingCat from "../../components/loading/LoadingCat";
+import NewPostButton from "../../components/common/NewPostButton";
 
 // CHECKLIST
 // [ ] 정렬 기준 동적으로 받아오게 수정
@@ -10,14 +12,7 @@ import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 // [ ] 무한 스크롤 로딩 스피너 만들기
 
 const Community = () => {
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isEmpty,
-  } = useCommunities("views");
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useCommunities("views");
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
@@ -31,7 +26,7 @@ const Community = () => {
   return (
     <section className="community-container">
       {isLoading ? (
-        <div>loading...</div>
+        <LoadingCat />
       ) : (
         <>
           <div className="category">
@@ -45,6 +40,7 @@ const Community = () => {
           <div className="more" ref={moreRef}>
             {isFetchingNextPage && <div>loading...</div>}
           </div>
+          <NewPostButton path="/boards/communities/write" />
         </>
       )}
     </section>

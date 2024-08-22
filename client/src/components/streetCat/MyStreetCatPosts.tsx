@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/css/components/streetCat/MyStreetCatPosts.css";
+import "../../styles/scss/components/streetCat/MyStreetCatPosts.scss";
 import { AiFillHeart } from "react-icons/ai";
 import MyStreetCatEmpty from "./MyStreetCatEmpty";
 
@@ -75,34 +75,33 @@ const MyStreetCatPosts: React.FC = () => {
     return (
       <>
         <p className="guide-text">
-          <span className="nickname">{nickname}</span>님 도감에는 <br/>
+          <span className="nickname">{nickname}</span>님 도감에는 <br />
           <span className="count">{catCount}</span>마리의 고양이가 있어요!
         </p>
         <ul className="street-cat-list">
-          {
-            testData.map((data) => (
-              <li key={data.postId} className="street-cat">
-                <a href={`${location.pathname}/${data.postId}`}>
-                  <div className="img-box">
-                    <img src={data.thumbnail} />
-                    <AiFillHeart className={data.streetCatFavorites ? "active" : ""} onClick={() => console.log("click")}/>
-                  </div>
-                  <div className="street-cat-info">
-                    <span className="name">{data.name}</span>
-                    <span className="date">{data.createdAt}</span>
-                  </div>
-                </a>
-              </li>
-            ))
-          }
+          {testData.map((data) => (
+            <li key={data.postId} className="street-cat">
+              <a href={`${location.pathname}/${data.postId}`}>
+                <div className="img-box">
+                  <img src={data.thumbnail} />
+                  <AiFillHeart
+                    className={data.streetCatFavorites ? "active" : ""}
+                    onClick={() => console.log("click")}
+                  />
+                </div>
+                <div className="street-cat-info">
+                  <span className="name">{data.name}</span>
+                  <span className="date">{data.createdAt}</span>
+                </div>
+              </a>
+            </li>
+          ))}
         </ul>
       </>
-    )
+    );
   } else {
-    return (
-      <MyStreetCatEmpty />
-    )
+    return <MyStreetCatEmpty />;
   }
-}
+};
 
 export default MyStreetCatPosts;

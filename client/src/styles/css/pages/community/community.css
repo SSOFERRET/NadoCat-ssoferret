@@ -49,7 +49,6 @@ body {
 .community-container {
   height: 100%;
   padding: 20rem;
-  padding-bottom: 64rem;
   background-color: #ffffff;
 }
 .community-container .category {
@@ -61,6 +60,28 @@ body {
 }
 .community-container .more {
   font-size: 14rem !important;
+}
+.community-container .write-btn {
+  position: sticky;
+  bottom: 73rem;
+  right: 20rem;
+  float: right;
+  width: 107rem;
+  height: 54rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50rem;
+  background-color: #f2b705;
+  color: #ffffff;
+  border: none;
+  font-family: "bold";
+  font-size: 18rem !important;
+  z-index: 10000;
+  cursor: pointer;
+}
+.community-container .write-btn svg {
+  margin-right: 6rem;
 }
 
 /*# sourceMappingURL=community.css.map */

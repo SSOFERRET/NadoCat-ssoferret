@@ -1,16 +1,10 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getEventPosts, Sort } from "../api/event.api";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { createEventPost, getEventPosts, Sort } from "../api/event.api";
 
 const useEvents = (sort?: Sort) => {
-  const {
-    data,
-    isLoading,
-    error,
-    isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["event", sort],
     queryFn: ({ pageParam = 0 }) => getEventPosts({ pageParam, sort }),
     initialPageParam: 0,
@@ -20,6 +14,17 @@ const useEvents = (sort?: Sort) => {
         return nextCursor;
       }
       return undefined;
+    },
+  });
+
+  const { mutateAsync: addEventPost } = useMutation({
+    mutationFn: (formData: FormData) => createEventPost(formData),
+    onSuccess: (post) => {
+      const postId = post.postId;
+      queryClient.invalidateQueries({ queryKey: ["EventDetail", postId] });
+    },
+    onError: (error) => {
+      console.error("Error creating event post:", error);
     },
   });
 
@@ -35,6 +40,7 @@ const useEvents = (sort?: Sort) => {
     isFetchingNextPage,
     isFetching,
     isEmpty,
+    addEventPost,
   };
 };
 
