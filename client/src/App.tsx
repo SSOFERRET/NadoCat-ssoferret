@@ -17,6 +17,7 @@ import ImageUploadTest from "./components/imageUploadTest";
 import Home from "./pages/Home/Home";
 import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
+import Missings from "./pages/missing/Missings";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
               { path: "", element: <Event /> },
               { path: ":id", element: <EventDetail /> },
             ],
+          },
+          {
+            path: "missings",
+            children: [{ path: "", element: <Missings /> }],
           },
         ],
       },
