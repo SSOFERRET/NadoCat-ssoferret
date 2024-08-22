@@ -16,7 +16,7 @@ import {
   removeLikesById,
   getLikeIds,
 } from "../../model/community.model";
-import { addImage, deleteImages } from "../../model/image.model";
+import { addImage, deleteImages, getImageById } from "../../model/image.model";
 import { addTag, deleteTags } from "../../model/tag.model";
 import { deleteCommentsById } from "../../model/communityComment.model";
 import { handleControllerError } from "../../util/errors/errors";
@@ -27,7 +27,7 @@ import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
-import { deleteImageFromS3, uploadImageToS3 } from "../../util/images/s3ImageHandler";
+import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 
 // CHECKLIST
@@ -149,7 +149,7 @@ export const createCommunity = async (req: Request, res: Response) => {
       }
 
       if (req.files) {
-        const imageUrls = (await uploadImageToS3(req, CATEGORY.COMMUNITIES, postId)) as any;
+        const imageUrls = (await uploadImagesToS3(req)) as any;
         const newImages = await addNewImages(
           tx,
           {
@@ -217,7 +217,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
       await addCommunityTags(tx, formatedTags);
 
       if (req.files) {
-        const imageUrls = (await uploadImageToS3(req, CATEGORY.COMMUNITIES, postId)) as any;
+        const imageUrls = (await uploadImagesToS3(req)) as any;
         const newImages = await addNewImages(
           tx,
           {
@@ -236,7 +236,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
         await addCommunityImages(tx, formatedImages);
       }
 
-      await deleteImageFromS3(CATEGORY.COMMUNITIES, postId, imageIds.length);
+      await deleteImageFromS3ByImageId(tx, imageIds);
 
       await removeImagesByIds(tx, imageIds);
 
@@ -278,6 +278,7 @@ export const deleteCommunity = async (req: Request, res: Response) => {
 
       if (post.images?.length) {
         const imageIds = post.images.map((item: IImage) => item.imageId);
+        await deleteImageFromS3ByImageId(tx, imageIds);
         await removeImagesByIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }

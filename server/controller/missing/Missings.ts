@@ -18,7 +18,7 @@ import jwt from "jsonwebtoken";
 import ensureAuthorization from "../../util/auth/auth";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
-import { deleteImageFromS3, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
+import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 
 
 
