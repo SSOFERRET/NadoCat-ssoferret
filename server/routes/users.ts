@@ -18,7 +18,7 @@ router.post("/signup", signupValidator, signup);
 router.post("/login", loginValidator, login);
 router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
-router.get("/my", ensureAutorization, my); //마이페이지
+router.get("/my", ensureAutorization, my); //마이페이지 + auth.ts 미들웨어(인증필요)
 
 // 동네 고양이 도감 즐겨찾기(내 도감)
 router.get("/street-cats", getFavoriteCats);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import "../../../styles/scss/components/user/myTab.scss";
+import "../../../styles/scss/components/user/my/myTab.scss";
 import MyPage from "../../../pages/MyPage";
 
 const MyTab = () => {

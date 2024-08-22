@@ -26,10 +26,7 @@ export const getComments = async (req: Request, res: Response) => {
 
     const comments = await getCommunityComments(postId, limit, cursor);
 
-    const nextCursor =
-      comments.length === limit
-        ? comments[comments.length - 1].commentId
-        : null;
+    const nextCursor = comments.length === limit ? comments[comments.length - 1].commentId : null;
 
     const result = {
       comments,
@@ -52,20 +49,12 @@ export const createComment = async (req: Request, res: Response) => {
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     if (!comment) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
     const newComment = await addComment(postId, userId, comment);
 
-    if (newComment)
-      await notifyNewComment(
-        Buffer.from(userId, "hex"),
-        CATEGORY.COMMUNITIES,
-        postId,
-        newComment.communityCommentId
-      );
+    if (newComment) await notifyNewComment(userId, CATEGORY.COMMUNITIES, postId, newComment.communityCommentId);
 
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
@@ -81,9 +70,7 @@ export const updateComment = async (req: Request, res: Response) => {
     const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     if (!comment) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
     await updateCommentById(postId, userId, commentId, comment);

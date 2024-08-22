@@ -9,11 +9,7 @@ export const getCommentCount = async (postId: number) => {
   });
 };
 
-export const getCommunityComments = async (
-  postId: number,
-  limit: number,
-  cursor: number | undefined
-) => {
+export const getCommunityComments = async (postId: number, limit: number, cursor: number | undefined) => {
   const result = await prisma.communityComments.findMany({
     where: {
       communityId: postId,
@@ -58,31 +54,22 @@ export const getCommunityComments = async (
   });
 };
 
-export const addComment = async (
-  postId: number,
-  userId: string,
-  comment: string
-) => {
+export const addComment = async (postId: number, userId: Buffer, comment: string) => {
   return await prisma.communityComments.create({
     data: {
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
       communityId: postId,
       comment,
     },
   });
 };
 
-export const updateCommentById = async (
-  postId: number,
-  userId: string,
-  commentId: number,
-  comment: string
-) => {
+export const updateCommentById = async (postId: number, userId: Buffer, commentId: number, comment: string) => {
   return await prisma.communityComments.update({
     where: {
       communityId: postId,
       communityCommentId: commentId,
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
     },
     data: {
       comment,
@@ -90,24 +77,17 @@ export const updateCommentById = async (
   });
 };
 
-export const deleteCommentById = async (
-  postId: number,
-  userId: string,
-  commentId: number
-) => {
+export const deleteCommentById = async (postId: number, userId: Buffer, commentId: number) => {
   return await prisma.communityComments.delete({
     where: {
       communityId: postId,
       communityCommentId: commentId,
-      uuid: Buffer.from(userId, "hex"),
+      uuid: userId,
     },
   });
 };
 
-export const deleteCommentsById = async (
-  tx: Prisma.TransactionClient,
-  postId: number
-) => {
+export const deleteCommentsById = async (tx: Prisma.TransactionClient, postId: number) => {
   return await tx.communityComments.deleteMany({
     where: {
       communityId: postId,

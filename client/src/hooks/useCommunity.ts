@@ -3,6 +3,7 @@ import {
   deleteCommunityPost,
   getCommunityDetail,
   ICommunityDetailParams,
+  updateCommunityPost,
 } from "../api/community.api";
 
 const useCommunity = (postId: number) => {
@@ -14,16 +15,23 @@ const useCommunity = (postId: number) => {
   });
 
   const { mutateAsync: removeCommunityPost } = useMutation({
-    mutationFn: ({ postId }: ICommunityDetailParams) =>
-      deleteCommunityPost({ postId }),
+    mutationFn: ({ postId }: ICommunityDetailParams) => deleteCommunityPost({ postId }),
     onSuccess: () => {
-      // queryClient.invalidateQueries({
-      //   queryKey: ["communityDetail", postId],
-      // });
       queryClient.removeQueries({ queryKey: ["communityDetail", postId] });
     },
     onError: (error) => {
       console.error("Error deleting community post:", error);
+    },
+  });
+
+  const { mutateAsync: editCommunityPost } = useMutation({
+    mutationFn: ({ formData, postId }: { formData: FormData; postId: number }) =>
+      updateCommunityPost({ formData, postId }),
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries({ queryKey: ["communityDetail", postId] });
+    // },
+    onError: (error) => {
+      console.error("Error updating community post:", error);
     },
   });
 
@@ -32,6 +40,7 @@ const useCommunity = (postId: number) => {
     isLoading,
     error,
     removeCommunityPost,
+    editCommunityPost,
   };
 };
 

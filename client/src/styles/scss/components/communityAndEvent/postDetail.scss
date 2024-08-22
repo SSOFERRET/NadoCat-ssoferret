@@ -4,61 +4,6 @@
   margin-bottom: 28rem;
   padding: 0 20rem;
 
-  .user {
-    width: 100%;
-    display: flex;
-    padding: 13rem 0;
-
-    .user-info {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .user-details {
-        display: flex;
-        flex-direction: column;
-        .nickname {
-          font-family: "bold";
-          font-size: $size-14;
-          margin-bottom: 5rem;
-        }
-        .date {
-          font-family: "medium";
-          font-size: $size-10;
-          color: $silver;
-        }
-      }
-
-      .post-status {
-        display: flex;
-        align-items: center;
-        gap: 5rem;
-        .is-closed {
-          display: flex;
-          flex-shrink: 0;
-          font-family: "medium";
-          font-size: $size-14;
-        }
-
-        .open {
-          color: $primary;
-        }
-
-        .close {
-          color: $gray;
-        }
-
-        .options-icon {
-          width: 22rem;
-          height: 22rem;
-          color: $dimgray;
-          margin-left: auto;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
   .post-title {
     display: inline-block;
     font-family: "bold";

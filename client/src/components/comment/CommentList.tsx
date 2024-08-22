@@ -10,22 +10,10 @@ interface IProps {
   showMenu: () => void;
   isCommentEdit: boolean;
   setIsCommentEdit: React.Dispatch<React.SetStateAction<boolean>>;
-  editComment: ({
-    postId,
-    userId,
-    comment,
-    commentId,
-  }: ICommentPutRequest) => Promise<void>;
+  editComment: ({ postId, userId, comment, commentId }: ICommentPutRequest) => Promise<void>;
 }
 
-const CommentList = ({
-  postId,
-  comments,
-  showMenu,
-  isCommentEdit,
-  setIsCommentEdit,
-  editComment,
-}: IProps) => {
+const CommentList = ({ postId, comments, showMenu, isCommentEdit, setIsCommentEdit, editComment }: IProps) => {
   return (
     <>
       {comments?.pages.map((group: ICommentPage, i: number) => (

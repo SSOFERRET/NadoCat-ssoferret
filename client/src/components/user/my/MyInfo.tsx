@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-// import "../../../styles/scss/components/user/myInfo.scss";
+import "../../../styles/scss/components/user/my/myInfo.scss";
 import { IoIosSettings } from "react-icons/io";
+import ProfileChangeModal from "./ProfileChangeModal";
 
 interface MyInfoProps {
   nickname: string;
@@ -21,13 +22,13 @@ const MyInfo = ({ nickname, profileImageUrl }: MyInfoProps) => {
   return (
     <div className="info-container">
       <div className="circle-container">
-        <div className="circle" />
+        <div className="circle"/>
         <img src={profileImageUrl} alt="profileImage" className="cat-circle" />
       </div>
 
       <div className="nickname-container">
         <div className="nickname-text">
-          <p>김닉네임{nickname}</p> 
+          <p>{nickname}</p> 
           <IoIosSettings />
         </div>
         <div className="change-profile-btn">
@@ -35,7 +36,7 @@ const MyInfo = ({ nickname, profileImageUrl }: MyInfoProps) => {
         </div>
       </div>
 
-        {isOpenModal && <ProfileModal closeModal={handleCloseProfileChange} />}
+        {isOpenModal && <ProfileChangeModal closeModal={handleCloseProfileChange} />}
 
     </div>
   );
