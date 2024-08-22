@@ -1,4 +1,4 @@
-import "../../styles/css/components/error/notFound.css";
+import "../../styles/scss/components/error/notFound.scss";
 import { useNavigate } from "react-router-dom";
 import NotFoundCat from "../../assets/img/notFoundCat.png";
 

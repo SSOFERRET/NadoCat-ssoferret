@@ -1,4 +1,4 @@
-import "../../styles/css/components/comment/comments.css";
+import "../../styles/scss/components/comment/comments.scss";
 import useCommunityComment from "../../hooks/useCommunityComment";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import CommentList from "../comment/CommentList";

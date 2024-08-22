@@ -1,4 +1,4 @@
-import { IPagination } from "./community.model";
+import { ICursorBasedPagination } from "./pagination.model";
 
 export interface ICommunityPost {
   pageParams: number[];
@@ -6,7 +6,7 @@ export interface ICommunityPost {
 }
 
 export interface ICommentPage {
-  pagination: IPagination;
+  pagination: ICursorBasedPagination;
   comments: IComment[];
 }
 

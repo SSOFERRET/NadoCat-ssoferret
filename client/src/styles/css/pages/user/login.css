@@ -48,7 +48,8 @@ body {
 /* tags */
 /* others */
 .login-container {
-  height: calc(100vh - 60rem);
+  overflow-y: hidden;
+  height: 100vh;
   background: #ffffff;
 }
 .login-container .login-header {

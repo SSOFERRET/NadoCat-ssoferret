@@ -1,0 +1,50 @@
+@import "../../base/common.scss";
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+
+  .overlay {
+    width: 430rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(255, 255, 255, 0.6);
+
+    .spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .loading-ring {
+        position: relative;
+        width: 98rem;
+        height: 98rem;
+        animation: spin 1s linear infinite;
+      }
+
+      .loading-cheese {
+        position: absolute;
+        width: 68rem;
+        height: 68rem;
+      }
+    }
+  }
+}

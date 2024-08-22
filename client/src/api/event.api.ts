@@ -1,10 +1,5 @@
-import { ICommunityPage } from "../models/community.model";
-import { IEvent } from "../models/event.model";
-import {
-  ICommentDeleteRequest,
-  ICommentPostRequest,
-  ICommentPutRequest,
-} from "./community.api";
+import { IEventDetail, IEventPage } from "../models/event.model";
+import { ICommentDeleteRequest, ICommentPostRequest, ICommentPutRequest } from "./community.api";
 import { httpClient } from "./http";
 
 const LIMIT = 10;
@@ -32,16 +27,10 @@ interface IEventCommentsParams {
 // [ ] 게시글 수정
 // [ ] 게시글 작성
 
-export const getEventPosts = async ({
-  pageParam,
-  limit,
-  sort,
-}: IEventPostsParams): Promise<ICommunityPage> => {
+export const getEventPosts = async ({ pageParam, limit, sort }: IEventPostsParams): Promise<IEventPage> => {
   try {
     const response = await httpClient.get(
-      `/boards/events?limit=${limit ?? LIMIT}&cursor=${pageParam}&sort=${
-        sort ?? SORT
-      }`
+      `/boards/events?limit=${limit ?? LIMIT}&cursor=${pageParam}&sort=${sort ?? SORT}`
     );
     return response.data;
   } catch (error) {
@@ -50,9 +39,7 @@ export const getEventPosts = async ({
   }
 };
 
-export const getEventDetail = async ({
-  postId,
-}: IEventDetailParams): Promise<IEvent> => {
+export const getEventDetail = async ({ postId }: IEventDetailParams): Promise<IEventDetail> => {
   try {
     const response = await httpClient.get(`/boards/events/${postId}`);
     return response.data;
@@ -62,9 +49,7 @@ export const getEventDetail = async ({
   }
 };
 
-export const deleteEventPost = async ({
-  postId,
-}: IEventDetailParams): Promise<void> => {
+export const deleteEventPost = async ({ postId }: IEventDetailParams) => {
   try {
     const response = await httpClient.delete(`/boards/events/${postId}`);
     return response.data;
@@ -74,16 +59,25 @@ export const deleteEventPost = async ({
   }
 };
 
-export const getEventComments = async ({
-  postId,
-  pageParam,
-  limit,
-}: IEventCommentsParams) => {
+export const createEventPost = async (formData: FormData) => {
+  console.log(formData);
+  try {
+    const response = await httpClient.post(`/boards/events`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating event post:", error);
+    throw error;
+  }
+};
+
+export const getEventComments = async ({ postId, pageParam, limit }: IEventCommentsParams) => {
   try {
     const response = await httpClient.get(
-      `/boards/events/${postId}/comments?limit=${
-        limit ?? LIMIT
-      }&cursor=${pageParam}`
+      `/boards/events/${postId}/comments?limit=${limit ?? LIMIT}&cursor=${pageParam}`
     );
 
     return response.data;
@@ -93,16 +87,9 @@ export const getEventComments = async ({
   }
 };
 
-export const createEventComment = async ({
-  postId,
-  userId,
-  comment,
-}: ICommentPostRequest) => {
+export const createEventComment = async ({ postId, userId, comment }: ICommentPostRequest) => {
   try {
-    const response = await httpClient.post(
-      `/boards/events/${postId}/comments`,
-      { postId, userId, comment }
-    );
+    const response = await httpClient.post(`/boards/events/${postId}/comments`, { postId, userId, comment });
 
     return response.data;
   } catch (error) {
@@ -111,17 +98,14 @@ export const createEventComment = async ({
   }
 };
 
-export const updateEventComment = async ({
-  postId,
-  commentId,
-  comment,
-}: ICommentPutRequest) => {
+export const updateEventComment = async ({ postId, commentId, comment }: ICommentPutRequest) => {
   try {
     // NOTE userId 확인?
-    const response = await httpClient.put(
-      `/boards/events/${postId}/comments/${commentId}`,
-      { postId, commentId, comment }
-    );
+    const response = await httpClient.put(`/boards/events/${postId}/comments/${commentId}`, {
+      postId,
+      commentId,
+      comment,
+    });
 
     return response.data;
   } catch (error) {
@@ -130,14 +114,9 @@ export const updateEventComment = async ({
   }
 };
 
-export const deleteEventComment = async ({
-  postId,
-  commentId,
-}: ICommentDeleteRequest) => {
+export const deleteEventComment = async ({ postId, commentId }: ICommentDeleteRequest) => {
   try {
-    const response = await httpClient.delete(
-      `/boards/events/${postId}/comments/${commentId}`
-    );
+    const response = await httpClient.delete(`/boards/events/${postId}/comments/${commentId}`);
 
     return response.data;
   } catch (error) {
