@@ -140,7 +140,7 @@ const PostWriteForm = ({ boardCategory, addPost }: IProps) => {
             <NewTags tags={newTags} removeTags={removeTags} />
           </div>
         </div>
-        <button className="post-submit">수정완료</button>
+        <button className="post-submit">작성완료</button>
       </form>
 
       {isOpen && <NewTagForm initialTags={newTags} addNewTags={addNewTags} handleTagFormOpen={handleTagFormOpen} />}

@@ -1,7 +1,7 @@
 @import "../../base/common.scss";
 
 .community-post-write {
-  min-height: 100vh;
+  min-height: calc(100vh - 60rem);
 
   .post-form {
     display: flex;

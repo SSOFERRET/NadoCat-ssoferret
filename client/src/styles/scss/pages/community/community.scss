@@ -2,9 +2,8 @@
 
 .community-container {
   height: 100%;
-  min-height: calc(100vh - 120rem);
+  min-height: 100vh;
   padding: 20rem;
-  // padding-bottom: 64rem;
   background-color: $white;
 
   .category {
@@ -13,6 +12,10 @@
     color: silver;
     border-bottom: 0.5rem solid $lightgray;
     padding-bottom: 10rem;
+  }
+
+  .community-post-list {
+    min-height: 100vh;
   }
 
   .more {
