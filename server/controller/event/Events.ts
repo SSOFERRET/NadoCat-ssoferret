@@ -199,9 +199,8 @@ export const updateEvent = async (req: Request, res: Response) => {
 
       await addEventTags(tx, formatedTags);
 
-      await deleteImageFromS3ByImageId(tx, deleteImageIds);
       await removeImagesByIds(tx, deleteImageIds);
-      
+
       if (req.files) {
         const imageUrls = (await uploadImagesToS3(req)) as any;
         const newImages = await addNewImages(
@@ -221,7 +220,7 @@ export const updateEvent = async (req: Request, res: Response) => {
         await addEventImages(tx, formatedImages);
       }
 
-      await deleteImageFromS3(CATEGORY.EVENTS, postId, imageIds.length);
+      await deleteImageFromS3ByImageId(tx, imageIds);
 
       await removeImagesByIds(tx, imageIds);
 
