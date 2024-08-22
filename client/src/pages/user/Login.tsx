@@ -7,6 +7,7 @@ import "../../styles/scss/pages/user/login.scss";
 import { IoIosArrowBack } from "react-icons/io";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
+import { useAuthStore } from "../../store/userStore";
 
 const KAKAO_AUTH_URL = `${import.meta.env.VITE_KAKAO_AUTH_URL}?response_type=code&client_id=${
   import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${
@@ -18,14 +19,31 @@ export interface LoginProps {
   password: string;
   authType: string;
   autoLogin: boolean;
+  uuid: string;
+//   user: string[];
+//   tokens: string[];
 }
 
 const Login = () => {
     const navigate = useNavigate();
     const [autoLogin, setAutoLogin] = useState(false);
     const {register, setFocus, handleSubmit, formState: {errors}} = useForm<LoginProps>();
+
     const handleLogin = (data: LoginProps) => {
-        login({...data, autoLogin}).then(() => {
+        login({...data, autoLogin}).then((response) => {
+            console.log("전체 response:", response);
+            const {user, tokens} = response;
+
+            useAuthStore.getState().storeLogin(tokens.accessToken);
+            useAuthStore.getState().storeUuid(user.uuid);
+
+            console.log("response.generalToken:",tokens.accessToken);
+            console.log("response.uuid:",user.uuid);
+
+            if(tokens.refreshToken){
+                useAuthStore.getState().storeAutoLogin(tokens.refreshToken);
+            }
+
             navigate("/home");
         });
     }
@@ -39,17 +57,17 @@ const Login = () => {
     }, [setFocus]);
 
 
-  if (!import.meta.env.VITE_KAKAO_REST_API_KEY || import.meta.env.VITE_KAKAO_REDIRECT_URI) {
-    console.error("카카오 값이 없음");
-  }
-  console.log(
-    "VITE_KAKAO_REST_API_KEY: ",
-    import.meta.env.VITE_KAKAO_REST_API_KEY
-  );
-  console.log(
-    "VITE_KAKAO_REDIRECT_URI: ",
-    import.meta.env.VITE_KAKAO_REDIRECT_URI
-  );
+//   if (!import.meta.env.VITE_KAKAO_REST_API_KEY || import.meta.env.VITE_KAKAO_REDIRECT_URI) {
+//     console.error("카카오 값이 없음");
+//   }
+//   console.log(
+//     "VITE_KAKAO_REST_API_KEY: ",
+//     import.meta.env.VITE_KAKAO_REST_API_KEY
+//   );
+//   console.log(
+//     "VITE_KAKAO_REDIRECT_URI: ",
+//     import.meta.env.VITE_KAKAO_REDIRECT_URI
+//   );
 
   return (
     <div className="login-container">
@@ -76,6 +94,7 @@ const Login = () => {
             <InputText type="password"
             placeholder="비밀번호"
             className="input-field"
+            autoComplete="new-password"
             {...register("password", {
                 required: "비밀번호를 입력해주세요.",
             })}

@@ -1,4 +1,4 @@
-import "../../styles/css/pages/error/errorPage.css";
+import "../../styles/scss/pages/error/errorPage.scss";
 import NotFound from "../../components/error/NotFound";
 
 const ErrorPage = () => {

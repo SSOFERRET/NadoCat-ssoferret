@@ -1,4 +1,5 @@
 import { IImage } from "./image.model";
+import { ICursorBasedPagination } from "./pagination.model";
 import { ITag } from "./tag.model";
 
 export interface ICommunity {
@@ -9,26 +10,26 @@ export interface ICommunity {
   views: number;
   createdAt: string;
   updatedAt: string;
-  images: IImage[];
+  thumbnail: string | null;
   tags: ITag[];
-  users?: Users;
 }
-export interface IPagination {
-  nextCursor: number;
-  totalCount: number;
+
+export interface ICommunityDetail extends Omit<ICommunity, "thumbnail"> {
+  images: IImage[];
+  users: IPostUserInfo;
 }
 
 export interface ICommunityPage {
-  pagination: IPagination;
+  pagination: ICursorBasedPagination;
   posts: ICommunity[];
 }
 
-export interface ICommunityPost {
+export interface IPaginatedPosts {
   pageParams: number[];
   pages: ICommunityPage[];
 }
 
-interface Users {
+export interface IPostUserInfo {
   uuid: string;
   nickname: string;
   profileImage: string;

@@ -1,16 +1,10 @@
-import { getCommunityPosts, Sort } from "../api/community.api";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { createCommunityPost, getCommunityPosts, Sort } from "../api/community.api";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useCommunities = (sort?: Sort) => {
-  const {
-    data,
-    isLoading,
-    error,
-    isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["community", sort],
     queryFn: ({ pageParam = 0 }) => getCommunityPosts({ pageParam, sort }),
     initialPageParam: 0,
@@ -26,6 +20,17 @@ const useCommunities = (sort?: Sort) => {
   const posts = data ? data.pages.flatMap((page) => page.posts) : [];
   const isEmpty = posts.length === 0;
 
+  const { mutateAsync: addCommunityPost } = useMutation({
+    mutationFn: (formData: FormData) => createCommunityPost(formData),
+    onSuccess: (post) => {
+      const postId = post.postId;
+      queryClient.invalidateQueries({ queryKey: ["communityDetail", postId] });
+    },
+    onError: (error) => {
+      console.error("Error creating community post:", error);
+    },
+  });
+
   return {
     data,
     isLoading,
@@ -35,6 +40,7 @@ const useCommunities = (sort?: Sort) => {
     isFetchingNextPage,
     isFetching,
     isEmpty,
+    addCommunityPost,
   };
 };
 

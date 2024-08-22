@@ -15,7 +15,9 @@ import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
 import { handleJoinRoom, handleMessage } from "./controller/chat/Chat";
 
-const PORT = process.env.PORT || 8080;
+import S3TestRouter from "./routes/s3test"
+
+const PORT = process.env.PORT || 3000;
 
 //chat 관련
 const app = express();
@@ -59,6 +61,9 @@ app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
 app.use("/notifications", NotificationsRouter);
 app.use("/searches", SearchesRouter);
+
+// s3 이미지 저장 테스트용. 삭제 예정
+app.use("/s3test", S3TestRouter);
 
 app.use((_req: Request, res: Response) => {
   res.sendStatus(404);

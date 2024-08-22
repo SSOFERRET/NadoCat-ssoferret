@@ -1,7 +1,7 @@
 import { httpClient } from "../api/http";
 import { SignupProps } from "../pages/user/Signup";
 import { LoginProps } from "../pages/user/Login";
-import  {Post}  from "../pages/MyPage";
+// import  {Post}  from "../pages/MyPage";
 
 export const signup = async(userData: SignupProps) => {
     try {
@@ -14,12 +14,23 @@ export const signup = async(userData: SignupProps) => {
 }
 
 //비밀번호 변경요청
-
 //비밀번호 변경
 
 interface ILoginResponse {
-    generalToken: string;
-    refreshToken: string;
+    // generalToken: string;
+    // refreshToken: string | null;
+    // authLogin: boolean;
+    // uuid: string;
+    message: string;
+  user: {
+    email: string;
+    nickname: string;
+    uuid: string;
+  };
+  tokens: {
+    accessToken: string;
+    refreshToken: string | null;
+  };
 }
 
 export const login = async(data: LoginProps) => {
