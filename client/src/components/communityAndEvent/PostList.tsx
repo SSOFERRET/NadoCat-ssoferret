@@ -4,23 +4,56 @@ import "../../styles/scss/components/communityAndEvent/postList.scss";
 import { ICommunity, ICommunityPage } from "../../models/community.model";
 import { InfiniteData } from "@tanstack/react-query";
 import { IEvent } from "../../models/event.model";
+import { IMissing, IMissingPosts } from "../../models/missing.model";
+import MissingPost from "../missing/MissingPost";
+
+// PostList 실종고양이 게시판에서도 공유하면 좋겠다는 생각에 조건부 렌더링으로 수정했습니다. 혹시 문제 생길 때를 대비에 원래 코드를 아래 주석으로 남겼습니다.
 
 interface IProps {
-  posts: InfiniteData<ICommunityPage> | undefined;
+  posts: InfiniteData<TCategory> | undefined;
 }
 
+type TCategory = IMissingPosts | ICommunityPage;
+
 const PostList = ({ posts }: IProps) => {
+  const isMissing = (post: IMissing | ICommunity | IEvent): boolean =>
+    (post as IMissing).missingCats ? true : false;
+
   return (
     <ul className="list">
-      {posts?.pages.map((group: ICommunityPage, i: number) => (
+      {posts?.pages.map((group: TCategory, i: number) => (
         <React.Fragment key={i}>
-          {group.posts.map((post: ICommunity | IEvent) => (
-            <Post key={post.postId} post={post} />
-          ))}
+          {group.posts.map((post: IMissing | ICommunity | IEvent) => {
+            return isMissing(post) ? (
+              <MissingPost key={post.postId} post={post as IMissing} />
+            ) : (
+              <Post key={post.postId} post={post as ICommunity | IEvent} />
+            );
+          })}
         </React.Fragment>
       ))}
     </ul>
   );
 };
+
+// 백업
+
+// interface IProps {
+//   posts: InfiniteData<ICommunityPage> | undefined;
+// }
+
+// const PostList = ({ posts }: IProps) => {
+//   return (
+//     <ul className="list">
+//       {posts?.pages.map((group: ICommunityPage, i: number) => (
+//         <React.Fragment key={i}>
+//           {group.posts.map((post: ICommunity | IEvent) => (
+//             <Post key={post.postId} post={post} />
+//           ))}
+//         </React.Fragment>
+//       ))}
+//     </ul>
+//   );
+// };
 
 export default PostList;
