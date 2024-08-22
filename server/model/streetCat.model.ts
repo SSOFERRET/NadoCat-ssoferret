@@ -352,6 +352,7 @@ export const readComments = async (tx: Prisma.TransactionClient, streetCatId: nu
       createdAt: true,
       users: {
         select: {
+          uuid: true,
           nickname: true,
           profileImage: true,
         }
@@ -364,6 +365,50 @@ export const readComments = async (tx: Prisma.TransactionClient, streetCatId: nu
     streetCatComments
   }
 }
+
+// export const readComments = async (
+//   tx: Prisma.TransactionClient,
+//   streetCatId: number,
+//   limit: number,
+//   cursor?: number
+// ) => {
+//   const streetCatComments = await prisma.streetCatComments.findMany({
+//     take: limit,
+//     skip: cursor ? 1 : 0,
+//     ...(cursor && { cursor: { streetCatCommentId: cursor } }),
+//     where: {
+//       streetCatId,
+//     },
+//     orderBy: {
+//       createdAt: "asc",
+//     },
+//     select: {
+//       streetCatCommentId: true,
+//       comment: true,
+//       createdAt: true,
+//       users: {
+//         select: {
+//           nickname: true,
+//           profileImage: true,
+//         },
+//       },
+//     },
+//   });
+
+//   return streetCatComments.map((item) => ({
+//     commentId: item.streetCatCommentId,
+//     comment: item.comment,
+//     createdAt: item.createdAt,
+//     updatedAt: null,
+//     users: {
+//       id: null,
+//       uuid: "",
+//       nickname: item.users.nickname,
+//       profileImage: item.users.profileImage,
+//     },
+//   }));
+// };
+
 
 export const addComment = async (uuid: Buffer, postId: number, comment: string) => {
   return await prisma.streetCatComments.create({

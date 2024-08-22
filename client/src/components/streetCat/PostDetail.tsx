@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import "../../styles/scss/components/streetCat/postDetail.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -6,6 +6,7 @@ import { IStreetCatDetail } from "../../models/streetCat.model";
 import ImageCarousel from "../common/ImageCarousel";
 import { IImage } from "../../models/image.model";
 import FavoriteButton from "../common/FavoriteButton";
+import PostMenu from "../communityAndEvent/PostMenu";
 
 // NOTE ?를 이렇게 막..다 써도되나
 interface IProps {
@@ -23,6 +24,11 @@ interface IProps {
 
 const PostDetail = (props: IProps) => {
   const images: IImage[] = props.streetCatImages || [];
+  const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
+
+  const toggleMenu = () => {
+    setMenuVisible((prev) => !prev);
+  };
   return (
     <>
       <div className="cat-container">
@@ -46,7 +52,9 @@ const PostDetail = (props: IProps) => {
               ? <FavoriteButton postId={props.postId} like={props.streetCatFavorites?.length}/>
               : ""
             }
-            <span className="more-btn"><HiOutlineDotsVertical /></span>
+            <span className="more-btn" onClick={toggleMenu}>
+              <HiOutlineDotsVertical />
+            </span>
           </div>
         </div>
 
@@ -56,6 +64,15 @@ const PostDetail = (props: IProps) => {
           </p>
         </div>
       </div>
+      {isMenuVisible && props.postId !== undefined && (
+        <PostMenu
+          boardType="streetCat"
+          menuType="post"
+          postId={props.postId}
+          isShowMenu={isMenuVisible}
+          showMenu={toggleMenu}
+        />
+      )}
     </>
   )
 }

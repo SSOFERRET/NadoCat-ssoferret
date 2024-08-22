@@ -25,7 +25,7 @@ const DiscoveryLocation = (props: ILocationProps) => {
   return (
     <>
       <div className="discovery-container">
-        <span className="title">발견 장소</span>
+        <span className="guide-title">발견 장소</span>
         <span className="location">{props.location?.detail}</span>
         <div className="map">
         <Map
