@@ -4,14 +4,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0 20rem;
+  // padding: 0 20rem;
   font-size: 14rem;
   position: relative;
   // margin-top: 33rem;
 
   .page-guide-box {
     font-family: "regular";
-    padding: 7rem 0 14rem 0;
+    padding: 7rem 20rem 14rem 20rem;
     border-bottom: 0.5rem solid $lightgray;
 
     .page-guide {
@@ -21,121 +21,11 @@
     }
   }
 
-  .cat-container {
-    padding-bottom: 20rem;
-    border-bottom: 0.5rem solid $lightgray;
+  .carousel-container {
+    background-color: $white;
 
-    .cat-name {
-      display: block;
-      font-family: "bold";
-      font-size: $size-16;
-      margin: 10rem 0;
-    }
-
-    .img-box {
-      width: 100%;
-      height: 390rem;
-      background-color: $lightgray;
-      border-radius: 5rem;
-      margin-bottom: 11rem;
-    }
-
-    .cat-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .cat-tag {
-        display: inline-block;
-
-        span {
-          @include tag;
-        }
-      }
-  
-      .btn-box {
-        display: inline-block;
-      
-        .like svg {
-          width: 25rem;
-          height: 25rem;
-          fill: $lightgray;
-          margin-right: 6rem;
-        }
-    
-        .more-btn svg {
-          width: 18rem;
-          height: 18rem;
-          fill: $dimgray;
-          margin-bottom: 2rem;
-        }
-      }
-    }
-
-    .cat-content {
-      font-family: "medium";
-      font-size: $size-14;
-      line-height: 1.4;
-      margin-top: 20rem;
-    }
-  }
-
-  .discovery-container {
-    padding: 20rem 0;
-    border-bottom: 0.5rem solid $lightgray;;
-    
-    .title {
-      display: block;
-      font-family: "bold";
-      font-size: $size-16;
-      margin-bottom: 7rem;
-    }
-
-    .location {
-      display: block;
-      font-family: "medium";
-      font-size: $size-14;
-      color: $silver;
-      margin-bottom: 8rem;
-    }
-
-    .map {
-      width: 100%;
-      height: 200rem;
-      background-color: $lightgray;
-      border-radius: $round-5;
-    }
-  }
-
-  .user-container {
-    display: flex;
-    align-items: center;
-    padding: 20rem 0;
-    
-    .user-img {
-      display: inline-block;
-      width: 36rem;
-      height: 36rem;
-      background-color: $primary;
-      border-radius: 50%; 
-      margin-right: 13rem;
-    }
-    
-    .user-info {
-      display: flex;
-      flex-direction: column;
-
-      .user-nickname {
-        font-family: "bold";
-        font-size: $size-16;
-        margin-bottom: 3rem;
-      }
-
-      .created-date {
-        font-family: "medium";
-        font-size: $size-12;
-        color: $silver;
-      }
+    img {
+      object-fit: cover;
     }
   }
 }
@@ -150,7 +40,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0 20rem;
+  // padding: 0 20rem;
   font-size: 14rem;
   position: relative;
   margin-top: 14rem;
@@ -160,6 +50,7 @@
     font-family: "medium";
     font-size: $size-14;
     color: $dimgray;
+    padding: 0 20rem;
   }
 
   svg {
@@ -175,4 +66,60 @@
   span {
     margin-right: 4rem;
   }
+
+  .street-cat-comment {
+    display: flex;
+    padding: 20rem 0;
+    border-bottom: 0.5rem solid $lightgray;
+    position: relative;
+
+    img {
+      width: 32rem;
+      height: 32rem;
+      border-radius: 50%;
+      margin-right: 9rem;
+    }
+
+    .user-info {
+
+      .user-profile {
+        margin-bottom: 8rem;
+
+        .nickname {
+          font-family: "bold";
+          font-size: $size-12;
+          margin-right: 4rem;
+        }
+
+        .date {
+          font-family: "medium";
+          font-size: $size-10;
+          color: $silver;
+        }
+      }
+    }
+
+    .content {
+      font-family: "medium";
+      font-size: $size-14;
+      color: $dimgray;
+      line-height: 1.4;
+    }
+
+    .comment-more {
+      position: absolute;
+      right: 0;
+      margin: 0;
+      top: 26rem;
+      color: $silver;
+    }
+  }
+  .street-cat-comment:last-child {
+    border: none;
+    margin-bottom: 70rem;
+  }
+}
+
+.street-cat-comment-list {
+  padding: 0 20rem;
 }
