@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId } from "../../model/missing.model";
+import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId, addMissingCat } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
@@ -18,6 +18,7 @@ import jwt from "jsonwebtoken";
 import ensureAuthorization from "../../util/auth/auth";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
+import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 
 
 
@@ -50,6 +51,7 @@ export const getMissings = async (req: Request, res: Response) => {
     orderBy: getOrderBy(sort),
     categoryId: CATEGORY.MISSINGS
   };
+
   return await getPosts(req, res, listData);
 }
 
@@ -108,30 +110,31 @@ export const getMissing = async (req: Request, res: Response) => {
 
 export const createMissing = async (req: Request, res: Response) => {
   try {
-    //   const authorization = ensureAuthorization(req, res);
-    //   console.log("authorization: ", authorization);
+    // const authorization = ensureAuthorization(req, res);
+    // console.log("authorization: ", authorization);
 
 
-    //   if (authorization instanceof jwt.TokenExpiredError) {
-    //     return res.status(StatusCodes.UNAUTHORIZED).json({
-    //       message: "로그인 세션이 만료되었습니다. 다시 로그인해주세요.",
-    //     });
-    //   } else if (authorization instanceof jwt.JsonWebTokenError) {
-    //     return res.status(StatusCodes.BAD_REQUEST).json({
-    //       message: "잘못된 토큰입니다.",
-    //     });
-    //   }
+    // if (authorization instanceof jwt.TokenExpiredError) {
+    //   return res.status(StatusCodes.UNAUTHORIZED).json({
+    //     message: "로그인 세션이 만료되었습니다. 다시 로그인해주세요.",
+    //   });
+    // } else if (authorization instanceof jwt.JsonWebTokenError) {
+    //   return res.status(StatusCodes.BAD_REQUEST).json({
+    //     message: "잘못된 토큰입니다.",
+    //   });
+    // }
 
-    //   if (!authorization)
-    //     return new Error("인증 과정에 문제 발생");
+    // if (!authorization)
+    //   return new Error("인증 과정에 문제 발생");
 
-    //   if (typeof authorization !== 'object' || !('uuid' in authorization))
-    //     return new Error("decodedJwt 반환값이 부적절");
+    // if (typeof authorization !== 'object' || !('uuid' in authorization))
+    //   return new Error("decodedJwt 반환값이 부적절");
 
-    //   if (typeof authorization.uuid !== 'string')
-    //     return new Error("uuid 타입")
+    // if (typeof authorization.uuid !== 'string')
+    //   return new Error("uuid 타입")
 
-    const { missing, location, images } = req.body;
+
+    const { missing, location, cat } = req.body;
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newLocation = await addLocation(tx, location);
@@ -139,9 +142,16 @@ export const createMissing = async (req: Request, res: Response) => {
       // const userId = Buffer.from((authorization.uuid as string).split("-").join(""), "hex");
       const userId = await getUserId();
 
+      const catData = {
+        ...cat,
+        uuid: userId
+      }
+      const missingCat = await addMissingCat(tx, catData);
+
       const post = await addMissing(tx,
         {
           ...missing,
+          catId: missingCat.missingCatId,
           uuid: userId,
           time: new Date(missing.time),
           locationId: newLocation.locationId,
@@ -153,13 +163,15 @@ export const createMissing = async (req: Request, res: Response) => {
         locationId: newLocation.locationId
       });
 
-      if (images) {
-        await addNewImages(tx, {
-          userId,
-          postId: post.postId,
-          categoryId: CATEGORY.MISSINGS,
-        }, images)
-      }
+      // if (req.files) {
+      //   const imageUrls = await uploadImageToS3(req) as string[];
+      //   console.log("결과 출력", imageUrls);
+      //   await addNewImages(tx, {
+      //     userId,
+      //     postId: post.postId,
+      //     categoryId: CATEGORY.MISSINGS,
+      //   }, imageUrls);
+      // }
 
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
 
@@ -170,6 +182,7 @@ export const createMissing = async (req: Request, res: Response) => {
       .status(StatusCodes.CREATED)
       .json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
+    console.log(error)
     if (error instanceof Error)
       validateError(res, error);
   }

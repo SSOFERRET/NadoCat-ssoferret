@@ -17,13 +17,14 @@ interface IProps<T> {
 const PostEditForm = <T extends Post>({ boardCategory, post, editPost }: IProps<T>) => {
   const oldImages = post.images.map((image) => image.url);
   const oldTags = post.tags.map((tag) => tag.tag);
+  const oldIsClosed = isClosedType(post) && post.isClosed;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
   const [newTags, setNewTags] = useState<string[]>([...oldTags]);
   const [newImages, setNewImages] = useState<(string | File)[]>(oldImages);
-  const [isClosed, setIsClosed] = useState(false);
+  const [isClosed, setIsClosed] = useState(oldIsClosed);
   const [tagsToDelete, setTagsToDelete] = useState<string[]>([]);
 
   const handleResizeHeight = () => {
@@ -176,7 +177,9 @@ const PostEditForm = <T extends Post>({ boardCategory, post, editPost }: IProps<
             <NewTags tags={newTags} removeTags={removeTags} />
           </div>
         </div>
-        <button className="post-submit">수정완료</button>
+        <button className={`post-submit ${!title || !content ? "submit-disabled" : ""}`} disabled={!title || !content}>
+          수정완료
+        </button>
       </form>
 
       {isOpen && (

@@ -28,7 +28,7 @@ import { removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
-import { deleteImageFromS3, uploadImageToS3 } from "../../util/images/s3ImageHandler";
+import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 
 // CHECKLIST
@@ -129,7 +129,7 @@ export const createEvent = async (req: Request, res: Response) => {
       }
 
       if (req.files) {
-        const imageUrls = (await uploadImageToS3(req, CATEGORY.EVENTS, postId)) as any;
+        const imageUrls = (await uploadImagesToS3(req)) as any;
         const newImages = await addNewImages(
           tx,
           {
@@ -174,10 +174,11 @@ export const updateEvent = async (req: Request, res: Response) => {
     const postId = Number(req.params.event_id);
 
     const { title, content, tags, deleteTagIds, deleteImageIds, isClosed } = req.body;
+    console.log(title, content, tags, deleteTagIds, deleteImageIds, isClosed);
 
-    if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
-    }
+    // if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
+    //   return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
+    // }
 
     const tagList = JSON.parse(tags);
     const tagIds = JSON.parse(deleteTagIds);
@@ -200,7 +201,7 @@ export const updateEvent = async (req: Request, res: Response) => {
       await addEventTags(tx, formatedTags);
 
       if (req.files) {
-        const imageUrls = (await uploadImageToS3(req, CATEGORY.COMMUNITIES, postId)) as any;
+        const imageUrls = (await uploadImagesToS3(req)) as any;
         const newImages = await addNewImages(
           tx,
           {
@@ -218,7 +219,7 @@ export const updateEvent = async (req: Request, res: Response) => {
         await addEventImages(tx, formatedImages);
       }
 
-      await deleteImageFromS3(CATEGORY.EVENTS, postId, imageIds.length);
+      await deleteImageFromS3ByImageId(tx, imageIds);
 
       await removeImagesByIds(tx, imageIds);
 
@@ -259,7 +260,7 @@ export const deleteEvent = async (req: Request, res: Response) => {
 
       if (post.images?.length) {
         const imageIds = post.images.map((item: IImage) => item.imageId);
-        await deleteImageFromS3(CATEGORY.EVENTS, postId, imageIds.length);
+        await deleteImageFromS3ByImageId(tx, imageIds);
         await removeImagesByIds(tx, imageIds);
         await deleteImages(tx, imageIds);
       }
