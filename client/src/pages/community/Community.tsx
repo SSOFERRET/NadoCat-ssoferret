@@ -9,6 +9,7 @@ import { useState } from "react";
 import { SortMenu, sortMenu } from "../../utils/sort/sortMenu";
 import PostSortMenu from "../../components/communityAndEvent/PostSortMenu";
 import SortButton from "../../components/communityAndEvent/SortButton";
+import Spinner from "../../components/loading/Spinner";
 
 // CHECKLIST
 // [x] 정렬 기준 동적으로 받아오게 수정
@@ -62,11 +63,12 @@ const Community = () => {
             {isEmpty && <PostEmpty />}
 
             {data && <PostList posts={data} />}
+
+            <div className="more" ref={moreRef}>
+              {isFetchingNextPage && <Spinner />}
+            </div>
           </section>
 
-          <div className="more" ref={moreRef}>
-            {isFetchingNextPage && <div>loading...</div>}
-          </div>
           <NewPostButton path="/boards/communities/write" />
         </>
       )}

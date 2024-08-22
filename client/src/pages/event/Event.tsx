@@ -9,6 +9,7 @@ import NewPostButton from "../../components/common/NewPostButton";
 import { SortMenu, sortMenu } from "../../utils/sort/sortMenu";
 import PostSortMenu from "../../components/communityAndEvent/PostSortMenu";
 import SortButton from "../../components/communityAndEvent/SortButton";
+import Spinner from "../../components/loading/Spinner";
 
 const Event = () => {
   const [sort, setSort] = useState<SortMenu>(sortMenu[1]);
@@ -54,15 +55,15 @@ const Event = () => {
             />
           </div>
 
-          <div className={`event-post-list ${isOpenMenu ? "is-open" : ""}`}>
+          <section className={`event-post-list ${isOpenMenu ? "is-open" : ""}`}>
             {isEmpty && <PostEmpty />}
 
             {data && <PostList posts={data} />}
-          </div>
 
-          <div className="more" ref={moreRef}>
-            {isFetchingNextPage && <div>loading...</div>}
-          </div>
+            <div className="more" ref={moreRef}>
+              {isFetchingNextPage && <Spinner />}
+            </div>
+          </section>
 
           <NewPostButton path="/boards/events/write" />
         </>
