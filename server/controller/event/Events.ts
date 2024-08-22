@@ -174,10 +174,11 @@ export const updateEvent = async (req: Request, res: Response) => {
     const postId = Number(req.params.event_id);
 
     const { title, content, tags, deleteTagIds, deleteImageIds, isClosed } = req.body;
+    console.log(title, content, tags, deleteTagIds, deleteImageIds, isClosed);
 
-    if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
-    }
+    // if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
+    //   return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
+    // }
 
     const tagList = JSON.parse(tags);
     const tagIds = JSON.parse(deleteTagIds);
@@ -198,8 +199,6 @@ export const updateEvent = async (req: Request, res: Response) => {
       }));
 
       await addEventTags(tx, formatedTags);
-
-      await removeImagesByIds(tx, deleteImageIds);
 
       if (req.files) {
         const imageUrls = (await uploadImagesToS3(req)) as any;
