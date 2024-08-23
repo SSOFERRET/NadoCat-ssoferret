@@ -5,6 +5,86 @@ import { CATEGORY } from "../constants/category";
 import { getOrderBy } from "../util/sort/orderBy";
 import { SortOrder } from "../types/sort";
 
+const selecteCommunity = {
+  postId: true,
+  categoryId: true,
+  title: true,
+  content: true,
+  views: true,
+  createdAt: true,
+  updatedAt: true,
+  users: {
+    select: {
+      id: true,
+      uuid: true,
+      nickname: true,
+      profileImage: true,
+    },
+  },
+  communityImages: {
+    select: {
+      images: {
+        select: {
+          imageId: true,
+          url: true,
+        },
+      },
+    },
+  },
+  communityTags: {
+    select: {
+      tags: {
+        select: {
+          tagId: true,
+          tag: true,
+        },
+      },
+    },
+  },
+  _count: {
+    select: {
+      communityLikes: true,
+    },
+  },
+};
+
+const selectCommunities = {
+  users: {
+    select: {
+      id: true,
+      uuid: true,
+      nickname: true,
+      profileImage: true,
+    },
+  },
+  communityImages: {
+    take: 1,
+    select: {
+      images: {
+        select: {
+          imageId: true,
+          url: true,
+        },
+      },
+    },
+  },
+  communityTags: {
+    select: {
+      tags: {
+        select: {
+          tagId: true,
+          tag: true,
+        },
+      },
+    },
+  },
+  _count: {
+    select: {
+      communityLikes: true,
+    },
+  },
+};
+
 export const getCommunitiesCount = async () => await prisma.communities.count();
 
 export const getCommunityList = async (limit: number, sort: string, cursor: number | undefined) => {
@@ -32,42 +112,7 @@ export const getCommunityList = async (limit: number, sort: string, cursor: numb
     skip: cursor ? 1 : 0,
     cursor: cursor ? { postId: cursor } : undefined,
     orderBy: orderOptions,
-    include: {
-      users: {
-        select: {
-          id: true,
-          uuid: true,
-          nickname: true,
-          profileImage: true,
-        },
-      },
-      communityImages: {
-        take: 1,
-        select: {
-          images: {
-            select: {
-              imageId: true,
-              url: true,
-            },
-          },
-        },
-      },
-      communityTags: {
-        select: {
-          tags: {
-            select: {
-              tagId: true,
-              tag: true,
-            },
-          },
-        },
-      },
-      _count: {
-        select: {
-          communityLikes: true,
-        },
-      },
-    },
+    include: selectCommunities,
   });
 
   return communities.map((community: ICommunity) => {
@@ -99,48 +144,7 @@ export const getCommunityById = async (postId: number) => {
       postId,
       categoryId,
     },
-    select: {
-      postId: true,
-      categoryId: true,
-      title: true,
-      content: true,
-      views: true,
-      createdAt: true,
-      updatedAt: true,
-      users: {
-        select: {
-          id: true,
-          uuid: true,
-          nickname: true,
-          profileImage: true,
-        },
-      },
-      communityImages: {
-        select: {
-          images: {
-            select: {
-              imageId: true,
-              url: true,
-            },
-          },
-        },
-      },
-      communityTags: {
-        select: {
-          tags: {
-            select: {
-              tagId: true,
-              tag: true,
-            },
-          },
-        },
-      },
-      _count: {
-        select: {
-          communityLikes: true,
-        },
-      },
-    },
+    select: selecteCommunity,
   });
 
   if (!community) {
