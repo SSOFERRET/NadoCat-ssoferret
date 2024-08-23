@@ -1,20 +1,17 @@
 import "../../styles/scss/components/common/avartar.scss";
-
-const DEFAULT_PROFILE: string = "/src/assets/img/profileImg1.png";
+import DefaultProfile from "../../assets/img/profileImg1.png";
 
 interface IProps {
   profileImage: string | null;
   nickname: string;
   onClick?: () => void;
+  size?: "sm" | "md" | "lg";
 }
 
-const Avartar = ({ profileImage, nickname, onClick }: IProps) => {
+const Avartar = ({ profileImage, nickname, onClick, size = "sm" }: IProps) => {
   return (
-    <div className="avatar" onClick={onClick}>
-      {profileImage && <img src={profileImage} alt={nickname} />}
-      {!profileImage && (
-        <img src={DEFAULT_PROFILE} alt={nickname} className="default_profile" />
-      )}
+    <div className={`avatar ${size}`} onClick={onClick}>
+      <img src={profileImage ?? DefaultProfile} alt={nickname} />
     </div>
   );
 };
