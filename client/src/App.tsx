@@ -23,6 +23,7 @@ import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
+import Search from "./pages/search/Search";
 import MissingDetail from "./pages/missing/MissingDetail";
 
 const router = createBrowserRouter([
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
             ],
           },
         ],
+      },
+      {
+        path: "/search",
+        children: [{ path: "", element: <Search /> }],
       },
     ],
   },

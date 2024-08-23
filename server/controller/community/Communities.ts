@@ -16,7 +16,7 @@ import {
   removeLikesById,
   getLikeIds,
 } from "../../model/community.model";
-import { addImage, deleteImages, getImageById } from "../../model/image.model";
+import { deleteImages, getImageById } from "../../model/image.model";
 import { addTag, deleteTags } from "../../model/tag.model";
 import { deleteCommentsById } from "../../model/communityComment.model";
 import { handleControllerError } from "../../util/errors/errors";
@@ -131,8 +131,10 @@ export const getCommunity = async (req: Request, res: Response) => {
 
 export const createCommunity = async (req: Request, res: Response) => {
   try {
+    const userId = Buffer.from(req.user.uuid, "hex");
+    console.log("userId", userId);
     const { title, content, tags } = req.body;
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    // const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
     const tagList = JSON.parse(tags);
 
     const newPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
