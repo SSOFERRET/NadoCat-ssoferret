@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
             <PiChatCircleBold></PiChatCircleBold>
             <span>채팅</span>
           </a>
-          <a href="/" className="navbar-item">
+          <a href="/search" className="navbar-item">
             <RiSearchLine></RiSearchLine>
             <span>검색</span>
           </a>

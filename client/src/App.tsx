@@ -23,6 +23,7 @@ import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
+import Search from "./pages/search/Search";
 
 const router = createBrowserRouter([
   {
@@ -79,6 +80,11 @@ const router = createBrowserRouter([
       {
         path: "imageUploadTest",
         children: [{ path: "", element: <ImageUploadTest /> }],
+      },
+
+      {
+        path: "/search",
+        children: [{ path: "", element: <Search /> }],
       },
     ],
   },
