@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import "../../../styles/scss/components/user/my/myInfo.scss";
-import { IoIosSettings } from "react-icons/io";
 import ProfileChangeModal from "./ProfileChangeModal";
+import { IoIosSettings } from "react-icons/io";
 
 interface MyInfoProps {
   nickname: string;
   profileImageUrl: string;
+  uuid: string;
 }
 
-const MyInfo = ({ nickname, profileImageUrl }: MyInfoProps) => {
+const MyInfo = ({ nickname, uuid, profileImageUrl }: MyInfoProps) => {
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const handleOpenProfileChange = () => {
@@ -28,7 +29,7 @@ const MyInfo = ({ nickname, profileImageUrl }: MyInfoProps) => {
 
       <div className="nickname-container">
         <div className="nickname-text">
-          <p>{nickname}</p> 
+          <p>닉네임:{nickname}/uuid:{uuid}</p> 
           <IoIosSettings />
         </div>
         <div className="change-profile-btn">
@@ -36,7 +37,7 @@ const MyInfo = ({ nickname, profileImageUrl }: MyInfoProps) => {
         </div>
       </div>
 
-        {isOpenModal && <ProfileChangeModal closeModal={handleCloseProfileChange} />}
+        {/* {isOpenModal && <ProfileChangeModal closeModal={handleCloseProfileChange} />} */}
 
     </div>
   );

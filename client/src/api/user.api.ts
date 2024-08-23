@@ -17,20 +17,17 @@ export const signup = async(userData: SignupProps) => {
 //비밀번호 변경
 
 interface ILoginResponse {
-    // generalToken: string;
-    // refreshToken: string | null;
-    // authLogin: boolean;
-    // uuid: string;
     message: string;
-  user: {
-    email: string;
-    nickname: string;
-    uuid: string;
-  };
-  tokens: {
-    accessToken: string;
-    refreshToken: string | null;
-  };
+    user: {
+        email: string;
+        nickname: string;
+        uuid: string;
+        status: string;
+    };
+    tokens: {
+        accessToken: string;
+        refreshToken: string;
+    };
 }
 
 export const login = async(data: LoginProps) => {
@@ -46,7 +43,9 @@ export const login = async(data: LoginProps) => {
 export const my = async() => {
     try {
         const response = await httpClient.get("/users/my");
+
         return response.data;
+
     } catch (error) {
         console.error("my error:", error);
         throw error;
