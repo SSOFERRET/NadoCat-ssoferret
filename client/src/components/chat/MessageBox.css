@@ -68,6 +68,7 @@ body {
   word-wrap: break-word;
   overflow-wrap: break-word;
   box-sizing: border-box;
+  resize: none;
 }
 .messageBox .inputBox::-moz-placeholder {
   margin-left: 2vh;

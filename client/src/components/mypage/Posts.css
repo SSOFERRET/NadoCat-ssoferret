@@ -62,7 +62,10 @@ html {
   }
 }
 .background {
-  margin-top: 12vh;
+  scrollbar-width: none;
+}
+.background::-webkit-scrollbar {
+  display: none;
 }
 .background .postsBox {
   border-bottom: 0.5px solid #b8bcbf;

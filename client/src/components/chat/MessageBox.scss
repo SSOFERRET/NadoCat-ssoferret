@@ -21,6 +21,7 @@
     word-wrap: break-word; 
     overflow-wrap: break-word; 
     box-sizing: border-box;
+    resize: none;
     &::placeholder{
       margin-left: 2vh;
       color: $silver;

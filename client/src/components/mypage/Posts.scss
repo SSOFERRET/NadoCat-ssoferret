@@ -20,8 +20,10 @@ html {
   }
 }
 .background{
-  margin-top: 12vh;
-  
+  scrollbar-width: none;
+  &::-webkit-scrollbar{
+    display: none;
+  }
   .postsBox{
     border-bottom: .5px solid $silver;
     height: 12vh;
