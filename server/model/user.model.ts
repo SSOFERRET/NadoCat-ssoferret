@@ -22,6 +22,19 @@ export const createUser = async (email: string, nickname: string, password: stri
   const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
 
   try {
+    //중복 사용자 검증
+    const selectUser = await prisma.users.findFirst({
+        where: {
+          email: email,
+        },
+      });
+
+      if (selectUser && selectUser.status === "active") {
+        console.log("사용중인 이메일입니다.");
+        return null;
+      }
+
+    //새로 가입
     const result = await prisma.$transaction(async (prisma) => {
       const user = await prisma.users.create({
         data: {
@@ -65,7 +78,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
         },
       });
 
-      if (!selectUser) {
+      if (!selectUser || selectUser.status === "inactive") {
         console.log("사용자를 찾을 수 없습니다.");
         return null;
       }
@@ -102,7 +115,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
         uuid: userUuidString,
         email: selectUser.email
       }, process.env.PRIVATE_KEY_GEN as string, {
-      expiresIn: "1m",
+      expiresIn: process.env.GENERAL_TOKEN_EXPIRE_IN,
       issuer: "fefive"
     });
 
@@ -112,7 +125,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
         {
           uuid: userUuidString,
         }, process.env.PRIVATE_KEY_REF as string, {
-        expiresIn: "7d",
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN,
         issuer: "fefive"
       }
       );
@@ -155,6 +168,53 @@ export const saveRefreshToken = async (uuid: string, refreshToken: string) => {
     throw new Error("자동로그인 중 오류 발생");
   }
 };
+
+
+//[x] 리프레시 토큰을 통한 액세스 토큰 발급
+export const refreshAccessToken = async(refreshToken: string) => {
+    try {
+        //토큰 검증
+        const decoded = jwt.verify(refreshToken, process.env.PRIVATE_KEY_REF as string) as jwt.JwtPayload;
+
+        //사용자 정보 가져옴
+        const uuidBuffer = Buffer.from(decoded.uuid.replace(/-/g, ""), "hex");
+        const selectUser = await prisma.users.findFirst({
+          where: {
+            uuid: uuidBuffer,
+          },
+        });
+
+        const selectUserSecrets = await prisma.userSecrets.findFirst({
+          where: {
+            uuid: uuidBuffer,
+          },
+        });
+
+        if(!selectUser){
+            throw new Error("사용자를 찾을 수 없습니다.");
+        }
+
+        if(!selectUserSecrets){
+            throw new Error("유효하지 않은 사용자입니다.");
+        }
+
+        //access token재발급
+        const newAccessToken = jwt.sign(
+            {
+              uuid: decoded.uuid,
+              email: selectUser.email
+            }, process.env.PRIVATE_KEY_GEN as string, {
+            expiresIn: process.env.GENERAL_TOKEN_EXPIRE_IN,
+            issuer: "fefive"
+          });
+
+          return newAccessToken;
+
+    } catch (error) {
+    console.log("access token refresh error:", error);
+    throw new Error("access token refresh 중 오류 발생");
+    }
+}
 
 
 //[ ] 카카오 로그인
@@ -204,4 +264,48 @@ export const kakaoUser = async (email: string, nickname: string, accessToken: st
   }
 
 
+}
+
+//[ ]마이페이지 
+export const myUser = async (uuid: string){
+    try {
+        //사용자 정보 가져오기
+        const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex"); //바이너리 변환
+        const selectUser = await prisma.users.findFirst({
+            where: {
+                uuid: uuidBuffer,
+            },
+        });
+
+        if(!selectUser){ //사실 자기정보라 이러면 안되긴 함
+            console.log("사용자를 찾을 수 없습니다.");
+            return null;
+        }
+
+        //사용자 업데이트
+        const updateUser = await prisma.users.update({
+            where: {
+                uuid: uuidBuffer,
+            },
+            data: {
+                nickname: "테스트"
+            }
+        });
+
+        //사용자 삭제(inactive로 상태변경)
+        const deleteUser = await prisma.users.update({
+            where: {
+                uuid: uuidBuffer,
+            },
+            data: {
+                status: "inactive"
+            }
+        })
+
+        return {selectUser};
+
+    } catch (error) {
+        console.log("마이페이지 error:", error);
+        throw new Error("마이페이지에서 오류 발생");
+    }
 }
