@@ -26,6 +26,7 @@ import EventPostEdit from "./pages/event/EventPostEdit";
 import Search from "./pages/search/Search";
 import MissingDetail from "./pages/missing/MissingDetail";
 import Boards from "./pages/boards/Boards";
+import ProtectedPath from "./pages/protectedPath/ProtectedPath";
 
 const router = createBrowserRouter([
   {
@@ -68,8 +69,22 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <Community /> },
               { path: ":id", element: <CommunityDetail /> },
-              { path: "write", element: <CommunityPostWrite /> },
-              { path: "edit/:id", element: <CommunityPostEdit /> },
+              {
+                path: "write",
+                element: (
+                  <ProtectedPath>
+                    <CommunityPostWrite />
+                  </ProtectedPath>
+                ),
+              },
+              {
+                path: "edit/:id",
+                element: (
+                  <ProtectedPath>
+                    <CommunityPostEdit />
+                  </ProtectedPath>
+                ),
+              },
             ],
           },
           {
@@ -77,8 +92,22 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <Event /> },
               { path: ":id", element: <EventDetail /> },
-              { path: "write", element: <EventPostWrite /> },
-              { path: "edit/:id", element: <EventPostEdit /> },
+              {
+                path: "write",
+                element: (
+                  <ProtectedPath>
+                    <EventPostWrite />
+                  </ProtectedPath>
+                ),
+              },
+              {
+                path: "edit/:id",
+                element: (
+                  <ProtectedPath>
+                    <EventPostEdit />
+                  </ProtectedPath>
+                ),
+              },
             ],
           },
           {

@@ -1,5 +1,15 @@
 import { Prisma } from "@prisma/client";
 
+export const getLiked = async (tx: Prisma.TransactionClient, postId: number, categoryId: number, userId: Buffer) => {
+  return await tx.likes.findFirst({
+    where: {
+      postId,
+      categoryId,
+      uuid: userId,
+    },
+  });
+};
+
 export const removeLikesByIds = async (tx: Prisma.TransactionClient, likeIds: { likeId: number }[]) => {
   await tx.likes.deleteMany({
     where: {
