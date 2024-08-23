@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import BasicScrollToBottom from "react-scroll-to-bottom";
 import Message from './Message';
-import "./Messages.scss";
+import "../../styles/scss/components/chat/Messages.scss";
 
 interface MessageData {
   // chatId: number; 

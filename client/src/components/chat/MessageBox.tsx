@@ -1,6 +1,6 @@
 import React from "react";
 import MessageSend from "../../assets/img/MessageSend.png";
-import "./MessageBox.scss";
+import "../../styles/scss/components/chat/MessageBox.scss";
 
 interface MessageBoxProps {
   message: string;

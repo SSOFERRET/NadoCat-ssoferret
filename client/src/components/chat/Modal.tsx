@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "./Modal.scss";
+import "../../styles/scss/components/chat/Modal.scss";
 import axios from 'axios';
 interface Props {
   isOpen: boolean;

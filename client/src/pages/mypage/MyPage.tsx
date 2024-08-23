@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import BackButton from '../../components/common/BackButton';
-import '../../styles/scss/pages/mypage/MyPage.scss';
+import React, { useEffect, useState } from "react";
+import BackButton from "../../components/common/BackButton";
+import "../../styles/scss/pages/mypage/MyPage.scss";
 import "../../styles/css/base/reset.css";
-import Posts from '../../components/mypage/Posts';
+import Posts from "../../components/mypage/Posts";
+
 
 export interface Post {
   title: string;

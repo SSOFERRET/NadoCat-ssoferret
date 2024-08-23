@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "./ChatList.scss";
+import "../../styles/scss/components/chat/ChatList.scss";
 import "../../styles/css/base/reset.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal from "./Modal";
