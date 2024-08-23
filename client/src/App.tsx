@@ -25,6 +25,7 @@ import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
 import Search from "./pages/search/Search";
 import MissingDetail from "./pages/missing/MissingDetail";
+import Boards from "./pages/boards/Boards";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
       {
         path: "boards",
         children: [
+          { path: "", element: <Boards /> },
           {
             path: "street-cats",
             children: [
