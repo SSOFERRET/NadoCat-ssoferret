@@ -32,7 +32,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <Home /> },
+      { index: true, path: "", element: <Home /> },
       {
         path: "users",
         children: [
