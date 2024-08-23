@@ -4,6 +4,7 @@ import { BiBell } from "react-icons/bi";
 import "../../styles/css/base/reset.css";
 import "../../styles/scss/components/common/header.scss";
 import { Link } from "react-router-dom";
+import NotificationAlarm from "./NotificationAlarm";
 
 export const Header: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ export const Header: React.FC = () => {
 
         <button className="alarm-button">
           <a href="/notification">
-            <BiBell></BiBell>
+            <NotificationAlarm />
           </a>
         </button>
       </header>
