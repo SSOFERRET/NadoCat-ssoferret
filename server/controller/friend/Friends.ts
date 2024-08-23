@@ -9,7 +9,7 @@ import { Prisma } from "@prisma/client";
 
 export const followings = async (req: Request, res: Response) => {
   try {
-    const userId = await getUserId();
+    const userId = Buffer.from(req.user.uuid, "hex");
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
 
@@ -33,7 +33,7 @@ export const followings = async (req: Request, res: Response) => {
 
 export const follow = async (req: Request, res: Response) => {
   try {
-    const userId = await getUserId();
+    const userId = Buffer.from(req.user.uuid, "hex");
     const followingId = Buffer.from(req.params.following_idm, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -55,7 +55,7 @@ export const follow = async (req: Request, res: Response) => {
 
 export const unfollow = async (req: Request, res: Response) => {
   try {
-    const userId = await getUserId();
+    const userId = Buffer.from(req.user.uuid, "hex");
     const followingId = Buffer.from(req.params.following_idm, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {

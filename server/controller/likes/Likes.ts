@@ -19,7 +19,7 @@ export const addLike = async (req: Request, res: Response) => {
   try {
     const categoryId = Number(req.params.category_id);
     const postId = Number(req.params.post_id);
-    const userId = await getUserId();
+    const userId = Buffer.from(req.user.uuid, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const like = await saveLike(tx, postId, categoryId, userId);
@@ -41,7 +41,7 @@ export const deleteLike = async (req: Request, res: Response) => {
   try {
     const categoryId = Number(req.params.category_id);
     const postId = Number(req.params.post_id);
-    const userId = await getUserId();
+    const userId = Buffer.from(req.user.uuid, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const like = await findLike(tx, postId, categoryId, userId);

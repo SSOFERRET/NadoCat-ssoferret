@@ -10,6 +10,7 @@ import { createComment, deleteComment, getComments, updateComment } from "../con
 import { body, param } from "express-validator";
 import { validate } from "../middleware/validator";
 import uploadImages from "../multer";
+import { ensureAutorization } from "../middleware/auth";
 
 const validatePostId = [
   param("community_id").notEmpty().isInt().withMessage("community_id는 숫자로 입력해주세요."),
@@ -75,20 +76,20 @@ const router = express.Router();
 
 router.get("/", getCommunities);
 
-router.post("/", uploadImages.array("images"), createCommunity);
+router.post("/", ensureAutorization, uploadImages.array("images"), createCommunity);
 
 router.get("/:community_id", getCommunity);
 
-router.put("/:community_id", uploadImages.array("images"), updateCommunity);
+router.put("/:community_id", ensureAutorization, uploadImages.array("images"), updateCommunity);
 
-router.delete("/:community_id", deleteCommunity);
+router.delete("/:community_id", ensureAutorization, deleteCommunity);
 
 router.get("/:community_id/comments", getComments);
 
-router.post("/:community_id/comments", createComment);
+router.post("/:community_id/comments", ensureAutorization, createComment);
 
-router.put("/:community_id/comments/:comment_id", updateComment);
+router.put("/:community_id/comments/:comment_id", ensureAutorization, updateComment);
 
-router.delete("/:community_id/comments/:comment_id", deleteComment);
+router.delete("/:community_id/comments/:comment_id", ensureAutorization, deleteComment);
 
 export default router;

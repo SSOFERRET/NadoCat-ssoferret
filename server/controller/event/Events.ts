@@ -72,7 +72,7 @@ export const getEvent = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.event_id);
     const categoryId = CATEGORY.EVENTS;
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const userId = Buffer.from(req.user.uuid, "hex");
 
     let result;
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -108,7 +108,7 @@ export const createEvent = async (req: Request, res: Response) => {
   try {
     const { title, content, isClosed, tags } = req.body;
     const tagList = JSON.parse(tags);
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const userId = Buffer.from(req.user.uuid, "hex");
 
     const newPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await addEvent(tx, userId, title, content, !!isClosed);
@@ -167,14 +167,14 @@ export const createEvent = async (req: Request, res: Response) => {
 // [ ] 에러처리
 export const updateEvent = async (req: Request, res: Response) => {
   try {
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const userId = Buffer.from(req.user.uuid, "hex");
     const postId = Number(req.params.event_id);
 
     const { title, content, tags, deleteTagIds, deleteImageIds, isClosed } = req.body;
 
-    // if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
-    // }
+    if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
+    }
 
     const tagList = JSON.parse(tags);
     const tagIds = JSON.parse(deleteTagIds);
@@ -237,7 +237,7 @@ export const updateEvent = async (req: Request, res: Response) => {
 export const deleteEvent = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.event_id);
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const userId = Buffer.from(req.user.uuid, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await getEventById(tx, postId);
