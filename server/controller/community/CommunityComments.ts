@@ -44,9 +44,12 @@ export const getComments = async (req: Request, res: Response) => {
 
 export const createComment = async (req: Request, res: Response) => {
   try {
+    // const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = req.user.uuid;
+    console.log("userId+++++++++++++++++++++++++++++++++++++", userId);
     const postId = Number(req.params.community_id);
     const comment = req.body.comment;
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    // const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     if (!comment) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
