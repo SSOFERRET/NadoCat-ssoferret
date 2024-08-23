@@ -1,0 +1,74 @@
+@import "../../base/common.scss";
+
+.post-details {
+  margin-bottom: 28rem;
+  padding: 0 20rem;
+
+  .post-title {
+    display: inline-block;
+    font-family: "bold";
+    font-size: $size-16;
+    line-height: 1.2;
+    margin: 7rem 0 13rem 0; // 여기 뭔가...흠
+  }
+
+  .image {
+    width: 380rem;
+    height: 380rem;
+    border-radius: $round-5;
+    background-color: $lightgray;
+    overflow: hidden;
+    margin-bottom: 13rem;
+  }
+
+  .post-event-date {
+    display: flex;
+    align-items: center;
+    gap: 10rem;
+    margin: 13rem 0;
+    font-family: "medium";
+    font-size: $size-14;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 9rem;
+      color: $dimgray;
+    }
+  }
+
+  .post-info {
+    display: flex;
+    align-items: center;
+    gap: 14rem;
+    font-family: "medium";
+    font-size: $size-14;
+    color: $dimgray;
+    margin: 20rem 0;
+    svg {
+      width: 17rem;
+      height: 17rem;
+    }
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .likes {
+      svg {
+        color: $primary;
+      }
+    }
+  }
+
+  .post-content {
+    font-family: "medium";
+    font-size: $size-14;
+    line-height: 1.5;
+    color: $dimgray;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+}

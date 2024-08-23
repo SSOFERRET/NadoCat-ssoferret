@@ -1,0 +1,50 @@
+@import "../../base/common.scss";
+
+.missing-post-head {
+  // // min-height: 100vh;
+  // height: 100%;
+  // // min-height: calc(100vh - 61rem);
+  // padding: 20rem;
+  // padding-bottom: 64rem;
+  background-color: $white;
+  margin: 0;
+  gap: 2rem;
+  margin-bottom: 8rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .post-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4rem;
+    .user-cat-name {
+      margin: 0;
+      p {
+        font-size: $size-14;
+        font-family: "bold";
+      }
+    }
+
+    .created-at {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+
+      p {
+        font-family: "medium";
+        font-size: $size-10;
+        color: $silver;
+      }
+    }
+  }
+
+  .options-icon {
+    width: 22rem;
+    height: 22rem;
+    color: $dimgray;
+    margin-left: auto;
+    cursor: pointer;
+  }
+}

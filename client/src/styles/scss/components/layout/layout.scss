@@ -1,0 +1,19 @@
+@import "../../base/common.scss";
+
+main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 430rem;
+  // margin-top: 58rem;
+  padding-bottom: 60rem;
+  background-color: $white;
+  min-height: calc(100vh - 61rem);
+}
+
+.no-headerfooter {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}

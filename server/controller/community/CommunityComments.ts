@@ -1,52 +1,32 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import prisma from "../../client";
+import {
+  addComment,
+  deleteCommentById,
+  getCommentCount,
+  getCommunityComments,
+  updateCommentById,
+} from "../../model/communityComment.model";
+import { getUserId } from "./Communities";
+import { handleControllerError } from "../../util/errors/errors";
+import { notifyNewComment } from "../notification/Notifications";
+import { CATEGORY } from "../../constants/category";
 
 //  CHECKLIST
-// [] model 코드 분리
+// [x] model 코드 분리
 // [] 에러처리 자세하게 구현하기
 // [] 사용자 정보 받아오는 부분 구현 필요
-
 export const getComments = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const postId = Number(req.params.community_id);
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
-    const count = await prisma.community_comments.count({
-      where: {
-        community_id: id,
-      },
-    });
-    const comments = await prisma.community_comments.findMany({
-      where: {
-        community_id: id,
-      },
-      take: limit,
-      skip: cursor ? 1 : 0,
-      cursor: cursor ? { community_comment_id: cursor } : undefined,
-      orderBy: [
-        {
-          community_comment_id: "asc",
-        },
-      ],
-      select: {
-        community_comment_id: true,
-        comment: true,
-        users: {
-          select: {
-            id: true,
-            user_id: true,
-            nickname: true,
-            profile_image: true,
-          },
-        },
-      },
-    });
+    const count = await getCommentCount(postId);
 
-    const nextCursor =
-      comments.length === limit
-        ? comments[comments.length - 1].community_comment_id
-        : null;
+    const comments = await getCommunityComments(postId, limit, cursor);
+
+    const nextCursor = comments.length === limit ? comments[comments.length - 1].commentId : null;
 
     const result = {
       comments,
@@ -58,94 +38,59 @@ export const getComments = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
 export const createComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const postId = Number(req.params.community_id);
     const comment = req.body.comment;
-    const userId = "aaa"; // TODO 사용자 정보 받아오기 수정 필요
+    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     if (!comment) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
-    await prisma.community_comments.create({
-      data: {
-        user_id: userId,
-        community_id: id,
-        comment,
-      },
-    });
+    const newComment = await addComment(postId, userId, comment);
+
+    if (newComment) await notifyNewComment(userId, CATEGORY.COMMUNITIES, postId, newComment.communityCommentId);
 
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
 export const updateComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const postId = Number(req.params.community_id);
     const commentId = Number(req.params.comment_id);
     const comment = req.body.comment;
-    const userId = "aaa"; // TODO 사용자 정보 받아오기 수정 필요
+    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     if (!comment) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
-    await prisma.community_comments.update({
-      where: {
-        community_id: id,
-        community_comment_id: commentId,
-        user_id: userId,
-      },
-      data: {
-        comment,
-      },
-    });
+    await updateCommentById(postId, userId, commentId, comment);
 
     res.status(StatusCodes.OK).json({ message: "댓글이 수정되었습니다." });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };
 
 export const deleteComment = async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.community_id);
+    const postId = Number(req.params.community_id);
     const commentId = Number(req.params.comment_id);
-    const userId = "aaa"; // TODO 사용자 정보 받아오기 수정 필요
+    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
-    await prisma.community_comments.delete({
-      where: {
-        community_id: id,
-        community_comment_id: commentId,
-        user_id: userId,
-      },
-    });
+    await deleteCommentById(postId, userId, commentId);
 
     res.status(StatusCodes.OK).json({ message: "댓글이 삭제되었습니다." });
   } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
+    handleControllerError(error, res);
   }
 };

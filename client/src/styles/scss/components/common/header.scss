@@ -1,0 +1,37 @@
+@import "../../base/common.scss";
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 17rem 20rem;
+  margin: 0 auto;
+  max-width: 430rem;
+  background-color: $white;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.logo {
+  cursor: pointer;
+
+  img {
+    width: 78rem;
+    height: 20rem;
+  }
+}
+
+.alarm-button {
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+
+  svg {
+    width: 22rem;
+    height: 22rem;
+    fill: $black;
+  }
+}

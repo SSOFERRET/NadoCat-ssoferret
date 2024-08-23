@@ -1,17 +1,21 @@
+import { IImage } from "./image";
+import { ITag } from "./tag";
+
 export interface ICommunity {
-  post_id: number;
-  category_id: number;
+  postId: number;
+  categoryId: number;
   title: string;
   content: string | null;
   views: number;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
   users: IUser;
-  community_images: ICommunityImage[] | [];
-  community_tags: ICommunityTag[] | [];
+  _count: ICount;
+  communityImages: ICommunityImage[] | [];
+  communityTags: ICommunityTag[] | [];
 }
 
-export interface ICommunities {
+export interface ICommunityList {
   posts: ICommunity[];
   pagination: IPagination;
 }
@@ -22,14 +26,9 @@ export interface ICommunityTag {
 
 interface IUser {
   id: number;
-  user_id: string;
+  uuid: Buffer;
   nickname: string;
-  profile_image: string | null;
-}
-
-export interface ITag {
-  tag_id: number;
-  tag: string;
+  profileImage: string | null;
 }
 
 export interface IPagination {
@@ -41,7 +40,6 @@ export interface ICommunityImage {
   images: IImage;
 }
 
-export interface IImage {
-  image_id: number;
-  url: string;
+interface ICount {
+  communityLikes: number;
 }

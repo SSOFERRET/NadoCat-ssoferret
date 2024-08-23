@@ -1,0 +1,24 @@
+@import "../../base/common.scss";
+
+.event-container {
+  height: 100%;
+  min-height: 100vh;
+  padding: 20rem;
+  background-color: $white;
+
+  .category {
+    font-family: "semiBold";
+    font-size: $size-14;
+    color: silver;
+    border-bottom: 0.5rem solid $lightgray;
+    padding-bottom: 10rem;
+  }
+
+  .event-post-list {
+    min-height: 100vh;
+  }
+
+  .more {
+    font-size: $size-14;
+  }
+}

@@ -1,0 +1,10 @@
+@import "../../base/common.scss";
+
+.street-cat-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 20rem;
+  font-size: 14rem;
+  position: relative;
+}

@@ -7,22 +7,27 @@ import {
   getStreetCat,
   createStreetCat,
   updateStreetCat,
-  deleteStreetCat
-} from '../controller/StreetCatsController';
+  deleteStreetCat,
+} from "../controller/streetCat/StreetCats";
 
-// 동네 고양이 도감 목록 조회
-router.get('/', getStreetCats);
+import {
+  getStreetCatComments,
+  createStreetCatComment,
+  updateStreetCatComment,
+  deleteStreetCatComment
+} from "../controller/streetCat/StreetCatsComments";
 
-// 동네 고양이 도감 상세 조회
-router.get('/:street_cat_id', getStreetCat);
+// 동네 고양이 도감
+router.get("/", getStreetCats);
+router.get("/:street_cat_id", getStreetCat);
+router.post("/", createStreetCat);
+router.put("/:street_cat_id", updateStreetCat);
+router.delete("/:street_cat_id", deleteStreetCat);
 
-// 동네 고양이 도감 생성
-router.post('/', createStreetCat);
-
-// 동네 고양이 도감 수정
-router.put('/:street_cat_id', updateStreetCat);
-
-// 동네 고양이 도감 삭제
-router.delete('/:street_cat_id', deleteStreetCat);
+// 동네 고양이 도감 댓글
+router.get("/:street_cat_id/comments", getStreetCatComments);
+router.post("/:street_cat_id/comments", createStreetCatComment);
+router.put("/:street_cat_id/comments", updateStreetCatComment);
+router.delete("/:street_cat_id/comments", deleteStreetCatComment);
 
 export default router;

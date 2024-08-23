@@ -1,0 +1,31 @@
+@import "../../base/common.scss";
+
+.post-summary {
+  // margin-left: 8rem;
+  .summary-column {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    gap: 8rem;
+    padding: 4rem 0 4rem 0;
+
+    svg {
+      width: 16rem;
+      height: 16rem;
+    }
+
+    p {
+      font-size: $size-14;
+    }
+
+    .column-key {
+      font-family: bold;
+    }
+
+    .data {
+      font-family: "medium";
+      color: $gray;
+    }
+  }
+}

@@ -1,0 +1,136 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  height: 380rem;
+  border-radius: 5rem;
+  background-color: lightgray;
+  overflow: hidden;
+  margin: 0 auto;
+  margin-bottom: 13rem;
+}
+.carousel-container .carousel-slider {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+.carousel-container .carousel-item {
+  min-width: 100%;
+  user-select: none;
+}
+.carousel-container .carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.carousel-container .carousel-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 30rem;
+  height: 30rem;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  color: #ffffff;
+  z-index: 10;
+  top: 50%;
+  cursor: pointer;
+}
+.carousel-container .carousel-button svg {
+  width: 20rem;
+  height: 20rem;
+}
+.carousel-container .carousel-button.prev-button {
+  left: 10rem;
+}
+.carousel-container .carousel-button.next-button {
+  right: 10rem;
+}
+.carousel-container .carousel-button:hover {
+  background-color: rgba(136, 139, 144, 0.4);
+}
+.carousel-container .pagination-container {
+  width: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  margin-top: 16rem;
+  position: absolute;
+  bottom: 12rem;
+}
+.carousel-container .pagination-container:hover {
+  display: flex;
+}
+.carousel-container .pagination-container ul {
+  display: flex;
+}
+.carousel-container .pagination-container ul li {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background-color: #888b90;
+  margin: 0 4rem;
+  cursor: pointer;
+}
+.carousel-container .pagination-container ul li:hover {
+  background-color: #4c4c4c;
+}
+.carousel-container .pagination-container ul li.active {
+  background-color: #4c4c4c;
+}
+
+/*# sourceMappingURL=imageCarousel.css.map */

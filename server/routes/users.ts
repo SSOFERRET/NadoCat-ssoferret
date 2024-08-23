@@ -1,10 +1,38 @@
-import express, { Router } from "express";
-const router: Router = express.Router();
-import signup from "../controller/UserController";
+import express from "express";
+import {signup, login, kakao, google, getNewAccessToken} from "../controller/user/Users";
+import { signupValidator, loginValidator } from "../middleware/validator";
+import { mypage, changeNickname, changepassword, changeProfile } from "../controller/user/MyPage";
+import {
+  getFavoriteCats,
+  getFavoriteCat,
+  addFavoriteCat,
+  deleteFavoriteCat
+} from "../controller/streetCat/StreetCatsFavorite"
+import { follow, followings, unfollow } from "../controller/friend/Friends";
+import { ensureAutorization } from "../middleware/auth";
 
-router.use(express.json());
+const router= express.Router();
 
-//회원가입
-router.post("/signup", signup);
+//사용자
+router.post("/signup", signupValidator, signup);
+router.post("/login", loginValidator, login);
+router.post("/refresh-token", getNewAccessToken);
+router.get("/auth/kakao/callback", kakao);
+router.get("/auth/google", google);
+router.get("/my", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
+router.put("/update-nickname", changeNickname);
+router.put("/update-password", changepassword);
+router.put("/update-profile", changeProfile);
+
+// 동네 고양이 도감 즐겨찾기(내 도감)
+router.get("/street-cats", getFavoriteCats);
+router.get("/street-cats/:street_cat_id", getFavoriteCat);
+router.post("/street-cats/:street_cat_id", addFavoriteCat);
+router.delete("/street-cats/:street_cat_id", deleteFavoriteCat);
+
+// 친구 맺기
+router.post("/follows/:following_id", follow);
+router.delete("/follows/:following_id", unfollow);
+router.get("/followings", followings);
 
 export default router;

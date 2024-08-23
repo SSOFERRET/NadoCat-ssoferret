@@ -1,0 +1,109 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.cat-container {
+  padding-bottom: 20rem;
+  border-bottom: 0.5rem solid #d9d9d9;
+}
+.cat-container .cat-name {
+  display: block;
+  font-family: "bold";
+  font-size: 16rem !important;
+  margin: 10rem 0;
+}
+.cat-container .img-box {
+  width: 100%;
+  height: 390rem;
+  background-color: #d9d9d9;
+  border-radius: 5rem;
+  margin-bottom: 11rem;
+}
+.cat-container .cat-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cat-container .cat-info .cat-tag {
+  display: inline-block;
+}
+.cat-container .cat-info .cat-tag span {
+  display: inline-block;
+  background-color: #fcf7e0;
+  font-family: "medium";
+  font-size: 14rem !important;
+  color: #f27405;
+  border-radius: 5rem;
+  padding: 6rem 8rem;
+  margin-right: 4rem;
+}
+.cat-container .cat-info .btn-box {
+  display: inline-block;
+}
+.cat-container .cat-info .btn-box .like {
+  width: 25rem;
+  height: 25rem;
+  fill: #d9d9d9;
+  margin-right: 6rem;
+}
+.cat-container .cat-info .btn-box .like.active {
+  fill: #f2b705;
+}
+.cat-container .cat-info .btn-box .more-btn svg {
+  width: 18rem;
+  height: 18rem;
+  fill: #4c4c4c;
+  margin-bottom: 2rem;
+}
+.cat-container .cat-content {
+  font-family: "medium";
+  font-size: 14rem !important;
+  line-height: 1.4;
+  margin-top: 20rem;
+}
+
+/*# sourceMappingURL=postDetail.css.map */
