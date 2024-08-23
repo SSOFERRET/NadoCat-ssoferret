@@ -16,7 +16,7 @@ const EventPostWrite = () => {
   };
   return (
     <div className="community-post-edit">
-      <HeaderWithBackButton />
+      <HeaderWithBackButton path="/boards/events" />
 
       <PostWriteForm boardCategory="event" addPost={addPost} />
     </div>
