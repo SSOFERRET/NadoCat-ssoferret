@@ -4,8 +4,9 @@ import dotenv from "dotenv";
 dotenv.config();
 import axios from "axios";
 // import crypto from "crypto";
-import { createUser, loginUser, saveRefreshToken, kakaoUser } from "../../model/user.model";
+import { createUser, loginUser, saveRefreshToken, kakaoUser, refreshAccessToken } from "../../model/user.model";
 import { IUsers, IUserSecrets } from "../../types/user";
+// import { Request, Response } from "aws-sdk";
 
 
 //[x]회원가입
@@ -14,9 +15,12 @@ export const signup = async (req: Request, res: Response) => {
 
   //DB저장
   try {
-    const result: { user: IUsers, secretUser: IUserSecrets } = await createUser(email, nickname, password);
+    const result: { user: IUsers, secretUser: IUserSecrets } | null = await createUser(email, nickname, password);
 
-    if (result.user && result.secretUser) {
+    if(result === null){
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: "이미 사용 중인 이메일입니다." });
+    }
+
       return res.status(StatusCodes.CREATED).json({
         message: "회원가입 성공!",
         user: {
@@ -27,9 +31,6 @@ export const signup = async (req: Request, res: Response) => {
           authtype: result.user.authType
         },
       });
-    } else {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 실패!" });
-    }
 
   } catch (error) {
     console.log("회원가입 error:", error);
@@ -56,7 +57,8 @@ export const login = async (req: Request, res: Response) => {
       httpOnly: true
     });
 
-    if (isAutoLogin) { //자동로그인시
+    //자동로그인시
+    if (isAutoLogin) { 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         maxAge: 3 * 60 * 1000 //3분
@@ -85,6 +87,24 @@ export const login = async (req: Request, res: Response) => {
     console.log("로그인 error:", error);
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인 처리 중 오류가 발생했습니다." });
   }
+};
+
+//[x] 액세스 토큰 재발급
+export const getNewAccessToken = async (req: Request, res: Response) => {
+    const {refreshToken} = req.body; //body에 들어오는지 어떻게 아는?
+
+    if(!refreshToken){
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Refresh token이 존재하지 않습니다." });
+    }
+
+    try {
+        const newAccessToken = await refreshAccessToken(refreshToken);
+        return res.status(StatusCodes.OK).json({ accessToken: newAccessToken });
+
+    } catch (error) {
+        console.log("로그인 error:", error);
+    return res.status(StatusCodes.UNAUTHORIZED).json({ message: "유효하지 않은 Refresh token입니다." });
+    }
 };
 
 //[ ]카카오
@@ -137,3 +157,4 @@ export const google = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   return res.json({ email: email, password: password });
 };
+
