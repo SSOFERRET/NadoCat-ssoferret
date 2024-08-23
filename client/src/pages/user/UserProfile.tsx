@@ -1,7 +1,7 @@
 import React from "react";
-import "../../styles/scss/pages/user/my.scss";
+import "../../styles/scss/pages/user/userProfile.scss";
 import MyTab from "../../components/user/my/MyTab";
-import Profile from "../../components/user/Profile";
+import Profile from "../../components/user/UserInfo";
 
 export interface UserProfileProps {
     nickname: string;

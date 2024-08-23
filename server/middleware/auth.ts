@@ -15,7 +15,16 @@ export const ensureAutorization = (
 
     const auth = req.headers["authorization"];
     console.log("auth------------: ", auth);
-    
+
+    if (!auth || !auth.startsWith('Bearer ')) {
+        return res.status(401).json({ message: '토큰이 유효하지 않습니다.' });
+    }
+
+    const token = auth.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: 'JWT 토큰이 존재하지 않습니다.' });
+      }
+
     if (auth && auth.startsWith("Bearer ")) {
         const receivedJwt = auth.substring(7);
         console.log("receivedJwt------------: ", jwt.decode(receivedJwt));
@@ -32,11 +41,9 @@ export const ensureAutorization = (
       console.error("JWT에 만료 시간이 설정되지 않았습니다.");
     }
     
-    // req.user = decodedJwt;
     req.user = {
         uuid: decodedJwt.uuid,
         email: decodedJwt.email,
-        // 필요한 다른 정보들...
       };
 
     next();

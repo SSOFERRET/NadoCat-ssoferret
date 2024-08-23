@@ -13,7 +13,8 @@ const MyTab = () => {
       </div>
 
       <div className="tab-content">
-        {activeTab === "tab-likepost" && <MyPage />}
+        {/* {activeTab === "tab-likepost" && <MyPage />} */}
+        {activeTab === "tab-likepost" && <div>관심글 내용입니다.</div>}
         {activeTab === "tab-mypost" && <div>작성한글 내용입니다.</div>}
       </div>
     </div>
