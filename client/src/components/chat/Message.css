@@ -49,6 +49,7 @@ body {
 .messageWrapper {
   width: 430px;
   display: flex;
+  flex-direction: row;
   align-items: flex-end;
   margin-bottom: 1vh;
   overflow-x: hidden;
@@ -84,14 +85,15 @@ body {
 .messageWrapper .messageContainer .messageText.justifyEnd {
   color: white;
 }
-.messageWrapper .messageContainer .messageTime {
+.messageWrapper .messageTime {
   font-size: 12px;
   font-weight: 500;
   color: #b8bcbf;
+  margin-bottom: 1vh;
 }
-.messageWrapper .messageContainer .messageTime.justifyStart {
+.messageWrapper .messageTime.justifyStart {
   margin-left: 0.5vh;
 }
-.messageWrapper .messageContainer .messageTime.justifyEnd {
+.messageWrapper .messageTime.justifyEnd {
   margin-right: 0.5vh;
 }/*# sourceMappingURL=Message.css.map */

@@ -2,32 +2,45 @@ import React from 'react';
 import "./Message.scss";
 
 interface MessageData {
-  user: string;
-  message: string;
-  time: string;
+  uuid: string;
+  content: string;
+  sentAt?: string;
 }
 
 interface Props {
   message: MessageData; 
-  myName?: string;
 }
 
-const Message: React.FC<Props> = ({ message: { user, message, time }, myName }) => {
-  const isSentByCurrentUser = user === myName;
+const Message: React.FC<Props> = ({ message: { uuid, content, sentAt }}) => {
+  const isSentByCurrentUser = uuid === sessionStorage.getItem("uuid");
+
+  function formatTime(sentAt: string) {
+    const date = new Date(sentAt);
+    console.log(sentAt);
+  
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    
+    const ampm = hours >= 12 ? '오후' : '오전';
+    const formattedHours = hours % 12 || 12; 
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes; 
+    
+    return `${ampm} ${formattedHours}시 ${formattedMinutes}분`;
+  }
 
   return isSentByCurrentUser ? (
     <div className="messageWrapper justifyEnd">
-      <p className='messageTime justifyEnd'>{time}</p>
+      <p className='messageTime justifyEnd'>{formatTime(sentAt || "")}</p>
       <div className='messageContainer justifyEnd'>
-        <p className='messageText justifyEnd'>{message}</p>
+        <p className='messageText justifyEnd'>{content}</p>
       </div>
     </div>
   ) : (
     <div className="messageWrapper justifyStart">
       <div className='messageContainer justifyStart'>
-        <p className='messageText justifyStart'>{message}</p>
+        <p className='messageText justifyStart'>{content}</p>
       </div>
-      <p className='messageTime justifyStart'>{time}</p>
+      <p className='messageTime justifyStart'>{formatTime(sentAt || "")}</p>
     </div>
   );
 };

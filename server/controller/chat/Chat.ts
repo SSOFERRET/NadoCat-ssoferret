@@ -2,78 +2,99 @@ import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { Server as  SocketIOServer} from 'socket.io';
 import { Socket } from 'socket.io';
-
+import moment from 'moment-timezone';
 const prisma = new PrismaClient();
 
-export const startChat = async (req: Request, res: Response, io: SocketIOServer) => {
-  const { userUuid, otherUserUuid, chatName, chatid } = req.body;
+let CHATID = ""
 
-  const userUuidBuffer = Buffer.from(userUuid.replace(/-/g, ''), 'hex');
-  const otherUserUuidBuffer = Buffer.from(otherUserUuid.replace(/-/g, ''), 'hex');
-  try{
+export const startChat = async (req: Request, res: Response, io: SocketIOServer) => {
+  const { userUuid, otherUserUuid } = req.body;
+
+  try {
+    if (!userUuid || !otherUserUuid) {
+      return res.status(400).json({ error: "Invalid UUIDs provided" });
+    }
+
+    const userUuidBuffer = Buffer.from(userUuid.replace(/-/g, ''), 'hex');
+    const otherUserUuidBuffer = Buffer.from(otherUserUuid.replace(/-/g, ''), 'hex');
+    
     let chat = await prisma.chats.findFirst({
       where: {
         OR: [
           {
             uuid: userUuidBuffer,
-            otherUuid: otherUserUuidBuffer
+            otherUuid: otherUserUuidBuffer,
           },
           {
-            uuid: otherUserUuid,
-            otherUuid: otherUserUuidBuffer
-          }
-        ]
-      }
+            uuid: otherUserUuidBuffer,
+            otherUuid: userUuidBuffer,
+          },
+        ],
+      },
+      include: { 
+        messages: {
+          orderBy: {
+            sentAt: 'asc', 
+          },
+        },
+      },
     });
+
     if (!chat) {
       chat = await prisma.chats.create({
         data: {
           uuid: userUuidBuffer,
           otherUuid: otherUserUuidBuffer,
-          messages: {
-          create: [] 
-        }
-      }
-    });
+        },
+        include: { 
+          messages: true,
+        },
+      });
+    }
+    
     const chatRoomId = chat.chatId.toString();
-    io.to(chatRoomId).emit('chat_created', { chatId: chatRoomId, chatName });
+    res.status(200).json({
+      chatId: chatRoomId,
+      messages: chat.messages,
+    });
+    io.to(chatRoomId).emit('chat_created', { chatId: chatRoomId });
+    CHATID = chatRoomId
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to start chat" });
   }
-
-  req.app.get('io').to(userUuid).emit('join_chat', { chatId: chat.chatId });
-  res.status(200).json(chat);
-
-}  catch (error){
-    res.status(500).json({ error: "Failed to start chat" });
-  }
-}
+};
 
 
-export const sendMessage = async (req: Request, res: Response) => {
-  const { chatId, userUuid, content } = req.body;
+
+export const sendMessage = async (req: Request, res: Response, io: SocketIOServer) => {
+  const { uuid, content, sentAt } = req.body;
+  const chatId = parseInt(CHATID);
 
   try {
-      const userUuidBuffer = Buffer.from(userUuid, 'hex'); 
-
-      const message = await prisma.messages.create({
-          data: {
-              content,
-              sentAt: new Date(),
-              chats: {
-                  connect: { chatId } 
-              },
-              users: {
-                  connect: { uuid: userUuidBuffer } 
-              }
-          },
-          include: {
-              chats: true,
-              users: true
-          }
-      });
-
-      req.app.get('io').to(chatId.toString()).emit('message', message);
-
-      res.status(200).json(message);
+    const userUuidBuffer = Buffer.from(uuid.replace(/-/g, ''), 'hex');
+  
+    const message = await prisma.messages.create({
+        data: {
+            content,
+            sentAt: sentAt,
+            chats: {
+                connect: { chatId } 
+            },
+            users: {
+                connect: { uuid: userUuidBuffer } 
+            }
+        },
+        include: {
+            chats: true,
+            users: true
+        }
+    });
+    const formattedTime = moment(message.sentAt).tz(sentAt).format('YYYY-MM-DD HH:mm:ss');
+    io.to(CHATID).emit('message', message, {
+      user: uuid,
+      message: message.content,
+      time: formattedTime,
+  })
   } catch (error) {
       console.error("Error sending message:", error);
       res.status(500).json({ error: "Failed to send message" });
@@ -81,14 +102,13 @@ export const sendMessage = async (req: Request, res: Response) => {
 };
 
 export const getChatList = async (req: Request, res: Response) => {
-  const userUuid = req.user.uuid;
+  const userUuid = req.headers["x-user-uuid"] as string;
 
   try {
+      const userUuidBuffer = Buffer.from(userUuid.replace(/-/g, ''), 'hex');
       const chats = await prisma.chats.findMany({
           where: {
-              users: {
-                  uuid: userUuid
-              }
+            uuid: userUuidBuffer,
           },
           include: {
               messages: {
@@ -107,6 +127,27 @@ export const getChatList = async (req: Request, res: Response) => {
   } catch (error) {
       console.error("Error fetching chat list:", error);
       res.status(500).json({ error: "Failed to fetch chat list" });
+  }
+};
+
+export const deleteChat = async (req: Request, res: Response, io: SocketIOServer) => {
+  const { chatId } = req.body;
+
+  try {
+    await prisma.$transaction([
+      prisma.messages.deleteMany({
+        where: { chatId: chatId },
+      }),
+      prisma.chats.delete({
+        where: { chatId: chatId },
+      }),
+    ]);
+
+    io.to(chatId).emit('chat_deleted', { chatId });
+    io.socketsLeave(chatId);
+  } catch (error) {
+    console.error("Error deleting chat:", error);
+    res.status(500).json({ error: "채팅방 나가기에 실패했습니다." });
   }
 };
 
@@ -135,12 +176,13 @@ export const handleMessage = async (socket: Socket, io: SocketIOServer) => {
 };
 
 export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
-    socket.on("join", async ({ uuid, roomId }) => {
-      socket.join(roomId);
-        
+  socket.on("join", async ({ uuid, roomId }) => {
+    try {
+      const chatId = parseInt(roomId, 10);
+      console.log(roomId)
       const previousMessages = await prisma.messages.findMany({
         where: {
-          chatId: parseInt(roomId),
+          chatId: chatId, 
         },
         orderBy: {
           sentAt: 'asc',
@@ -152,11 +194,14 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
         message: msg.content,
         time: msg.sentAt.toLocaleTimeString(),
       })));
-  
+
       socket.to(roomId).emit('message', {
         user: 'admin',
         time: new Date().toLocaleTimeString(),
       });
-    });
+    } catch (error) {
+      console.error("Error fetching previous messages:", error);
+    }
+  });
   };
   

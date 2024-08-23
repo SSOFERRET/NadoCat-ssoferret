@@ -3,104 +3,61 @@ import ChatListC from "../../components/chat/ChatList";
 import Test from "../../assets/img/test.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuthStore } from "../../store/userStore";
+import NoList from "../../assets/img/StartChat.png";
+
 interface IList{
   img: string;
-  nickname: string;
-  contents: string;
-  time: string;
-}
-const List: IList[] = [
-  {
-    img: Test,
-    nickname: "상대방 닉네임",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임",
-    contents: "안녕하세유",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임인데 뭐라고 짓지 룰루랄",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임",
-    contents: "안녕하세유",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임인데 뭐라고 짓지 룰루랄",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임인데 뭐라고 짓지 룰루랄",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
-  },
-  {
-    img: "",
-    nickname: "상대방 닉네임",
-    contents: "채팅 내용 미리보기 채팅 내용 미리보기 채팅 내용 미리보기 채팅 미리보기 보기보기",
-    time: "1분 전"
+  users: {
+    nickname: string;
   }
-]
+  messages: {
+    content: string;
+    sentAt: string;
+  }[];
+  otherUuid: {
+    data: number[];
+  };
+  uuid: {
+    data: number[];
+  };
+  chatId: string;
+}
+
 const ChatList = () => {
-  const [list, setList] = useState([]);
-
+  const [list, setList] = useState<IList[]>([]);
+  const userUuid = sessionStorage.getItem("uuid");
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   useEffect(() => {
-    const fetchChatList = async () => {
-      try {
-        const response = await axios.get('/chatlist', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("generalToken")}`, 
-          },
-        });
-        setList(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    if (userUuid && isLoggedIn) {
+      const fetchChatList = async () => {
+        try {
+          const response = await axios.get('http://localhost:8080/chats/chatlist', {
+            headers: {
+              'X-User-UUID': userUuid,
+            },
+          });
+          setList(response.data);
+          console.log(list);
+          console.log(sessionStorage.getItem("uuid"))
+        } catch (error) {
+          console.error('Error fetching chat list:', error);
+        }
+      };
 
-    fetchChatList();
-  }, []);
+      fetchChatList();
+    }
+  }, [userUuid, isLoggedIn]);
+
   return (
     <div className="chatList">
       <div className="header">
         <div id='title'>채팅</div>
-        <ChatListC lists={list}/>
+        {
+        list.length ? 
+        <ChatListC lists={list}/>:
+        <img src={NoList} className="nolist"/>
+        }
       </div>
       
     </div>

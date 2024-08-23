@@ -13,17 +13,16 @@ import ChatRouter from "./routes/chat";
 import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
-import { handleJoinRoom, handleMessage } from "./controller/chat/Chat";
+import { handleJoinRoom ,handleMessage } from "./controller/chat/Chat";
 
 import S3TestRouter from "./routes/s3test"
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 //chat 관련
 const app = express();
 const server = http.createServer(app);
 
-app.use("/chat", ChatRouter);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173",
@@ -34,8 +33,7 @@ const io = new Server(server, {
 io.on("connection", (socket: Socket) => {
   console.log("새로운 유저가 접속했습니다. ");
 
-  handleJoinRoom(socket, io);
-  
+  handleJoinRoom(socket, io)
   handleMessage(socket, io);
 
   socket.on('disconnect', () => {
@@ -61,6 +59,7 @@ app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
 app.use("/notifications", NotificationsRouter);
 app.use("/searches", SearchesRouter);
+app.use("/chats", ChatRouter(io))
 
 // s3 이미지 저장 테스트용. 삭제 예정
 app.use("/s3test", S3TestRouter);

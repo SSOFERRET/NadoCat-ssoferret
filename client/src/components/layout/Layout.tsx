@@ -6,7 +6,7 @@ import "../../styles/scss/components/layout/layout.scss";
 
 const Layout: React.FC = () => {
   const location = useLocation();
-  const noHeaderFooterPaths = ["/users/signup", "/users/login"];
+  const noHeaderFooterPaths = ["/users/signup", "/users/login", "/chats/chat"];
   const isHeaderFooterHidden = noHeaderFooterPaths.includes(location.pathname);
   const isPostFormPage = location.pathname.includes("/write") || location.pathname.includes("/edit");
   const boardsDetailRegex = /\/boards\/(communities|events)\/\d+$/;

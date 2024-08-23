@@ -40,6 +40,7 @@ const Login = () => {
             console.log("response.generalToken:",tokens.accessToken);
             console.log("response.uuid:",user.uuid);
 
+            sessionStorage.setItem("uuid", user.uuid);
             if(tokens.refreshToken){
                 useAuthStore.getState().storeAutoLogin(tokens.refreshToken);
             }

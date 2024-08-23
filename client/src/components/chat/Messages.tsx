@@ -4,17 +4,20 @@ import Message from './Message';
 import "./Messages.scss";
 
 interface MessageData {
-  user: string;
-  message: string;
-  time: string;
+  // chatId: number; 
+  // userUuid: string;
+  // content: string;
+  // timeZone: string;
+  uuid: string;
+  content: string;
+  sentAt: string;
 }
 
 interface Props {
   messages: MessageData[];
-  user: string;
 }
 
-const Messages: React.FC<Props> = ({ messages, user}) => {
+const Messages: React.FC<Props> = ({ messages}) => {
   useEffect(() => {
     console.log(messages);
   }, [messages]);
@@ -23,8 +26,8 @@ const Messages: React.FC<Props> = ({ messages, user}) => {
     <BasicScrollToBottom className="messages">
       {messages.map((message, index) => (
         <div key={index}>
-          {message.user === user ? 
-          <div className="end"><Message message={message} myName={user}/></div> :
+          {sessionStorage.getItem("uuid") === "0619-eba4-9bf1-496d-a690-e158-2de9-9871"? 
+          <div className="end"><Message message={message} /></div> :
           <div className="start"><Message message={message}/></div>
           }
         </div>

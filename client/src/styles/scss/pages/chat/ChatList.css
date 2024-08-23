@@ -71,4 +71,8 @@ body {
   border-bottom: 0.5px solid #b8bcbf;
   width: 85%;
   height: 3vh;
+}
+.chatList .header .nolist {
+  height: 35vh;
+  margin-top: 15vh;
 }/*# sourceMappingURL=ChatList.css.map */

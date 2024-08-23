@@ -79,6 +79,9 @@ body {
   color: #b8bcbf;
   font-weight: 600;
 }
+.messageBox .inputBox::-webkit-scrollbar {
+  display: none;
+}
 .messageBox .button {
   background-color: white;
   padding: 1vh;

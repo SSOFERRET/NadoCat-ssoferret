@@ -9,9 +9,10 @@ interface MessageBoxProps {
 }
 
 const MessageBox: React.FC<MessageBoxProps> = ({ message, setMessage, sendMessage }) => {
+  
   return (
     <form className='messageBox' onSubmit={sendMessage}>
-      <input
+      <textarea
         className='inputBox'
         autoComplete='off'
         placeholder="메세지 보내기"

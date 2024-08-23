@@ -1,9 +1,10 @@
 .messages {
   width: 400px;
-  max-height: 85vh;
+  max-height: 80vh;
   overflow-y: scroll;
   display: flex;
   scrollbar-width: none;
+  padding: 2vh 0;
 }
 .messages .start {
   display: flex;

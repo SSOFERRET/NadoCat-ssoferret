@@ -73,7 +73,6 @@ body {
   height: 4vh;
   width: 4vh;
   margin-right: 1vh;
-  background-color: black;
   border-radius: 5vh;
   overflow: hidden;
   display: flex;
@@ -126,7 +125,11 @@ body {
   max-height: 2vh;
   overflow: hidden;
 }
-.chatlist .listbox .icon {
+.chatlist .listbox .iconbox {
+  width: 2vh;
+  height: 2vh;
+}
+.chatlist .listbox .iconbox .icon {
   font-size: 1.7vh;
   cursor: pointer;
 }/*# sourceMappingURL=ChatList.css.map */

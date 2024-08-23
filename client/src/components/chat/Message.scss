@@ -3,6 +3,7 @@
 .messageWrapper {
   width: 430px;
   display: flex;
+  flex-direction: row;
   align-items: flex-end; 
   margin-bottom: 1vh;
   overflow-x: hidden;
@@ -41,17 +42,17 @@
         color: white;
       }
     }
-
-    .messageTime {
-      font-size: 12px; 
-      font-weight: 500;
-      color: $silver;
-      &.justifyStart{
-        margin-left: 0.5vh;
-      }
-      &.justifyEnd{
-        margin-right: 0.5vh;
-      }
+  }
+  .messageTime {
+    font-size: 12px; 
+    font-weight: 500;
+    color: $silver;
+    margin-bottom: 1vh;
+    &.justifyStart{
+      margin-left: 0.5vh;
+    }
+    &.justifyEnd{
+      margin-right: 0.5vh;
     }
   }
 }

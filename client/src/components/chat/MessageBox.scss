@@ -26,6 +26,9 @@
       color: $silver;
       font-weight: 600;
     }
+    &::-webkit-scrollbar{
+      display: none;
+    }
   }
   
   .button{
