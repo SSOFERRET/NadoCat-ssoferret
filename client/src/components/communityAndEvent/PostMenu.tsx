@@ -20,7 +20,7 @@ const getPostDeletionPath = (boardType: BoardType) => {
       return `/boards/events`;
     case "streetCat":
       return `/boards/street-cats`;
-    case "missingCat":
+    case "missing":
       return `/boards/missings`;
     default:
       throw new Error(`일치하는 boardType이 없음: ${boardType}`);

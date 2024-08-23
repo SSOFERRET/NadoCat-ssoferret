@@ -1,5 +1,6 @@
 import "../../styles/scss/components/common/avartar.scss";
-import DefaultProfile from "../../assets/img/profileCat.png";
+
+const DEFAULT_PROFILE: string = "/src/assets/img/profileImg1.png";
 
 interface IProps {
   profileImage: string | null;
