@@ -95,13 +95,91 @@
   }
 
   .search-result-list {
+    .search-result-count {
+      display: block;
+      font-family: "bold";
+      color: $primary;
+      font-size: $size-14;
+      margin-top: 17rem;
+    }
   }
 
-  .search-result-count {
-    display: block;
-    font-family: "bold";
-    color: $primary;
-    font-size: $size-14;
-    margin-top: 17rem;
+  // 여긴 최근 검색어
+  .recent-keyword-container {
+    margin-top: 14rem;
+
+    .recent-keyword-top-menu {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .recent-keyword-title {
+        font-size: $size-14;
+        font-family: "bold";
+      }
+
+      button {
+        font-family: "medium";
+        font-size: $size-14;
+        background-color: transparent;
+        color: $dimgray;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .recent-keywords {
+      display: flex;
+      flex-direction: column;
+      gap: 21rem;
+      margin-top: 20rem;
+
+      .recent-keyword {
+        display: flex;
+        align-items: center;
+        font-size: $size-14;
+        font-family: "regular";
+
+        .clock-icon {
+          font-size: 15rem;
+        }
+
+        .recent-keyword-wrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex: 1;
+
+          margin-left: 7rem;
+
+          span {
+            max-width: 339rem;
+            display: block;
+            flex: 1;
+            margin-right: 17rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: $size-14;
+            font-family: "regular";
+            color: $black;
+          }
+
+          .cross-icon {
+            color: $black;
+          }
+
+          .recent-keyword-delete-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: $size-12;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+          }
+        }
+      }
+    }
   }
 }
