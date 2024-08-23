@@ -46,5 +46,48 @@
     color: $dimgray;
     margin-left: auto;
     cursor: pointer;
+    // z-index: 5;
+    // svg {
+    //   z-index: 100;
+    // }
+  }
+
+  .match-check {
+    width: 50rem;
+    height: 20rem;
+    border-radius: $round-5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    p {
+      font-size: $size-14;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: $round-5;
+    }
+
+    .match-is-Y {
+      width: 100%;
+      height: 100%;
+      background-color: rgb(0, 158, 79);
+      color: white;
+    }
+
+    .match-is-N {
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      color: white;
+    }
+
+    .match-is-- {
+      width: 100%;
+      height: 100%;
+      background-color: $primary;
+      color: black;
+    }
   }
 }

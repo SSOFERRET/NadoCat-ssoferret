@@ -1,0 +1,45 @@
+@import "../../base/common.scss"; 
+
+.messageBox{
+  width: 400px;
+  height: 6vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 2vh;
+  .inputBox{
+    background-color: $whitesmoke;
+    width: 90%;
+    min-height: 3vh;
+    border-radius: 3vh;
+    border: 1px solid $lightgray;
+    color: black;
+    padding: 1vh 2vh;
+    outline: none;
+    white-space: pre-wrap; 
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    box-sizing: border-box;
+    resize: none;
+    &::placeholder{
+      margin-left: 2vh;
+      color: $silver;
+      font-weight: 600;
+    }
+    &::-webkit-scrollbar{
+      display: none;
+    }
+  }
+  
+  .button{
+    background-color: white;
+    padding: 1vh;
+    border: none;
+    cursor: pointer;
+    .sendImg{
+      height: 2.2vh;
+      background-color: white;
+    }
+  }
+}

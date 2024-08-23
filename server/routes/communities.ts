@@ -77,18 +77,18 @@ router.get("/", getCommunities);
 
 router.post("/", uploadImages.array("images"), createCommunity);
 
-router.get("/:community_id", validatePostId, getCommunity);
+router.get("/:community_id", getCommunity);
 
 router.put("/:community_id", uploadImages.array("images"), updateCommunity);
 
 router.delete("/:community_id", deleteCommunity);
 
-router.get("/:community_id/comments", validatePostId, getComments);
+router.get("/:community_id/comments", getComments);
 
-router.post("/:community_id/comments", validateComment, createComment);
+router.post("/:community_id/comments", createComment);
 
-router.put("/:community_id/comments/:comment_id", validateCommentPut, updateComment);
+router.put("/:community_id/comments/:comment_id", updateComment);
 
-router.delete("/:community_id/comments/:comment_id", validateCommentDelete, deleteComment);
+router.delete("/:community_id/comments/:comment_id", deleteComment);
 
 export default router;

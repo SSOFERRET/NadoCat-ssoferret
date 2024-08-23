@@ -1,12 +1,16 @@
 @import "../../base/common.scss";
 
 .event-container {
+  position: relative;
   height: 100%;
   min-height: 100vh;
   padding: 20rem;
   background-color: $white;
 
   .category {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-family: "semiBold";
     font-size: $size-14;
     color: silver;
@@ -16,6 +20,10 @@
 
   .event-post-list {
     min-height: 100vh;
+
+    &.is-open {
+      pointer-events: none;
+    }
   }
 
   .more {

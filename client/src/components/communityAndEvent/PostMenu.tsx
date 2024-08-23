@@ -2,25 +2,12 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/scss/components/communityAndEvent/postMenu.scss";
 import { ICommentDeleteRequest } from "../../api/community.api";
 import useCommentStore from "../../store/comment";
+import { BoardType, getPostPath } from "../../utils/boards/boards";
 
-type BoardType = "community" | "event" | "streetCat" | "missingCat";
+export type DeletePost = { postId: number };
+
 type MenuType = "post" | "comment";
-type DeletePost = { postId: number };
 
-const getPostDeletionPath = (boardType: BoardType) => {
-  switch (boardType) {
-    case "community":
-      return `/boards/communities`;
-    case "event":
-      return `/boards/events`;
-    case "streetCat":
-      return `/boards/street-cats`;
-    case "missingCat":
-      return `/boards/missings`;
-    default:
-      throw new Error(`일치하는 boardType이 없음: ${boardType}`);
-  }
-};
 interface IProps {
   boardType: BoardType;
   menuType: MenuType;
@@ -61,7 +48,7 @@ const PostMenu = ({
 
     deletePost({ postId }).then(() => {
       showMenu();
-      navigate(`${getPostDeletionPath(boardType)}`);
+      navigate(`${getPostPath(boardType)}`);
     });
   };
 
@@ -93,7 +80,7 @@ const PostMenu = ({
   };
 
   const handleUpdatePost = () => {
-    navigate(`${getPostDeletionPath(boardType)}/edit/${postId}`);
+    navigate(`${getPostPath(boardType)}/edit/${postId}`);
     showMenu();
   };
 

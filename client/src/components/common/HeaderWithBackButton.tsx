@@ -1,13 +1,21 @@
-import React from "react";
 import "../../styles/scss/components/common/headerWithBackButton.scss";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
-const HeaderWithBackButton = () => {
+interface IProps {
+  path?: string;
+}
+
+const HeaderWithBackButton = ({ path }: IProps) => {
   const navigate = useNavigate();
   return (
     <header className="back-header">
-      <button onClick={() => navigate(-1)} className="back-button">
+      <button
+        onClick={() => {
+          path ? navigate(path, { replace: true }) : navigate(-1);
+        }}
+        className="back-button"
+      >
         <IoIosArrowBack />
       </button>
     </header>
