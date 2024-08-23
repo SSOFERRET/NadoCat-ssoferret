@@ -1,0 +1,72 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.write-btn {
+  background-color: #f2b705;
+  border: none;
+  border-radius: 30rem;
+  font-size: 16rem;
+  padding: 16rem 20rem;
+  position: absolute;
+  right: 5%;
+  z-index: 100;
+}
+.write-btn svg {
+  width: 19rem;
+  height: 19rem;
+  fill: #ffffff;
+  margin-right: 4rem;
+  vertical-align: middle;
+}
+.write-btn a {
+  text-decoration: none;
+  font-family: "bold";
+  font-size: 18rem !important;
+  color: #ffffff;
+  vertical-align: middle;
+}/*# sourceMappingURL=writeButton.css.map */

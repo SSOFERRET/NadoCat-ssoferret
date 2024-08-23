@@ -174,8 +174,7 @@ export const addEvent = async (
   userId: Buffer,
   title: string,
   content: string,
-  isClosed: boolean,
-  date?: string
+  isClosed: boolean
 ) => {
   const categoryId = CATEGORY.EVENTS;
   return await tx.events.create({
@@ -194,7 +193,7 @@ export const updateEventById = async (
   postId: number,
   title: string,
   content: string,
-  isClosed: boolean,
+  isClosed: boolean
 ) => {
   const categoryId = CATEGORY.EVENTS;
   return await tx.events.update({
