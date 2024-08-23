@@ -17,6 +17,14 @@ export interface IStreetCats {
   uuid: Buffer | string
 }
 
+export interface IStreetCatPosts {
+  postId: number,
+  thumbnail: number | null,
+  name: string | null,
+  createdAt: Date,
+  streetCatFavorites: { postId: number }[]
+}
+
 export interface IStreetCatPost {
   postId: number,
   categoryId: number,

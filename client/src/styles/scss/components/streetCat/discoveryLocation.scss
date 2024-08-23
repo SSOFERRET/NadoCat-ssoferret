@@ -1,0 +1,28 @@
+@import "../../base/common.scss";
+
+.discovery-container {
+  padding: 20rem;
+  border-bottom: 0.5rem solid $lightgray;;
+  
+  .guide-title {
+    display: block;
+    font-family: "bold";
+    font-size: $size-16;
+    margin: 7rem 0;
+  }
+
+  .location {
+    display: block;
+    font-family: "medium";
+    font-size: $size-14;
+    color: $silver;
+    margin-bottom: 8rem;
+  }
+
+  .map {
+    width: 100%;
+    height: 200rem;
+    background-color: $lightgray;
+    border-radius: $round-5;
+  }
+}

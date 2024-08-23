@@ -24,7 +24,7 @@ const CommunityPostEdit = () => {
 
       {isLoading && <LoadingCat />}
 
-      {post && <PostEditForm post={post} editPost={editPost} />}
+      {post && <PostEditForm boardCategory={"community"} post={post} editPost={editPost} />}
     </div>
   );
 };

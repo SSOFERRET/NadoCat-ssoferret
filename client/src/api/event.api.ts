@@ -74,6 +74,20 @@ export const createEventPost = async (formData: FormData) => {
   }
 };
 
+export const updateEventPost = async ({ formData, postId }: { formData: FormData; postId: number }) => {
+  try {
+    const response = await httpClient.put(`/boards/events/${postId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating events post:", error);
+    throw error;
+  }
+};
+
 export const getEventComments = async ({ postId, pageParam, limit }: IEventCommentsParams) => {
   try {
     const response = await httpClient.get(

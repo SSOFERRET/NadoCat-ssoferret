@@ -1,0 +1,65 @@
+@import "../../base/common.scss";
+
+.cat-container {
+  padding: 0 20rem;
+  padding-bottom: 20rem;
+  border-bottom: 0.5rem solid $lightgray;
+
+  .cat-name {
+    display: block;
+    font-family: "bold";
+    font-size: $size-16;
+    margin: 10rem 0;
+  }
+
+  .img-box {
+    width: 100%;
+    height: 390rem;
+    background-color: $lightgray;
+    border-radius: 5rem;
+    margin-bottom: 11rem;
+  }
+
+  .cat-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .cat-tag {
+      display: inline-block;
+
+      span {
+        @include tag;
+      }
+    }
+
+    .btn-box {
+      display: inline-block;
+    
+      .like {
+        width: 25rem;
+        height: 25rem;
+        fill: $lightgray;
+        margin-right: 6rem;
+      }
+
+      .like.active {
+        fill: $primary;
+      }
+  
+      .more-btn svg {
+        width: 18rem;
+        height: 18rem;
+        color: $dimgray;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+
+  .cat-content {
+    font-family: "medium";
+    font-size: $size-14;
+    line-height: 1.4;
+    margin-top: 20rem;
+  }
+}

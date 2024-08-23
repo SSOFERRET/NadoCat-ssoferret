@@ -17,6 +17,7 @@ export interface ICommunity {
 export interface ICommunityDetail extends Omit<ICommunity, "thumbnail"> {
   images: IImage[];
   users: IPostUserInfo;
+  liked: boolean;
 }
 
 export interface ICommunityPage {

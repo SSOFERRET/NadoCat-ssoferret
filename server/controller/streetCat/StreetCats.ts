@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
-import { IImages, IStreetCatImages } from "../../types/streetCat";
-import { addImage, createFavoriteCat, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, readFavoriteCat, readFavoriteCatPostIds, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, removeComment, removeFavoriteCat, updatePost } from "../../model/streetCat.model";
+import { IImages, IStreetCatImages, IStreetCatPosts, IStreetCats } from "../../types/streetCat";
+import { addImage, createFavoriteCat, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, readFavoriteCat, readFavoriteCatPostIds, readLocation, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, removeComment, removeFavoriteCat, updatePost } from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
@@ -9,7 +9,7 @@ import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocu
 import { incrementViewCountAsAllowed } from "../common/Views";
 
 // CHECKLIST
-// [ ] 페이지네이션 구현
+// [x] 페이지네이션 구현
 // [ ] 썸네일 어떻게 받아올지
 // [ ] 에러 처리
 
@@ -37,6 +37,10 @@ export const getStreetCats = async (req: Request, res: Response) => {
           : readPostsWithFavorites(tx, uuid, limit, cursor)
         );
 
+        // const streetCatPosts: IStreetCatPosts[] = getPostsWithFavorites.streetCatPosts;
+        // const thumbnails: (number | null)[] = streetCatPosts.map((post: IStreetCatPosts) => post.thumbnail);
+        // console.log(thumbnails)
+        
         res.status(201).json(getPostsWithFavorites);
       } else {
         const getPosts = await (isNaN(cursor)
@@ -62,6 +66,9 @@ export const getStreetCat = async (req: Request, res: Response) => {
   try {
     await prisma.$transaction(async (tx) => {
       const getPost = await readPost(postId);
+      const locationId = Number(getPost?.locationId);
+      const getLocation = await readLocation(tx, locationId);
+      const postData = {...getPost, location: getLocation};
 
       // if (!getPost) throw new Error("No Post"); // 타입 가드 필요해서 추가
 
@@ -70,7 +77,7 @@ export const getStreetCat = async (req: Request, res: Response) => {
       // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
       // getPost.views += viewIncrementResult || 0;
 
-      res.status(200).json(getPost);
+      res.status(200).json(postData);
     })
   } catch (error) {
     console.error(error);

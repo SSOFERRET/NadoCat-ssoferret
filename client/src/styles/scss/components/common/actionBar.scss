@@ -1,0 +1,64 @@
+@import "../../base/common.scss";
+
+.action-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 13rem 0;
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    margin-left: 9rem;
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      .nickname {
+        font-family: "bold";
+        font-size: $size-14;
+        margin-bottom: 5rem;
+      }
+      .date {
+        font-family: "medium";
+        font-size: $size-10;
+        color: $silver;
+      }
+    }
+
+    .post-buttons {
+      display: flex;
+      align-items: center;
+
+      .post-like {
+        width: 35rem;
+        height: 40rem;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        border: none;
+        background-color: transparent;
+        font-size: 25rem;
+        cursor: pointer;
+      }
+
+      .post-like.like {
+        color: $primary;
+      }
+
+      .post-like.dislike {
+        color: $lightgray;
+      }
+
+      .options-icon {
+        width: 22rem;
+        height: 22rem;
+        color: $dimgray;
+        margin-left: auto;
+        cursor: pointer;
+      }
+    }
+  }
+}

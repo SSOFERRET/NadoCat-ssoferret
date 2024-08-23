@@ -14,8 +14,7 @@ import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
 import { handleJoinRoom ,handleMessage } from "./controller/chat/Chat";
-
-import S3TestRouter from "./routes/s3test"
+import LikesRouter from "./routes/likes";
 
 const PORT = process.env.PORT || 8080;
 
@@ -25,7 +24,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5173", // 클라이언트 돌아가고 있는 경로
     methods: ['GET', 'POST'],
   }
 });
@@ -60,9 +59,7 @@ app.use("/boards/events", EventsRouter);
 app.use("/notifications", NotificationsRouter);
 app.use("/searches", SearchesRouter);
 app.use("/chats", ChatRouter(io))
-
-// s3 이미지 저장 테스트용. 삭제 예정
-app.use("/s3test", S3TestRouter);
+app.use("/posts", LikesRouter);
 
 app.use((_req: Request, res: Response) => {
   res.sendStatus(404);

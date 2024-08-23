@@ -1,18 +1,18 @@
 import prisma from "../client";
 
-type PostCategory = "communities" | "events" ;
+type PostCategory = "communities" | "events";
 
 const findPostInCategory = async (category: PostCategory, postId: number) => {
   switch (category) {
     case "communities":
       return await prisma.communities.findUnique({
         where: { postId: postId },
-        select: { title: true, content: true, views: true, createdAt: true, thumbnail: true} 
+        select: { title: true, content: true, views: true, createdAt: true, thumbnail: true }
       });
     case "events":
       return await prisma.events.findUnique({
         where: { postId: postId },
-        select: { title: true, content: true, views: true, createdAt: true, thumbnail: true, isClosed: true, date: true,}
+        select: { title: true, content: true, views: true, createdAt: true, thumbnail: true, isClosed: true }
       });
     default:
       return null;

@@ -1,0 +1,23 @@
+@import "../../base/common.scss";
+
+.missing-container {
+  // min-height: 100vh;
+  height: 100%;
+  // min-height: calc(100vh - 61rem);
+  padding: 20rem;
+  padding-bottom: 64rem;
+  background-color: $white;
+
+  .category {
+    font-family: "semiBold";
+    font-size: $size-16;
+    color: silver;
+    border-bottom: 0.5rem solid $lightgray;
+    padding-bottom: 10rem;
+    margin: 0 8rem;
+  }
+
+  .more {
+    font-size: $size-14;
+  }
+}
