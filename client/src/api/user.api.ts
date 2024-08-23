@@ -28,10 +28,6 @@ interface ILoginResponse {
         accessToken: string;
         refreshToken: string;
     };
-    // generalToken: string;
-    // refreshToken: string | null;
-    // authLogin: boolean;
-    // uuid: string;
 }
 
 export const login = async(data: LoginProps) => {
@@ -46,10 +42,8 @@ export const login = async(data: LoginProps) => {
 
 export const my = async() => {
     try {
-        console.log("1) my client api 진입")
         const response = await httpClient.get("/users/my");
 
-        console.log("2) server갔다가 my client api 돌아옴:", response);
         return response.data;
 
     } catch (error) {

@@ -75,7 +75,6 @@ export const login = async (req: Request, res: Response) => {
         email: result.selectUser.email,
         nickname: result.selectUser.nickname,
         uuid: userUuidString,
-        // password: result.selectUserSecret.hashPassword,
       },
       tokens: {
         accessToken: generalToken,

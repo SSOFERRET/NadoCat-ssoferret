@@ -23,8 +23,6 @@ export interface LoginProps {
   authType: string;
   autoLogin: boolean;
   uuid: string;
-  //   user: string[];
-  //   tokens: string[];
 }
 
 const Login = () => {
@@ -44,13 +42,10 @@ const Login = () => {
 
       console.log("response.generalToken:", tokens.accessToken);
       console.log("response.uuid:", user.uuid);
-      // useAuthStore.getState().storeLogin(tokens.accessToken);
-      // useAuthStore.getState().storeUuid(user.uuid);
-      // if(tokens.refreshToken){
-      //     useAuthStore.getState().storeAutoLogin(tokens.refreshToken);
-      // }
 
-        useAuthStore.getState().storeLogin(tokens.accessToken, user.uuid, tokens.refreshToken ?? "");
+      useAuthStore
+        .getState()
+        .storeLogin(tokens.accessToken, user.uuid, tokens.refreshToken ?? "");
 
       navigate("/home");
     });

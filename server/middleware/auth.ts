@@ -25,8 +25,6 @@ export const ensureAutorization = (
         return res.status(401).json({ message: 'JWT 토큰이 존재하지 않습니다.' });
       }
 
-
-    //토큰이 있다면
     if (auth && auth.startsWith("Bearer ")) {
         const receivedJwt = auth.substring(7);
         console.log("receivedJwt------------: ", jwt.decode(receivedJwt));
@@ -43,7 +41,6 @@ export const ensureAutorization = (
       console.error("JWT에 만료 시간이 설정되지 않았습니다.");
     }
     
-    // req.user = decodedJwt;
     req.user = {
         uuid: decodedJwt.uuid,
         email: decodedJwt.email,

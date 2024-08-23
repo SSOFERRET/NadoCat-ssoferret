@@ -26,7 +26,7 @@ export const My = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await my(); //사용자 정보 요청 api
+                const response = await my(); 
                 console.log("response:", response);
                 setUserData(response.user);
 
