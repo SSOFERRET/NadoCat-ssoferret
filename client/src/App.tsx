@@ -14,7 +14,6 @@ import StreetCatWrite from "./pages/streetCat/StreetCatWrite";
 import StreetCatDetail from "./pages/streetCat/StreetCatDetail";
 import Event from "./pages/event/Event";
 import EventDetail from "./pages/event/EventDetail";
-import ImageUploadTest from "./components/imageUploadTest";
 import Home from "./pages/Home/Home";
 import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
@@ -23,6 +22,7 @@ import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
+import MissingDetail from "./pages/missing/MissingDetail";
 
 const router = createBrowserRouter([
   {
@@ -72,13 +72,12 @@ const router = createBrowserRouter([
           },
           {
             path: "missings",
-            children: [{ path: "", element: <Missings /> }],
+            children: [
+              { path: "", element: <Missings /> },
+              { path: ":id", element: <MissingDetail /> },
+            ],
           },
         ],
-      },
-      {
-        path: "imageUploadTest",
-        children: [{ path: "", element: <ImageUploadTest /> }],
       },
     ],
   },
