@@ -16,11 +16,13 @@ export const formatAgo = (date: string) => {
   return dayjs(date).fromNow();
 };
 
-export const formatDate = (date: string) => {
+export const formatDate = (date: string, time?: boolean) => {
   const dateFormat = new Intl.DateTimeFormat("ko", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: time ? "numeric" : undefined,
+    minute: time ? "numeric" : undefined
   });
 
   const parsedDate = new Date(date); // 문자열을 Date 객체로 변환

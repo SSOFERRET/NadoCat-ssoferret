@@ -1,0 +1,204 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.street-cat-write-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 20rem;
+  font-size: 14rem;
+  position: relative;
+  margin-top: 33rem;
+}
+.street-cat-write-section .write-form {
+  margin-bottom: 18rem;
+}
+.street-cat-write-section .input-title {
+  display: block;
+  font-family: "bold";
+  font-size: 14rem !important;
+  margin-bottom: 6rem;
+}
+.street-cat-write-section .write-form.name .name-input {
+  width: 360rem;
+  height: 18rem;
+  font-family: "ragular";
+  font-size: 14rem !important;
+  border: 1px solid #d9d9d9;
+  border-radius: 5rem;
+  padding: 10rem 15rem;
+}
+.street-cat-write-section .write-form.name .name-input ::-moz-placeholder {
+  font-family: "ragular";
+  font-size: 14rem !important;
+  color: #b8bcbf;
+}
+.street-cat-write-section .write-form.name .name-input ::placeholder {
+  font-family: "ragular";
+  font-size: 14rem !important;
+  color: #b8bcbf;
+}
+.street-cat-write-section .write-form.gender input[type=radio],
+.street-cat-write-section .write-form.neutered input[type=radio] {
+  display: none;
+}
+.street-cat-write-section .write-form.gender input[type=radio] + label,
+.street-cat-write-section .write-form.neutered input[type=radio] + label {
+  position: relative;
+  display: inline-block;
+  font-family: "medium";
+  font-size: 12rem !important;
+  color: #191919;
+  background-color: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 30rem;
+  padding: 8rem 14rem 8rem 11rem;
+  margin-right: 6rem;
+}
+.street-cat-write-section .write-form.gender input[type=radio] + label svg,
+.street-cat-write-section .write-form.neutered input[type=radio] + label svg {
+  margin-right: 3rem;
+}
+.street-cat-write-section .write-form.gender input[type=radio]:checked + label,
+.street-cat-write-section .write-form.neutered input[type=radio]:checked + label {
+  position: relative;
+  display: inline-block;
+  font-family: "bold";
+  font-size: 12rem !important;
+  color: #ffffff;
+  background-color: #f2b705;
+  border: none;
+  border-radius: 30rem;
+  padding: 9rem 15rem 9rem 12rem;
+  margin-right: 6rem;
+}
+.street-cat-write-section .write-form.gender input[type=radio]:checked + label svg,
+.street-cat-write-section .write-form.neutered input[type=radio]:checked + label svg {
+  margin-right: 3rem;
+}
+.street-cat-write-section .write-form.discovery div {
+  display: flex;
+  align-items: center;
+  width: 284rem;
+  height: 14rem;
+  font-family: "medium";
+  font-size: 12rem !important;
+  color: #4c4c4c;
+  background-color: #f5f5f5;
+  border-radius: 5rem;
+  padding: 12rem;
+}
+.street-cat-write-section .write-form.discovery svg {
+  width: 16rem;
+  height: 16rem;
+  fill: #4c4c4c;
+  margin-right: 10rem;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox] {
+  display: none;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox] + label {
+  display: flex;
+  align-items: center;
+  width: 22rem;
+  height: 22rem;
+  background-color: #f2b705;
+  border-radius: 5rem;
+  position: absolute;
+  right: 15%;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox] + label svg {
+  fill: #ffffff;
+  margin: 0 5rem;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox]:checked + label {
+  display: flex;
+  align-items: center;
+  width: 22rem;
+  height: 22rem;
+  background-color: #f2b705;
+  border-radius: 5rem;
+  position: absolute;
+  right: 15%;
+}
+.street-cat-write-section .write-form.discovery input[type=checkbox]:checked + label svg {
+  fill: #ffffff;
+  margin: 0 5rem;
+}
+.street-cat-write-section .write-form.discovery .check-text {
+  font-family: "regular";
+  position: absolute;
+  right: 9%;
+}
+.street-cat-write-section .write-form.location div {
+  display: flex;
+  align-items: center;
+  width: 284rem;
+  height: 14rem;
+  font-family: "medium";
+  font-size: 12rem !important;
+  color: #b8bcbf;
+  background-color: #f5f5f5;
+  border-radius: 5rem;
+  padding: 12rem;
+}
+.street-cat-write-section .write-form.location svg {
+  width: 16rem;
+  height: 16rem;
+  fill: #4c4c4c;
+  margin-right: 10rem;
+}
+.street-cat-write-section .write-form.description textarea {
+  width: 100%;
+  font-family: "medium";
+  font-size: 16rem !important;
+  margin-bottom: 30rem;
+  border: none;
+  min-height: 100rem;
+  line-height: 1.3;
+}/*# sourceMappingURL=streetCatWrite.css.map */

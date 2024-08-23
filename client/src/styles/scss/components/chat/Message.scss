@@ -1,0 +1,58 @@
+@import "../../base/common.scss";
+
+.messageWrapper {
+  width: 430px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end; 
+  margin-bottom: 1vh;
+  overflow-x: hidden;
+
+  &.justifyStart {
+    justify-content: flex-start; 
+  }
+  &.justifyEnd{
+    justify-content: flex-end;
+  }
+
+  .messageContainer {
+    display: flex;
+    padding: 0.5vh 1vh;
+    margin-bottom: 1vh;
+    border-radius: 1vh;
+    width: max-content;
+    max-width: 70%;
+    
+    &.justifyEnd {
+      background-color: $orange;
+    }
+  
+    &.justifyStart {
+      background-color: $lightgray;
+    }
+
+    .messageText {
+      padding: 0.5vh 1vh;
+      font-size: 14px; 
+      line-height: 1.4;
+      color: black;
+      font-weight: 600;
+
+      &.justifyEnd {
+        color: white;
+      }
+    }
+  }
+  .messageTime {
+    font-size: 12px; 
+    font-weight: 500;
+    color: $silver;
+    margin-bottom: 1vh;
+    &.justifyStart{
+      margin-left: 0.5vh;
+    }
+    &.justifyEnd{
+      margin-right: 0.5vh;
+    }
+  }
+}

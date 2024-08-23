@@ -1,21 +1,39 @@
-@import "../../styles/scss/base/common.scss";
+@import "../../base/common.scss";
 @mixin font ($size, $color){
   color: $color;
   font-size: $size;
 }
+
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
 .background{
-  margin-top: 100px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar{
+    display: none;
+  }
   .postsBox{
     border-bottom: .5px solid $silver;
-    width: 320px;
-    height: 100px;
+    height: 12vh;
     display: flex;
     align-items: center;
-  
+    width: 360px;
     .postsContents{
       display: flex;
       flex-direction: column;
-      height: 80px;
+      height: 10vh;
       &.withImg{
         width:75%;
       }
@@ -25,20 +43,21 @@
       .title{
         @include font(16px, black);
         font-family: "bold";
-        line-height: 18px;
+        line-height: 1em;
         margin: 0;
         width: 100%;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-height: 30px;
+        max-height: 3vh;
         overflow: hidden;
         height: 30%;
+        padding: .5em 0;
       }
       .contents{
         @include font(14px, $black);
         font-family: "medium";
-        line-height: 15px;
-        width: 100%;
+        line-height: 1.4em;
+        width: 90%;
         margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -46,24 +65,24 @@
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
         overflow: hidden;
-        height: 35%;
+        height: 40%;
         
       }
       #time{
         @include font(12px, $silver);
         font-size: "medium";
-        max-height: 20px;
+        max-height: 1.7em;
         margin: 0;
         height: 20%;
         position: relative;
-        bottom: -10px;
+        bottom: -1.2vh;
       }
     }
     .postsImg{
-      width: 70px;
-      height: 70px;
-      margin-left: 10px;
-      border-radius: 5px;
+      width: 9vh;
+      height: 9vh;
+      margin-left: 0.5vh;
+      border-radius: .5vh;
       overflow: hidden;
       display: flex;
       justify-content: center;

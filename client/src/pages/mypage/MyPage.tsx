@@ -1,8 +1,9 @@
-import React from 'react';
-import BackButton from '../components/common/BackButton';
-import './MyPage.scss';
-import Posts from '../components/mypage/Posts';
-import test from "../../src/assets/img/test.png";
+import React, { useEffect, useState } from "react";
+import BackButton from "../../components/common/BackButton";
+import "../../styles/scss/pages/mypage/MyPage.scss";
+import "../../styles/css/base/reset.css";
+import Posts from "../../components/mypage/Posts";
+
 
 export interface Post {
   title: string;
@@ -41,7 +42,7 @@ const MyPage: React.FC = () => {
     },
     {
       title: "고양이도 에어컨을 좋아하네요",
-      contents: "에어컨만 틀면 거실로 나옵니다. 더위 타는 건 다 똑같나봐요.. 나도 에어컨 좋아하는데 자유도 좋아고ㅗ... 에어컨은 누구에게나 사랑받는 존재인것 같네요....",
+      contents: "에어컨만 틀면 거실로 나옵니다. 더위 타는 건 다 똑같나봐요.. 나도 에어컨 좋아하는데 ... 에어컨은 누구에게나 사랑받는 존재인것 같네요....",
       time: 45,
       views: 1,
       img: "../../src/assets/img/test.png",
@@ -53,13 +54,13 @@ const MyPage: React.FC = () => {
       views: 34
     },{
       title: "게시글 제목 들어가는 자리",
-      contents: "게시글 내용이 길어지면 예시 게시글 내",
+      contents: "에어컨만 틀면 거실로 나옵니다. 더위 타는 건 다 똑같나봐요.. 나도 에어컨 좋아하는데 ... 에어컨은 누구에게나 사랑받는 존재인것 같네요....",
       time: 45,
       views: 34
     },
     {
       title: "게시글 제목 들어가는 자리",
-      contents: "게시글 내용이 길어지면 예시 게시글 내",
+      contents: "에어컨만 틀면 거실로 나옵니다. 더위 타는 건 다 똑같나봐요.. 나도 에어컨 좋아하는데 ... 에어컨은 누구에게나 사랑받는 존재인것 같네요....ㅇㄹㄴㅇㄹㄴㅇㄹ",
       time: 45,
       views: 34,
       img: "../../src/assets/img/test2.png"
@@ -80,7 +81,7 @@ const MyPage: React.FC = () => {
   return (
     <div className="myPage">
       <div className="header">
-        <BackButton />
+        <BackButton userName=''/>
         <div id="title">관심글</div>
       </div>
       <Posts lists={lists}/>

@@ -7,17 +7,10 @@
 
   .comment {
     display: flex;
-    .avatar {
-      width: 32rem;
-      height: 32rem;
-      background-color: $primary;
-      border-radius: 50%;
-      margin-right: 9rem;
-      flex-shrink: 0;
-    }
 
     .detail {
       flex: 1;
+      margin-left: 9rem;
       .comment-info {
         min-height: 18rem;
         display: flex;

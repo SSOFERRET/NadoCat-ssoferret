@@ -1,7 +1,6 @@
 import React from 'react';
-import "./Posts.scss";
-import Rectangle from "../../assets/img/Rectangle-13.png"
-
+import "../../styles/scss/components/user/Posts.scss";
+import "../../styles/css/base/reset.css";
 interface Post {
   title: string;
   contents: string;

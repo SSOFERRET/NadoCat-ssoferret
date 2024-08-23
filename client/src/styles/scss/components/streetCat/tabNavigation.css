@@ -1,0 +1,73 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.street-cat-nav {
+  font-family: "regular";
+  padding: 7rem 0 14rem 0;
+  border-bottom: 0.5rem solid #d9d9d9;
+}
+.street-cat-nav ul {
+  display: flex;
+  justify-content: space-between;
+}
+.street-cat-nav li {
+  position: relative;
+  cursor: pointer;
+}
+.street-cat-nav li.active {
+  font-family: "bold";
+  color: #f2b705;
+}
+.street-cat-nav li .nav-bar {
+  display: block;
+  width: 100%;
+  height: 2rem;
+  background-color: #f2b705;
+  position: absolute;
+  bottom: -15rem;
+}/*# sourceMappingURL=tabNavigation.css.map */

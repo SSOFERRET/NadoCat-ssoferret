@@ -1,0 +1,135 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.signup-container {
+  overflow-y: hidden;
+  height: 100vh;
+  background: #ffffff;
+}
+.signup-container .signup-header {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  font-size: 21rem !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 17rem;
+  font-weight: bold;
+}
+.signup-container .signup-header svg {
+  margin-left: 20rem;
+}
+.signup-container .signup-header h1 {
+  color: #4c4c4c;
+  margin-right: 44rem;
+  text-align: center;
+  flex: 1;
+}
+.signup-container .signup-header .back-button {
+  cursor: pointer;
+}
+.signup-container .signup-content {
+  color: #4c4c4c;
+  font-size: 32rem !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50rem;
+  height: auto;
+}
+.signup-container .signup-content .error-message {
+  margin-top: 10rem;
+  margin-bottom: 10rem;
+  color: red;
+  font-size: 11rem !important;
+}
+.signup-container .signup-content fieldset {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20rem;
+}
+.signup-container .signup-content fieldset legend {
+  font-size: 16rem !important;
+  padding-bottom: 10rem;
+}
+.signup-container .signup-content fieldset input {
+  width: 340rem;
+  padding: 7rem;
+}
+.signup-container .signup-content fieldset input:focus {
+  outline: none;
+  border: 1px solid #f2b705;
+}
+.signup-container .signup-content fieldset input::-moz-placeholder {
+  color: #bababa;
+  font-size: 14rem !important;
+}
+.signup-container .signup-content fieldset input::placeholder {
+  color: #bababa;
+  font-size: 14rem !important;
+}
+.signup-container .signup-content fieldset input + input {
+  margin-top: 10rem;
+}
+.signup-container .signup-content button {
+  display: block;
+  margin: 20rem auto 0;
+  width: 200rem;
+  height: 45rem;
+  font-family: "Pretendard-Bold";
+  font-size: 16rem !important;
+  text-align: center;
+  line-height: 1;
+  border-radius: 5rem;
+  color: #ffffff;
+  border: 0;
+  background-color: #f2b705;
+  width: 340rem;
+}/*# sourceMappingURL=signup.css.map */
