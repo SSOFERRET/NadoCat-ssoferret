@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../../styles/scss/components/user/my/myTab.scss";
-// import MyPage from "../../../pages/MyPage";
+import MyPage from "../../../pages/mypage/MyPage";
 
 const MyTab = () => {
   const [activeTab, setActiveTab] = useState("tab-likepost");

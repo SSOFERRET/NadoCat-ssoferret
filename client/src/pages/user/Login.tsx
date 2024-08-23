@@ -47,9 +47,10 @@ const Login = () => {
         .getState()
         .storeLogin(tokens.accessToken, user.uuid, tokens.refreshToken ?? "");
 
-      navigate("/home");
-    });
-  };
+            sessionStorage.setItem("uuid", user.uuid);
+            navigate("/home");
+        });
+      };
 
   const handleBack = () => {
     navigate(-1);

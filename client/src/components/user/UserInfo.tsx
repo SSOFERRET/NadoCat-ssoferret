@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Chat from "../../pages/chat/Chat";
+import { useNavigate } from "react-router-dom";
 import "../../styles/scss/components/user/userInfo.scss";
 import { IoIosAdd } from "react-icons/io";
 
@@ -9,7 +11,10 @@ interface ProfileProps {
 
 const MyInfo = ({ nickname, profileImageUrl }: ProfileProps) => {
     const [isOpenModal, setIsOpenModal] = useState(false);
-
+    const navigate = useNavigate();
+    const StartChat = () => {
+      navigate("/chats/chat", {state: {myUserId: sessionStorage.getItem("uuid"), otherUserId: "0619-eba4-9bf1-496d-a690-e158-2de9-9871"}});
+    }
     const handleOpenProfileChange = () => {
         setIsOpenModal(true);
     };
@@ -31,7 +36,7 @@ const MyInfo = ({ nickname, profileImageUrl }: ProfileProps) => {
           <IoIosAdd />
         </div>
         <div className="change-profile-btn">
-          <button onClick={handleOpenProfileChange}>채팅하기</button>
+          <button onClick={StartChat}>채팅하기</button>
         </div>
       </div>
 
