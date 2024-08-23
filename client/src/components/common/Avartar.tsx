@@ -1,13 +1,11 @@
-import React from "react";
 import "../../styles/scss/components/common/avartar.scss";
+import DefaultProfile from "../../assets/img/profileCat.png";
 
 interface IProps {
   profileImage: string | null;
   nickname: string;
   onClick?: () => void;
 }
-
-const DEFAULT_PROFILE: string = "/src/assets/img/profileImg1.png";
 
 const Avartar = ({ profileImage, nickname, onClick }: IProps) => {
   return (

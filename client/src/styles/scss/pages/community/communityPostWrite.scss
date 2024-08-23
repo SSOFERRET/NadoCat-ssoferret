@@ -65,6 +65,11 @@
       font-family: "bold";
       margin: 20rem;
     }
+
+    .post-submit[disabled] {
+      background-color: $lightgray;
+      cursor: not-allowed;
+    }
   }
 
   .hash-tag-wrapper {

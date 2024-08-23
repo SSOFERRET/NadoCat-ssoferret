@@ -12,6 +12,20 @@ type BoardType =
 type MenuType = "post" | "comment";
 export type DeletePost = { postId: number };
 
+const getPostDeletionPath = (boardType: BoardType) => {
+  switch (boardType) {
+    case "community":
+      return `/boards/communities`;
+    case "event":
+      return `/boards/events`;
+    case "streetCat":
+      return `/boards/street-cats`;
+    case "missingCat":
+      return `/boards/missings`;
+    default:
+      throw new Error(`일치하는 boardType이 없음: ${boardType}`);
+  }
+};
 interface IProps {
   boardType: BoardType;
   menuType: MenuType;
@@ -58,7 +72,7 @@ const PostMenu = ({
 
     deletePost({ postId }).then(() => {
       showMenu();
-      navigate(-1);
+      navigate(`${getPostDeletionPath(boardType)}`);
     });
   };
 
@@ -89,7 +103,6 @@ const PostMenu = ({
     handelCommentFormOpen();
   };
 
-  // NOTE 일단은 수정 페이지로 이동하게 만들었는데 어떻게 처리할지는 고민이 필요함.
   const handleUpdatePost = () => {
     switch (boardType) {
       case "community":
@@ -115,6 +128,8 @@ const PostMenu = ({
       default:
         throw new Error(`일치하는 boardType이 없음: ${boardType}`);
     }
+    navigate(`${getPostDeletionPath(boardType)}/edit/${postId}`);
+    showMenu();
   };
 
   return (
