@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../../styles/scss/components/user/profile.scss";
-// import { IoIosSettings } from "react-icons/io";
+import "../../styles/scss/components/user/userInfo.scss";
+import { IoIosAdd } from "react-icons/io";
 
 interface ProfileProps {
   nickname: string;
@@ -28,7 +28,7 @@ const MyInfo = ({ nickname, profileImageUrl }: ProfileProps) => {
       <div className="nickname-container">
         <div className="nickname-text">
           <p>{nickname}</p> 
-          {/* <IoIosSettings /> */}
+          <IoIosAdd />
         </div>
         <div className="change-profile-btn">
           <button onClick={handleOpenProfileChange}>채팅하기</button>

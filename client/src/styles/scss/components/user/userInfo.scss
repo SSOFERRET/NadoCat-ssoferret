@@ -35,17 +35,17 @@
         font-weight: bold;
       }
 
-    //   svg {
-    //     cursor: pointer;
-    //     width: 30rem;
-    //     height: 20rem;
-    //     margin-left: 180rem;
-    //     background: $lightgray;
-    //     color: $dimgray;
-    //     padding: 1rem;
-    //     border-radius: 4rem;
-    //     margin-top: 10rem;
-    //   }
+      svg {
+        cursor: pointer;
+        width: 30rem;
+        height: 20rem;
+        margin-left: 180rem;
+        background: $lightgray;
+        color: $dimgray;
+        padding: 1rem;
+        border-radius: 4rem;
+        margin-top: 10rem;
+      }
     }
 
     .change-profile-btn {
@@ -62,7 +62,7 @@
         width: 74rem;
         font-size: $size-11;
         padding: 13rem;
-        margin: 5rem auto 5rem;
+        margin: 5rem auto;
       }
     }
   }
