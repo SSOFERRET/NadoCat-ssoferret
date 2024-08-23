@@ -10,19 +10,14 @@ import { getPostAuthorUuid } from "../../model/common/uuid.model";
 
 /* CHECKLIST
 * [x] 알람글 isRead update API
-
-*  [x] 실종고양이 제보글 => 게시글 게시자
-*  [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
-*  [x] 실종고양이 제보글 수정 => 게시글 게시자
-*  
-*  [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
-*  
-*  [x] 신규 글 작성 => 친구
-*  [-] 좋아요 찍힘 => 게시글 게시자
-*  [x] 댓글 => 게시글 게시자
-* 
-*  [x] 친구 요청 => 요청 받은 사용자
-*  
+* [x] 실종고양이 제보글 => 게시글 게시자
+* [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
+* [x] 실종고양이 제보글 수정 => 게시글 게시자
+* [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
+* [x] 신규 글 작성 => 친구
+* [-] 좋아요 찍힘 => 게시글 게시자
+* [x] 댓글 => 게시글 게시자
+* [x] 친구 요청 => 요청 받은 사용자
 */
 
 interface INoticiationData {
@@ -35,11 +30,11 @@ interface INoticiationData {
 }
 
 export interface INotification extends INoticiationData {
-  // notificationTimeId: number;
   timestamp: string;
 }
 
 export const notifications: INotification[] = [];
+let lastNotification: INoticiationData | null = null;  // 마지막 알림을 추적하기 위한 변수
 
 export const serveNotifications = (req: Request, res: Response) => {
   try {
@@ -55,8 +50,6 @@ export const serveNotifications = (req: Request, res: Response) => {
     });
 
     const sendNotifications = async () => {
-      console.log(notifications);
-
       while (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {
@@ -68,7 +61,7 @@ export const serveNotifications = (req: Request, res: Response) => {
               timestamp: ${notification.timestamp}
             }\n\n`);
           }
-        })
+        });
         notifications.length = 0;
       }
     };
@@ -77,7 +70,6 @@ export const serveNotifications = (req: Request, res: Response) => {
 
     req.on('close', () => clearInterval(intervalid));
 
-
   } catch (error) {
     handleControllerError(error, res);
   }
@@ -85,27 +77,33 @@ export const serveNotifications = (req: Request, res: Response) => {
 
 type TNotify = "newPost" | "comment" | "update" | "match" | "follow" | "found" | "like";
 
-
 const timestampObject = () => {
   const timestamp = new Date();
 
   return {
-    // notificationTimeId: Math.floor((timestamp.getTime() - DATE.BASETIME) / 1000),
     timestamp: timestamp.toISOString()
-  }
-}
+  };
+};
 
 export const notify = (data: INoticiationData) => {
-  const timestamp = timestampObject();
+  // 동일한 알림이 아닌지 확인하는 로직
+  if (lastNotification &&
+    lastNotification.type === data.type &&
+    lastNotification.receiver.equals(data.receiver) &&
+    lastNotification.sender.equals(data.sender) &&
+    lastNotification.url === data.url &&
+    lastNotification.commentId === data.commentId &&
+    lastNotification.result === data.result) {
+    console.log("중복된 알림이므로 생성하지 않습니다.");
+    return;  // 중복된 알림이므로 처리하지 않습니다.
+  }
 
-  return notifications.push({
-    ...timestamp,
-    ...data
-  });
-}
+  const timestamp = timestampObject();
+  notifications.push({ ...data, ...timestamp });
+  lastNotification = data;  // 마지막 알림을 업데이트
+};
 
 export const updateNotifications = async (req: Request, res: Response) => {
-  // NOTE header의 user 내용으로 변경할 것
   try {
     const userId = await getUserId();
     updateNotificationsIsReadByReceiver(userId);
@@ -114,7 +112,7 @@ export const updateNotifications = async (req: Request, res: Response) => {
   } catch (error) {
     handleControllerError(error, res);
   }
-}
+};
 
 export const notifyNewPostToFriends = async (
   userId: Buffer,
@@ -128,8 +126,8 @@ export const notifyNewPostToFriends = async (
     receiver: friend.followingId,
     sender: userId,
     url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`
-  }))
-}
+  }));
+};
 
 export const notifyNewComment = async (
   userId: Buffer,
