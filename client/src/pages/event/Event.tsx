@@ -12,7 +12,7 @@ import SortButton from "../../components/communityAndEvent/SortButton";
 import Spinner from "../../components/loading/Spinner";
 
 const Event = () => {
-  const [sort, setSort] = useState<SortMenu>(sortMenu[1]);
+  const [sort, setSort] = useState<SortMenu>(sortMenu[0]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useEvents(sort.sortType);
 

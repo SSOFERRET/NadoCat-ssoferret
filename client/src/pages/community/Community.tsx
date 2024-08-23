@@ -13,10 +13,10 @@ import Spinner from "../../components/loading/Spinner";
 
 // CHECKLIST
 // [x] 정렬 기준 동적으로 받아오게 수정
-// [ ] 무한 스크롤 로딩 스피너 만들기
+// [x] 무한 스크롤 로딩 스피너 만들기
 
 const Community = () => {
-  const [sort, setSort] = useState<SortMenu>(sortMenu[1]);
+  const [sort, setSort] = useState<SortMenu>(sortMenu[0]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useCommunities(sort.sortType);
 
