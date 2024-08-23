@@ -7,14 +7,13 @@ import axios from "axios";
 import { createUser, loginUser, saveRefreshToken, kakaoUser } from "../../model/user.model";
 import { IUsers, IUserSecrets } from "../../types/user";
 
-
 //[x]회원가입
 export const signup = async (req: Request, res: Response) => {
-  const { email, nickname, password} = req.body;
+  const { email, nickname, password } = req.body;
 
   //DB저장
   try {
-    const result: { user: IUsers, secretUser: IUserSecrets } = await createUser(email, nickname, password);
+    const result: { user: IUsers; secretUser: IUserSecrets } = await createUser(email, nickname, password);
 
     if (result.user && result.secretUser) {
       return res.status(StatusCodes.CREATED).json({
@@ -24,24 +23,22 @@ export const signup = async (req: Request, res: Response) => {
           userId: result.user.uuid,
           email: result.user.email,
           nickname: result.user.nickname,
-          authtype: result.user.authType
+          authtype: result.user.authType,
         },
       });
     } else {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 실패!" });
     }
-
   } catch (error) {
     console.log("회원가입 error:", error);
     return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 처리 중 오류가 발생했습니다." });
   }
 };
 
-
 //[x]로그인
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
-  const isAutoLogin = (autoLogin === 'true' || autoLogin === true);
+  const isAutoLogin = autoLogin === "true" || autoLogin === true;
 
   try {
     const { generalToken, refreshToken, result, userUuidString } = await loginUser(email, password, autoLogin);
@@ -53,13 +50,14 @@ export const login = async (req: Request, res: Response) => {
     }
 
     res.cookie("generalToken", generalToken, {
-      httpOnly: true
+      httpOnly: true,
     });
 
-    if (isAutoLogin) { //자동로그인시
+    if (isAutoLogin) {
+      //자동로그인시
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        maxAge: 3 * 60 * 1000 //3분
+        maxAge: 5 * 60 * 1000, //3분
         // maxAge: 7 * 24 * 60 * 60 * 1000 //7일
       });
 
@@ -77,10 +75,9 @@ export const login = async (req: Request, res: Response) => {
       },
       tokens: {
         accessToken: generalToken,
-        refreshToken: refreshToken
-      }
+        refreshToken: refreshToken,
+      },
     });
-
   } catch (error) {
     console.log("로그인 error:", error);
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인 처리 중 오류가 발생했습니다." });
@@ -123,11 +120,10 @@ export const kakao = async (req: Request, res: Response) => {
     await kakaoUser(email, nickname, access_token, refresh_token, expires_in.toString());
 
     res.redirect("/signup"); //홈으로 수정
-
   } catch (error) {
     console.log("카카오 로그인 오류: ", error);
     return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "카카오 로그인 실패"
+      message: "카카오 로그인 실패",
     });
   }
 };
