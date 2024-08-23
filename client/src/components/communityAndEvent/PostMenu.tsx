@@ -2,30 +2,12 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/scss/components/communityAndEvent/postMenu.scss";
 import { ICommentDeleteRequest } from "../../api/community.api";
 import useCommentStore from "../../store/comment";
+import { BoardType, getPostPath } from "../../utils/boards/boards";
 
-type BoardType =
-  | "community"
-  | "event"
-  | "streetCat"
-  | "missing"
-  | "missingReport";
-type MenuType = "post" | "comment";
 export type DeletePost = { postId: number };
 
-const getPostDeletionPath = (boardType: BoardType) => {
-  switch (boardType) {
-    case "community":
-      return `/boards/communities`;
-    case "event":
-      return `/boards/events`;
-    case "streetCat":
-      return `/boards/street-cats`;
-    case "missing":
-      return `/boards/missings`;
-    default:
-      throw new Error(`일치하는 boardType이 없음: ${boardType}`);
-  }
-};
+type MenuType = "post" | "comment";
+
 interface IProps {
   boardType: BoardType;
   menuType: MenuType;
@@ -34,10 +16,7 @@ interface IProps {
   isShowMenu: boolean;
   showMenu: () => void;
   deletePost?: ({ postId }: DeletePost) => Promise<void>;
-  deleteComment?: ({
-    postId,
-    commentId,
-  }: ICommentDeleteRequest) => Promise<void>;
+  deleteComment?: ({ postId, commentId }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
   handelCommentFormOpen?: () => void;
 }
@@ -53,12 +32,9 @@ const PostMenu = ({
   handelCommentFormOpen,
 }: IProps) => {
   const navigate = useNavigate();
-  const { selectedCommentId: commentId, clearSelectedCommentId } =
-    useCommentStore();
+  const { selectedCommentId: commentId, clearSelectedCommentId } = useCommentStore();
 
-  const handleMenu = (
-    e: React.MouseEvent<HTMLDivElement | HTMLUListElement>
-  ) => {
+  const handleMenu = (e: React.MouseEvent<HTMLDivElement | HTMLUListElement>) => {
     if (e.target === e.currentTarget) {
       showMenu();
       clearSelectedCommentId();
@@ -72,7 +48,7 @@ const PostMenu = ({
 
     deletePost({ postId }).then(() => {
       showMenu();
-      navigate(`${getPostDeletionPath(boardType)}`);
+      navigate(`${getPostPath(boardType)}`);
     });
   };
 
@@ -104,43 +80,13 @@ const PostMenu = ({
   };
 
   const handleUpdatePost = () => {
-    switch (boardType) {
-      case "community":
-        navigate(`/boards/communities/edit/${postId}`);
-        showMenu();
-        break;
-      case "event":
-        navigate(`/boards/events/edit/${postId}`);
-        showMenu();
-        break;
-      case "streetCat":
-        navigate(`/boards/street-cats/edit/${postId}`);
-        showMenu();
-        break;
-      case "missing":
-        navigate(`/boards/missings/edit/${postId}`);
-        showMenu();
-        break;
-      case "missingReport":
-        navigate(`/boards/missings/edit/${postId}`);
-        showMenu();
-        break;
-      default:
-        throw new Error(`일치하는 boardType이 없음: ${boardType}`);
-    }
-    navigate(`${getPostDeletionPath(boardType)}/edit/${postId}`);
+    navigate(`${getPostPath(boardType)}/edit/${postId}`);
     showMenu();
   };
 
   return (
-    <div
-      className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
-      onClick={handleMenu}
-    >
-      <ul
-        className={`comment-menu ${isShowMenu ? "show" : "hide"}`}
-        onClick={handleMenu}
-      >
+    <div className={`overlay ${isShowMenu ? "visible" : "hidden"}`} onClick={handleMenu}>
+      <ul className={`comment-menu ${isShowMenu ? "show" : "hide"}`} onClick={handleMenu}>
         {menuType === "post" && (
           <>
             <li onClick={handleUpdatePost}>게시글 수정</li>
@@ -153,12 +99,7 @@ const PostMenu = ({
         {menuType === "comment" && (
           <>
             <li onClick={handelUpdateComment}>댓글 수정</li>
-            <li
-              className="delete"
-              onClick={() =>
-                commentId && handleCommentDelete(postId, commentId)
-              }
-            >
+            <li className="delete" onClick={() => commentId && handleCommentDelete(postId, commentId)}>
               댓글 삭제
             </li>
           </>

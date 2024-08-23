@@ -20,7 +20,7 @@ const CommunityPostEdit = () => {
 
   return (
     <div className="community-post-edit">
-      <HeaderWithBackButton />
+      <HeaderWithBackButton path="/boards/communities" />
 
       {isLoading && <LoadingCat />}
 
