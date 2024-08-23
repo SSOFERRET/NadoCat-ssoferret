@@ -99,6 +99,7 @@ export const getMissing = async (req: Request, res: Response) => {
 
 
 export const createMissing = async (req: Request, res: Response) => {
+  let postId: number = 0;
   try {
     // const authorization = ensureAuthorization(req, res);
     // console.log("authorization: ", authorization);
@@ -166,11 +167,14 @@ export const createMissing = async (req: Request, res: Response) => {
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
 
       await indexOpensearchDocument(CATEGORY.MISSINGS, "", missing.detail, post.postId);
+      postId = post.postId;
     });
+
+    if (!postId) throw Error("포스트아이디값 없다")
 
     res
       .status(StatusCodes.CREATED)
-      .json({ message: "게시글이 등록되었습니다." });
+      .send({ postId: postId as number });
   } catch (error) {
     console.log(error)
     if (error instanceof Error)
@@ -195,6 +199,8 @@ export const deleteMissing = async (req: Request, res: Response) => {
       postId,
       categoryId: CATEGORY.MISSINGS
     }
+
+    console.log("삭제할 아이디", postId);
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const missingReports = await getMissingReportsByMissingId(tx, postId);
@@ -222,7 +228,7 @@ export const deleteMissing = async (req: Request, res: Response) => {
       .status(StatusCodes.OK)
       .json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error)
       return validateError(res, error);
   }

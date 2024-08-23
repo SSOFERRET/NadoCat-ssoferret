@@ -4,15 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 interface IProps {
   path: string;
+  text?: string;
 }
 
-const NewPostButton = ({ path }: IProps) => {
+const NewPostButton = ({ path, text }: IProps) => {
   const navigate = useNavigate();
 
   return (
     <button className="new-post-button" onClick={() => navigate(path)}>
       <FaPlus />
-      글쓰기
+      {text ?? "글쓰기"}
     </button>
   );
 };
