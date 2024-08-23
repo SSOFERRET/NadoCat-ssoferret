@@ -138,7 +138,7 @@ export const getEventList = async (limit: number, sort: string, cursor: number |
   });
 };
 
-export const getEventById = async (postId: number) => {
+export const getEventById = async (tx: Prisma.TransactionClient, postId: number) => {
   const categoryId = CATEGORY.EVENTS;
   const event = await prisma.events.findUnique({
     where: {
@@ -269,8 +269,8 @@ export const removeImagesByIds = async (tx: Prisma.TransactionClient, imageIds: 
   });
 };
 
-export const getLikeIds = async (postId: number) => {
-  return await prisma.eventLikes.findMany({
+export const getLikeIds = async (tx: Prisma.TransactionClient, postId: number) => {
+  return await tx.eventLikes.findMany({
     where: {
       postId,
     },
