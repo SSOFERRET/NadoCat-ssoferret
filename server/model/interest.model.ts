@@ -1,5 +1,4 @@
 import prisma from "../client";
-import { Prisma } from "@prisma/client";
 
 type PostCategory = "communities" | "events";
 

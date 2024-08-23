@@ -1,8 +1,7 @@
-import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./api/queryClient";
-// import MyPage from "./pages/MyPage";
+import MyPage from "./pages/mypage/MyPage";
 import StreetCats from "./pages/streetCat/StreetCat";
 import { My } from "./pages/user/My";
 import Login from "./pages/user/Login";
@@ -14,16 +13,18 @@ import StreetCatWrite from "./pages/streetCat/StreetCatWrite";
 import StreetCatDetail from "./pages/streetCat/StreetCatDetail";
 import Event from "./pages/event/Event";
 import EventDetail from "./pages/event/EventDetail";
-import ImageUploadTest from "./components/imageUploadTest";
 import Home from "./pages/Home/Home";
 import CommunityPostEdit from "./pages/community/CommunityPostEdit";
 import ErrorPage from "./pages/error/ErrorPage";
 import Missings from "./pages/missing/Missings";
+import ChatList from "./pages/chat/ChatList";
+import Chat from "./pages/chat/Chat";
 import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
 import Search from "./pages/search/Search";
+import MissingDetail from "./pages/missing/MissingDetail";
 
 const router = createBrowserRouter([
   {
@@ -35,11 +36,18 @@ const router = createBrowserRouter([
       {
         path: "users",
         children: [
-          // { path: "my", element: <MyPage /> },
+          { path: "interest", element: <MyPage /> },
           { path: "user", element: <UserProfile /> },
           { path: "my", element: <My /> },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
+        ],
+      },
+      {
+        path: "chats",
+        children: [
+          { path: "list", element: <ChatList /> },
+          { path: "chat", element: <Chat /> },
         ],
       },
       {
@@ -73,15 +81,13 @@ const router = createBrowserRouter([
           },
           {
             path: "missings",
-            children: [{ path: "", element: <Missings /> }],
+            children: [
+              { path: "", element: <Missings /> },
+              { path: ":id", element: <MissingDetail /> },
+            ],
           },
         ],
       },
-      {
-        path: "imageUploadTest",
-        children: [{ path: "", element: <ImageUploadTest /> }],
-      },
-
       {
         path: "/search",
         children: [{ path: "", element: <Search /> }],

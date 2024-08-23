@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
             <PiCat></PiCat>
             <span>카테고리</span>
           </a>
-          <a href="/" className="navbar-item">
+          <a href="/chats/list" className="navbar-item">
             <PiChatCircleBold></PiChatCircleBold>
             <span>채팅</span>
           </a>

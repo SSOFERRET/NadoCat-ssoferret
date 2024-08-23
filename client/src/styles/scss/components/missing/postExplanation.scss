@@ -1,0 +1,14 @@
+@import "../../base/common.scss";
+
+.missing-explain {
+  font-size: $size-14;
+  // margin-left: 8rem;
+  .column-key {
+    font-family: bold;
+  }
+
+  .data {
+    font-family: "medium";
+    color: $gray;
+  }
+}
