@@ -1,0 +1,19 @@
+.messages {
+  width: 400px;
+  max-height: 80vh;
+  overflow-y: scroll;
+  display: flex;
+  scrollbar-width: none;
+  padding: 2vh 0;
+}
+.messages .start {
+  display: flex;
+  justify-content: start;
+}
+.messages .end {
+  display: flex;
+  justify-content: end;
+}
+.messages::-webkit-scrollbar {
+  display: none;
+}/*# sourceMappingURL=Messages.css.map */
