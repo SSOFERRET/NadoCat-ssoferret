@@ -29,15 +29,9 @@ const CommunityDetail = () => {
   const { dislikePost, likePost } = useLike(postId, "communityDetail");
   const [isShowMenu, setIsShowMenu] = useState(false);
 
-  const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
-
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);
   };
-
-  if (error) {
-    return <ErrorNotFound />;
-  }
 
   const toggleLike = () => {
     post?.liked ? dislikePost({ categoryId, postId }) : likePost({ categoryId, postId });
@@ -50,11 +44,12 @@ const CommunityDetail = () => {
         <span>커뮤니티</span>
       </div>
       {isLoading && <LoadingCat />}
+      {error && <ErrorNotFound />}
       {post && (
         <>
           <PostDetail post={post} commentCount={commentCount} showMenu={showMenu} toggleLike={toggleLike} />
           <CommunityComments postId={postId} />
-          <CommentForm postId={postId} userId={userId} addComment={addCommunityComment} />
+          <CommentForm postId={postId} addComment={addCommunityComment} />
         </>
       )}
 
@@ -66,6 +61,7 @@ const CommunityDetail = () => {
         isShowMenu={isShowMenu}
         deletePost={removeCommunityPost}
       />
+
       <Footer />
     </div>
   );
