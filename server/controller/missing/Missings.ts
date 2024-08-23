@@ -75,21 +75,11 @@ export const getMissing = async (req: Request, res: Response) => {
       }
 
       let post = await getPostByPostId(tx, postData);
+      console.log(post);
 
-      const locationFormats = await getLocationFormatsByPostId(tx, postData);
-      if (locationFormats) {
-        const locations = await Promise.all(locationFormats.map((locationFormat) => getLocationById(tx, locationFormat.locationId)));
-        post = { ...post, locations };
-      }
-
-      const imageFormats = await getImageFormatsByPostId(tx, postData);
-      if (imageFormats) {
-        const images = await Promise.all(imageFormats.map((imageFormat) => getImageById(tx, imageFormat.imageId)));
-        post = { ...post, images };
-      }
-
-      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
-      post.views += viewIncrementResult || 0;
+      //NOTE view
+      // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
+      // post.views += viewIncrementResult || 0;
 
       return res
         .status(StatusCodes.CREATED)

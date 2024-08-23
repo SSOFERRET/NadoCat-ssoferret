@@ -7,6 +7,74 @@ import { ILocationBridge } from "../types/location";
 import prisma from "../client";
 import { getCategoryModel } from "./common/model.model";
 
+const missingDataSelect = {
+  postId: true,
+  uuid: false,
+  categoryId: false,
+  catId: false,
+  time: true,
+  locationId: false,
+  found: true,
+  views: true,
+  createdAt: true,
+  updatedAt: true,
+  users: {
+    select: {
+      nickname: true,
+      profileImage: true,
+      uuid: true,
+      id: true
+    }
+  },
+  missingCats: {
+    select: {
+      missingCatId: true,
+      name: true,
+      age: true,
+      detail: true,
+      gender: true
+    }
+  },
+  locations: {
+    select: {
+      locationId: true,
+      latitude: true,
+      longitude: true,
+      detail: true
+    }
+  }
+}
+
+const missingReportDataSelect = {
+  postId: true,
+  uuid: false,
+  categoryId: false,
+  missingId: true,
+  time: true,
+  locationId: false,
+  match: true,
+  views: true,
+  createdAt: true,
+  updatedAt: true,
+  users: {
+    select: {
+      nickname: true,
+      profileImage: true,
+      uuid: true,
+      id: true
+    }
+  },
+  locations: {
+    select: {
+      locationId: true,
+      latitude: true,
+      longitude: true,
+      detail: true
+    }
+  }
+}
+
+
 export const addMissing = async (
   tx: Prisma.TransactionClient,
   missing: IMissingCreate
@@ -61,44 +129,7 @@ const getMissingsList = async (
           postId: "desc",
         },
       ],
-      select: {
-        postId: true,
-        uuid: false,
-        categoryId: false,
-        catId: false,
-        time: true,
-        locationId: false,
-        found: true,
-        views: true,
-        createdAt: true,
-        updatedAt: true,
-        users: {
-          select: {
-            nickname: true,
-            profileImage: true,
-            uuid: true,
-            id: true
-          }
-        },
-        missingCats: {
-          select: {
-            missingCatId: true,
-            name: true,
-            age: true,
-            detail: true,
-            gender: true
-          }
-        },
-        locations: {
-          select: {
-            locationId: true,
-            latitude: true,
-            longitude: true,
-            detail: true
-          }
-        }
-      },
-
+      select: missingDataSelect
     });
   };
   const unfoundList = await fetchMissingsByFoundStatus(0, limit, cursor);
@@ -124,6 +155,7 @@ const getMissingReportsList = async (
       where: {
         match: matchStatus
       },
+      select: missingReportDataSelect,
       take: limit,
       skip: cursor ? 1 : 0,
       cursor: cursor ? { postId: cursor } : undefined,
@@ -141,20 +173,15 @@ const getMissingReportsList = async (
   let remainingLimit = limit - matchList.length;
   const checkingList = remainingLimit > 0 ? await fetchMissingReportsByFoundStatus("-", remainingLimit, cursor) : [];
 
-  const posts = [...matchList, ...checkingList];
+  let posts = [...matchList, ...checkingList];
 
   remainingLimit = limit - posts.length;
 
   const unmatchList = await fetchMissingReportsByFoundStatus("N", limit, cursor);
 
-  let nextCursor = null;
+  posts = [...posts, ...unmatchList];
 
-  if (posts.length === limit) {
-    const lastPost = posts[posts.length - 1];
-    nextCursor = lastPost.postId;
-  }
-
-  return { posts, nextCursor };
+  return posts;
 }
 
 export const getPostsCount = async (
@@ -267,6 +294,10 @@ export const getPostByPostId = async (
         where: {
           postId: postData.postId,
         },
+        select: {
+          ...missingDataSelect,
+          detail: true
+        }
       });
     case 4:
       return await tx.missingReports.findUnique({

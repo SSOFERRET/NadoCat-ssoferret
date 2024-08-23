@@ -3,9 +3,14 @@ import "../../styles/scss/components/communityAndEvent/postMenu.scss";
 import { ICommentDeleteRequest } from "../../api/community.api";
 import useCommentStore from "../../store/comment";
 
-type BoardType = "community" | "event" | "streetCat" | "missingCat";
+type BoardType =
+  | "community"
+  | "event"
+  | "streetCat"
+  | "missing"
+  | "missingReport";
 type MenuType = "post" | "comment";
-type DeletePost = { postId: number };
+export type DeletePost = { postId: number };
 
 interface IProps {
   boardType: BoardType;
@@ -15,7 +20,10 @@ interface IProps {
   isShowMenu: boolean;
   showMenu: () => void;
   deletePost?: ({ postId }: DeletePost) => Promise<void>;
-  deleteComment?: ({ postId, commentId }: ICommentDeleteRequest) => Promise<void>;
+  deleteComment?: ({
+    postId,
+    commentId,
+  }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
   handelCommentFormOpen?: () => void;
 }
@@ -31,9 +39,12 @@ const PostMenu = ({
   handelCommentFormOpen,
 }: IProps) => {
   const navigate = useNavigate();
-  const { selectedCommentId: commentId, clearSelectedCommentId } = useCommentStore();
+  const { selectedCommentId: commentId, clearSelectedCommentId } =
+    useCommentStore();
 
-  const handleMenu = (e: React.MouseEvent<HTMLDivElement | HTMLUListElement>) => {
+  const handleMenu = (
+    e: React.MouseEvent<HTMLDivElement | HTMLUListElement>
+  ) => {
     if (e.target === e.currentTarget) {
       showMenu();
       clearSelectedCommentId();
@@ -93,7 +104,11 @@ const PostMenu = ({
         navigate(`/boards/street-cats/edit/${postId}`);
         showMenu();
         break;
-      case "missingCat":
+      case "missing":
+        navigate(`/boards/missings/edit/${postId}`);
+        showMenu();
+        break;
+      case "missingReport":
         navigate(`/boards/missings/edit/${postId}`);
         showMenu();
         break;
@@ -103,8 +118,14 @@ const PostMenu = ({
   };
 
   return (
-    <div className={`overlay ${isShowMenu ? "visible" : "hidden"}`} onClick={handleMenu}>
-      <ul className={`comment-menu ${isShowMenu ? "show" : "hide"}`} onClick={handleMenu}>
+    <div
+      className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
+      onClick={handleMenu}
+    >
+      <ul
+        className={`comment-menu ${isShowMenu ? "show" : "hide"}`}
+        onClick={handleMenu}
+      >
         {menuType === "post" && (
           <>
             <li onClick={handleUpdatePost}>게시글 수정</li>
@@ -117,7 +138,12 @@ const PostMenu = ({
         {menuType === "comment" && (
           <>
             <li onClick={handelUpdateComment}>댓글 수정</li>
-            <li className="delete" onClick={() => commentId && handleCommentDelete(postId, commentId)}>
+            <li
+              className="delete"
+              onClick={() =>
+                commentId && handleCommentDelete(postId, commentId)
+              }
+            >
               댓글 삭제
             </li>
           </>
