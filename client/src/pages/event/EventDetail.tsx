@@ -29,8 +29,6 @@ const EventDetail = () => {
   const { dislikePost, likePost } = useLike(postId, "eventDetail");
   const [isShowMenu, setIsShowMenu] = useState(false);
 
-  const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
-
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);
   };
@@ -56,8 +54,7 @@ const EventDetail = () => {
           </div>
           <PostDetail post={post} commentCount={commentCount} showMenu={showMenu} toggleLike={toggleLike} />
           <EventComments postId={postId} />
-
-          <CommentForm postId={postId} userId={userId} addComment={addEventComment} />
+          <CommentForm postId={postId} addComment={addEventComment} />
         </>
       )}
 
