@@ -19,6 +19,9 @@ export const createUser = async (email: string, nickname: string, password: stri
 
   const { salt, hashPassword } = await hashing(password);
   const uuid = uuidv4();
+  console.log("uuid원형: ", uuid);
+  console.log("uuid하이픈제거: ", uuid.replace(/-/g, ""));
+
   const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
 
   try {
@@ -109,7 +112,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
       throw new Error("사용자 정보가 일치하지 않습니다.");
     }
 
-    const userUuidString = selectUser.uuid.toString("hex").match(/.{1,4}/g)?.join("-");
+    const userUuidString = selectUser.uuid.toString("hex");
     const generalToken = jwt.sign(
       {
         uuid: userUuidString,

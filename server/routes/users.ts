@@ -1,7 +1,7 @@
 import express from "express";
-import {signup, login, kakao, google} from "../controller/user/Users";
+import {signup, login, kakao, google, getNewAccessToken} from "../controller/user/Users";
 import { signupValidator, loginValidator } from "../middleware/validator";
-import { my } from "../controller/user/MyPage";
+import { mypage, changeNickname, changepassword, changeProfile } from "../controller/user/MyPage";
 import {
   getFavoriteCats,
   getFavoriteCat,
@@ -16,9 +16,13 @@ const router= express.Router();
 //사용자
 router.post("/signup", signupValidator, signup);
 router.post("/login", loginValidator, login);
+router.post("/refresh-token", getNewAccessToken);
 router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
-router.get("/my", ensureAutorization, my); //마이페이지 + auth.ts 미들웨어(인증필요)
+router.get("/my", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
+router.put("/update-nickname", changeNickname);
+router.put("/update-password", changepassword);
+router.put("/update-profile", changeProfile);
 
 // 동네 고양이 도감 즐겨찾기(내 도감)
 router.get("/street-cats", getFavoriteCats);
