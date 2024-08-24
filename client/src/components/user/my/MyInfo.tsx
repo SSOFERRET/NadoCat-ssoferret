@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../../../styles/scss/components/user/my/myInfo.scss";
 import ProfileChangeModal from "./ProfileChangeModal";
 import { IoIosSettings } from "react-icons/io";
-import Avartar from "../../common/Avartar";
+import Avatar from "../../common/Avatar";
 import { AiOutlineSetting } from "react-icons/ai";
 
 interface MyInfoProps {
@@ -28,8 +28,8 @@ const MyInfo = ({ nickname, uuid, profileImageUrl }: MyInfoProps) => {
   return (
     <div className="info-container">
 
-      {/* Avartar에 onClick이라는 함수를 넣을 수 있습니다. 여기다가 원하는 동작을 하는 함수를 props로 전달하면 됩니다. */}
-      <Avartar nickname={nickname} profileImage={profileImageUrl}/>
+      {/* Avatar에 onClick이라는 함수를 넣을 수 있습니다. 여기다가 원하는 동작을 하는 함수를 props로 전달하면 됩니다. */}
+      <Avatar nickname={nickname} profileImage={profileImageUrl}/>
 
       <div className="nickname-container">
         <div className="nickname-text">

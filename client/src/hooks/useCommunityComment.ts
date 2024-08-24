@@ -28,6 +28,7 @@ const useCommunityComment = (postId: number) => {
       }
       return undefined;
     },
+    staleTime: 60000
   });
 
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];

@@ -1,5 +1,5 @@
 import "../../styles/scss/components/comment/comment.scss";
-import Avartar from "../common/Avartar";
+import Avatar from "../common/Avatar";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IComment } from "../../models/comment.model";
 import { formatAgo } from "../../utils/format/format";
@@ -105,7 +105,7 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
   return (
     <li className="comment-card">
       <div className="comment">
-        <Avartar profileImage={comment.users.profileImage} nickname={comment.users.nickname} />
+        <Avatar profileImage={comment.users.profileImage} nickname={comment.users.nickname} />
 
         <div className="detail">
           <div className="comment-info">

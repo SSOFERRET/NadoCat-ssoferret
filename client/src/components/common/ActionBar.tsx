@@ -1,9 +1,10 @@
 import "../../styles/scss/components/common/actionBar.scss";
 import { IPostUserInfo } from "../../models/community.model";
-import Avartar from "./Avartar";
+import Avatar from "./Avatar";
 import { formatDate } from "../../utils/format/format";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { GoHeartFill } from "react-icons/go";
+import { useAuthStore } from "../../store/userStore";
 
 interface IProps {
   userInfo: IPostUserInfo;
@@ -14,9 +15,10 @@ interface IProps {
 }
 
 const ActionBar = ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
+  const {uuid} = useAuthStore()
   return (
     <div className="action-bar">
-      <Avartar profileImage={userInfo.profileImage} nickname={userInfo.nickname} />
+      <Avatar profileImage={userInfo.profileImage} nickname={userInfo.nickname} />
       <div className="user-info">
         <div className="user-details">
           <span className="nickname">{userInfo.nickname}</span>
@@ -26,7 +28,7 @@ const ActionBar = ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps)
           <button className={`post-like ${liked ? "like" : "dislike"}`} onClick={toggleLike}>
             <GoHeartFill />
           </button>
-          <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />
+          {uuid === userInfo.uuid && <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />}
         </div>
       </div>
     </div>
