@@ -21,8 +21,8 @@ router.post("/logout", ensureAutorization, logout);
 router.post("/refresh-token", getNewAccessToken);
 router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
-router.get("/my", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
-// router.get("/my:uuid", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
+// router.get("/my", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
+router.get("/my/:uuid", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
 router.put("/update-nickname", updateNickname);
 router.put("/update-password", updatePassword);
 router.put("/update-profile", uploadImages.single("profileImage"),updateProfile);
