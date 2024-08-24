@@ -46,12 +46,8 @@ export const My = () => {
 
   return (
     <div className="my-container">
-        {/* <div><p>{userData.nickname}</p></div>
-        <div><p>{userData.uuid}</p></div> */}
-        {/* <MyInfo nickname={nickname} profileImageUrl={profileImageUrl}></MyInfo> */}
         <MyInfo nickname={userData.nickname} profileImageUrl="url" uuid={userData.uuid} />
         <Logout />
-        {/* <MyInfo nickname={userData.nickname} profileImageUrl="url" uuid={userData.uuid} /> */}
         <MyTab></MyTab>
     </div>
   );

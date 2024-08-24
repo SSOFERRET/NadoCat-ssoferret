@@ -43,8 +43,6 @@ export const login = async(data: LoginProps) => {
 
 export const my = async(uuid: string) => {
     try {
-        // const response = await httpClient.get(`/users/my/${uuid}`);
-        // const response = await axios.get('/users/my', { withCredentials: true });
         const response = await httpClient.get(`/users/my`);
         return response.data;
 
