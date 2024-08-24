@@ -224,7 +224,7 @@ export const refreshAccessToken = async(refreshToken: string) => {
  export const logoutUser = async (uuid: string) => {
     try {
         const uuidBuffer = Buffer.from(uuid, "hex");
-
+        
         const selectUserSecrets = await prisma.userSecrets.findFirst({
             where: {
               uuid: uuidBuffer,

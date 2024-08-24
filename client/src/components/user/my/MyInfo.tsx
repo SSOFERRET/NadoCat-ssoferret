@@ -9,10 +9,11 @@ interface MyInfoProps {
   nickname: string;
   profileImageUrl: string;
   uuid: string;
+  onAvatarClick?: () => void
 }
 
 
-const MyInfo = ({ nickname, uuid, profileImageUrl }: MyInfoProps) => {
+const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps) => {
   console.log("MyInfo의 uuid:" , uuid);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -29,7 +30,7 @@ const MyInfo = ({ nickname, uuid, profileImageUrl }: MyInfoProps) => {
     <div className="info-container">
 
       {/* Avatar에 onClick이라는 함수를 넣을 수 있습니다. 여기다가 원하는 동작을 하는 함수를 props로 전달하면 됩니다. */}
-      <Avatar nickname={nickname} profileImage={profileImageUrl}/>
+      <Avatar size="lg" nickname={nickname} profileImage={profileImageUrl}  onClick={onAvatarClick}/>
 
       <div className="nickname-container">
         <div className="nickname-text">

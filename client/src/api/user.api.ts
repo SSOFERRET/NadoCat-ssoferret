@@ -1,7 +1,6 @@
 import { httpClient } from "../api/http";
 import { SignupProps } from "../pages/user/Signup";
 import { LoginProps } from "../pages/user/Login";
-import axios from "axios";
 // import  {Post}  from "../pages/MyPage";
 
 export const signup = async(userData: SignupProps) => {
@@ -44,7 +43,8 @@ export const login = async(data: LoginProps) => {
 // localStorage.getItem("uuid");
 export const my = async(uuid: string) => {
     try {
-        const response = await httpClient.get(`/users/my`);
+        // const response = await httpClient.get(`/users/my`);
+        const response = await httpClient.get(`/users/my/${uuid}`);
         return response.data;
 
     } catch (error) {

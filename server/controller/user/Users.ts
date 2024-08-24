@@ -40,7 +40,7 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
   const isAutoLogin = (autoLogin === 'true' || autoLogin === true);
-  const generalTokenMaxAge = 5 * 60 * 1000; // 5분
+  const generalTokenMaxAge = 5 * 60 * 1000; // 1분
   const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 7일
 
   try {
@@ -110,16 +110,19 @@ export const getNewAccessToken = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
     try {
         const { uuid } = req.body;
+        console.log("유저 컨트롤러 로그아웃 uuid: ", uuid);
 
         if(!uuid) {
             return res.status(400).json({ message: "UUID가 없습니다." });
         }
+
         //db에서 refresh token 삭제
         await logoutUser(uuid);
     
         //클라이언트 쿠키제거
         res.clearCookie("generalToken", { httpOnly: true, secure: true });
         res.clearCookie("refreshToken", { httpOnly: true, secure: true });
+        res.clearCookie("uuid", { httpOnly: true, secure: true });
     
         return res.status(200).json({ message: "로그아웃 성공" });
         

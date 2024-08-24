@@ -52,7 +52,8 @@ const links = [
   { to: "/boards", label: "카테고리", noMatchIcon: <PiCat />, matchIcon: <PiCat /> },
   { to: "/chats/list", label: "채팅", noMatchIcon: <PiChatCircleBold />, matchIcon: <PiChatCircleFill /> },
   { to: "/search", label: "검색", noMatchIcon: <RiSearchLine />, matchIcon: <RiSearchFill /> },
-  { to: "/users/my", label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
+  { to: `/users/my/${localStorage.getItem('uuid')}` , label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
+//   { to: `/users/my/:uuid` , label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
 ];
 
 export const Footer: React.FC = () => {

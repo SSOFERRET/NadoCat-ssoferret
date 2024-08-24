@@ -8,7 +8,7 @@ interface StoreState{
   uuid: string; 
   storeLogin: (uuid: string, isAutoLogin: boolean) => void;
   storeAuthType: (authType: string) => void;
-  storeLogout: () => void;
+  storeLogout: (uuid: string) => void;
 }
 
 //uuid
@@ -44,14 +44,15 @@ export const useAuthStore = create<StoreState>((set) => ({
     set({authType});
   },
 
-  storeLogout: async () => {
+  storeLogout: async (uuid: string) => {
     try {
-        await axios.post("/users/logout", {}, {withCredentials: true});
+        // const uuid = getUuid(); // localStorage에서 uuid 가져오기
+        await axios.post("/users/logout", {uuid}, {withCredentials: true});
         set({isLoggedIn: false, isAutoLogin: false, authType: null, uuid: ""});
+        console.log("uuid:", uuid);
         localStorage.removeItem("uuid");
         localStorage.removeItem("isAutoLogin");
-        window.location.href = "/users/login";
-
+        // window.location.href = "/users/login";
     } catch (error) {
         console.error("로그아웃 중 오류 발생:", error);
     }
