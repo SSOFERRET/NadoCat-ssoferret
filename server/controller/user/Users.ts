@@ -8,10 +8,9 @@ import { createUser, loginUser, saveRefreshToken, kakaoUser, refreshAccessToken,
 import { IUsers, IUserSecrets } from "../../types/user";
 // import { Request, Response } from "aws-sdk";
 
-
 //[x]회원가입
 export const signup = async (req: Request, res: Response) => {
-  const { email, nickname, password} = req.body;
+  const { email, nickname, password } = req.body;
 
   //DB저장
   try {
@@ -28,16 +27,14 @@ export const signup = async (req: Request, res: Response) => {
           userId: result.user.uuid,
           email: result.user.email,
           nickname: result.user.nickname,
-          authtype: result.user.authType
+          authtype: result.user.authType,
         },
       });
-
   } catch (error) {
     console.log("회원가입 error:", error);
     return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 처리 중 오류가 발생했습니다." });
   }
 };
-
 
 //[x]로그인
 export const login = async (req: Request, res: Response) => {
@@ -82,10 +79,9 @@ export const login = async (req: Request, res: Response) => {
       },
       tokens: {
         accessToken: generalToken,
-        refreshToken: refreshToken
-      }
+        refreshToken: refreshToken,
+      },
     });
-
   } catch (error) {
     console.log("로그인 error:", error);
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인 처리 중 오류가 발생했습니다." });
@@ -170,11 +166,10 @@ export const kakao = async (req: Request, res: Response) => {
     await kakaoUser(email, nickname, access_token, refresh_token, expires_in.toString());
 
     res.redirect("/signup"); //홈으로 수정
-
   } catch (error) {
     console.log("카카오 로그인 오류: ", error);
     return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "카카오 로그인 실패"
+      message: "카카오 로그인 실패",
     });
   }
 };
@@ -184,4 +179,3 @@ export const google = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   return res.json({ email: email, password: password });
 };
-
