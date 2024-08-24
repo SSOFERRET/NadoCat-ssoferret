@@ -56,6 +56,12 @@ export const createClient = (config?: AxiosRequestConfig) => {
 
       //access token 만료
       if (error.response?.status === 401) {
+
+        //[ ]추가된 부분?
+         // JWT 토큰 만료 시 uuid 삭제
+    //   localStorage.removeItem("uuid");
+    //   console.log("401 Unauthorized - 토큰 만료로 인해 UUID 삭제");
+
         console.log("401 Unauthorized - 토큰만료");
 
         const originalRequest = error.config;
