@@ -13,24 +13,16 @@ export const ensureAutorization = (
   try {
     console.log("미들웨어 시작!!!!");
 
-    const auth = req.headers["authorization"];
-    console.log("auth------------: ", auth);
-
-    if (!auth || !auth.startsWith('Bearer ')) {
-        return res.status(401).json({ message: '토큰이 유효하지 않습니다.' });
-    }
-
-    const token = auth.split(' ')[1];
+    //쿠키에서 jwt가져오기
+    const token = req.cookies.generalToken || req.headers["authorization"]?.split(' ')[1];
+    console.log("cookie token: ", token);
+    
     if (!token) {
         return res.status(401).json({ message: 'JWT 토큰이 존재하지 않습니다.' });
-      }
-
-    if (auth && auth.startsWith("Bearer ")) {
-        const receivedJwt = auth.substring(7);
-        console.log("receivedJwt------------: ", jwt.decode(receivedJwt));
+    }
 
       const decodedJwt = jwt.verify(
-        receivedJwt,
+        token,
         process.env.PRIVATE_KEY_GEN as string
     ) as JwtPayload;
 
@@ -48,13 +40,7 @@ export const ensureAutorization = (
 
     next();
 
-    } else {
-      return res
-        .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "잘못된 JWT 형식입니다." });
-    }
   } catch (error) {
-    //수정부분
     console.error("Authorization error:", error);
     if (error instanceof jwt.TokenExpiredError) {
         console.log("TokenExpiredError 발생!");

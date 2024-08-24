@@ -43,12 +43,10 @@ const Login = () => {
       console.log("response.generalToken:", tokens.accessToken);
       console.log("response.uuid:", user.uuid);
 
-      useAuthStore
-        .getState()
-        .storeLogin(tokens.accessToken, user.uuid, tokens.refreshToken ?? "");
+      useAuthStore.getState().storeLogin(user.uuid, autoLogin);
+      sessionStorage.setItem("uuid", user.uuid);
 
-            sessionStorage.setItem("uuid", user.uuid);
-            navigate("/home");
+      navigate("/home");
         });
       };
 
@@ -118,6 +116,8 @@ const Login = () => {
               />
               자동로그인
             </label>
+            {/* <span>|</span> */}
+            <a href="/users/signup" className="signup-link">회원가입</a>
           </fieldset>
 
           <button type="submit" className="login-btn">

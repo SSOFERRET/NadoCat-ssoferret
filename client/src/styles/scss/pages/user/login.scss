@@ -109,15 +109,41 @@
     }
 
     .check-field {
-      .auto-login {
         display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        font-size: $size-11;
-
-        input {
-          margin-right: 5px; /* 체크박스와 텍스트 사이의 간격 조절 */
+        flex-direction: row;
+        justify-content: space-between;
+        
+        .auto-login {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            font-size: $size-11;
+            color: #787878;
+            
+            input {
+                margin-right: 5px; /* 체크박스와 텍스트 사이의 간격 조절 */
+                width: 11rem;
+                height: 11rem;
         }
+      }
+
+    //   span {
+    //     font-size: $size-11;
+    // }
+    
+    .signup-link {
+        font-size: $size-11;
+        text-decoration-line: none;
+        color: #787878;
+        
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+          }
+
       }
     }
   }

@@ -3,6 +3,8 @@ import "../../styles/scss/pages/user/my.scss";
 import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
 import { my } from "../../api/user.api";
+import { useParams } from "react-router-dom";
+import Logout from "../../components/user/my/Logout";
 
 export interface MyProps {
     email: string;
@@ -15,6 +17,9 @@ export interface MyProps {
 }
 
 export const My = () => {
+    const {uuid} = useParams<{uuid: string}>(); // URL에서 UUID를 가져옴
+    const UserUuid = uuid || "";
+
     const [userData, setUserData] = useState({
         email: "",
         nickname: "",
@@ -25,8 +30,9 @@ export const My = () => {
 
     useEffect(() => {
         const fetchUserData = async () => {
+            
             try {
-                const response = await my(); 
+                const response = await my(UserUuid); 
                 console.log("response:", response);
                 setUserData(response.user);
 
@@ -40,10 +46,8 @@ export const My = () => {
 
   return (
     <div className="my-container">
-        {/* <div><p>{userData.nickname}</p></div>
-        <div><p>{userData.uuid}</p></div> */}
-        {/* <MyInfo nickname={nickname} profileImageUrl={profileImageUrl}></MyInfo> */}
         <MyInfo nickname={userData.nickname} profileImageUrl="url" uuid={userData.uuid} />
+        <Logout />
         <MyTab></MyTab>
     </div>
   );
