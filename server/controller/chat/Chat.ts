@@ -105,7 +105,7 @@ export const getChatList = async (req: Request, res: Response) => {
   const userUuid = req.headers["x-user-uuid"] as string;
 
   try {
-      const userUuidBuffer = Buffer.from(userUuid.replace(/-/g, ''), 'hex');
+      const userUuidBuffer = Buffer.from(userUuid, 'hex');
       const chats = await prisma.chats.findMany({
           where: {
             uuid: userUuidBuffer,
@@ -129,6 +129,26 @@ export const getChatList = async (req: Request, res: Response) => {
       res.status(500).json({ error: "Failed to fetch chat list" });
   }
 };
+
+// userid 되는지 test
+export const testUuid = async (req: Request, res: Response) => {
+  const {uuid} = req.body;
+  const userUuidBuffer = Buffer.from(uuid, 'hex');
+  try{
+    const users = await prisma.users.findFirst({
+      where: {
+        uuid: userUuidBuffer
+      }
+    })
+    if (users) {
+      res.status(200).json(users);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  }catch (error) {
+    console.log(error)
+  }
+}
 
 export const deleteChat = async (req: Request, res: Response, io: SocketIOServer) => {
   const { chatId } = req.body;

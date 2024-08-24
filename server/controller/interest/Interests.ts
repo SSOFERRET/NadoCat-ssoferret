@@ -1,22 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
-// import { getUserId } from "../community/Communities";
 import { interest } from "../../model/interest.model";
 import { StatusCodes } from "http-status-codes";
 
 export const getInterests = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId;
+    const { userId } = req.body;
 
+    console.log("userid test:" +userId);
     if (!userId) {
       return res
       .status(StatusCodes.NOT_FOUND)
       .json({ message: "사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요."});
     }
 
-    const userBuffer = Buffer.from(userId, "hex");
-
-    const interestPosts = await interest(userBuffer);
+    const interestPosts = await interest(userId);
 
     if (!interestPosts.length) {
       return res

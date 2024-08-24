@@ -52,8 +52,8 @@ export const myUser = async (uuid: string) => {
 }
 
 //프로필 이미지 저장 로직 추가
-export const addProfileImageFormats = async (
-    tx: Prisma.TransactionClient, 
-    image: IProfileImageBridge) => {
-        return await tx.userImages.create({ data: image });
-  };
+// export const addProfileImageFormats = async (
+//     tx: Prisma.TransactionClient, 
+//     image: IProfileImageBridge) => {
+//         return await tx.userImages.create({ data: image });
+//   };
