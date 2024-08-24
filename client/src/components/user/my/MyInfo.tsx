@@ -11,7 +11,10 @@ interface MyInfoProps {
   uuid: string;
 }
 
+
 const MyInfo = ({ nickname, uuid, profileImageUrl }: MyInfoProps) => {
+  console.log("MyInfo의 uuid:" , uuid);
+
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const handleOpenProfileChange = () => {
@@ -34,9 +37,11 @@ const MyInfo = ({ nickname, uuid, profileImageUrl }: MyInfoProps) => {
           <span>님</span>
           {/* <p>닉네임:{nickname}/uuid:{uuid} </p> */}
         </div>
+
         <div className="change-profile-btn">
           <button onClick={handleOpenProfileChange}>프로필 변경</button>
         </div>
+
       </div>
 
       <button
@@ -47,6 +52,16 @@ const MyInfo = ({ nickname, uuid, profileImageUrl }: MyInfoProps) => {
       >
         <AiOutlineSetting />
       </button>
+
+
+        
+      {/* 프로필 변경 버튼을 눌렀을 때 모달 띄우기 */}
+      {/* {isOpenModal &&  <ProfileChangeModal closeModal={handleCloseProfileChange}></ProfileChangeModal>} */}
+       
+
+
+
+
     </div>
   );
 };

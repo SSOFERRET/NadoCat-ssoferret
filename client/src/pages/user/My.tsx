@@ -4,7 +4,7 @@ import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
 import { my } from "../../api/user.api";
 import { useParams } from "react-router-dom";
-import Logout from "../../components/user/my/Logout";
+// import Logout from "../../components/user/my/Logout";
 
 export interface MyProps {
     email: string;
@@ -47,7 +47,7 @@ export const My = () => {
   return (
     <div className="my-container">
         <MyInfo nickname={userData.nickname} profileImageUrl="url" uuid={userData.uuid} />
-        <Logout />
+        {/* <Logout /> */}
         <MyTab></MyTab>
     </div>
   );
