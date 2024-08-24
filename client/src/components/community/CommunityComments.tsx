@@ -5,12 +5,15 @@ import CommentList from "../comment/CommentList";
 import CommentsEmpty from "../comment/CommentsEmpty";
 import PostMenu from "../communityAndEvent/PostMenu";
 import { useState } from "react";
+import { useAuthStore } from "../../store/userStore";
 
 interface IProps {
   postId: number;
 }
 
 const CommunityComments = ({ postId }: IProps) => {
+  const {uuid, storeLogin} = useAuthStore()
+  console.log("여기", uuid)
   const {
     data,
     fetchNextPage,
