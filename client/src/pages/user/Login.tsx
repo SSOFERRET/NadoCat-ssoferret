@@ -118,6 +118,8 @@ const Login = () => {
               />
               자동로그인
             </label>
+            {/* <span>|</span> */}
+            <a href="/users/signup" className="signup-link">회원가입</a>
           </fieldset>
 
           <button type="submit" className="login-btn">
