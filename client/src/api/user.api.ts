@@ -1,6 +1,7 @@
 import { httpClient } from "../api/http";
 import { SignupProps } from "../pages/user/Signup";
 import { LoginProps } from "../pages/user/Login";
+import axios from "axios";
 // import  {Post}  from "../pages/MyPage";
 
 export const signup = async(userData: SignupProps) => {
@@ -40,14 +41,15 @@ export const login = async(data: LoginProps) => {
     }
 }
 
-export const my = async() => {
+export const my = async(uuid: string) => {
     try {
-        const response = await httpClient.get("/users/my");
-
+        // const response = await httpClient.get(`/users/my/${uuid}`);
+        // const response = await axios.get('/users/my', { withCredentials: true });
+        const response = await httpClient.get(`/users/my`);
         return response.data;
 
     } catch (error) {
-        console.error("my error:", error);
+        console.error("마이페이지 정보를 가져오는 데 실패했습니다:", error);
         throw error;
         
     }

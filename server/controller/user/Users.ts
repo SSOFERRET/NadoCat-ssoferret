@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import axios from "axios";
 // import crypto from "crypto";
-import { createUser, loginUser, saveRefreshToken, kakaoUser, refreshAccessToken } from "../../model/user.model";
+import { createUser, loginUser, saveRefreshToken, kakaoUser, refreshAccessToken, logoutUser } from "../../model/user.model";
 import { IUsers, IUserSecrets } from "../../types/user";
 // import { Request, Response } from "aws-sdk";
 
@@ -43,6 +43,8 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
   const isAutoLogin = (autoLogin === 'true' || autoLogin === true);
+  const generalTokenMaxAge = 5 * 60 * 1000; // 5분
+  const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 7일
 
   try {
     const { generalToken, refreshToken, result, userUuidString } = await loginUser(email, password, autoLogin);
@@ -54,15 +56,17 @@ export const login = async (req: Request, res: Response) => {
     }
 
     res.cookie("generalToken", generalToken, {
-      httpOnly: true
+      httpOnly: true,
+      secure: true,
+      maxAge: generalTokenMaxAge 
     });
 
     //자동로그인시
     if (isAutoLogin) { 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        maxAge: 3 * 60 * 1000 //3분
-        // maxAge: 7 * 24 * 60 * 60 * 1000 //7일
+        secure: true,
+        maxAge: refreshTokenMaxAge 
       });
 
       //refresh token DB 저장
@@ -105,6 +109,30 @@ export const getNewAccessToken = async (req: Request, res: Response) => {
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "유효하지 않은 Refresh token입니다." });
     }
 };
+
+//[ ]로그아웃
+export const logout = async (req: Request, res: Response) => {
+    try {
+        const { uuid } = req.body;
+
+        if(!uuid) {
+            return res.status(400).json({ message: "UUID가 없습니다." });
+        }
+        //db에서 refresh token 삭제
+        await logoutUser(uuid);
+    
+        //클라이언트 쿠키제거
+        res.clearCookie("generalToken", { httpOnly: true, secure: true });
+        res.clearCookie("refreshToken", { httpOnly: true, secure: true });
+    
+        return res.status(200).json({ message: "로그아웃 성공" });
+        
+    } catch (error) {
+        console.log("로그아웃 에러:", error);
+        return res.status(500).json({ message: "로그아웃 중 오류 발생" });
+    }
+} 
+
 
 //[ ]카카오
 export const kakao = async (req: Request, res: Response) => {

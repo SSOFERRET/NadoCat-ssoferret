@@ -43,12 +43,10 @@ const Login = () => {
       console.log("response.generalToken:", tokens.accessToken);
       console.log("response.uuid:", user.uuid);
 
-      useAuthStore
-        .getState()
-        .storeLogin(tokens.accessToken, user.uuid, tokens.refreshToken ?? "");
+      useAuthStore.getState().storeLogin(user.uuid, autoLogin);
+      sessionStorage.setItem("uuid", user.uuid);
 
-            sessionStorage.setItem("uuid", user.uuid);
-            navigate("/home");
+      navigate("/home");
         });
       };
 

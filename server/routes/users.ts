@@ -1,7 +1,7 @@
 import express from "express";
-import {signup, login, kakao, google, getNewAccessToken} from "../controller/user/Users";
+import {signup, login, kakao, google, getNewAccessToken, logout} from "../controller/user/Users";
 import { signupValidator, loginValidator } from "../middleware/validator";
-import { mypage, changeNickname, changepassword, changeProfile } from "../controller/user/MyPage";
+import { mypage, updateNickname, updatePassword, updateProfile, deleteProfile } from "../controller/user/MyPage";
 import {
   getFavoriteCats,
   getFavoriteCat,
@@ -10,19 +10,23 @@ import {
 } from "../controller/streetCat/StreetCatsFavorite"
 import { follow, followings, unfollow } from "../controller/friend/Friends";
 import { ensureAutorization } from "../middleware/auth";
+import uploadImages from "../multer";
 
 const router= express.Router();
 
 //사용자
 router.post("/signup", signupValidator, signup);
 router.post("/login", loginValidator, login);
+router.post("/logout", ensureAutorization, logout);
 router.post("/refresh-token", getNewAccessToken);
 router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
 router.get("/my", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
-router.put("/update-nickname", changeNickname);
-router.put("/update-password", changepassword);
-router.put("/update-profile", changeProfile);
+// router.get("/my:uuid", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
+router.put("/update-nickname", updateNickname);
+router.put("/update-password", updatePassword);
+router.put("/update-profile", uploadImages.single("profileImage"),updateProfile);
+router.put("/delete-profile", uploadImages.single("profileImage"),deleteProfile);
 
 // 동네 고양이 도감 즐겨찾기(내 도감)
 router.get("/street-cats", getFavoriteCats);
