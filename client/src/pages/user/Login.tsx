@@ -35,19 +35,18 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginProps>();
 
-  const handleLogin = (data: LoginProps) => {
-    login({ ...data, autoLogin }).then((response) => {
-      console.log("전체 response:", response);
+  const handleLogin = async (data: LoginProps) => { 
+      const response = await login({ ...data, autoLogin });
       const { user, tokens } = response;
-
+      console.log("전체 response:", response);
+      
       console.log("response.generalToken:", tokens.accessToken);
       console.log("response.uuid:", user.uuid);
 
       useAuthStore.getState().storeLogin(user.uuid, autoLogin);
-      sessionStorage.setItem("uuid", user.uuid);
-
+      
       navigate("/home");
-        });
+    //   sessionStorage.setItem("uuid", user.uuid);
       };
 
   const handleBack = () => {
