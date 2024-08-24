@@ -1,4 +1,4 @@
-import "../../styles/scss/components/common/avartar.scss";
+import "../../styles/scss/components/common/avatar.scss";
 import DefaultProfile from "../../assets/img/profileImg1.png";
 
 interface IProps {
@@ -8,7 +8,7 @@ interface IProps {
   size?: "sm" | "md" | "lg";
 }
 
-const Avartar = ({ profileImage, nickname, onClick, size = "sm" }: IProps) => {
+const Avatar = ({ profileImage, nickname, onClick, size = "sm" }: IProps) => {
   return (
     <div className={`avatar ${size}`} onClick={onClick}>
       <img src={profileImage ?? DefaultProfile} alt={nickname} />
@@ -16,4 +16,4 @@ const Avartar = ({ profileImage, nickname, onClick, size = "sm" }: IProps) => {
   );
 };
 
-export default Avartar;
+export default Avatar;
