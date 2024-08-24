@@ -43,6 +43,7 @@ export const createUser = async (email: string, nickname: string, password: stri
         data: {
           uuid: uuidBuffer,
           email: email,
+          profileImage: "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png",
           nickname: nickname,
           authType: "general",
           status: "active",
@@ -218,6 +219,38 @@ export const refreshAccessToken = async(refreshToken: string) => {
     throw new Error("access token refresh 중 오류 발생");
     }
 }
+
+//[ ] 로그아웃
+ export const logoutUser = async (uuid: string) => {
+    try {
+        const uuidBuffer = Buffer.from(uuid, "hex");
+
+        const selectUserSecrets = await prisma.userSecrets.findFirst({
+            where: {
+              uuid: uuidBuffer,
+            },
+          });
+
+          if(!selectUserSecrets){
+            throw new Error("사용자를 찾을 수 없습니다.");
+          }
+
+          const updateUserSecrets = await prisma.userSecrets.update({
+            data: {
+              refreshToken: ""
+            },
+            where: {
+                userSecretId: selectUserSecrets?.userSecretId,
+            },
+          });
+
+          return console.log("로그아웃 성공");
+
+    } catch (error) {
+        console.log("로그아웃:", error);
+        throw new Error("로그아웃 중 오류 발생");
+    }
+ }
 
 
 //[ ] 카카오 로그인
