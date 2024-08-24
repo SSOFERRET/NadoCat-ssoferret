@@ -32,9 +32,12 @@ export const ensureAutorization = (
     } else {
       console.error("JWT에 만료 시간이 설정되지 않았습니다.");
     }
+
+    // 요청 헤더에서 uuid 가져오기
+    const uuid = req.headers["x-uuid"] as string;
     
     req.user = {
-        uuid: decodedJwt.uuid,
+        uuid: uuid || decodedJwt.uuid,
         email: decodedJwt.email,
       };
 
