@@ -41,6 +41,7 @@ export const login = async(data: LoginProps) => {
     }
 }
 
+// localStorage.getItem("uuid");
 export const my = async(uuid: string) => {
     try {
         const response = await httpClient.get(`/users/my`);

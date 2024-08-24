@@ -23,8 +23,15 @@ export const createClient = (config?: AxiosRequestConfig) => {
       .find((row) => row.startsWith("generalToken="))
       ?.split("=")[1];
 
+      // localStorage에서 uuid 가져오기
+      const uuid = localStorage.getItem("uuid");
+
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    if (uuid){
+      config.headers["X-UUID"] = uuid;
     }
 
       console.log("HTTP 요청:", config); // 요청 로그 추가
