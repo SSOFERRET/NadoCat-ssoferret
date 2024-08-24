@@ -2,7 +2,6 @@ import "../../styles/scss/pages/chat/ChatList.scss";
 import ChatListC from "../../components/chat/ChatList";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuthStore } from "../../store/userStore";
 import NoList from "../../assets/img/StartChat.png";
 
 interface IList{

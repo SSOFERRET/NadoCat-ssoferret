@@ -7,14 +7,15 @@ export const getInterests = async (req: Request, res: Response) => {
   try {
     const { userId } = req.body;
 
-    console.log("userid test:" +userId);
+    console.log("userid test:" + userId);
     if (!userId) {
       return res
       .status(StatusCodes.NOT_FOUND)
       .json({ message: "사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요."});
     }
-
-    const interestPosts = await interest(userId);
+    const userUuidBuffer = Buffer.from(userId, 'hex');
+    console.log(userUuidBuffer)
+    const interestPosts = await interest(userUuidBuffer);
 
     if (!interestPosts.length) {
       return res
