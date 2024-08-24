@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import "../../styles/scss/components/user/Posts.scss";
 import "../../styles/css/base/reset.css";
 import NoLike from "../../assets/img/NoLike.png";
@@ -31,7 +31,7 @@ const Posts: React.FC<PostsProps> = ({ lists }) => {
             )}
           </div>
         )):
-        <img src={NoLike} className='nolike' />
+        <img src={NoLike} className="nolike" />
       }
     </div>
     
