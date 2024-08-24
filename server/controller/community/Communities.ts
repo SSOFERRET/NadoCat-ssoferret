@@ -54,7 +54,11 @@ export const getUserId = async () => {
 };
 
 export const getCommunities = async (req: Request, res: Response) => {
-  try {
+    try {
+    //   const uuid = req.user?.uuid;
+    const uuid = req.headers["x-uuid"] as string;
+    console.log("getCommunities uuid가 나오는지: ", uuid);
+
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const sort = req.query.sort?.toString() ?? "latest";
@@ -74,6 +78,7 @@ export const getCommunities = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
+    console.log("게시판 목록 에러 발생");
     handleControllerError(error, res);
   }
 };
@@ -86,10 +91,14 @@ export const getCommunities = async (req: Request, res: Response) => {
 // [ ] 에러처리 자세하게 구현하기
 
 export const getCommunity = async (req: Request, res: Response) => {
+    // const uuid = req.user?.uuid;
+    const uuid = req.headers["x-uuid"] as string;
+    console.log("getCommunity uuid가 나오는지: ", uuid);
+
   try {
     const postId = Number(req.params.community_id);
     const categoryId = CATEGORY.COMMUNITIES;
-    const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = Buffer.from(uuid, "hex");
 
     let result;
 
