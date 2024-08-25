@@ -193,6 +193,8 @@ export const getNotificationList = async (req: Request, res: Response) => {
     };
 
     res.status(StatusCodes.OK).send(result);
+
+    await updateNotificationsIsReadByReceiver(userId);
   } catch (error) {
     console.error(error);
     res
