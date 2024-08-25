@@ -54,12 +54,13 @@ export const serveNotifications = (req: Request, res: Response) => {
         await createNotification(notifications);
         notifications.forEach((notification) => {
           if (notification && userId && userIdBuffer.equals(notification.receiver)) {
-            res.write(`data: {
-              type: ${notification.type},
-              sender: ${notification.sender},
-              url: ${notification.url},
-              timestamp: ${notification.timestamp}
-            }\n\n`);
+            const notificationData = JSON.stringify({
+              type: notification.type,
+              sender: notification.sender,
+              url: notification.url,
+              timestamp: notification.timestamp
+            })
+            res.write(`data: ${notificationData}\n\n`);
           }
         });
         notifications.length = 0;
