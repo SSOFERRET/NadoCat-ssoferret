@@ -1,0 +1,49 @@
+@import "../../base/common.scss";
+
+.friends-container {
+  margin-top: 10rem;
+
+  .category {
+    margin: 0 20rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "semiBold";
+    font-size: $size-14;
+    color: silver;
+    border-bottom: 0.5rem solid $lightgray;
+    padding-bottom: 10rem;
+  }
+
+  .frienddList {
+    padding: 10rem 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 18rem;
+    // background-color: antiquewhite;
+
+    .friend {
+      // background-color: aquamarine;
+      display: flex;
+      padding: 10rem 0;
+
+      .user-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: 1;
+        margin-left: 8rem;
+        .nickname {
+          word-break: break-all;
+          font-family: "bold";
+          font-size: $size-14;
+        }
+        .friend-delete {
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
