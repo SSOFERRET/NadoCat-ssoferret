@@ -19,7 +19,7 @@ export const searchDocuments = async (req: Request, res: Response) => {
   try {
     console.log("search start");
 
-    const searchCategoryList = [...[1].map((id) => getCategoryUrlStringById(id as TCategoryId))]
+    const searchCategoryList = [...[1, 2].map((id) => getCategoryUrlStringById(id as TCategoryId))]
     //, "users"]; // NOTE 추후 다른 게시판도 추가해야함
     // console.log("searchCategoryList", searchCategoryList)
     const results = await Promise.all(
