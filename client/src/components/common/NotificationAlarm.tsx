@@ -1,35 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { BiBell } from "react-icons/bi";
+import { GoDotFill } from "react-icons/go";
+
+interface INotificationData {
+  type: string;
+  sender: string;
+  url: string;
+  timestamp: string;
+}
 
 const NotificationAlarm: React.FC = () => {
   const [alarmExists, setAlarmExists] = useState<boolean>(false);
-  useEffect(() => {
+  const createEventSource = () => {
     const userId: string = "74657374320000000000000000000000";
     const eventSource = new EventSource(
       `http://localhost:3000/notifications?userId=${userId}`
     );
 
-    interface INotificationData {
-      type: string;
-      sender: string;
-      url: string;
-      timestamp: string;
-    }
-
-    eventSource.onmessage = function (event: MessageEvent) {
+    eventSource.addEventListener("message", (event) => {
       try {
-        const data: INotificationData = JSON.parse(event.data);
-        console.log("알림 수신:", data);
-
-        if (!alarmExists) setAlarmExists(true);
+        const notification = JSON.parse(event.data);
+        console.log(notification);
+        setAlarmExists(true);
       } catch (error) {
-        console.error("알림 처리 중 오류 발생:", error);
+        console.error("데이터 파싱 중 오류 발생:", error);
       }
-    };
+    });
 
-    eventSource.onerror = function (error: Event) {
-      console.error("SSE 연결 오류:", error);
-    };
+    eventSource.addEventListener("error", (error) => {
+      console.error("SSE Error:", error);
+      if (eventSource.readyState === EventSource.CLOSED) {
+        setTimeout(createEventSource, 3000);
+      }
+    });
+
+    return eventSource;
+  };
+
+  useEffect(() => {
+    const eventSource = createEventSource();
 
     return () => {
       eventSource.close();
@@ -38,9 +47,9 @@ const NotificationAlarm: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <BiBell />
-      <h2>{alarmExists ? "있다!" : "없다!"}</h2>
+    <div className="notification-icon">
+      <BiBell className="bell-icon" />
+      {alarmExists && <GoDotFill className="new-sign" />}
     </div>
   );
 };
