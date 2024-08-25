@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BiBell } from "react-icons/bi";
 import { GoDotFill } from "react-icons/go";
-import useNotifications from "../../hooks/useNotifications";
 import "./../../styles/scss/components/notification/notificationAlarm.scss";
-import dotenv from "dotenv";
-
-// dotenv.config();
 
 interface INotificationData {
   type: string;
