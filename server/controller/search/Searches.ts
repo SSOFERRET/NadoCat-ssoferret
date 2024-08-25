@@ -41,6 +41,7 @@ export const searchDocuments = async (req: Request, res: Response) => {
                     { match: { content: query } },
                     { match: { title: query } },
                     { match: { detail: query } },
+                    { match: { name: query } }
                     // { match: { nickname: query } }
                   ]
                 }
@@ -187,6 +188,7 @@ export const indexResultToOpensearch = async (categoryId: TCategoryId, postId: n
         break;
       case 5:
         postDataForOpensearch = await getStreetCatById(tx, postId);
+        console.log(postDataForOpensearch);
         break;
       default:
         throw new Error("유효하지 않은 카테고리 ID");

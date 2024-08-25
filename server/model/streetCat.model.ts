@@ -139,12 +139,11 @@ export const readPost = async (postId: number) => {
 export const getStreetCatById = async (
   tx: Prisma.TransactionClient,
   postId: number
-): Promise<any> => {
-  return await tx.missings.findUnique({
+) => {
+  return await tx.streetCats.findUnique({
     where: {
       postId: postId,
     },
-
   });
 };
 

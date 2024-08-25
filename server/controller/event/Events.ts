@@ -234,7 +234,7 @@ export const updateEvent = async (req: Request, res: Response) => {
 
       await deleteImages(tx, imageIds);
 
-      await updateOpensearchDocument(CATEGORY.EVENTS, postId, { content });
+      await updateOpensearchDocument(CATEGORY.EVENTS, postId, { title, content });
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
