@@ -61,7 +61,7 @@ const StreetCatPosts: React.FC = () => {
 
       <div className="more" ref={moreRef}></div>
       <div>{isFetchingNextPage && <p>Loading more...</p>}</div>
-    </div>
+    </>
   );
 };
 
