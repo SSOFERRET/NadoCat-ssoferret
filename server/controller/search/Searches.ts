@@ -1,8 +1,15 @@
+import { Prisma } from "@prisma/client";
 import { getCategoryUrlStringById } from "../../constants/category";
 import { SEARCH } from "../../constants/search";
 import { TCategoryId } from "../../types/category";
 import opensearch from "./../../opensearch";
 import { Request, Response } from "express";
+import prisma from "../../client";
+import { getCommunityById } from "../../model/community.model";
+import { getEventById } from "../../model/event.model";
+import { getMissingById, getPostByPostId } from "../../model/missing.model";
+import { getStreetCat } from "../streetCat/StreetCats";
+import { getStreetCatById, readPost } from "../../model/streetCat.model";
 
 const getId = (categoryId: TCategoryId, postId: number) => `${categoryId}_${postId}`;
 
@@ -17,11 +24,8 @@ export const searchDocuments = async (req: Request, res: Response) => {
   console.log("searchDocuments function called");
   const { query } = req.query;
   try {
-    console.log("search start");
+    const searchCategoryList = [1, 2, 3, 5].map((id) => getCategoryUrlStringById(id as TCategoryId))
 
-    const searchCategoryList = [...[1, 2].map((id) => getCategoryUrlStringById(id as TCategoryId))]
-    //, "users"]; // NOTE 추후 다른 게시판도 추가해야함
-    // console.log("searchCategoryList", searchCategoryList)
     const results = await Promise.all(
       searchCategoryList.map(async (categoryName) => {
         // console.log(categoryName)
@@ -36,6 +40,7 @@ export const searchDocuments = async (req: Request, res: Response) => {
                   should: [
                     { match: { content: query } },
                     { match: { title: query } },
+                    { match: { detail: query } },
                     // { match: { nickname: query } }
                   ]
                 }
@@ -164,4 +169,30 @@ export const deleteOpensearchDocument = async (categoryId: TCategoryId, postId: 
   } catch (error) {
     console.error('Error deleting document:', error);
   }
+};
+
+export const indexResultToOpensearch = async (categoryId: TCategoryId, postId: number) => {
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    let postDataForOpensearch;
+
+    switch (categoryId) {
+      case 1:
+        postDataForOpensearch = await getCommunityById(tx, postId);
+        break;
+      case 2:
+        postDataForOpensearch = await getEventById(tx, postId);
+        break;
+      case 3:
+        postDataForOpensearch = await getMissingById(tx, postId);
+        break;
+      case 5:
+        postDataForOpensearch = await getStreetCatById(tx, postId);
+        break;
+      default:
+        throw new Error("유효하지 않은 카테고리 ID");
+    }
+
+    if (!postDataForOpensearch) throw new Error("포스트 없다");
+    await indexOpensearchDocument(categoryId, postId, postDataForOpensearch);
+  });
 };

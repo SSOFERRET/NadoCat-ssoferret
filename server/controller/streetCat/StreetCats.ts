@@ -5,7 +5,7 @@ import { addImage, createFavoriteCat, createLoction, createPost, createStreetCat
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
-import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
@@ -129,10 +129,12 @@ export const createStreetCat = async (req: Request, res: Response) => {
         await createStreetCatImages(tx, getStreetCatImages);
       }
 
-      await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
-      await indexOpensearchDocument(CATEGORY.STREET_CATS, name, content, postId);
+      // await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
+      // await indexOpensearchDocument(CATEGORY.STREET_CATS, name, content, postId);
 
       res.status(201).json({ message: "동네 고양이 도감 생성" });
+
+      await indexResultToOpensearch(CATEGORY.STREET_CATS, newPost.postId);
     })
 
   } catch (error) {

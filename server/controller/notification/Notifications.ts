@@ -40,46 +40,46 @@ export const notifications: INotification[] = [];
 let lastNotification: INoticiationData | null = null;  // 마지막 알림을 추적하기 위한 변수
 
 export const serveNotifications = (req: Request, res: Response) => {
-  try {
-    const userId = req.query.userId;
-    let userIdBuffer: Buffer;
-    if (typeof userId === "string")
-      userIdBuffer = Buffer.from(userId, "hex");
+  // try {
+  //   const userId = req.query.userId;
+  //   let userIdBuffer: Buffer;
+  //   if (typeof userId === "string")
+  //     userIdBuffer = Buffer.from(userId, "hex");
 
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
-    });
+  //   res.writeHead(200, {
+  //     'Content-Type': 'text/event-stream',
+  //     'Cache-Control': 'no-cache',
+  //     'Connection': 'keep-alive',
+  //   });
 
-    const sendNotifications = async () => {
-      console.log(notifications)
-      if (notifications.length) {
-        await createNotification(notifications);
-        notifications.forEach((notification) => {
-          if (notification && userId && userIdBuffer.equals(notification.receiver)) {
-            const notificationData = JSON.stringify({
-              type: notification.type,
-              sender: notification.sender,
-              url: notification.url,
-              timestamp: notification.timestamp
-            })
-            res.write(`data: ${notificationData}\n\n`);
-          }
-        });
-        notifications.length = 0;
-      } else {
-        res.write('\n\n');
-      }
-    };
+  //   const sendNotifications = async () => {
+  //     // console.log(notifications)
+  //     if (notifications.length) {
+  //       await createNotification(notifications);
+  //       notifications.forEach((notification) => {
+  //         if (notification && userId && userIdBuffer.equals(notification.receiver)) {
+  //           const notificationData = JSON.stringify({
+  //             type: notification.type,
+  //             sender: notification.sender,
+  //             url: notification.url,
+  //             timestamp: notification.timestamp
+  //           })
+  //           res.write(`data: ${notificationData}\n\n`);
+  //         }
+  //       });
+  //       notifications.length = 0;
+  //     } else {
+  //       res.write('\n\n');
+  //     }
+  //   };
 
-    const intervalid = setInterval(sendNotifications, 10000);
+  //   const intervalid = setInterval(sendNotifications, 10000);
 
-    req.on('close', () => clearInterval(intervalid));
+  //   req.on('close', () => clearInterval(intervalid));
 
-  } catch (error) {
-    handleControllerError(error, res);
-  }
+  // } catch (error) {
+  //   handleControllerError(error, res);
+  // }
 };
 
 type TNotify = "newPost" | "comment" | "update" | "match" | "follow" | "found" | "like";

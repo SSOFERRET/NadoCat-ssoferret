@@ -29,11 +29,12 @@ const categories = [
   { id: 4, category: "동네고양이" },
 ];
 
+//opensearch 목록별 명칭
 const categoryNames = {
   communities: "커뮤니티",
   events: "이벤트",
-  missingCats: "실종고양이",
-  streetCats: "동네고양이",
+  missings: "실종 고양이",
+  "street-cats": "동네 고양이",
 };
 
 // CHECKLIST
@@ -171,7 +172,7 @@ const Search = () => {
             </span>
             <ul className="total-results">
               {data.map((category) => (
-                <li className="category-container">
+                <li key={category.category} className="category-container">
                   <span className="search-result-count">
                     {`${
                       categoryNames[
@@ -179,19 +180,22 @@ const Search = () => {
                       ]
                     } ${category.totalcount.value} 건`}
                   </span>
-                  <ul className="results-container">
+                  <div className="results-container">
                     {category.search.map((result) => (
-                      <li className="result">
+                      <div key={result._source.postId} className="result">
                         {(category.category === "communities" ||
                           category.category === "events") && (
                           <Post post={result._source as ICommunity | IEvent} />
                         )}
                         {category.category === "missings" && (
-                          <MissingPost post={result._source as IMissing} />
+                          <MissingPost
+                            key={result._source.postId}
+                            post={result._source as IMissing}
+                          />
                         )}
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </li>
               ))}
             </ul>
