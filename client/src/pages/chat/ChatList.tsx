@@ -27,37 +27,42 @@ const ChatList = () => {
   const uuid = localStorage.getItem("uuid");
   // const generalToken = localStorage.getItem("generalToken");
   // const refreshToken = localStorage.getItem("refreshToken");
+
   useEffect(() => {
-    
-    if (uuid) {
-      const fetchChatList = async () => {
-        try {
-          const response = await axios.get(ENDPOINT + '/chats/chatlist', {
-            headers: {
-              "x-user-uuid": uuid,
-            },
-          });
-          setList(response.data);
-        } catch (error) {
-          console.log(error)
-        }
-      };
+    const fetchChatLists = async () => {
+      try {
+        const response = await axios.get(ENDPOINT + '/chats/chatlist', {
+          headers: {
+            "x-user-uuid": uuid,
+          },
+        });
+        const chatLists = response.data;
 
-      fetchChatList();
+        const updatedLists = await Promise.all(
+          chatLists.map(async (list: IList) => {
+            const otherUuid = list.otherUuid.data;
+            const userResponse = await axios.post(`${ENDPOINT}/chats`, {
+              uuid: otherUuid,
+            });
+            const nickname = userResponse.data.nickname;
+            return {
+              ...list,
+              users: {
+                ...list.users,
+                nickname: nickname,
+              },
+            };
+          })
+        );
 
-      // const testUuid = async () => {
-      //   try {
-      //     const response = await axios.post("http://localhost:8080/chats", {
-      //       uuid: uuid
-      //     })
-      //     console.log(response);
-      //   } catch (error) {
-      //     console.log(error);
-      //   }
-      // }
-      // testUuid();
-    }
-  }, [uuid]);
+        setList(updatedLists);
+      } catch (error) {
+        console.error('Error fetching chat lists:', error);
+      }
+    };
+
+    fetchChatLists();
+  }, []);
 
   return (
     <div className="chatList">

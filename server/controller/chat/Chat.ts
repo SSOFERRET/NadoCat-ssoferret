@@ -17,7 +17,7 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
 
     const userUuidBuffer = Buffer.from(userUuid, 'hex');
     const otherUserUuidBuffer = Buffer.from(otherUserUuid, 'hex');
-    
+  
     let chat = await prisma.chats.findFirst({
       where: {
         OR: [
@@ -60,6 +60,7 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
     io.to(chatRoomId).emit('chat_created', { chatId: chatRoomId });
     CHATID = chatRoomId
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ error: "Failed to start chat" });
   }
 };

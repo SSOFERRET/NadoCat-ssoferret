@@ -28,10 +28,11 @@ interface IList{
 interface ChatProps {
   lists: IList[];
 }
-
+const ENDPOINT = "http://localhost:8080"
 const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string|null>(null);
+  const [userNicknames, setUserNicknames] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -44,8 +45,8 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
     setModalOpen(true);
 
   }
-  const handleChatClick = (otherUuid: number[], chatId: string) => {
-    navigate("/chats/chat", { state: { otherUuid, chatId } });
+  const handleChatClick = (otherUuid: number[]) => {
+    navigate("/chats/chat", { state: { otherUuid } });
   }
 
   const now: Date = new Date();
@@ -67,11 +68,12 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
       return;
     }
   };
+  
   console.log(lists)
   return (
     <div className="chatlist">
       {lists.map((list, index) => (
-        <div className="listbox" key={index} onClick={ () =>handleChatClick( list.otherUuid.data, list.chatId) }>
+        <div className="listbox" key={index} onClick={ () =>handleChatClick(list.otherUuid.data) }>
           <div className="imgbox">{list.img ?<img src={list.img} /> : <img src={DefaultImg} /> }</div>
           <div className="contentsbox">
             <div className="nametimebox">

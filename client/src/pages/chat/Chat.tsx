@@ -19,7 +19,7 @@ const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { userData, otherUuid, chatId } = location.state || {}
+  const { userData, otherUuid } = location.state || {}
   
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -49,20 +49,8 @@ const Chat = () => {
         alert("Failed to start chat. Please try again.");
       }
     };
-    const getUserData = async () => {
-      try{
-        const response = await axios.post(ENDPOINT + "/chats", {
-          uuid: otherUuid
-        })
-        setOtherUserData(response.data.nickname)
-        console.log(response)
-      } catch (error) {
-        console.log(error);
-      }
-    }
 
     initiateChat();
-    getUserData();
 
     return () => {
       socket.disconnect();
