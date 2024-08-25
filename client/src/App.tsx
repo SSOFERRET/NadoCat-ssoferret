@@ -26,6 +26,7 @@ import EventPostEdit from "./pages/event/EventPostEdit";
 import Search from "./pages/search/Search";
 import MissingDetail from "./pages/missing/MissingDetail";
 import MissingPostWrite from "./pages/missing/MissingPostWrite";
+import Notification from "./pages/notification/Notification";
 
 const router = createBrowserRouter([
   {
@@ -93,6 +94,10 @@ const router = createBrowserRouter([
       {
         path: "/search",
         children: [{ path: "", element: <Search /> }],
+      },
+      {
+        path: "/notification",
+        children: [{ path: "", element: <Notification /> }],
       },
     ],
   },
