@@ -116,8 +116,12 @@ export const getCommunity = async (req: Request, res: Response) => {
 // [ ] 사용자 정보 받아오는 부분 구현 필요
 
 export const createCommunity = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = Buffer.from(req.user.uuid, "hex");
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const { title, content, tags } = req.body;
 
     const tagList = JSON.parse(tags);
@@ -173,9 +177,13 @@ export const createCommunity = async (req: Request, res: Response) => {
 // [ ] 사용자 정보 받아오는 부분 구현 필요
 // [x] 원래 이미지, 태그는 받아오지 않기
 export const updateCommunity = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
     const postId = Number(req.params.community_id);
-    const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = Buffer.from(uuid, "hex");
 
     const { title, content, tags, deleteTagIds, deleteImageIds } = req.body;
 
@@ -244,9 +252,13 @@ export const updateCommunity = async (req: Request, res: Response) => {
 // [x] 테이블 변경에 따른 태그, 이미지 삭제 수정
 // [x] 게시글 삭제 시 댓글 삭제 구현
 export const deleteCommunity = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
     const postId = Number(req.params.community_id);
-    const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = Buffer.from(uuid, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await getCommunityById(tx, postId);

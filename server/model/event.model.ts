@@ -104,6 +104,7 @@ export const getEventList = async (limit: number, sort: string, cursor: number |
       [orderBy.sortBy]: orderBy.sortOrder as SortOrder,
     });
   }
+
   const events = await prisma.events.findMany({
     where: {
       categoryId,
