@@ -20,8 +20,8 @@
 
       svg {
         color: $gray;
-        width: 20rem;
-        height: 20rem;
+        width: 15rem;
+        height: 15rem;
       }
 
       & + li + li {
@@ -30,7 +30,7 @@
       }
 
       span {
-        font-size: $size-18;
+        font-size: $size-16;
       }
     }
 

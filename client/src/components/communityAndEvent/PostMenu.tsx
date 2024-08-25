@@ -20,6 +20,8 @@ interface IProps {
   deleteComment?: ({ postId, commentId }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
   handelCommentFormOpen?: () => void;
+  uploadImage: (file: File) => void;
+  setDefaultImage: () => void;
 }
 
 const PostMenu = ({
@@ -31,6 +33,8 @@ const PostMenu = ({
   deletePost,
   deleteComment,
   handelCommentFormOpen,
+  uploadImage,
+  setDefaultImage
 }: IProps) => {
   const navigate = useNavigate();
   const { selectedCommentId: commentId, clearSelectedCommentId } = useCommentStore();
@@ -60,7 +64,7 @@ const PostMenu = ({
 
     deletePost({ postId }).then(() => {
       showMenu();
-      navigate(`${getPostDeletionPath(boardType)}`);
+      navigate(`${getPostPath(boardType)}`);
     });
   };
 
@@ -100,6 +104,30 @@ const PostMenu = ({
     showMenu();
   };
 
+  const handleUploadClick = () => {
+    const fileInput = document.createElement("input");
+
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.onchange = (event) => {
+        const target = event.target as HTMLInputElement;
+        
+        if(target && target.files && target.files.length > 0) {
+            const file = target.files[0];
+            uploadImage(file); 
+        }
+    };
+    fileInput.click(); 
+}
+
+const handleDefaultImageClick = () => {
+    setDefaultImage();
+}
+
+const handleSetting = () => {
+  navigate("/users/my/setting");
+}
+
   return (
     <div className={`overlay ${isShowMenu ? "visible" : "hidden"}`} onClick={handleMenu}>
       <div className={`button-container ${isShowMenu ? "visible" : "hidden"}`}>
@@ -133,13 +161,13 @@ const PostMenu = ({
 
         {menuType === "user" && (
           <>
-            <li onClick={() => {}}>
+            <li onClick={() => handleUploadClick()}>
               <span>사진 올리기</span>
             </li>
-            <li onClick={() => {}}>
+            <li onClick={() => handleDefaultImageClick()}>
               <span>기본 이미지로 변경</span>
             </li>
-            <li onClick={() => {}}>
+            <li onClick={() => handleSetting()}>
               <span>회원정보 수정</span>
             </li>
             <li className="logout">

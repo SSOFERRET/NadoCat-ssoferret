@@ -23,11 +23,11 @@ router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
 router.get("/my/:uuid", ensureAutorization, mypage);  //user로 바꿔야하나?
 // router.get("/my", ensureAutorization, mypage); 
-router.put("/setting", setting);
-router.put("/setting/profile", updateNickname);
-router.post("/setting/auth-password", authPassword);
-router.put("/setting/password", updatePassword);
-router.put("/setting/detail", updateDetail);
+router.put("/my//setting", setting);
+router.put("/my/setting/nickname", updateNickname);
+router.post("/my/setting/auth-password", authPassword);
+router.put("/my/setting/password", updatePassword);
+router.put("/my/setting/detail", updateDetail);
 
 router.post("/update-profile",ensureAutorization, uploadImages.single("profileImage"),updateProfile);
 router.put("/delete-profile",ensureAutorization, deleteProfile);

@@ -33,6 +33,7 @@ import Setting from "./pages/user/Setting";
 import SettingAuthPassword from "./components/user/my/SettingAuthPassword";
 import SettingDetail from "./components/user/my/SettingDetail";
 import SettingNickname from "./components/user/my/SettingNickname";
+import SettingPassword from "./components/user/my/SettingPassword";
 
 const router = createBrowserRouter([
   {
@@ -56,11 +57,11 @@ const router = createBrowserRouter([
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
 
-          { path: "setting", element: <Setting /> },
-          { path: "setting/profile", element: <SettingNickname /> },
-          { path: "setting/auth-password", element: <SettingAuthPassword /> },
-          { path: "setting/password", element: <Signup /> },
-          { path: "setting/detail", element: <SettingDetail /> },
+          { path: "my/setting", element: <Setting /> },
+          { path: "my/setting/nickname", element: <SettingNickname /> },
+          { path: "my/setting/auth-password", element: <SettingAuthPassword /> },
+          { path: "my/setting/password", element: <SettingPassword /> },
+          { path: "my/setting/detail", element: <SettingDetail /> },
         ],
       },
       {

@@ -44,9 +44,9 @@ const SettingNickname = () => {
               required: "닉네임을 입력해주세요.",
             })}
           />
-          {/* {errors.nickname && (
+          {errors.nickname && (
             <p className="error-message">{errors.nickname.message}</p>
-          )} */}
+          )}
         </fieldset>
         <button type="submit" className="complete-btn">
           완료

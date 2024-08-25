@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import HeaderWithBackButton from "../../../components/common/HeaderWithBackButton";
 import { useNavigate } from "react-router-dom";
 import InputText from "../InputText";
-import "../../../styles/scss/components/user/my/settingNickname.scss";
-import { updateNickname } from "../../../api/user.api";
+import "../../../styles/scss/components/user/my/settingAuthPassword.scss";
+import { authPassword } from "../../../api/user.api";
 import { useForm } from "react-hook-form";
 
 export interface SettingAuthPasswordProps {
@@ -20,11 +20,11 @@ const SettingAuthPassword = () => {
     formState: { errors },
   } = useForm<SettingAuthPasswordProps>();
 
-  const handleNickname = (data: SettingAuthPasswordProps) => {
-    const result = updateNickname(data);
+  const handleAuthPassword = (data: SettingAuthPasswordProps) => {
+    const result = authPassword(data);
     console.log("비밀번호 인증 성공:", result);
 
-    navigate("/users/my");
+    navigate("/users/my/setting/password");
   };
 
   useEffect(() => {
@@ -32,9 +32,9 @@ const SettingAuthPassword = () => {
   }, [setFocus]);
 
   return (
-    <div className="setting-nickname-container">
+    <div className="setting-auth-password-container">
       <HeaderWithBackButton />
-      <form onSubmit={handleSubmit(handleNickname)}>
+      <form onSubmit={handleSubmit(handleAuthPassword)}>
         <fieldset className="title">
           <p>비밀번호 확인</p>
           <InputText
@@ -44,12 +44,12 @@ const SettingAuthPassword = () => {
               required: "비밀번호를 입력해주세요.",
             })}
           />
-          {/* {errors.nickname && (
-            <p className="error-message">{errors.nickname.message}</p>
-          )} */}
+          {errors.password && (
+            <p className="error-message">{errors.password.message}</p>
+          )}
         </fieldset>
         <button type="submit" className="complete-btn">
-          완료
+          다음
         </button>
       </form>
     </div>

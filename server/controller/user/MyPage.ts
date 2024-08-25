@@ -57,11 +57,22 @@ export const mypage = async ( req: Request, res: Response, next: NextFunction) =
 
 
 
+export const setting = async (req: Request, res: Response) => {
+  // const {uuid}
+};
 export const updateNickname = async (req: Request, res: Response) => {
   // const {uuid}
 };
 
+export const authPassword = async (req: Request, res: Response) => {
+    
+};
+
 export const updatePassword = async (req: Request, res: Response) => {
+    
+};
+
+export const updateDetail = async (req: Request, res: Response) => {
     
 };
 
