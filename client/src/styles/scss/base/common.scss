@@ -84,6 +84,10 @@ body {
   color: $black;
 }
 
+button {
+  outline: none;
+}
+
 /* buttons */
 @mixin smallButton($active) {
   width: 121rem;
