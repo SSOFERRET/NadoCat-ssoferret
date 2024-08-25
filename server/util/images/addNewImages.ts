@@ -23,9 +23,8 @@ export const addNewImages = async (
 };
 
 //프로필 이미지 변경
-export const addProfileImages = async (
-    tx: Prisma.TransactionClient, uuid: string, imageUrl: string) => {
-    const newImage = await addProfileImage(tx, uuid, imageUrl);
+export const addProfileImages = async (uuid: string, imageUrl: string) => {
+    const newImage = await addProfileImage(uuid, imageUrl);
 
     return newImage;
 }

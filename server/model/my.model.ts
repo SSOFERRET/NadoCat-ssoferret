@@ -77,19 +77,17 @@ export const deleteUser = async (uuid: string) => {
 
 //프로필 이미지 저장 로직 추가
 export const addProfileImageFormats = async (
-  tx: Prisma.TransactionClient,
   uuid: string,
   imageUrl: string
 ) => {
-  await addProfileImages(tx, imageUrl, uuid);
+  await addProfileImages(imageUrl, uuid);
 };
 
-//프로필 이미지 삭제 로직 추가
+//프로필 이미지 삭제 로직 추가(기본이미지 변경)
 export const deleteProfileImageFormats = async (
-    tx: Prisma.TransactionClient,
     uuid: string,
     imageUrl: string
   ) => {
-    await deleteProfileImages(tx, imageUrl, uuid);
+    await deleteProfileImages(imageUrl, uuid);
   };
   

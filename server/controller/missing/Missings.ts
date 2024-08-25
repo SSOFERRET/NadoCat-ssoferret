@@ -75,7 +75,6 @@ export const getMissing = async (req: Request, res: Response) => {
       }
 
       let post = await getPostByPostId(tx, postData);
-      console.log(post);
 
       //NOTE view
       // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
@@ -163,7 +162,6 @@ export const createMissing = async (req: Request, res: Response) => {
       //     categoryId: CATEGORY.MISSINGS,
       //   }, imageUrls);
       // }
-
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
 
       await indexOpensearchDocument(CATEGORY.MISSINGS, "", missing.detail, post.postId);
