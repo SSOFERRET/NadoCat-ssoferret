@@ -1,67 +1,60 @@
+import axios from "axios";
 import {create} from "zustand";
 
 interface StoreState{
   isLoggedIn: boolean;
   isAutoLogin: boolean;
   authType: string | null;
-  userUuid: string | null; //uuid 추가
-  storeLogin: (generalToken: string) => void;
-  storeUuid: (userUuid: string) => void;
-  storeAutoLogin: (refreshToken: string) => void;
+  uuid: string; 
+  storeLogin: (uuid: string, isAutoLogin: boolean) => void;
   storeAuthType: (authType: string) => void;
-  storeLogout: () => void;
+  storeLogout: (uuid: string) => void;
 }
 
-export const getGeneralToken = () => {
-  const generalToken = localStorage.getItem("generalToken");
-  return {generalToken};
+//uuid
+export const getUuid = () => {
+    const uuid = localStorage.getItem("uuid");
+    return uuid;
 }
 
-export const setGeneralToken = (generalToken: string) => {
-  localStorage.setItem("generalToken", generalToken);
+export const setUuid = (uuid: string) => {
+    localStorage.setItem("uuid", uuid);
 }
 
-export const getRefreshToken = () => {
-  const refreshToken = localStorage.getItem("refreshToken");
-  return {refreshToken}
-}
-
-export const setRefreshToken = (refreshToken: string) => {
-  localStorage.setItem("refreshToken", refreshToken);
-}
-
-//로그아웃시
-export const removeToken = () => {
-  localStorage.removeItem("generalToken");
-  localStorage.removeItem("refreshToken");
-}
 
 export const useAuthStore = create<StoreState>((set) => ({
-  isLoggedIn: getGeneralToken().generalToken? true : false,
+  isLoggedIn: !!getUuid(), // UUID가 존재하면 로그인 상태
   isAutoLogin: false,
   authType: null,
-  userUuid: null, //uuid 상태 추가
+  uuid: getUuid() || "", 
 
-  storeLogin: (generalToken) => {
-    set({isLoggedIn: true});
-    setGeneralToken(generalToken);
+  storeLogin: (uuid: string, isAutoLogin: boolean)  => {
+    set({isLoggedIn: true, isAutoLogin});
+    setUuid(uuid);
+
+     // 자동로그인 상태 저장
+     if (isAutoLogin) {
+        localStorage.setItem("isAutoLogin", "true");
+      } else {
+        localStorage.removeItem("isAutoLogin");
+      }
   },
 
-  storeUuid: (userUuid) => {
-    set({userUuid});
-  },
-
-  storeAutoLogin: (refreshToken) => {
-    set({isAutoLogin: true});
-    setRefreshToken(refreshToken);
-  },
-
-  storeAuthType: (authType) => {
+  storeAuthType: (authType: string) => {
     set({authType});
   },
 
-  storeLogout: () => {
-    set({isLoggedIn: false, isAutoLogin: false, authType: null, userUuid: null});
-    removeToken();
+  storeLogout: async (uuid: string) => {
+    try {
+        // const uuid = getUuid(); // localStorage에서 uuid 가져오기
+        await axios.post("/users/logout", {uuid}, {withCredentials: true});
+        set({isLoggedIn: false, isAutoLogin: false, authType: null, uuid: ""});
+        console.log("uuid:", uuid);
+        localStorage.removeItem("uuid");
+        localStorage.removeItem("isAutoLogin");
+        // window.location.href = "/users/login";
+    } catch (error) {
+        console.error("로그아웃 중 오류 발생:", error);
+    }
   },
 }));

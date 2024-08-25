@@ -44,8 +44,8 @@ export const getFriends = async (userId: Buffer, limit: number, cursor: number |
   });
 };
 
-export const getFriendById = async (userId: Buffer, followingId: Buffer) => {
-  return await prisma.friends.findFirst({
+export const getFriendById = async (tx: Prisma.TransactionClient, userId: Buffer, followingId: Buffer) => {
+  return await tx.friends.findFirst({
     where: {
       uuid: userId,
       followingId: followingId,
@@ -61,8 +61,8 @@ export const getFriendList = async (userId: Buffer) => {
   });
 };
 
-export const addFriend = async (userId: Buffer, followingId: Buffer) => {
-  return await prisma.friends.create({
+export const addFriend = async (tx: Prisma.TransactionClient, userId: Buffer, followingId: Buffer) => {
+  return await tx.friends.create({
     data: {
       followingId: followingId,
       uuid: userId,
@@ -70,8 +70,8 @@ export const addFriend = async (userId: Buffer, followingId: Buffer) => {
   });
 };
 
-export const removeFriend = async (friendId: number) => {
-  return await prisma.friends.delete({
+export const removeFriend = async (tx: Prisma.TransactionClient, friendId: number) => {
+  return await tx.friends.delete({
     where: {
       friendId,
     },

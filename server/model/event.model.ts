@@ -5,6 +5,87 @@ import { CATEGORY } from "../constants/category";
 import { getOrderBy } from "../util/sort/orderBy";
 import { SortOrder } from "../types/sort";
 
+const selectEvents = {
+  users: {
+    select: {
+      id: true,
+      uuid: true,
+      nickname: true,
+      profileImage: true,
+    },
+  },
+  eventImages: {
+    take: 1,
+    select: {
+      images: {
+        select: {
+          imageId: true,
+          url: true,
+        },
+      },
+    },
+  },
+  eventTags: {
+    select: {
+      tags: {
+        select: {
+          tagId: true,
+          tag: true,
+        },
+      },
+    },
+  },
+  _count: {
+    select: {
+      eventLikes: true,
+    },
+  },
+};
+
+const selectEvent = {
+  postId: true,
+  categoryId: true,
+  title: true,
+  content: true,
+  views: true,
+  createdAt: true,
+  updatedAt: true,
+  isClosed: true,
+  users: {
+    select: {
+      id: true,
+      uuid: true,
+      nickname: true,
+      profileImage: true,
+    },
+  },
+  eventImages: {
+    select: {
+      images: {
+        select: {
+          imageId: true,
+          url: true,
+        },
+      },
+    },
+  },
+  eventTags: {
+    select: {
+      tags: {
+        select: {
+          tagId: true,
+          tag: true,
+        },
+      },
+    },
+  },
+  _count: {
+    select: {
+      eventLikes: true,
+    },
+  },
+};
+
 export const getEventsCount = async () => await prisma.events.count();
 
 export const getEventList = async (limit: number, sort: string, cursor: number | undefined) => {
@@ -31,42 +112,7 @@ export const getEventList = async (limit: number, sort: string, cursor: number |
     skip: cursor ? 1 : 0,
     cursor: cursor ? { postId: cursor } : undefined,
     orderBy: orderOptions,
-    include: {
-      users: {
-        select: {
-          id: true,
-          uuid: true,
-          nickname: true,
-          profileImage: true,
-        },
-      },
-      eventImages: {
-        take: 1,
-        select: {
-          images: {
-            select: {
-              imageId: true,
-              url: true,
-            },
-          },
-        },
-      },
-      eventTags: {
-        select: {
-          tags: {
-            select: {
-              tagId: true,
-              tag: true,
-            },
-          },
-        },
-      },
-      _count: {
-        select: {
-          eventLikes: true,
-        },
-      },
-    },
+    include: selectEvents,
   });
 
   return events.map((event: IEvent) => {
@@ -92,57 +138,14 @@ export const getEventList = async (limit: number, sort: string, cursor: number |
   });
 };
 
-export const getEventById = async (postId: number) => {
+export const getEventById = async (tx: Prisma.TransactionClient, postId: number) => {
   const categoryId = CATEGORY.EVENTS;
   const event = await prisma.events.findUnique({
     where: {
       postId,
       categoryId,
     },
-    select: {
-      postId: true,
-      categoryId: true,
-      title: true,
-      content: true,
-      views: true,
-      createdAt: true,
-      updatedAt: true,
-      isClosed: true,
-      date: true,
-      users: {
-        select: {
-          id: true,
-          uuid: true,
-          nickname: true,
-          profileImage: true,
-        },
-      },
-      eventImages: {
-        select: {
-          images: {
-            select: {
-              imageId: true,
-              url: true,
-            },
-          },
-        },
-      },
-      eventTags: {
-        select: {
-          tags: {
-            select: {
-              tagId: true,
-              tag: true,
-            },
-          },
-        },
-      },
-      _count: {
-        select: {
-          eventLikes: true,
-        },
-      },
-    },
+    select: selectEvent,
   });
 
   if (!event) {
@@ -158,7 +161,6 @@ export const getEventById = async (postId: number) => {
     createdAt: event.createdAt,
     updatedAt: event.updatedAt,
     isClosed: event.isClosed,
-    date: event.date,
     users: {
       id: event?.users.id,
       uuid: (event?.users.uuid as Buffer).toString("hex"),
@@ -176,8 +178,7 @@ export const addEvent = async (
   userId: Buffer,
   title: string,
   content: string,
-  isClosed: boolean,
-  date?: string
+  isClosed: boolean
 ) => {
   const categoryId = CATEGORY.EVENTS;
   return await tx.events.create({
@@ -187,7 +188,6 @@ export const addEvent = async (
       isClosed,
       categoryId,
       uuid: userId,
-      date,
     },
   });
 };
@@ -197,8 +197,7 @@ export const updateEventById = async (
   postId: number,
   title: string,
   content: string,
-  isClosed: boolean,
-  date?: string
+  isClosed: boolean
 ) => {
   const categoryId = CATEGORY.EVENTS;
   return await tx.events.update({
@@ -211,7 +210,6 @@ export const updateEventById = async (
       title,
       content,
       isClosed,
-      date,
     },
   });
 };
@@ -271,8 +269,8 @@ export const removeImagesByIds = async (tx: Prisma.TransactionClient, imageIds: 
   });
 };
 
-export const getLikeIds = async (postId: number) => {
-  return await prisma.eventLikes.findMany({
+export const getLikeIds = async (tx: Prisma.TransactionClient, postId: number) => {
+  return await tx.eventLikes.findMany({
     where: {
       postId,
     },

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
 import { getUuid } from "./StreetCats";
 import { addComment, putComment, readComments, readPost, removeComment } from "../../model/streetCat.model";
-import { notifyNewComment } from "../notification/Notifications";
+// import { notifyNewComment } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
 
 // NOTE: 임시 데이터 streetCatCommentId 값 주의
@@ -39,7 +39,7 @@ export const createStreetCatComment = async (req: Request, res: Response) => {
     const createComment = await addComment(uuid, postId, comment);
 
     if (createComment.streetCatCommentId)
-      await notifyNewComment(uuid, CATEGORY.STREET_CATS, postId, createComment.streetCatCommentId)
+      // await notifyNewComment(uuid, CATEGORY.STREET_CATS, postId, createComment.streetCatCommentId)
 
     res.status(200).json({ message: "동네 고양이 댓글 등록" });
   } catch (error) {

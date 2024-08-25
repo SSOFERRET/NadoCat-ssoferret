@@ -1,19 +1,22 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import "../../styles/scss/components/comment/commentForm.scss";
 import { ICreateCommentParams } from "../../hooks/useCommunityComment";
+import { useAuthStore } from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 // CHECKLIST
 // [x] 댓글 달기 기능
 
 interface IProps {
   postId: number;
-  userId: string; // 버퍼일지도..? 일단 테스트를 위한 string
   addComment: ({ postId, userId, comment }: ICreateCommentParams) => Promise<void>;
 }
 
-const CommentForm = ({ postId, userId, addComment }: IProps) => {
+const CommentForm = ({ postId, addComment }: IProps) => {
+  const navigate = useNavigate();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [comment, setComment] = useState("");
+  const { uuid, isLoggedIn } = useAuthStore();
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -30,12 +33,19 @@ const CommentForm = ({ postId, userId, addComment }: IProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // NOTE isLoggedIn를 여기서 불러야 하나..?
+
+    if (!isLoggedIn) {
+      navigate("/users/login");
+      return;
+    }
+
     if (comment.trim().length === 0) {
       return;
     }
 
     // 여기 UI로 보여주기
-    addComment({ postId, userId, comment })
+    addComment({ postId, userId: uuid, comment })
       .then(() => {
         console.log("댓글이 성공적으로 등록되었습니다!");
         setComment("");

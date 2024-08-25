@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../../styles/scss/components/user/my/myTab.scss";
-import MyPage from "../../../pages/MyPage";
+import MyPage from "../../../pages/mypage/MyPage";
 
 const MyTab = () => {
   const [activeTab, setActiveTab] = useState("tab-likepost");
@@ -13,7 +13,8 @@ const MyTab = () => {
       </div>
 
       <div className="tab-content">
-        {activeTab === "tab-likepost" && <MyPage />}
+        {/* {activeTab === "tab-likepost" && <MyPage />} */}
+        {activeTab === "tab-likepost" && <div>관심글 내용입니다.</div>}
         {activeTab === "tab-mypost" && <div>작성한글 내용입니다.</div>}
       </div>
     </div>

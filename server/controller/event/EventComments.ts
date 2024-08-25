@@ -22,10 +22,7 @@ export const getComments = async (req: Request, res: Response) => {
 
     const comments = await getEventComments(postId, limit, cursor);
 
-    const nextCursor =
-      comments.length === limit
-        ? comments[comments.length - 1].commentId
-        : null;
+    const nextCursor = comments.length === limit ? comments[comments.length - 1].commentId : null;
 
     const result = {
       comments,
@@ -43,25 +40,18 @@ export const getComments = async (req: Request, res: Response) => {
 
 export const createComment = async (req: Request, res: Response) => {
   try {
+    const userId = Buffer.from(req.user.uuid, "hex");
     const postId = Number(req.params.community_id);
     const comment = req.body.comment;
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     if (!comment) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
     const newComment = await addComment(postId, userId, comment);
 
     if (newComment.eventCommentId)
-      await notifyNewComment(
-        Buffer.from(userId),
-        CATEGORY.EVENTS,
-        postId,
-        newComment.eventCommentId
-      );
+      await notifyNewComment(Buffer.from(userId), CATEGORY.EVENTS, postId, newComment.eventCommentId);
 
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
@@ -74,12 +64,10 @@ export const updateComment = async (req: Request, res: Response) => {
     const postId = Number(req.params.community_id);
     const commentId = Number(req.params.comment_id);
     const comment = req.body.comment;
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const userId = Buffer.from(req.user.uuid, "hex");
 
     if (!comment) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "입력값을 확인해 주세요." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
     await updateCommentById(postId, userId, commentId, comment);
@@ -94,7 +82,7 @@ export const deleteComment = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.community_id);
     const commentId = Number(req.params.comment_id);
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const userId = Buffer.from(req.user.uuid, "hex");
 
     await deleteCommentById(postId, userId, commentId);
 

@@ -1,0 +1,167 @@
+/* 1rem to 1rem */
+html {
+  font-size: 0.2325581395vw;
+  overflow-x: hidden;
+}
+
+@media screen and (min-width: 430px) {
+  html {
+    font-size: 1px;
+  }
+}
+@media screen and (max-width: 429px) {
+  html {
+    font-size: 0.2325581395vw;
+  }
+}
+/* font */
+@font-face {
+  font-family: "bold";
+  src: url("/src/assets/fonts/Pretendard-Bold.ttf");
+}
+@font-face {
+  font-family: "semiBold";
+  src: url("/src/assets/fonts/Pretendard-SemiBold.ttf");
+}
+@font-face {
+  font-family: "medium";
+  src: url("/src/assets/fonts/Pretendard-Medium.ttf");
+}
+@font-face {
+  font-family: "regular";
+  src: url("/src/assets/fonts/Pretendard-Regular.ttf");
+}
+/* font size */
+/* color palette */
+/* radious */
+body {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  background-color: #fcf7e0;
+  letter-spacing: -0.7px;
+  color: #191919;
+}
+
+/* buttons */
+/* tags */
+/* others */
+.comment-card {
+  min-height: 81rem;
+  padding: 15rem 0;
+  border-bottom: 0.5rem solid #d9d9d9;
+}
+.comment-card .comment {
+  display: flex;
+}
+.comment-card .comment .avatar {
+  width: 32rem;
+  height: 32rem;
+  background-color: #f2b705;
+  border-radius: 50%;
+  margin-right: 9rem;
+  flex-shrink: 0;
+}
+.comment-card .comment .detail {
+  flex: 1;
+}
+.comment-card .comment .detail .comment-info {
+  min-height: 18rem;
+  display: flex;
+  align-items: center;
+}
+.comment-card .comment .detail .comment-info .nickname {
+  word-break: break-all;
+  font-family: "bold";
+  font-size: 12rem !important;
+}
+.comment-card .comment .detail .comment-info .date {
+  font-family: "medium";
+  font-size: 10rem !important;
+  color: #b8bcbf;
+  margin-left: 5rem;
+}
+.comment-card .comment .detail .comment-info .options-icon {
+  position: static;
+  margin-left: auto;
+  width: 18rem;
+  height: 18rem;
+  color: #b8bcbf;
+  cursor: pointer;
+}
+.comment-card .comment .detail .comment-detail {
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin-top: 7rem;
+  color: #4c4c4c;
+  font-family: "medium";
+  font-size: 14rem !important;
+  line-height: 1.5;
+}
+.comment-card:nth-child(odd) .avatar {
+  background-color: #f2b705;
+}
+.comment-card:nth-child(even) .avatar {
+  background-color: #d9d9d9;
+}
+.comment-card .comment-edit-form-container {
+  margin-top: 10rem;
+  border: 1rem solid #d9d9d9;
+  border-radius: 15rem;
+  padding: 8rem;
+}
+.comment-card .comment-edit-form-container .comment-edit-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+}
+.comment-card .comment-edit-form-container .comment-edit-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 70rem;
+  overflow: hidden;
+  font-family: "medium";
+  font-size: 14rem !important;
+  padding: 10rem;
+  border: none;
+  resize: none;
+}
+.comment-card .comment-edit-form-container .comment-edit-form textarea::-moz-placeholder {
+  color: #b8bcbf;
+}
+.comment-card .comment-edit-form-container .comment-edit-form textarea::placeholder {
+  color: #b8bcbf;
+}
+.comment-card .comment-edit-form-container .comment-edit-form textarea:focus {
+  outline: 0;
+}
+.comment-card .comment-edit-form-container .buttons {
+  display: flex;
+  justify-content: end;
+  gap: 10rem;
+}
+.comment-card .comment-edit-form-container .buttons button {
+  height: 25rem;
+  width: 40rem;
+  flex-shrink: 0;
+  font-family: "bold";
+  color: #f27405;
+  font-size: 14rem !important;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 5rem;
+  cursor: pointer;
+}
+.comment-card .comment-edit-form-container .buttons button:hover {
+  color: #f2b705;
+}
+.comment-card .comment-edit-form-container .buttons .edit-btn {
+  background-color: #ffffff;
+  color: #f27405;
+}
+.comment-card .comment-edit-form-container .buttons .close-btn {
+  color: #888b90;
+}/*# sourceMappingURL=comment.css.map */

@@ -48,7 +48,7 @@ export const getEventComments = async (postId: number, limit: number, cursor: nu
         id: item.users.id,
         uuid: item.users.uuid.toString("hex"),
         nickname: item.users.nickname,
-        profileImage: item.users.nickname,
+        profileImage: item.users.profileImage,
       },
     };
   });

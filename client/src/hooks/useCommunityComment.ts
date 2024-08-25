@@ -1,8 +1,4 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createCommunityComment,
   deleteCommunityComment,
@@ -21,14 +17,7 @@ export interface ICreateCommentParams {
 const useCommunityComment = (postId: number) => {
   const queryClient = useQueryClient();
 
-  const {
-    data,
-    isLoading,
-    isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const { data, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["communityComment", postId],
     queryFn: ({ pageParam = 0 }) => getCommunityComments({ pageParam, postId }),
     initialPageParam: 0,
@@ -39,6 +28,7 @@ const useCommunityComment = (postId: number) => {
       }
       return undefined;
     },
+    staleTime: 60000
   });
 
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];
@@ -72,8 +62,7 @@ const useCommunityComment = (postId: number) => {
   });
 
   const { mutateAsync: removeCommunityComment } = useMutation({
-    mutationFn: ({ postId, commentId }: ICommentDeleteRequest) =>
-      deleteCommunityComment({ postId, commentId }),
+    mutationFn: ({ postId, commentId }: ICommentDeleteRequest) => deleteCommunityComment({ postId, commentId }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["communityComment", postId],

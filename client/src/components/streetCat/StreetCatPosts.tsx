@@ -16,62 +16,52 @@ import NewPostButton from "../common/NewPostButton";
 // [ ] 글쓰기 버튼 고쳐야함(css)
 
 const StreetCatPosts: React.FC = () => {
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-    isLoading,
-    streetCatPosts,
-    isEmpty
-  } = useStreetCatPosts();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, isLoading, streetCatPosts, isEmpty } =
+    useStreetCatPosts();
 
   const moreRef = useIntersectionObserver(([entry]) => {
-    if(entry.isIntersecting) {
+    if (entry.isIntersecting) {
       loadMore();
     }
-  })
+  });
 
   const loadMore = () => {
-    if(!hasNextPage) return;
+    if (!hasNextPage) return;
     fetchNextPage();
+  };
+
+  if (isEmpty) {
+    return <p>Not found</p>;
   }
 
-  if(isEmpty) {
-    return (<p>Not found</p>);
-  }
-
-  console.log(streetCatPosts)
+  console.log(streetCatPosts);
   return (
     <>
       <p className="title">우리 동네 고양이</p>
       <ul className="street-cat-list">
-        {
-          streetCatPosts.map((cat) => (
-            <li key={cat?.postId} className="street-cat">
-              {
-                cat?.postId !== undefined && cat?.streetCatFavorites.length !== undefined
-                ? <FavoriteButton postId={cat.postId} like={cat.streetCatFavorites?.length}/>
-                : ""
-              }
-              <a href={`${location.pathname}/${cat?.postId}`}>
-                <div className="img-box">
-                  <img src={cat?.streetCatImages[0]?.images.url} />
-                </div>
-                <div className="street-cat-info">
-                  <span className="name">{cat?.name}</span>
-                  <span className="date">{new Date(cat?.createdAt as Date).toLocaleDateString()}</span>
-                </div>
-              </a>
-            </li>
-          ))
-        }
+        {streetCatPosts.map((cat) => (
+          <li key={cat?.postId} className="street-cat">
+            {cat?.postId !== undefined && cat?.streetCatFavorites.length !== undefined ? (
+              <FavoriteButton postId={cat.postId} like={cat.streetCatFavorites?.length} />
+            ) : (
+              ""
+            )}
+            <a href={`${location.pathname}/${cat?.postId}`}>
+              <div className="img-box">
+                <img src={cat?.streetCatImages[0]?.images.url} />
+              </div>
+              <div className="street-cat-info">
+                <span className="name">{cat?.name}</span>
+                <span className="date">{new Date(cat?.createdAt as Date).toLocaleDateString()}</span>
+              </div>
+            </a>
+          </li>
+        ))}
       </ul>
 
-      <div className='more' ref={moreRef}></div>
+      <div className="more" ref={moreRef}></div>
       <div>{isFetchingNextPage && <p>Loading more...</p>}</div>
-    </>
+    </div>
   );
 };
 
