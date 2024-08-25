@@ -14,8 +14,7 @@ interface INotificationData {
 const NotificationAlarm: React.FC = () => {
   const [alarmExists, setAlarmExists] = useState<boolean>(false);
 
-  const { isAllRead, isAllReadLoading } = useNotifications();
-  console.log(isAllRead);
+  // const { isAllRead, isAllReadLoading } = useNotifications();
 
   const createEventSource = () => {
     const userId: string = "74657374320000000000000000000000";
@@ -49,20 +48,14 @@ const NotificationAlarm: React.FC = () => {
     return () => {
       eventSource.close();
       console.log("SSE 연결이 닫혔습니다.");
-      setAlarmExists(!isAllRead);
+      // setAlarmExists(!isAllRead);
     };
   }, []);
-
-  useEffect(() => {
-    if (!isAllReadLoading) {
-      setAlarmExists(!isAllRead);
-    }
-  }, [isAllRead, isAllReadLoading]);
 
   return (
     <div className="notification-icon">
       <BiBell className="bell-icon" />
-      {alarmExists && !isAllReadLoading && <GoDotFill className="new-sign" />}
+      {alarmExists && <GoDotFill className="new-sign" />}
     </div>
   );
 };
