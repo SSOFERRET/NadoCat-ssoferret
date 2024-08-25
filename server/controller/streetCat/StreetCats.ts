@@ -95,7 +95,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
   const postData = { categoryId, name, gender, neutered, discoveryDate, content, uuid };
   
   try {
-    await prisma.$transaction(async (tx) => {
+    const post = await prisma.$transaction(async (tx) => {
       // location 생성
       const newLocation = await createLoction(tx, location);
       const locationId = newLocation.locationId;
@@ -132,10 +132,11 @@ export const createStreetCat = async (req: Request, res: Response) => {
       // await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
       // await indexOpensearchDocument(CATEGORY.STREET_CATS, name, content, postId);
 
-      res.status(201).json({ message: "동네 고양이 도감 생성" });
-
-      await indexResultToOpensearch(CATEGORY.STREET_CATS, newPost.postId);
+      return newPost;
     })
+    res.status(201).json({ message: "동네 고양이 도감 생성" });
+
+    await indexResultToOpensearch(CATEGORY.STREET_CATS, post.postId);
 
   } catch (error) {
     console.error(error);

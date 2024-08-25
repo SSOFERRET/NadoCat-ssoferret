@@ -238,7 +238,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
 
       await deleteImages(tx, imageIds);
 
-      await updateOpensearchDocument(CATEGORY.COMMUNITIES, postId, { content });
+      await updateOpensearchDocument(CATEGORY.COMMUNITIES, postId, { title, content });
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });

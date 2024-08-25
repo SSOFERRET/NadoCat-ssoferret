@@ -315,10 +315,6 @@ export const getMissingById = async (
   return await tx.missings.findUnique({
     where: {
       postId: postId,
-    },
-    select: {
-      ...missingDataSelect,
-      detail: true
     }
   });
 };
