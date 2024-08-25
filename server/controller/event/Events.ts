@@ -183,8 +183,9 @@ export const updateEvent = async (req: Request, res: Response) => {
     const postId = Number(req.params.event_id);
 
     const { title, content, tags, deleteTagIds, deleteImageIds, isClosed } = req.body;
+    console.log(req.body)
 
-    if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
+    if (!title || !content || !tags || !deleteTagIds || !deleteImageIds ) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
