@@ -23,7 +23,6 @@ const Notification = () => {
       fetchNextPage();
     }
   });
-  console.log(data?.pages);
 
   return (
     <section className="notification-container">
