@@ -24,6 +24,8 @@ import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
 import Search from "./pages/search/Search";
 import MissingDetail from "./pages/missing/MissingDetail";
+import MissingPostWrite from "./pages/missing/MissingPostWrite";
+import Notification from "./pages/notification/Notification";
 import Boards from "./pages/boards/Boards";
 import ProtectedPath from "./pages/protectedPath/ProtectedPath";
 import StreetCatEdit from "./pages/streetCat/StreetCatEdit";
@@ -122,6 +124,7 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <Missings /> },
               { path: ":id", element: <MissingDetail /> },
+              { path: "write", element: <MissingPostWrite /> },
             ],
           },
         ],
@@ -129,6 +132,10 @@ const router = createBrowserRouter([
       {
         path: "/search",
         children: [{ path: "", element: <Search /> }],
+      },
+      {
+        path: "/notification",
+        children: [{ path: "", element: <Notification /> }],
       },
     ],
   },

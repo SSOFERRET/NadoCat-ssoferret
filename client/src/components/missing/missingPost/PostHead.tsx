@@ -15,24 +15,23 @@ export interface IMissingComponentProps {
   data: IMissing | IMissingReport;
   navigateUser?: boolean;
   menuList?: IMenuList;
+  showMenu?: () => void;
 }
 
 export const isMissing = (data: IMissing | IMissingReport): data is IMissing =>
   (data as IMissing).missingCats ? true : false;
 
-const PostHead = ({ data, navigateUser, menuList }: IMissingComponentProps) => {
+const PostHead = ({
+  data,
+  navigateUser,
+  menuList,
+  showMenu,
+}: IMissingComponentProps) => {
   const navigate = useNavigate();
-  const navigateToUser = () =>
-    navigateUser ? navigate(`/users/${1234}/profile`) : null; //  내비게이트값 변경 (-)
+  // const navigateToUser = () =>
+  //   navigateUser ? navigate(`/users/${1234}/profile`) : null; // 내비게이트값 변경 (-)
 
-  const [isShowMenu, setIsShowMenu] = useState<
-    "missing" | "missingReport" | ""
-  >("");
-  const showMenu = () => {
-    setIsShowMenu((prev) =>
-      prev ? "" : isMissing(data) ? "missing" : "missingReport"
-    );
-  };
+  const navigateToUser = () => console.log("내비게이트");
 
   return (
     <section className="missing-post-head" key={data.postId}>
@@ -68,14 +67,6 @@ const PostHead = ({ data, navigateUser, menuList }: IMissingComponentProps) => {
         </div>
       )}
       <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />
-      <PostMenu
-        boardType={isMissing(data) ? "missing" : "missingReport"}
-        menuType="post"
-        postId={data.postId}
-        showMenu={showMenu}
-        isShowMenu={isShowMenu ? true : false}
-        // deletePost={(menuList as IMenuList).remove}
-      />
     </section>
   );
 };

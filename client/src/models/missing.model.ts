@@ -72,8 +72,8 @@ export interface IMissingReport {
 }
 
 export interface IMenuList {
-  remove: ({ postId }: DeletePost) => Promise<void>;
-  edit?: () => Promise<void>;
-  changeMatch?: () => Promise<void>;
-  changeFound?: () => Promise<void>;
+  remove: UseMutateAsyncFunction<any, Error, IMissingDetailParam, unknown>;
+  edit?: any;
+  changeMatch?: any;
+  changeFound?: any;
 };
