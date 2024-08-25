@@ -64,7 +64,7 @@ export const My = () => {
     <div className="my-container">
       <MyInfo
         nickname={userData.nickname}
-        profileImageUrl={userData.profileImageUrl
+        profileImageUrl={userData.profileImageUrl}
         uuid={userData.uuid}
         onAvatarClick={handleAvatarClick}
       />

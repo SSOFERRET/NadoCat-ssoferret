@@ -4,6 +4,7 @@
   //   overflow-y: hidden;
   height: 100vh;
   background: $white;
+  font-family: medium;
 
   .signup-header {
     margin-top: 5rem;
@@ -71,6 +72,8 @@
         &::placeholder {
           color: #bababa;
           font-size: $size-14;
+          font-family: medium;
+          
         }
       }
 
@@ -83,6 +86,8 @@
       display: block;
       margin: 20rem auto 0;
       @include midiumButton(on);
+      font-family: medium;
+      cursor: pointer;
 
       width: 340rem;
     }
