@@ -19,7 +19,6 @@ import ErrorPage from "./pages/error/ErrorPage";
 import Missings from "./pages/missing/Missings";
 import ChatList from "./pages/chat/ChatList";
 import Chat from "./pages/chat/Chat";
-import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
@@ -27,6 +26,9 @@ import Search from "./pages/search/Search";
 import MissingDetail from "./pages/missing/MissingDetail";
 import MissingPostWrite from "./pages/missing/MissingPostWrite";
 import Notification from "./pages/notification/Notification";
+import Boards from "./pages/boards/Boards";
+import ProtectedPath from "./pages/protectedPath/ProtectedPath";
+import StreetCatEdit from "./pages/streetCat/StreetCatEdit";
 
 const router = createBrowserRouter([
   {
@@ -39,8 +41,14 @@ const router = createBrowserRouter([
         path: "users",
         children: [
           { path: "interest", element: <MyPage /> },
-          { path: "user", element: <UserProfile /> },
-          { path: "my", element: <My /> },
+          {
+            path: "my/:uuid",
+            element: (
+              <ProtectedPath>
+                <My />
+              </ProtectedPath>
+            ),
+          },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
         ],
@@ -55,12 +63,14 @@ const router = createBrowserRouter([
       {
         path: "boards",
         children: [
+          { path: "", element: <Boards /> },
           {
             path: "street-cats",
             children: [
               { path: "", element: <StreetCats /> },
               { path: ":id", element: <StreetCatDetail /> },
               { path: "write", element: <StreetCatWrite /> },
+              { path: "edit/:id", element: <StreetCatEdit /> },
             ],
           },
           {
@@ -68,8 +78,22 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <Community /> },
               { path: ":id", element: <CommunityDetail /> },
-              { path: "write", element: <CommunityPostWrite /> },
-              { path: "edit/:id", element: <CommunityPostEdit /> },
+              {
+                path: "write",
+                element: (
+                  <ProtectedPath>
+                    <CommunityPostWrite />
+                  </ProtectedPath>
+                ),
+              },
+              {
+                path: "edit/:id",
+                element: (
+                  <ProtectedPath>
+                    <CommunityPostEdit />
+                  </ProtectedPath>
+                ),
+              },
             ],
           },
           {
@@ -77,8 +101,22 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <Event /> },
               { path: ":id", element: <EventDetail /> },
-              { path: "write", element: <EventPostWrite /> },
-              { path: "edit/:id", element: <EventPostEdit /> },
+              {
+                path: "write",
+                element: (
+                  <ProtectedPath>
+                    <EventPostWrite />
+                  </ProtectedPath>
+                ),
+              },
+              {
+                path: "edit/:id",
+                element: (
+                  <ProtectedPath>
+                    <EventPostEdit />
+                  </ProtectedPath>
+                ),
+              },
             ],
           },
           {

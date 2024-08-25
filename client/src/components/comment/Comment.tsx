@@ -1,11 +1,13 @@
 import "../../styles/scss/components/comment/comment.scss";
-import Avartar from "../common/Avartar";
+import Avatar from "../common/Avatar";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IComment } from "../../models/comment.model";
 import { formatAgo } from "../../utils/format/format";
 import useCommentStore from "../../store/comment";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ICommentPutRequest } from "../../api/community.api";
+import { useAuthStore } from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 //CHECKLIST
 // [x] 회원 정보가 동일할때만 옵션 아이콘 출력
@@ -23,11 +25,12 @@ interface IProps {
 }
 
 const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, editComment }: IProps) => {
+  const navigate = useNavigate();
   const oldComment = comment.comment;
   const { selectedCommentId, setSelectedCommentId, clearSelectedCommentId } = useCommentStore();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [commentText, setCommentText] = useState(oldComment);
-  const userId = "2f4c4e1d3c6d4f28b1c957f4a8e9e76d";
+  const { uuid, isLoggedIn } = useAuthStore();
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -55,13 +58,17 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!isLoggedIn) {
+      navigate("/users/login");
+    }
+
     if (!commentText.trim().length || comment.comment === commentText) {
       return;
     }
 
     editComment({
       postId,
-      userId,
+      userId: uuid,
       comment: commentText,
       commentId: comment.commentId,
     })
@@ -91,14 +98,14 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
     };
   }, [commentText, showMenu]);
 
-  const canShowOptionsIcon = userId === comment.users.uuid;
+  const canShowOptionsIcon = uuid === comment.users.uuid;
   const isEditingCurrentComment = selectedCommentId === comment.commentId;
   const showOptionsIcon = canShowOptionsIcon && !isEditingCurrentComment && !isCommentEdit;
 
   return (
     <li className="comment-card">
       <div className="comment">
-        <Avartar profileImage={comment.users.profileImage} nickname={comment.users.nickname} />
+        <Avatar profileImage={comment.users.profileImage} nickname={comment.users.nickname} onClick={() => navigate(`/users/${comment.users.uuid}`)} />
 
         <div className="detail">
           <div className="comment-info">

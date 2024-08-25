@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { getUserId } from "../community/Communities";
 import { handleControllerError } from "../../util/errors/errors";
 import { CATEGORY } from "../../constants/category";
 import prisma from "../../client";
@@ -16,10 +15,15 @@ import {
 import { Prisma } from "@prisma/client";
 
 export const addLike = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+
     const categoryId = Number(req.params.category_id);
     const postId = Number(req.params.post_id);
-    const userId = await getUserId();
+    const userId = Buffer.from(uuid, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const like = await saveLike(tx, postId, categoryId, userId);
@@ -38,10 +42,15 @@ export const addLike = async (req: Request, res: Response) => {
 };
 
 export const deleteLike = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+
     const categoryId = Number(req.params.category_id);
     const postId = Number(req.params.post_id);
-    const userId = await getUserId();
+    const userId = Buffer.from(uuid, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const like = await findLike(tx, postId, categoryId, userId);

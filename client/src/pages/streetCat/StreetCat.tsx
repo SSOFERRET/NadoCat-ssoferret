@@ -6,6 +6,7 @@ import TabNavigation from "../../components/streetCat/TabNavigation";
 import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
 import MyStreetCatPosts from "../../components/streetCat/MyStreetCatPosts";
 import StreetCatsMap from "../../components/streetCat/StreetCatsMap";
+import NewPostButton from "../../components/common/NewPostButton";
 
 // CHECKLIST
 // [ ] 페이지별 라우터를 나눠야할듯..
@@ -33,6 +34,7 @@ const StreetCats: React.FC = () => {
         <TabNavigation selectedTab={selectedTab} onSelectTab={setSelectedTab} />
         {renderContent()}
       </section>
+      <WriteButton />
     </>
   );
 };

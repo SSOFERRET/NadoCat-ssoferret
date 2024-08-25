@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { addImage } from "../../model/image.model";
+import { addImage, addProfileImage } from "../../model/image.model";
 import { IImage } from "../../types/image";
 import { addImageFormats } from "../../model/missing.model";
 import { IPostData } from "../../types/post";
@@ -19,6 +19,13 @@ export const addNewImages = async (
   }));
 
   await addImageFormats(tx, postData.categoryId, formattedImages);
-
   return formattedImages.map(image => image.imageId);
 };
+
+//프로필 이미지 변경
+export const addProfileImages = async (
+    tx: Prisma.TransactionClient, uuid: string, imageUrl: string) => {
+    const newImage = await addProfileImage(tx, uuid, imageUrl);
+
+    return newImage;
+}

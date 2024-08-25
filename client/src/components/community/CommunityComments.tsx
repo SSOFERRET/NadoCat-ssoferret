@@ -5,6 +5,8 @@ import CommentList from "../comment/CommentList";
 import CommentsEmpty from "../comment/CommentsEmpty";
 import PostMenu from "../communityAndEvent/PostMenu";
 import { useState } from "react";
+import CommentError from "../comment/CommentError";
+import Spinner from "../loading/Spinner";
 
 interface IProps {
   postId: number;
@@ -13,6 +15,8 @@ interface IProps {
 const CommunityComments = ({ postId }: IProps) => {
   const {
     data,
+    isLoading,
+    error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -49,18 +53,26 @@ const CommunityComments = ({ postId }: IProps) => {
   return (
     <>
       <section className="comment-list">
-        <CommentList
-          postId={postId}
-          comments={data}
-          showMenu={showMenu}
-          isCommentEdit={isCommentEdit}
-          setIsCommentEdit={setIsCommentEdit}
-          editComment={editCommunityComment}
-        />
+        {error && <CommentError />}
 
-        <div className="more" ref={moreRef}>
-          {isFetchingNextPage && <div>loading...</div>}
-        </div>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <CommentList
+              postId={postId}
+              comments={data}
+              showMenu={showMenu}
+              isCommentEdit={isCommentEdit}
+              setIsCommentEdit={setIsCommentEdit}
+              editComment={editCommunityComment}
+            />
+
+            <div className="more" ref={moreRef}>
+              {isFetchingNextPage && <Spinner />}
+            </div>
+          </>
+        )}
       </section>
 
       <PostMenu

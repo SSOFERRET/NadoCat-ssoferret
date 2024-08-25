@@ -1,4 +1,3 @@
-import React from "react";
 import "../../styles/scss/components/comment/commentsEmpty.scss";
 import CommentsEmptyCat from "../../assets/img/commentsEmpty.png";
 

@@ -5,7 +5,7 @@ import {
   IMissingReport,
 } from "../../../models/missing.model";
 import { formatDate } from "../../../utils/format/format";
-import Avartar from "../../common/Avartar";
+import Avatar from "../../common/Avatar";
 import "./../../../styles/scss/components/missing/postHead.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { useState } from "react";
@@ -35,7 +35,7 @@ const PostHead = ({
 
   return (
     <section className="missing-post-head" key={data.postId}>
-      <Avartar
+      <Avatar
         profileImage={data.users.profileImage}
         nickname={data.users.nickname}
         onClick={navigateToUser}

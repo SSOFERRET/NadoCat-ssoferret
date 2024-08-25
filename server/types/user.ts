@@ -5,7 +5,10 @@ export interface IUsers {
   uuid: Buffer | string
   email: string
   nickname: string
+  detail: string | null
+  profileImage?: string | null
   authType: string
+  createdAt: Date
   status: string
 }
 

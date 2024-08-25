@@ -1,8 +1,6 @@
 @import "../../base/common.scss";
 
 .avatar {
-  width: 36rem;
-  height: 36rem;
   border-radius: 50%;
   background-color: $pale;
   overflow: hidden;
@@ -10,9 +8,28 @@
   flex-shrink: 0;
   margin: 0;
 
+  &.sm {
+    width: 36rem;
+    height: 36rem;
+  }
+
+  &.md {
+    width: 68rem;
+    height: 68rem;
+  }
+
+  &.lg {
+    width: 110rem;
+    height: 110rem;
+  }
+
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  &.pointer {
+    cursor: pointer;
   }
 }

@@ -17,20 +17,17 @@ export const signup = async(userData: SignupProps) => {
 //비밀번호 변경
 
 interface ILoginResponse {
-    // generalToken: string;
-    // refreshToken: string | null;
-    // authLogin: boolean;
-    // uuid: string;
     message: string;
-  user: {
-    email: string;
-    nickname: string;
-    uuid: string;
-  };
-  tokens: {
-    accessToken: string;
-    refreshToken: string | null;
-  };
+    user: {
+        email: string;
+        nickname: string;
+        uuid: string;
+        status: string;
+    };
+    tokens: {
+        accessToken: string;
+        refreshToken: string;
+    };
 }
 
 export const login = async(data: LoginProps) => {
@@ -43,12 +40,15 @@ export const login = async(data: LoginProps) => {
     }
 }
 
-export const my = async() => {
+// localStorage.getItem("uuid");
+export const my = async(uuid: string) => {
     try {
-        const response = await httpClient.get("/users/my");
+        // const response = await httpClient.get(`/users/my`);
+        const response = await httpClient.get(`/users/my/${uuid}`);
         return response.data;
+
     } catch (error) {
-        console.error("my error:", error);
+        console.error("마이페이지 정보를 가져오는 데 실패했습니다:", error);
         throw error;
         
     }

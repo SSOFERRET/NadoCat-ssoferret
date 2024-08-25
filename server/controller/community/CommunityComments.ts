@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import prisma from "../../client";
 import {
   addComment,
   deleteCommentById,
@@ -8,7 +7,6 @@ import {
   getCommunityComments,
   updateCommentById,
 } from "../../model/communityComment.model";
-import { getUserId } from "./Communities";
 import { handleControllerError } from "../../util/errors/errors";
 import { notifyNewComment } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
@@ -22,6 +20,7 @@ export const getComments = async (req: Request, res: Response) => {
     const postId = Number(req.params.community_id);
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
+
     const count = await getCommentCount(postId);
 
     const comments = await getCommunityComments(postId, limit, cursor);
@@ -43,13 +42,15 @@ export const getComments = async (req: Request, res: Response) => {
 };
 
 export const createComment = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    // const userId = Buffer.from(req.user.uuid, "hex");
-    const userId = req.user.uuid;
-    console.log("userId+++++++++++++++++++++++++++++++++++++", userId);
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+
+    const userId = Buffer.from(uuid, "hex");
     const postId = Number(req.params.community_id);
     const comment = req.body.comment;
-    // const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
 
     if (!comment) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
@@ -66,11 +67,15 @@ export const createComment = async (req: Request, res: Response) => {
 };
 
 export const updateComment = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
     const postId = Number(req.params.community_id);
     const commentId = Number(req.params.comment_id);
     const comment = req.body.comment;
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const userId = Buffer.from(uuid, "hex");
 
     if (!comment) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
@@ -85,10 +90,14 @@ export const updateComment = async (req: Request, res: Response) => {
 };
 
 export const deleteComment = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
     const postId = Number(req.params.community_id);
     const commentId = Number(req.params.comment_id);
-    const userId = await getUserId(); // NOTE 임시 값으로 나중에 수정 필요
+    const userId = Buffer.from(uuid, "hex");
 
     await deleteCommentById(postId, userId, commentId);
 

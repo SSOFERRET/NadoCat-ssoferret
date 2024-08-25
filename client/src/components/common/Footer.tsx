@@ -39,20 +39,21 @@
 // };
 
 import React from "react";
-import { GoHomeFill } from "react-icons/go";
-import { PiCat, PiChatCircleBold } from "react-icons/pi";
-import { RiSearchLine } from "react-icons/ri";
-import { FaRegUser } from "react-icons/fa6";
+import { GoHome, GoHomeFill } from "react-icons/go";
+import { PiCat, PiChatCircleBold, PiChatCircleFill } from "react-icons/pi";
+import { RiSearchFill, RiSearchLine } from "react-icons/ri";
 import "../../styles/css/base/reset.css";
 import "../../styles/scss/components/common/footer.scss";
 import { Link, useLocation } from "react-router-dom";
+import { BiSolidUser, BiUser } from "react-icons/bi";
 
 const links = [
-  { to: "/", label: "홈", icon: <GoHomeFill /> },
-  { to: "/boards", label: "카테고리", icon: <PiCat /> },
-  { to: "/chats/list", label: "채팅", icon: <PiChatCircleBold /> },
-  { to: "/search", label: "검색", icon: <RiSearchLine /> },
-  { to: "/users", label: "마이", icon: <FaRegUser /> },
+  { to: "/", label: "홈", noMatchIcon: <GoHome />, matchIcon: <GoHomeFill /> },
+  { to: "/boards", label: "카테고리", noMatchIcon: <PiCat />, matchIcon: <PiCat /> },
+  { to: "/chats/list", label: "채팅", noMatchIcon: <PiChatCircleBold />, matchIcon: <PiChatCircleFill /> },
+  { to: "/search", label: "검색", noMatchIcon: <RiSearchLine />, matchIcon: <RiSearchFill /> },
+  { to: `/users/my/${localStorage.getItem('uuid')}` , label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
+//   { to: `/users/my/:uuid` , label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
 ];
 
 export const Footer: React.FC = () => {
@@ -72,7 +73,7 @@ export const Footer: React.FC = () => {
       <nav className="navbar">
         {links.map((link) => (
           <Link key={link.to} to={link.to} className={`navbar-item ${isActive(link.to) ? "active" : ""}`}>
-            {link.icon}
+            {isActive(link.to) ? link.matchIcon : link.noMatchIcon}
             <span>{link.label}</span>
           </Link>
         ))}

@@ -41,7 +41,7 @@ export const createStreetCatComment = async (req: Request, res: Response) => {
     if (createComment.streetCatCommentId)
       // await notifyNewComment(uuid, CATEGORY.STREET_CATS, postId, createComment.streetCatCommentId)
 
-    res.status(200).json({ message: "댓글 등록" });
+    res.status(200).json({ message: "동네 고양이 댓글 등록" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -52,13 +52,13 @@ export const createStreetCatComment = async (req: Request, res: Response) => {
 export const updateStreetCatComment = async (req: Request, res: Response) => {
   const uuid = await getUuid();
   const streetCatId = Number(req.params.street_cat_id);
-  const streetCatCommentId = 2; // 임시 데이터
+  const streetCatCommentId = Number(req.params.street_cat_comment_id);
   const { comment } = req.body;
 
   try {
     await putComment(uuid, streetCatCommentId, streetCatId, comment);
 
-    res.status(200).json({ message: "댓글 수정" });
+    res.status(200).json({ message: "동네 고양이 댓글 수정" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -69,12 +69,12 @@ export const updateStreetCatComment = async (req: Request, res: Response) => {
 export const deleteStreetCatComment = async (req: Request, res: Response) => {
   const uuid = await getUuid();
   const streetCatId = Number(req.params.street_cat_id);
-  const streetCatCommentId = 1; // 임시 데이터
+  const streetCatCommentId = Number(req.params.street_cat_comment_id);
 
   try {
     await removeComment(uuid, streetCatCommentId, streetCatId);
 
-    res.status(200).json({ message: "내 도감 삭제" });
+    res.status(200).json({ message: "동네 고양이 댓글 삭제" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });

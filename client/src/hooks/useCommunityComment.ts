@@ -17,7 +17,7 @@ export interface ICreateCommentParams {
 const useCommunityComment = (postId: number) => {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+  const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["communityComment", postId],
     queryFn: ({ pageParam = 0 }) => getCommunityComments({ pageParam, postId }),
     initialPageParam: 0,
@@ -28,6 +28,7 @@ const useCommunityComment = (postId: number) => {
       }
       return undefined;
     },
+    staleTime: 60000,
   });
 
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];
@@ -74,6 +75,7 @@ const useCommunityComment = (postId: number) => {
 
   return {
     data,
+    error,
     isLoading,
     fetchNextPage,
     hasNextPage,
