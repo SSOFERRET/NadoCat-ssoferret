@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
-import { createNotification, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
-import { getUserId } from "../missing/Missings";
+import { createNotification, getNotificationListByReceiver, getNotificationsCount, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
+import { getUserId, getUserId2 } from "../missing/Missings";
 import { StatusCodes } from "http-status-codes";
 import { handleControllerError } from "../../util/errors/errors";
 import { TCategoryId } from "../../types/category";
 import { getFriendList } from "../../model/friend.model";
 import { getCategoryUrlStringById } from "../../constants/category";
 import { getPostAuthorUuid } from "../../model/common/uuid.model";
+import { IListData } from "../../types/post";
+import prisma from "../../client";
+import { getPostsCount } from "../../model/missing.model";
 
 /* CHECKLIST
 * [x] 알람글 isRead update API
@@ -158,3 +161,42 @@ export const notifyNewLike = async (
     url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}` //프론트 url에 맞출 것
   });
 };
+
+// export const getNotifitionList = async (
+//   req: Request, res: Response
+// ) => {
+//   try {
+//     const userId = await getUserId2();
+//     const notifications = await getNotificationListByReceiver(userId, 10);
+//     res.status(StatusCodes.OK).send(notifications);
+//   } catch (error) {
+//     console.log(error)
+//   }
+
+// };
+
+export const getNotificationList = async (req: Request, res: Response) => {
+  try {
+    const limit = 10;
+    const userId = await getUserId2(); //NOTE
+    let notifications = await getNotificationListByReceiver(userId, limit);
+    const count = await getNotificationsCount();
+
+    const nextCursor = notifications.length === limit ? notifications[notifications.length - 1].notificationId : null;
+
+    const result = {
+      notifications,
+      pagination: {
+        nextCursor,
+        totalCount: count
+      }
+    };
+
+    res.status(StatusCodes.OK).send(result);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal Server Error" });
+  }
+}
