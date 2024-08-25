@@ -4,10 +4,11 @@ import { ICommentDeleteRequest } from "../../api/community.api";
 import useCommentStore from "../../store/comment";
 import { BoardType, getPostPath } from "../../utils/boards/boards";
 import { RxCross1 } from "react-icons/rx";
+import { SortMenu } from "../../utils/sort/sortMenu";
 
 export type DeletePost = { postId: number };
 
-type MenuType = "post" | "comment" | "user";
+type MenuType = "post" | "comment" | "user" | "sort";
 
 interface IProps {
   boardType?: BoardType;
@@ -20,6 +21,9 @@ interface IProps {
   deleteComment?: ({ postId, commentId }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
   handelCommentFormOpen?: () => void;
+  sortMenu?: SortMenu[];
+  handleSortMenu?: (item: SortMenu) => void;
+  sort?: SortMenu;
 }
 
 const PostMenu = ({
@@ -31,6 +35,9 @@ const PostMenu = ({
   deletePost,
   deleteComment,
   handelCommentFormOpen,
+  handleSortMenu,
+  sortMenu,
+  sort,
 }: IProps) => {
   const navigate = useNavigate();
   const { selectedCommentId: commentId, clearSelectedCommentId } = useCommentStore();
@@ -60,7 +67,7 @@ const PostMenu = ({
 
     deletePost({ postId }).then(() => {
       showMenu();
-      navigate(`${getPostDeletionPath(boardType)}`);
+      navigate(`${getPostPath(boardType)}`);
     });
   };
 
@@ -100,6 +107,8 @@ const PostMenu = ({
     showMenu();
   };
 
+  const isPostSortMenu = menuType === "sort" && sortMenu && sort;
+
   return (
     <div className={`overlay ${isShowMenu ? "visible" : "hidden"}`} onClick={handleMenu}>
       <div className={`button-container ${isShowMenu ? "visible" : "hidden"}`}>
@@ -128,6 +137,22 @@ const PostMenu = ({
             <li className="delete" onClick={() => commentId && postId && handleCommentDelete(postId, commentId)}>
               <span>댓글 삭제</span>
             </li>
+          </>
+        )}
+
+        {isPostSortMenu && (
+          <>
+            {sortMenu.map((item) => (
+              <li
+                key={item.id}
+                className={`${sort.name === item.name ? "seleted" : ""}`}
+                onClick={() => {
+                  handleSortMenu && handleSortMenu(item);
+                }}
+              >
+                <span>{item.name}</span>
+              </li>
+            ))}
           </>
         )}
 

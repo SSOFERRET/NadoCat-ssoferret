@@ -18,9 +18,7 @@ const NotificationAlarm: React.FC = () => {
 
   const createEventSource = () => {
     const userId: string = "74657374320000000000000000000000";
-    const eventSource = new EventSource(
-      `http://localhost:3000/notifications?userId=${userId}`
-    );
+    const eventSource = new EventSource(`http://localhost:3000/notifications?userId=${userId}`);
 
     eventSource.addEventListener("message", (event) => {
       try {

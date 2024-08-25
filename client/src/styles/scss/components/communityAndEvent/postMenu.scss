@@ -77,6 +77,10 @@
       &:hover {
         color: $secondary;
       }
+
+      &.seleted {
+        color: $secondary;
+      }
     }
 
     .delete,

@@ -3,14 +3,13 @@ import { IoIosArrowDown } from "react-icons/io";
 import { SortMenu } from "../../utils/sort/sortMenu";
 
 interface IProps {
-  onOpenMenu: () => void;
   sort: SortMenu;
-  isOpenMenu: boolean;
+  handleMene: () => void;
 }
 
-const SortButton = ({ onOpenMenu, sort, isOpenMenu }: IProps) => {
+const SortButton = ({ sort, handleMene }: IProps) => {
   return (
-    <button className={`sort-button ${isOpenMenu ? "is-open" : ""}`} onClick={onOpenMenu}>
+    <button className={`sort-button`} onClick={handleMene}>
       {sort.name} <IoIosArrowDown />
     </button>
   );
