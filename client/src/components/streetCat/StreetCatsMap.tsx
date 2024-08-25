@@ -10,7 +10,7 @@ declare global {
 
 // NOTE 좌표 DB 연결 후 테스트 해야함
 // CHECKLIST
-// [ ] 중심 좌표 기준 근처의 location들을 불러와야 함
+// [x] 중심 좌표 기준 근처의 location들을 불러와야 함
 const locations = [
   {
     title: "삼색이",
@@ -30,14 +30,17 @@ const locations = [
   },
 ];
 
+// 경복궁
+const lat = 37.5759;
+const lng = 126.9768;
+
 const StreetCatsMap: React.FC = () => {
   return (
-    <Map // 지도를 표시할 Container
+    <Map
       id="map"
       center={{
-        // 지도의 중심좌표 (추후 유저의 location으로 변경)
-        lat: 33.450701,
-        lng: 126.570667,
+        lat: lat,
+        lng: lng,
       }}
       level={3} // 지도의 확대 레벨
     >

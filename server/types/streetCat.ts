@@ -60,3 +60,11 @@ export interface IImages {
   imageId: number,
   url: string
 }
+
+export interface ILocation {
+  location: {
+    latitude: number;
+    longitude: number;
+    detail: string;
+  };
+}
