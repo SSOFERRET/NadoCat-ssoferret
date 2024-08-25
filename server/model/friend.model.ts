@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
-import { getUserId } from "../controller/community/Communities";
 
 export const getFriendCounts = async (userId: Buffer) => {
   return await prisma.friends.count({

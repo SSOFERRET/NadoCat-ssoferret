@@ -23,13 +23,13 @@ model BoardCategories {
 
 model Chats {
   chatId    Int        @id @unique(map: "chat_id_UNIQUE") @default(autoincrement()) @map("chat_id")
-  chatName  String     @map("chat_name") @db.VarChar(45)
   uuid      Bytes      @db.Binary(16)
   createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
+  otherUuid Bytes      @map("other_uuid") @db.Binary(16)
   users     Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "chats_uuid_fk")
   messages  Messages[]
 
-  @@index([uuid], map: "chats_uuid_fk_idx")
+  @@index([uuid, otherUuid], map: "chats_uuid_fk_idx")
   @@map("chats")
 }
 
@@ -41,7 +41,6 @@ model Communities {
   views             Int                 @default(0)
   createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt         DateTime            @default(now()) @map("updated_at") @db.Timestamp(0)
-  thumbnail         Int?
   uuid              Bytes               @db.Binary(16)
   boardCategories   BoardCategories     @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "communities_category_id_fk")
   users             Users               @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "communities_uuid_fk")
@@ -151,24 +150,20 @@ model Events {
   categoryId      Int             @default(2) @map("category_id")
   title           String          @db.VarChar(100)
   isClosed        Boolean         @default(false) @map("is_closed")
-  date            String          @db.VarChar(45)
   content         String          @db.LongText
   views           Int             @default(0)
   createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt       DateTime        @default(now()) @map("updated_at") @db.Timestamp(0)
-  thumbnail       Int?
   uuid            Bytes           @db.Binary(16)
   eventComments   EventComments[]
   eventImages     EventImages[]
   eventLikes      EventLikes[]
   eventTags       EventTags[]
   boardCategories BoardCategories @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "events_category_id_fk")
-  images          Images?         @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "events_thumbnail_fk")
   users           Users           @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "events_uuid_fk")
 
   @@id([postId, categoryId])
   @@index([categoryId], map: "events_category_id_fk_idx")
-  @@index([thumbnail], map: "events_thumbnail_fk_idx")
   @@index([uuid], map: "events_uuid_fk_idx")
   @@map("events")
 }
@@ -185,30 +180,14 @@ model Friends {
   @@map("friends")
 }
 
-model HomeCats {
-  homeCatId    Int     @id @unique(map: "home_cat_id_UNIQUE") @default(autoincrement()) @map("home_cat_id")
-  name         String  @db.VarChar(10)
-  age          Int?
-  gender       String? @db.Char(1)
-  uuid         Bytes   @db.Binary(16)
-  detail       String? @db.MediumText
-  profileImage String? @map("profile_image") @db.VarChar(100)
-  users        Users   @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "home_cats_uuid_fk")
-
-  @@index([uuid], map: "home_cats_uuid_fk_idx")
-  @@map("home_cats")
-}
-
 model Images {
   imageId             Int                  @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
   url                 String               @db.VarChar(2048)
   communityImages     CommunityImages?
   eventImages         EventImages?
-  events              Events[]
   missingImages       MissingImages?
   missingReportImages MissingReportImages?
   missingReports      MissingReports[]
-  missings            Missings[]
   streetCatImages     StreetCatImages?
   streetCats          StreetCats[]
 
@@ -233,8 +212,8 @@ model Likes {
 
 model Locations {
   locationId             Int                     @id @unique(map: "idlocation_id_UNIQUE") @default(autoincrement()) @map("location_id")
-  longitude              Float                   @db.Float
   latitude               Float                   @db.Float
+  longitude              Float                   @db.Float
   detail                 String                  @db.VarChar(100)
   missingLocations       MissingLocations?
   missingReportLocations MissingReportLocations?
@@ -353,21 +332,20 @@ model Missings {
   views            Int                @default(0)
   createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt        DateTime           @default(now()) @map("updated_at") @db.Timestamp(0)
-  thumbnail        Int?
   missingFavorites MissingFavorites[]
   missingImages    MissingImages[]
   missingLocations MissingLocations[]
   missingReports   MissingReports[]
+  missingCats      MissingCats        @relation(fields: [catId], references: [missingCatId], onDelete: NoAction, onUpdate: NoAction, map: "missings_cat_id_fk")
   boardCategories  BoardCategories    @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "missings_category_id_fk")
   locations        Locations?         @relation(fields: [locationId], references: [locationId], onDelete: NoAction, onUpdate: NoAction, map: "missings_location_id_fk")
-  images           Images?            @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "missings_thumbnail_id_fk")
   users            Users              @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "missings_uuid_fk")
 
   @@id([postId, categoryId])
   @@index([categoryId], map: "missings_category_id_fk_idx")
   @@index([locationId], map: "missings_location_id_fk_idx")
-  @@index([thumbnail], map: "missings_thumbnail_id_fk_idx")
   @@index([uuid], map: "missings_user_id_fk_idx")
+  @@index([catId], map: "missings_cat_id_fk_idx")
   @@map("missings")
 }
 
@@ -417,7 +395,7 @@ model StreetCatFavorites {
   streetCatFavoriteId Int        @id @unique(map: "street_cat_favorite_id_UNIQUE") @default(autoincrement()) @map("street_cat_favorite_id")
   uuid                Bytes      @db.Binary(16)
   postId              Int        @map("post_id")
-  createdAt           DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
+  createdAt           String     @default("CURRENT_TIMESTAMP()") @map("created_at") @db.VarChar(45)
   streetCats          StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
   users               Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
 
@@ -528,9 +506,9 @@ model Users {
   events                                    Events[]
   friendsFriendsFollowingIdTousers          Friends[]            @relation("friends_following_idTousers")
   friendsFriendsUuidTousers                 Friends[]            @relation("friends_uuidTousers")
-  homeCats                                  HomeCats[]
   likes                                     Likes[]
   messages                                  Messages[]
+  missingCats                               MissingCats[]
   missingFavorites                          MissingFavorites[]
   missingReports                            MissingReports[]
   missings                                  Missings[]
@@ -543,4 +521,18 @@ model Users {
   userSecrets                               UserSecrets[]
 
   @@map("users")
+}
+
+model MissingCats {
+  missingCatId Int        @id @unique(map: "missing_cat_id_UNIQUE") @default(autoincrement()) @map("missing_cat_id")
+  name         String     @db.VarChar(10)
+  birth        DateTime?  @db.Date
+  gender       String?    @default("-") @db.Char(1)
+  uuid         Bytes      @db.Binary(16)
+  detail       String?    @db.MediumText
+  users        Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "home_cats_uuid_fk")
+  missings     Missings[]
+
+  @@index([uuid], map: "home_cats_uuid_fk_idx")
+  @@map("missing_cats")
 }
