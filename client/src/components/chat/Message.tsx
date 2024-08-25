@@ -1,22 +1,18 @@
-import React from 'react';
+import React from "react";
 import "../../styles/scss/components/chat/Message.scss";
-
-interface MessageData {
-  uuid: string;
-  content: string;
-  sentAt?: string;
-}
+import { Buffer } from "buffer";
+import { MessageData } from "./Messages";
 
 interface Props {
   message: MessageData; 
 }
 
 const Message: React.FC<Props> = ({ message: { uuid, content, sentAt }}) => {
-  const isSentByCurrentUser = uuid === localStorage.getItem("uuid");
+  // console.log("uuid === ", Buffer.from(uuid).toString("hex"))
+  const isSentByCurrentUser = Buffer.from(uuid).toString("hex") === localStorage.getItem("uuid");
 
   function formatTime(sentAt: string) {
     const date = new Date(sentAt);
-    console.log(sentAt);
   
     const hours = date.getHours();
     const minutes = date.getMinutes();

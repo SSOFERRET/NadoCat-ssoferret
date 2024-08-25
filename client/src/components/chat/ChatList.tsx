@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import { useNavigate } from 'react-router-dom';
 import DefaultImg from "../../assets/img/DefaultImg.png";
 import axios from 'axios';
+import { Buffer } from 'buffer';
 
 interface IList{
   img: string;
@@ -32,7 +33,6 @@ const ENDPOINT = "http://localhost:8080"
 const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string|null>(null);
-  const [userNicknames, setUserNicknames] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -45,8 +45,16 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
     setModalOpen(true);
 
   }
-  const handleChatClick = (otherUuid: number[]) => {
-    navigate("/chats/chat", { state: { otherUuid } });
+  const handleChatClick = (list: IList) => {
+    const uuid = localStorage.getItem("uuid");
+    const otherUuid = Buffer.from(list.otherUuid.data).toString("hex");
+    let realOtherUuid;
+    if (uuid === otherUuid) {
+      realOtherUuid = list.uuid.data
+    } else {
+      realOtherUuid = list.otherUuid.data
+    }
+    navigate("/chats/chat", { state: { realOtherUuid } });
   }
 
   const now: Date = new Date();
@@ -73,7 +81,7 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
   return (
     <div className="chatlist">
       {lists.map((list, index) => (
-        <div className="listbox" key={index} onClick={ () =>handleChatClick(list.otherUuid.data) }>
+        <div className="listbox" key={index} onClick={ () =>handleChatClick(list) }>
           <div className="imgbox">{list.img ?<img src={list.img} /> : <img src={DefaultImg} /> }</div>
           <div className="contentsbox">
             <div className="nametimebox">

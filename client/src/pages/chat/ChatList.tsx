@@ -3,6 +3,7 @@ import ChatListC from "../../components/chat/ChatList";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import NoList from "../../assets/img/StartChat.png";
+import { Buffer } from "buffer";
 
 interface IList{
   img: string;
@@ -22,9 +23,10 @@ interface IList{
   chatId: string;
 }
 const ENDPOINT = "http://localhost:8080";
+
 const ChatList = () => {
   const [list, setList] = useState<IList[]>([]);
-  const uuid = localStorage.getItem("uuid");
+  
   // const generalToken = localStorage.getItem("generalToken");
   // const refreshToken = localStorage.getItem("refreshToken");
 
@@ -33,14 +35,16 @@ const ChatList = () => {
       try {
         const response = await axios.get(ENDPOINT + '/chats/chatlist', {
           headers: {
-            "x-user-uuid": uuid,
+            "x-user-uuid": localStorage.getItem("uuid")
           },
         });
         const chatLists = response.data;
 
         const updatedLists = await Promise.all(
           chatLists.map(async (list: IList) => {
-            const otherUuid = list.otherUuid.data;
+            console.log("otherUuid :", Buffer.from(list.otherUuid.data).toString("hex"), localStorage.getItem("uuid"));
+            const otherUuid = (Buffer.from(list.otherUuid.data).toString("hex") === localStorage.getItem("uuid") ?
+              list.uuid.data : list.otherUuid.data);
             const userResponse = await axios.post(`${ENDPOINT}/chats`, {
               uuid: otherUuid,
             });
@@ -54,6 +58,7 @@ const ChatList = () => {
             };
           })
         );
+
 
         setList(updatedLists);
       } catch (error) {
