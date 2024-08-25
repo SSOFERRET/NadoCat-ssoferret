@@ -19,7 +19,6 @@ import ErrorPage from "./pages/error/ErrorPage";
 import Missings from "./pages/missing/Missings";
 import ChatList from "./pages/chat/ChatList";
 import Chat from "./pages/chat/Chat";
-import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
@@ -39,8 +38,7 @@ const router = createBrowserRouter([
         path: "users",
         children: [
           { path: "interest", element: <MyPage /> },
-          { path: "user", element: <UserProfile /> },
-          { path: "my", element: <My /> },
+          { path: "my/:uuid", element: <My /> },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
         ],

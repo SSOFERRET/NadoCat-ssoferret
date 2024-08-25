@@ -15,6 +15,7 @@ import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
 import { handleJoinRoom ,handleMessage } from "./controller/chat/Chat";
 import LikesRouter from "./routes/likes";
+import cookieParser from "cookie-parser";  
 
 
 const PORT = process.env.PORT || 8080;
@@ -27,6 +28,7 @@ const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173", // 클라이언트 돌아가고 있는 경로
     methods: ['GET', 'POST'],
+    credentials: true,
   }
 });
 
@@ -42,6 +44,7 @@ io.on("connection", (socket: Socket) => {
 })
 
 app.use(express.json());
+app.use(cookieParser()); 
 app.use(
   cors({
     origin: process.env.CORS_ALLOW_ORIGIN,

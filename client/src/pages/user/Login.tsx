@@ -35,21 +35,18 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginProps>();
 
-  const handleLogin = (data: LoginProps) => {
-    login({ ...data, autoLogin }).then((response) => {
-      console.log("전체 response:", response);
+  const handleLogin = async (data: LoginProps) => { 
+      const response = await login({ ...data, autoLogin });
       const { user, tokens } = response;
-
+      console.log("전체 response:", response);
+      
       console.log("response.generalToken:", tokens.accessToken);
       console.log("response.uuid:", user.uuid);
 
-      useAuthStore
-        .getState()
-        .storeLogin(tokens.accessToken, user.uuid, tokens.refreshToken ?? "");
-
-            sessionStorage.setItem("uuid", user.uuid);
-            navigate("/home");
-        });
+      useAuthStore.getState().storeLogin(user.uuid, autoLogin);
+      
+      navigate("/home");
+    //   sessionStorage.setItem("uuid", user.uuid);
       };
 
   const handleBack = () => {
@@ -118,6 +115,8 @@ const Login = () => {
               />
               자동로그인
             </label>
+            {/* <span>|</span> */}
+            <a href="/users/signup" className="signup-link">회원가입</a>
           </fieldset>
 
           <button type="submit" className="login-btn">

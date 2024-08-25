@@ -1,9 +1,8 @@
 import { Prisma } from "@prisma/client";
-import { addImage } from "../../model/image.model";
-import { IImage, IProfileImage } from "../../types/image";
+import { addImage, addProfileImage } from "../../model/image.model";
+import { IImage } from "../../types/image";
 import { addImageFormats } from "../../model/missing.model";
 import { IPostData } from "../../types/post";
-// import { addProfileImageFormats } from "../../model/my.model";
 
 export const addNewImages = async (
   tx: Prisma.TransactionClient,
@@ -23,17 +22,10 @@ export const addNewImages = async (
   return formattedImages.map(image => image.imageId);
 };
 
-// export const addProfileImages = async (
-//     tx: Prisma.TransactionClient, 
-//     uuid: string, 
-//     imageUrl: string) => {
-//     const newImage = await addImage(tx,imageUrl);
-//     const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex"); 
-//     const formattedImage = {
-//         imageId: newImage.imageId,
-//         uuid: uuidBuffer,
-//       };
+//프로필 이미지 변경
+export const addProfileImages = async (
+    tx: Prisma.TransactionClient, uuid: string, imageUrl: string) => {
+    const newImage = await addProfileImage(tx, uuid, imageUrl);
 
-//     await addProfileImageFormats(tx, formattedImage);
-//     return newImage.imageId;
-// }
+    return newImage;
+}

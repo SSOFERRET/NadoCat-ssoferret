@@ -11,7 +11,7 @@ const ENDPOINT = "http://localhost:8080";
 let socket: Socket;
 
 const Chat = () => {
-  const [myUserId, setMyUserId] = useState<string>(sessionStorage.getItem("uuid") || "");
+  const [myUserId, setMyUserId] = useState<string>(localStorage.getItem("uuid") || "");
   const [otherUserId,setOtherUserId] = useState<string>("0619-eba4-9bf1-496d-a690-e158-2de9-9871");
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Array<{ uuid: string, content: string, sentAt: string }>>([]);
@@ -21,22 +21,8 @@ const Chat = () => {
 
   useEffect(() => {
     socket = io(ENDPOINT);
-    // const { uuid, otherUuid, chatId } = location.state || {};
 
-    // function bufferToUuid(bufferData: number[]) {
-    //   const hexArray = Array.from(bufferData).map(byte => byte.toString(16).padStart(2, '0'));
-
-    //   return [
-    //     hexArray.slice(0, 4).join(''), 
-    //     hexArray.slice(4, 6).join(''),    
-    //     hexArray.slice(6, 8).join(''),  
-    //     hexArray.slice(8, 10).join(''),  
-    //     hexArray.slice(10).join('')     
-    //   ].join('-');
-    // }
-
-
-    if (!sessionStorage.getItem("uuid") || otherUserId.length === 0) {
+    if (!localStorage.getItem("uuid") || otherUserId.length === 0) {
       alert("유효한 사용자 ID가 없습니다.");
       navigate(-1);
       return;
@@ -45,7 +31,7 @@ const Chat = () => {
     const initiateChat = async () => {
       try {
         const response = await axios.post(ENDPOINT + "/chats/startchat", {
-          userUuid: sessionStorage.getItem("uuid"),
+          userUuid: localStorage.getItem("uuid"),
           otherUserUuid: otherUserId,
         });
         if(response.data.messages){
@@ -77,10 +63,6 @@ const Chat = () => {
     
     if (message) {
       const newMessage = {
-        // chatId: parseInt(roomId),
-        // userUuid: myUserId,
-        // content: message,
-        // timeZone: timeZone
         uuid: myUserId,
         content: message,
         sentAt: sentAt,

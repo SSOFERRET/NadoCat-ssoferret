@@ -20,23 +20,18 @@ const MyPage: React.FC = () => {
   const [lists, setLists] = useState<Post[]>([]);
 
   const uuid = localStorage.getItem("uuid");
-  const generalToken = localStorage.getItem("generalToken");
-  const refreshToken = localStorage.getItem("refreshToken");
   
   try{
     axios.post(ENDPOINT + "/boards/Interests", {
       userId: uuid
-    }, {
-      headers: {
-        Authorization: `Bearer ${generalToken}`
-      }
-    })
+    }
+    )
     .then(response => {
       setLists(response.data);
       console.log(response.data);
     })
   } catch(error){
-    console.log("뭐가 문제인지 한 번 보자" + error)
+    console.log(error)
   }
   
   return (
