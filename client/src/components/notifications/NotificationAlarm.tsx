@@ -3,6 +3,9 @@ import { BiBell } from "react-icons/bi";
 import { GoDotFill } from "react-icons/go";
 import useNotifications from "../../hooks/useNotifications";
 import "./../../styles/scss/components/notification/notificationAlarm.scss";
+import dotenv from "dotenv";
+
+// dotenv.config();
 
 interface INotificationData {
   type: string;
@@ -13,13 +16,15 @@ interface INotificationData {
 
 const NotificationAlarm: React.FC = () => {
   const [alarmExists, setAlarmExists] = useState<boolean>(false);
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
   // const { isAllRead, isAllReadLoading } = useNotifications();
 
   const createEventSource = () => {
     const userId: string = "74657374320000000000000000000000";
     const eventSource = new EventSource(
-      `http://localhost:3000/notifications?userId=${userId}`
+      `${BASE_URL}/notifications?userId=${userId}`
     );
 
     eventSource.addEventListener("message", (event) => {
