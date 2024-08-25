@@ -39,7 +39,14 @@ const router = createBrowserRouter([
         path: "users",
         children: [
           { path: "interest", element: <MyPage /> },
-          { path: "my/:uuid", element: <My /> },
+          {
+            path: "my/:uuid",
+            element: (
+              <ProtectedPath>
+                <My />
+              </ProtectedPath>
+            ),
+          },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
         ],
