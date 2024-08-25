@@ -10,8 +10,8 @@ interface IProps {
 
 const Avatar = ({ profileImage, nickname, onClick, size = "sm" }: IProps) => {
   return (
-    <div className={`avatar ${size}`} onClick={onClick}>
-      <img src={profileImage ?? DefaultProfile} alt={nickname} />
+    <div className={`avatar ${size} ${onClick ? "pointer" : ""}`} onClick={onClick}>
+      <img src={profileImage || DefaultProfile} alt={nickname} />
     </div>
   );
 };

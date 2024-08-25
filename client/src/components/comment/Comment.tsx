@@ -105,7 +105,7 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
   return (
     <li className="comment-card">
       <div className="comment">
-        <Avatar profileImage={comment.users.profileImage} nickname={comment.users.nickname} />
+        <Avatar profileImage={comment.users.profileImage} nickname={comment.users.nickname} onClick={() => navigate(`/users/${comment.users.uuid}`)} />
 
         <div className="detail">
           <div className="comment-info">
