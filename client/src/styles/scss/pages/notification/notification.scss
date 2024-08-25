@@ -1,1 +1,31 @@
 @import "../../base/common.scss";
+
+.notification-container {
+  // min-height: 100vh;
+  height: 100%;
+  // min-height: calc(100vh - 61rem);
+  // padding: 20rem;
+  padding-bottom: 64rem;
+  background-color: $white;
+
+  .category {
+    padding: 20rem;
+
+    font-family: "semiBold";
+    font-size: $size-16;
+    color: silver;
+    border-bottom: 0.5rem solid $lightgray;
+    padding-bottom: 10rem;
+    margin: 0 8rem;
+  }
+
+  .notification-list {
+    .notification-component {
+      padding: 32rem;
+    }
+  }
+
+  .more {
+    font-size: $size-14;
+  }
+}
