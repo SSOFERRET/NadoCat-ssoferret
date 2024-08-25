@@ -23,18 +23,20 @@ const TabNavigation: React.FC<ITabNavigationProps> = ({ selectedTab, onSelectTab
   };
 
   return (
-    <>
-      <nav className="street-cat-nav">
-        <ul>
-          {tabs.map((tab) => (
-            <li key={tab.id} className={tab.id === selectedTab ? "active" : ""} onClick={() => handleTabClick(tab.id)}>
-              <span>{tab.label}</span>
-              {tab.id === selectedTab ? <span className="nav-bar"></span> : ""}
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </>
+    <nav className="street-cat-nav">
+      <ul>
+        {tabs.map((tab) => (
+          <li
+            key={tab.id}
+            className={tab.id === selectedTab ? 'active' : ''}
+            onClick={() => handleTabClick(tab.id)}
+          >
+            <span>{tab.label}</span>
+            {tab.id === selectedTab && <span className="nav-bar"></span>}
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };
 

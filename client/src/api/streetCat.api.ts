@@ -23,7 +23,8 @@ interface IFetchStreetCatPostsResponse {
 
 interface IFetchMyStreetCatPostsResponse {
   favoriteCatPosts: IStreetCatPost[] | [undefined];
-  nextCursor?: number;
+  nickname: string;
+  myCatCount: number;
 }
 
 export interface ICommentCreateRequest {

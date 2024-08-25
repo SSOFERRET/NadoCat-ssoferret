@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../../client";
 import { Prisma } from "@prisma/client";
-import { getUuid } from "./StreetCats";
+// import { getUuid } from "./StreetCats";
 import { createFavoriteCat, readFavoriteCat, readFavoriteCatPostIds, readFavoriteCatPosts, removeFavoriteCat } from "../../model/streetCat.model";
 
 // CHECKLIST
@@ -9,41 +9,40 @@ import { createFavoriteCat, readFavoriteCat, readFavoriteCatPostIds, readFavorit
 // [ ] 에러 처리
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 목록 조회
-// TODO: 테이블에 created_At 컬럼 추가되면 최신순 정렬
 export const getFavoriteCats = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
   const limit = Number(req.query.limit);
   const cursor = Number(req.query.cursor);
 
   await prisma.$transaction(async (tx) => {
-    // const getFavoritePostIds = await readFavoriteCatPostIds(tx, uuid);
+    const getFavoritePostIds = await readFavoriteCatPostIds(tx, uuid);
 
-    // const postIds = getFavoritePostIds.map((post) => {return post.postId});
+    const postIds = getFavoritePostIds.map((post) => {return post.postId});
 
-    // const getFavoriteCatPosts = await readFavoriteCatPosts(tx, uuid, postIds);
     const getFavoriteCatPosts = await (isNaN(cursor)
-          ? readFavoriteCatPosts(tx, uuid, limit)
-          : readFavoriteCatPosts(tx, uuid, limit, cursor)
+          ? readFavoriteCatPosts(tx, uuid, limit, cursor as number | 0, postIds)
+          : readFavoriteCatPosts(tx, uuid, limit, cursor, postIds)
         );
-    
-    res.status(200).json(getFavoriteCatPosts);
+
+        getFavoriteCatPosts.favoriteCatPostCount
+
+    const result = {
+      favoriteCatPosts: getFavoriteCatPosts.favoriteCatPosts,
+      nickname: getFavoriteCatPosts.nickname?.nickname,
+      myCatCount: getFavoriteCatPosts.favoriteCatPostCount
+    }
+
+    res.status(200).json(result);
   })
 }
 
-// // 동네 고양이 도감 즐겨찾기(내 도감) postId 목록 조회
-// export const getFavoriteCatsPostIds = async (req: Request, res: Response) => {
-//   const uuid = await getUuid();
-
-//   await prisma.$transaction(async (tx) => {
-//     const getFavoriteCatPostIds = await readFavoriteCatPostIds(tx, uuid);
-
-//   res.status(200).json(getFavoriteCatPostIds);
-//   });
-// }
-
 // 동네 고양이 도감 즐겨찾기(내 도감) 조회
 export const getFavoriteCat = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
   const postId = Number(req.params.street_cat_id);
 
   const getFavoriteCat = await readFavoriteCat(uuid, postId);
@@ -53,7 +52,12 @@ export const getFavoriteCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 추가 
 export const addFavoriteCat = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+
+  console.log("uuidString: ", uuidString);
+  console.log("uuid: ", uuid);
   const postId = Number(req.params.street_cat_id);
 
   try {
@@ -68,7 +72,9 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 삭제
 export const deleteFavoriteCat = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
   const postId = Number(req.params.street_cat_id);
 
   try {

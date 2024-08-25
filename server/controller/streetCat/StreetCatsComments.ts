@@ -9,7 +9,6 @@ import { CATEGORY } from "../../constants/category";
 
 // 동네 고양이 도감 댓글 목록 조회
 export const getStreetCatComments = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
   const postId = Number(req.params.street_cat_id);
   const limit = Number(req.query.limit);
   const cursor = Number(req.query.cursor);
@@ -31,7 +30,9 @@ export const getStreetCatComments = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 댓글 등록
 export const createStreetCatComment = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
   const postId = Number(req.params.street_cat_id);
   const { comment } = req.body;
 
@@ -50,7 +51,9 @@ export const createStreetCatComment = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 댓글 수정
 export const updateStreetCatComment = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
   const streetCatId = Number(req.params.street_cat_id);
   const streetCatCommentId = Number(req.params.street_cat_comment_id);
   const { comment } = req.body;
@@ -67,7 +70,9 @@ export const updateStreetCatComment = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 댓글 삭제
 export const deleteStreetCatComment = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
   const streetCatId = Number(req.params.street_cat_id);
   const streetCatCommentId = Number(req.params.street_cat_comment_id);
 

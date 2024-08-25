@@ -35,7 +35,7 @@ export const useAddStreetCatPost = () => {
   return useMutation({
     mutationFn: (formData: FormData) => createStreetCatPost(formData),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey:['createStreetCatPost']});
+      queryClient.invalidateQueries();
     },
     onError: (error) => {
       console.error("Error creating street cat post:", error);
@@ -49,7 +49,7 @@ export const useUpdateStreetCatPost = () => {
   return useMutation({
     mutationFn: ({formData, postId}: IStreetCatEdit) => updateStreetCatPost(formData, postId),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey:['createStreetCatPost']});
+      queryClient.invalidateQueries();
     },
     onError: (error) => {
       console.error("Error creating street cat post:", error);
@@ -63,7 +63,7 @@ export const useDeleteStreetCatPost = () => {
   return useMutation({
     mutationFn: ({ postId }: IStreetCatDetailParams) => deleteStreetCatPost({ postId }),
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ["deleteStreetCatPost", postId] });
+      queryClient.removeQueries();
     },
     onError: (error) => {
       console.error("Error deleting street cat post:", error);

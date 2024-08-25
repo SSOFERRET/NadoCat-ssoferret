@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { AiFillHeart } from 'react-icons/ai';
 import { useAddFavoriteCat, useDeleteFavoriteCat } from '../../hooks/useStreetCat';
+import { GoHeartFill } from "react-icons/go";
 
 interface IFavoriteButtonProps {
   postId: number;
@@ -39,7 +39,7 @@ const FavoriteButton: React.FC<IFavoriteButtonProps> = ({ postId, like, onToggle
   };
 
   return (
-    <AiFillHeart
+    <GoHeartFill
       className={`like ${isFavorite ? "active" : ""}`}
       onClick={toggleFavorite}
     />

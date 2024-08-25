@@ -1,5 +1,4 @@
 import React, { useCallback, useRef, useState } from "react";
-import { AiFillHeart } from "react-icons/ai";
 import "../../styles/scss/components/streetCat/postDetail.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { IStreetCatDetail } from "../../models/streetCat.model";

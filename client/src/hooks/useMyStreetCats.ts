@@ -6,7 +6,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 const LIMIT = 8;
 
-export const useMyStreetCatPosts = () => {
+export const useMyStreetCatPosts = (enabled: boolean) => {
   const {
     data,
     fetchNextPage,
@@ -27,8 +27,11 @@ export const useMyStreetCatPosts = () => {
       }
       return lastPage.favoriteCatPosts[LIMIT - 1]?.postId;
     },
+    enabled,
   });
 
+  const nickname = data?.pages[0]?.nickname;
+  const myCatCount = data?.pages[0]?.myCatCount;
   const myStreetCatPosts = data ? data.pages.flatMap((page) => page?.favoriteCatPosts) : [];
   const isEmpty = myStreetCatPosts.length === 0;
 
@@ -39,7 +42,9 @@ export const useMyStreetCatPosts = () => {
     isFetchingNextPage,
     status,
     isLoading,
+    isEmpty,
     myStreetCatPosts,
-    isEmpty
+    nickname,
+    myCatCount
   };
 }
