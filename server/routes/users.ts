@@ -1,7 +1,7 @@
 import express from "express";
 import { signup, login, kakao, google, getNewAccessToken, logout } from "../controller/user/Users";
 import { signupValidator, loginValidator } from "../middleware/validator";
-import { mypage, updateNickname, updatePassword, updateProfile, deleteProfile } from "../controller/user/MyPage";
+import { mypage, updateNickname, updatePassword, updateProfile, deleteProfile, authPassword, updateDetail, setting } from "../controller/user/MyPage";
 import {
   getFavoriteCats,
   getFavoriteCat,
@@ -21,9 +21,13 @@ router.post("/logout", ensureAutorization, logout);
 router.post("/refresh-token", getNewAccessToken);
 router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
-router.get("/my/:uuid", ensureAutorization, mypage); 
-router.put("/update-nickname", updateNickname);
-router.put("/update-password", updatePassword);
+router.get("/my/:uuid", ensureAutorization, mypage);  //user로 바꿔야하나?
+// router.get("/my", ensureAutorization, mypage); 
+router.put("/setting", setting);
+router.put("/setting/profile", updateNickname);
+router.post("/setting/auth-password", authPassword);
+router.put("/setting/password", updatePassword);
+router.put("/setting/detail", updateDetail);
 
 router.post("/update-profile",ensureAutorization, uploadImages.single("profileImage"),updateProfile);
 router.put("/delete-profile",ensureAutorization, deleteProfile);
