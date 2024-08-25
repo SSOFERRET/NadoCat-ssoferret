@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import dotenv from "dotenv";
-dotenv.config();
+
 import axios from "axios";
 // import crypto from "crypto";
 import { createUser, loginUser, saveRefreshToken, kakaoUser, refreshAccessToken, logoutUser } from "../../model/user.model";
 import { IUsers, IUserSecrets } from "../../types/user";
 // import { Request, Response } from "aws-sdk";
+
+dotenv.config();
 
 //[x]회원가입
 export const signup = async (req: Request, res: Response) => {
@@ -40,8 +42,8 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
   const isAutoLogin = (autoLogin === 'true' || autoLogin === true);
-  const generalTokenMaxAge = 5 * 60 * 1000; // 1분
-  const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 7일
+  const generalTokenMaxAge = parseInt(process.env.GENERAL_TOKEN_MAX_AGE || '300000'); // 5분
+  const refreshTokenMaxAge = parseInt(process.env.REFRESH_TOKEN_MAX_AGE || "604800000");// 7일
 
   try {
     const { generalToken, refreshToken, result, userUuidString } = await loginUser(email, password, autoLogin);
