@@ -7,9 +7,9 @@ import PostList from "../../components/communityAndEvent/PostList";
 import LoadingCat from "../../components/loading/LoadingCat";
 import NewPostButton from "../../components/common/NewPostButton";
 import { SortMenu, sortMenu } from "../../utils/sort/sortMenu";
-import PostSortMenu from "../../components/communityAndEvent/PostSortMenu";
 import SortButton from "../../components/communityAndEvent/SortButton";
 import Spinner from "../../components/loading/Spinner";
+import PostMenu from "../../components/communityAndEvent/PostMenu";
 
 const Event = () => {
   const [sort, setSort] = useState<SortMenu>(sortMenu[0]);
@@ -25,50 +25,51 @@ const Event = () => {
     }
   });
 
-  const onCloseMenu = () => {
-    setIsOpenMenu(false);
-  };
-
-  const onOpenMenu = () => {
-    setIsOpenMenu(true);
+  const handleMene = () => {
+    setIsOpenMenu((prev) => !prev);
   };
 
   const handleSortMenu = (item: SortMenu) => {
     setSort(item);
-    onCloseMenu();
+    handleMene();
   };
 
   return (
-    <section className={`event-container`}>
-      {isLoading ? (
-        <LoadingCat />
-      ) : (
-        <>
-          <div className="category">
-            <span>이벤트 &#183; 모임</span>
-            <SortButton sort={sort} onOpenMenu={onOpenMenu} isOpenMenu={isOpenMenu} />
-            <PostSortMenu
-              sort={sort}
-              isOpenMenu={isOpenMenu}
-              handleSortMenu={handleSortMenu}
-              onCloseMenu={onCloseMenu}
-            />
-          </div>
-
-          <section className={`event-post-list ${isOpenMenu ? "is-open" : ""}`}>
-            {isEmpty && <PostEmpty />}
-
-            {data && <PostList posts={data} />}
-
-            <div className="more" ref={moreRef}>
-              {isFetchingNextPage && <Spinner />}
+    <>
+      <section className={`event-container`}>
+        {isLoading ? (
+          <LoadingCat />
+        ) : (
+          <>
+            <div className="category">
+              <span>이벤트 &#183; 모임</span>
+              <SortButton sort={sort} handleMene={handleMene} />
             </div>
-          </section>
 
-          <NewPostButton path="/boards/events/write" />
-        </>
-      )}
-    </section>
+            <section className={`event-post-list ${isOpenMenu ? "is-open" : ""}`}>
+              {isEmpty && <PostEmpty />}
+
+              {data && <PostList posts={data} />}
+
+              <div className="more" ref={moreRef}>
+                {isFetchingNextPage && <Spinner />}
+              </div>
+            </section>
+
+            <NewPostButton path="/boards/events/write" />
+          </>
+        )}
+      </section>
+
+      <PostMenu
+        sort={sort}
+        sortMenu={sortMenu}
+        isShowMenu={isOpenMenu}
+        menuType="sort"
+        showMenu={handleMene}
+        handleSortMenu={handleSortMenu}
+      />
+    </>
   );
 };
 
