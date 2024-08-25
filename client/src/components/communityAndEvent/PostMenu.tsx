@@ -60,7 +60,7 @@ const PostMenu = ({
 
     deletePost({ postId }).then(() => {
       showMenu();
-      navigate(`${getPostDeletionPath(boardType)}`);
+      navigate(`${getPostPath(boardType)}`);
     });
   };
 
