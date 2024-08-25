@@ -1,8 +1,7 @@
-import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { getUserId } from "../community/Communities";
 import prisma from "../../client";
 import { Prisma } from "@prisma/client";
+import { StatusCodes } from "http-status-codes";
+import { Request, Response } from "express";
 import { addTag, deleteTags } from "../../model/tag.model";
 import { deleteImages } from "../../model/image.model";
 import {
@@ -69,10 +68,11 @@ export const getEvents = async (req: Request, res: Response) => {
 // [x] 좋아요 관련 부분 코드 분리
 // [ ] 에러처리
 export const getEvent = async (req: Request, res: Response) => {
+  const uuid = req.headers["x-uuid"] as string;
   try {
     const postId = Number(req.params.event_id);
     const categoryId = CATEGORY.EVENTS;
-    const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = uuid && Buffer.from(req.user.uuid, "hex");
 
     let result;
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -82,7 +82,11 @@ export const getEvent = async (req: Request, res: Response) => {
         return res.status(StatusCodes.NOT_FOUND).json({ message: "게시글을 찾을 수 없습니다." });
       }
 
-      const liked = await getLiked(tx, postId, categoryId, userId);
+      let liked;
+
+      if (userId) {
+        liked = await getLiked(tx, postId, categoryId, userId);
+      }
 
       result = {
         ...post,
