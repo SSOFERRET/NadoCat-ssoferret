@@ -135,6 +135,17 @@ export const readPost = async (postId: number) => {
   }
 }
 
+export const getStreetCatById = async (
+  tx: Prisma.TransactionClient,
+  postId: number
+) => {
+  return await tx.streetCats.findUnique({
+    where: {
+      postId: postId,
+    },
+  });
+};
+
 export const createLoction = async (tx: Prisma.TransactionClient, location: ILocation) => {
 
   return await tx.locations.create({
@@ -167,7 +178,7 @@ export const createPost = async (tx: Prisma.TransactionClient, {
   discoveryDate,
   content,
   uuid,
-}: Omit<IStreetCatPost, "postId"|"locationId">, locationId: number) => {
+}: Omit<IStreetCatPost, "postId" | "locationId">, locationId: number) => {
 
   return await tx.streetCats.create({
     data: {
@@ -296,6 +307,7 @@ export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: B
   const favoriteCatPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
+
     ...(cursor && { cursor: { postId: cursor} }),
     orderBy: {
       createdAt: "desc"

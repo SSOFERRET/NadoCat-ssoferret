@@ -3,7 +3,7 @@ import { TCategoryId } from "./category"
 export interface IPostData {
   postId: number;
   categoryId: TCategoryId;
-  userId: Buffer;
+  userId?: Buffer;
 }
 
 export interface IListData {
