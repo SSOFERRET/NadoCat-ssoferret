@@ -33,10 +33,10 @@ export const My = () => {
     const myUuid = useAuthStore((store) => store.uuid); // 현재 로그인된 사용자의 uuid 가져오기
 
     useEffect(() => {
-        if (!isLoggedIn) {
-            window.location.href = "/users/login"; // 로그인이 안되어 있으면 리다이렉트
-            return;
-        }
+    //     if (!isLoggedIn) {
+    //         window.location.href = "/users/login"; // 로그인이 안되어 있으면 리다이렉트
+    //         return;
+    //     }
 
         const fetchUserData = async () => {
             try {
@@ -61,8 +61,8 @@ export const My = () => {
 
   return (
     <div className="my-container">
-        <MyInfo nickname={userData.nickname} profileImageUrl="url" uuid={userData.uuid} onAvatarClick={handleAvatarClick}/>
-        <Logout />
+        <MyInfo nickname={userData.nickname} profileImageUrl={userData.profileImageUrl} uuid={userData.uuid} onAvatarClick={handleAvatarClick}/>
+        {/* <Logout /> */}
         <MyTab></MyTab>
     </div>
   );

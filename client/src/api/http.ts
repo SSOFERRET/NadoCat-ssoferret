@@ -79,7 +79,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
             }
           } catch (error) {
             console.error("토큰 재발급 실패:", error);
-            useAuthStore.getState().storeLogout(); // 실패 시 로그아웃
+            // useAuthStore.getState().storeLogout(); // 실패 시 로그아웃
           }
         }
       }

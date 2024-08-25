@@ -21,12 +21,12 @@ router.post("/logout", ensureAutorization, logout);
 router.post("/refresh-token", getNewAccessToken);
 router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
-// router.get("/my", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
-router.get("/my/:uuid", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
+router.get("/my/:uuid", ensureAutorization, mypage); 
 router.put("/update-nickname", updateNickname);
 router.put("/update-password", updatePassword);
-router.put("/update-profile", uploadImages.single("profileImage"),updateProfile);
-router.put("/delete-profile", uploadImages.single("profileImage"),deleteProfile);
+
+router.post("/update-profile",ensureAutorization, uploadImages.single("profileImage"),updateProfile);
+router.put("/delete-profile",ensureAutorization, deleteProfile);
 
 // 동네 고양이 도감 즐겨찾기(내 도감)
 router.get("/street-cats", getFavoriteCats);
