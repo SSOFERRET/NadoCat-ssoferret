@@ -53,7 +53,8 @@ export const serveNotifications = (req: Request, res: Response) => {
     });
 
     const sendNotifications = async () => {
-      while (notifications.length) {
+      console.log(notifications)
+      if (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {
           if (notification && userId && userIdBuffer.equals(notification.receiver)) {
@@ -67,6 +68,8 @@ export const serveNotifications = (req: Request, res: Response) => {
           }
         });
         notifications.length = 0;
+      } else {
+        res.write('\n\n');
       }
     };
 
@@ -93,18 +96,17 @@ export const notify = (data: INoticiationData) => {
   // 동일한 알림이 아닌지 확인하는 로직
   if (lastNotification &&
     lastNotification.type === data.type &&
-    lastNotification.receiver.equals(data.receiver) &&
-    lastNotification.sender.equals(data.sender) &&
+    // lastNotification.receiver.equals(data.receiver) &&
+    // lastNotification.sender.equals(data.sender) &&
     lastNotification.url === data.url &&
     lastNotification.commentId === data.commentId &&
     lastNotification.result === data.result) {
     console.log("중복된 알림이므로 생성하지 않습니다.");
-    return;  // 중복된 알림이므로 처리하지 않습니다.
+    return;
   }
-
   const timestamp = timestampObject();
   notifications.push({ ...data, ...timestamp });
-  lastNotification = data;  // 마지막 알림을 업데이트
+  lastNotification = data;
 };
 
 export const updateNotifications = async (req: Request, res: Response) => {
