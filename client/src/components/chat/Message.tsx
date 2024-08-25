@@ -12,7 +12,7 @@ interface Props {
 }
 
 const Message: React.FC<Props> = ({ message: { uuid, content, sentAt }}) => {
-  const isSentByCurrentUser = uuid === sessionStorage.getItem("uuid");
+  const isSentByCurrentUser = uuid === localStorage.getItem("uuid");
 
   function formatTime(sentAt: string) {
     const date = new Date(sentAt);

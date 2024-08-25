@@ -12,27 +12,28 @@ let socket: Socket;
 
 const Chat = () => {
   const [myUserId, setMyUserId] = useState<string>(localStorage.getItem("uuid") || "");
-  const [otherUserId,setOtherUserId] = useState<string>("0619-eba4-9bf1-496d-a690-e158-2de9-9871");
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Array<{ uuid: string, content: string, sentAt: string }>>([]);
   const [roomId, setRoomId] = useState<string>("");
+  const [otherUserData, setOtherUserData] = useState<string>("");
   const location = useLocation();
   const navigate = useNavigate();
 
+  const { userData, otherUuid, chatId } = location.state || {}
+  
   useEffect(() => {
     socket = io(ENDPOINT);
 
-    if (!localStorage.getItem("uuid") || otherUserId.length === 0) {
+    if ( !localStorage.getItem("uuid") || !otherUuid ) {
       alert("유효한 사용자 ID가 없습니다.");
-      navigate(-1);
+      // navigate(-1);
       return;
     }
-
     const initiateChat = async () => {
       try {
         const response = await axios.post(ENDPOINT + "/chats/startchat", {
           userUuid: localStorage.getItem("uuid"),
-          otherUserUuid: otherUserId,
+          otherUserUuid: userData.uuid || otherUuid
         });
         if(response.data.messages){
           setMessages(response.data.messages);
@@ -48,8 +49,20 @@ const Chat = () => {
         alert("Failed to start chat. Please try again.");
       }
     };
+    const getUserData = async () => {
+      try{
+        const response = await axios.post(ENDPOINT + "/chats", {
+          uuid: otherUuid
+        })
+        setOtherUserData(response.data.nickname)
+        console.log(response)
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     initiateChat();
+    getUserData();
 
     return () => {
       socket.disconnect();
@@ -85,7 +98,7 @@ const Chat = () => {
   return (
     <div className='layout'>
       <div className='Chat'>
-        <BackButton userName={otherUserId} />
+        <BackButton userName={userData ? userData.nickname : otherUserData} />
         <div id='title'>채팅</div>
         <Messages messages={messages}/>
         <MessageBox message={message} setMessage={setMessage} sendMessage={sendMessage} />

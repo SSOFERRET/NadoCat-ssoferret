@@ -24,8 +24,7 @@ const MyPage: React.FC = () => {
   try{
     axios.post(ENDPOINT + "/boards/Interests", {
       userId: uuid
-    }
-    )
+    })
     .then(response => {
       setLists(response.data);
       console.log(response.data);

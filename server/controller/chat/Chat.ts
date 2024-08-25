@@ -15,8 +15,8 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
       return res.status(400).json({ error: "Invalid UUIDs provided" });
     }
 
-    const userUuidBuffer = Buffer.from(userUuid.replace(/-/g, ''), 'hex');
-    const otherUserUuidBuffer = Buffer.from(otherUserUuid.replace(/-/g, ''), 'hex');
+    const userUuidBuffer = Buffer.from(userUuid, 'hex');
+    const otherUserUuidBuffer = Buffer.from(otherUserUuid, 'hex');
     
     let chat = await prisma.chats.findFirst({
       where: {
@@ -64,14 +64,12 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
   }
 };
 
-
-
 export const sendMessage = async (req: Request, res: Response, io: SocketIOServer) => {
   const { uuid, content, sentAt } = req.body;
   const chatId = parseInt(CHATID);
 
   try {
-    const userUuidBuffer = Buffer.from(uuid.replace(/-/g, ''), 'hex');
+    const userUuidBuffer = Buffer.from(uuid, 'hex');
   
     const message = await prisma.messages.create({
         data: {
@@ -132,7 +130,7 @@ export const getChatList = async (req: Request, res: Response) => {
 
 // userid 되는지 test
 export const testUuid = async (req: Request, res: Response) => {
-  const {uuid} = req.body;
+  const { uuid } = req.body;
   const userUuidBuffer = Buffer.from(uuid, 'hex');
   try{
     const users = await prisma.users.findFirst({

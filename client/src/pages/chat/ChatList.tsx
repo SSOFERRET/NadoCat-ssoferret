@@ -21,59 +21,43 @@ interface IList{
   };
   chatId: string;
 }
-
+const ENDPOINT = "http://localhost:8080";
 const ChatList = () => {
   const [list, setList] = useState<IList[]>([]);
   const uuid = localStorage.getItem("uuid");
-  const generalToken = localStorage.getItem("generalToken");
-  const refreshToken = localStorage.getItem("refreshToken");
+  // const generalToken = localStorage.getItem("generalToken");
+  // const refreshToken = localStorage.getItem("refreshToken");
   useEffect(() => {
+    
     if (uuid) {
       const fetchChatList = async () => {
         try {
-          const response = await axios.get('http://localhost:8080/chats/chatlist', {
+          const response = await axios.get(ENDPOINT + '/chats/chatlist', {
             headers: {
-              Authorization: `Bearer ${generalToken}`,
               "x-user-uuid": uuid,
             },
           });
           setList(response.data);
-          console.log(response.data);
         } catch (error) {
-          if (error.response && error.response.status === 401 && refreshToken) {
-            try {
-              const retryResponse = await axios.get('http://localhost:8080/chats/chatlist', {
-                headers: {
-                  Authorization: `Bearer ${refreshToken}`,
-                  "x-user-uuid": uuid,
-                },
-              });
-              setList(retryResponse.data);
-              console.log(retryResponse.data);
-            } catch (retryError) {
-              console.error('Error fetching chat list after token refresh:', retryError);
-            }
-          } else {
-            console.error('Error fetching chat list:', error);
-          }
+          console.log(error)
         }
       };
 
       fetchChatList();
 
-      const testUuid = async () => {
-        try {
-          const response = await axios.post("http://localhost:8080/chats", {
-            uuid: uuid
-          })
-          console.log(response);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      testUuid();
+      // const testUuid = async () => {
+      //   try {
+      //     const response = await axios.post("http://localhost:8080/chats", {
+      //       uuid: uuid
+      //     })
+      //     console.log(response);
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
+      // }
+      // testUuid();
     }
-  }, [uuid, refreshToken, generalToken]);
+  }, [uuid]);
 
   return (
     <div className="chatList">
