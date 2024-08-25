@@ -1,6 +1,5 @@
 import React from "react";
 import logoHeader from "../../assets/img/logoHeader.png";
-import { BiBell } from "react-icons/bi";
 import "../../styles/css/base/reset.css";
 import "../../styles/scss/components/common/header.scss";
 import { Link } from "react-router-dom";

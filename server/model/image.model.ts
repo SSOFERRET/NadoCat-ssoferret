@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import prisma from "../client";
 
 export const deleteImages = async (
   tx: Prisma.TransactionClient,
@@ -33,12 +34,35 @@ export const getImageById = async (
 };
 
 //프로필 이미지 변경
-export const addProfileImage = async (
-  tx: Prisma.TransactionClient,
-  url: string,
-  uuid: string
-) => {
-  return await tx.users.update({
+export const addProfileImage = async (url: string, uuid: string) => {
+  const uuidBuffer = Buffer.from(uuid, "hex");
+  const user = await prisma.users.findFirst({
+    where: { uuid: uuidBuffer },
+  });
+
+  if (!user) {
+    console.error(`사용자를 찾을 수 없습니다. user: ${user}, uuid: ${uuid}`);
+    return;
+  }
+
+  try {
+    return await prisma.users.update({
+      where: {
+        uuid: uuidBuffer,
+      },
+      data: {
+        profileImage: url,
+      },
+    });
+  } catch (error) {
+    console.error("프로필 이미지 업데이트 중 오류 발생:", error);
+    throw error;
+  }
+};
+
+//프로필 이미지 기본으로 변경
+export const deleteProfileImage = async (url: string, uuid: string) => {
+  return await prisma.users.update({
     where: {
       uuid: Buffer.from(uuid, "hex"),
     },
@@ -48,18 +72,11 @@ export const addProfileImage = async (
   });
 };
 
-//프로필 이미지 삭제
-export const deleteProfileImage = async (
-  tx: Prisma.TransactionClient,
-  url: string,
-  uuid: string
-) => {
-  return await tx.users.update({
-    where: {
-      uuid: Buffer.from(uuid, "hex"),
-    },
-    data: {
-      profileImage: "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png",
-    },
-  });
+//프로필 이미지 조회
+export const getProfileImage = async (uuid: string) => {
+    return await prisma.users.findFirst({
+        where: {
+            uuid: Buffer.from(uuid, "hex")
+        }
+    });
 };

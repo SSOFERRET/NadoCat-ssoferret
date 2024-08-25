@@ -1,12 +1,12 @@
 import "../../styles/scss/components/comment/comments.scss";
+import { useState } from "react";
 import useCommunityComment from "../../hooks/useCommunityComment";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import CommentList from "../comment/CommentList";
 import CommentsEmpty from "../comment/CommentsEmpty";
 import PostMenu from "../communityAndEvent/PostMenu";
-import { useState } from "react";
-import CommentError from "../comment/CommentError";
 import Spinner from "../loading/Spinner";
+import ServerError from "../comment/CommentError";
 
 interface IProps {
   postId: number;
@@ -53,7 +53,7 @@ const CommunityComments = ({ postId }: IProps) => {
   return (
     <>
       <section className="comment-list">
-        {error && <CommentError />}
+        {error && <ServerError text="댓글을 불러올 수 없습니다." />}
 
         {isLoading ? (
           <Spinner />

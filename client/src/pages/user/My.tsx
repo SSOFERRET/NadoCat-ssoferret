@@ -32,6 +32,7 @@ export const My = () => {
   const isLoggedIn = useAuthStore((store) => store.isLoggedIn); // 로그인 상태 가져오기
   const myUuid = useAuthStore((store) => store.uuid); // 현재 로그인된 사용자의 uuid 가져오기
 
+
   useEffect(() => {
     // NOTE 여기 주석 처리 했습니다. 안그러면 무한 굴레에 빠져서 여기서 나갈 수 없어요. 대신 App.tsx에서 처리 했습니다.
     // if (!isLoggedIn) {
@@ -63,7 +64,7 @@ export const My = () => {
     <div className="my-container">
       <MyInfo
         nickname={userData.nickname}
-        profileImageUrl="url"
+        profileImageUrl={userData.profileImageUrl
         uuid={userData.uuid}
         onAvatarClick={handleAvatarClick}
       />

@@ -29,6 +29,7 @@ import Notification from "./pages/notification/Notification";
 import Boards from "./pages/boards/Boards";
 import ProtectedPath from "./pages/protectedPath/ProtectedPath";
 import StreetCatEdit from "./pages/streetCat/StreetCatEdit";
+import Friends from "./pages/user/Friends";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
           },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
+          { path: "friends", element: <ProtectedPath><Friends /></ProtectedPath> },
         ],
       },
       {
