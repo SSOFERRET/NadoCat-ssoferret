@@ -33,7 +33,9 @@ const ActionBar = ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps)
           <span className="date">{formatDate(createdAt)}</span>
         </div>
         <div className="post-buttons">
-          <button className={`post-like ${liked ? "like" : "dislike"}`} onClick={toggleLike}>
+          <button className={`post-like ${liked ? "like" : "dislike"}`} onClick={() =>{
+            uuid ? toggleLike() : navigate('/users/login')
+          }}>
             <GoHeartFill />
           </button>
           {uuid === userInfo.uuid && <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />}
