@@ -247,6 +247,19 @@ export const getUserId = async () => { // 임시
   return result.uuid;
 };
 
+export const getUserId2 = async () => { // 임시
+  const result = await prisma.users.findUnique({
+    where: {
+      id: 2
+    }
+  });
+  if (!result) {
+    throw new Error("사용자 정보 없음");
+  }
+  console.log(result.uuid);
+  return result.uuid;
+};
+
 /**
  * CHECKLIST
  * Update

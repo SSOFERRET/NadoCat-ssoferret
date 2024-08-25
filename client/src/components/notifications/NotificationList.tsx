@@ -1,7 +1,6 @@
 import { InfiniteData } from "@tanstack/react-query";
 
 import { INotificationPage } from "../../models/notification.model";
-import "./../../styles/scss/components/notification/notificationList.scss";
 import React from "react";
 import NotificationComponent from "./NotificationComponent";
 import { INotificationFromDB } from "../../api/notification.api";
