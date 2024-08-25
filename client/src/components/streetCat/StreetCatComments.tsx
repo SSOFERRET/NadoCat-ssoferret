@@ -4,7 +4,6 @@ import "../../styles/scss/pages/streetCat/streetCatDetail.scss";
 import CommentsEmpty from "../comment/CommentsEmpty";
 import { useIntersectionObserver } from "./IntersectionObserver";
 import StreetCatComment from "./streetCatComment";
-import { AiFillHeart } from "react-icons/ai";
 import CommentForm from "./CommentForm";
 import PostMenu from "../communityAndEvent/PostMenu";
 import CommentList from "../comment/CommentList";
@@ -14,8 +13,6 @@ interface IProps {
 }
 
 const StreetCatComments = ({postId}: IProps) => {
-  const uuid = [85, 14, 132, 0, 226, 155, 65, 212, 167, 22, 68, 102, 85, 68, 0, 0]; // NOTE: 임시 데이터
-
   const { 
     data, 
     fetchNextPage, 
@@ -49,15 +46,7 @@ const StreetCatComments = ({postId}: IProps) => {
     setIsCommentEdit(true);
   };
 
-  if (isEmpty) {
-    return ( 
-    <>
-      <CommentsEmpty />
-      <CommentForm postId={postId} uuid={uuid} addComment={addStreetCatComment} />
-    </>
-    );
-  }
-
+  
   const transformedComments = data?.pages.map(page => ({
     comments: page.streetCatComments.map(comment => ({
       commentId: comment.streetCatCommentId,
@@ -67,6 +56,16 @@ const StreetCatComments = ({postId}: IProps) => {
       users: comment.users
     }))
   }));
+
+  const areAllCommentsEmpty = transformedComments?.every(page => page.comments.length === 0);
+  if (isEmpty || areAllCommentsEmpty) {
+    return ( 
+    <>
+      <CommentsEmpty />
+      <CommentForm postId={postId} addComment={addStreetCatComment} />
+    </>
+    );
+  }
 
   return (
     <>
@@ -83,7 +82,7 @@ const StreetCatComments = ({postId}: IProps) => {
           />
         </ul>
       </div>
-      <CommentForm postId={postId} uuid={uuid} addComment={addStreetCatComment} />
+      <CommentForm postId={postId} addComment={addStreetCatComment} />
 
       <div className="more" ref={moreRef}>
         {isFetchingNextPage && <div>loading...</div>}

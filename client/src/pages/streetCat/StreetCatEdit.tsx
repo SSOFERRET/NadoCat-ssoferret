@@ -4,7 +4,7 @@ import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 import { useReadStreetCatPost, useUpdateStreetCatPost } from "../../hooks/useStreetCat";
 import EditForm from "../../components/streetCat/EditForm";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LoadingCat from "../../components/loading/LoadingCat";
 
 const StreetCatEdit: React.FC = () => {
@@ -12,9 +12,11 @@ const StreetCatEdit: React.FC = () => {
   const postId = Number(id);  
   const {data} = useReadStreetCatPost(postId);
   const { mutate: editPost, isLoading, error } = useUpdateStreetCatPost();
+  const navigate = useNavigate();
 
-  const handleFormSubmit = (formData: FormData) => {
-    editPost({formData, postId});
+  const handleFormSubmit = async (formData: FormData) => {
+    await editPost({formData, postId});
+    navigate("/boards/street-cats");
   };
 
   return (
