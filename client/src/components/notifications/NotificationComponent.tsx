@@ -4,7 +4,7 @@ import {
   INotificationFromDB,
 } from "../../hooks/useNotifications";
 import { formatAgo } from "../../utils/format/format";
-import Avartar from "../common/Avartar";
+import Avatar from "../common/Avatar";
 import "./../../styles/scss/components/notification/notificationComponent.scss";
 import { GoDotFill } from "react-icons/go";
 
@@ -56,7 +56,7 @@ const NotificationComponent = ({ notification }: IProps) => {
     >
       <div className="avatar-sign">
         {!notification.isRead && <GoDotFill id="dot" />}
-        <Avartar
+        <Avatar
           profileImage={profileImage}
           nickname={nickname}
           onClick={handleNavigateUser}
