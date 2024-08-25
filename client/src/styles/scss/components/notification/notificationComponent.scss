@@ -1,0 +1,55 @@
+@import "../../base/common.scss";
+
+.notification-component {
+  height: 92rem;
+  display: flex;
+  flex-direction: row;
+  gap: 16rem;
+  align-items: center;
+  border-bottom: 1px solid $lightgray;
+  position: relative;
+  padding-left: 20rem;
+
+  .avatar-sign {
+    width: 52rem;
+    height: 52rem;
+    position: relative;
+    #dot {
+      width: 16rem;
+      height: 16rem;
+      position: absolute;
+      fill: $primary;
+      stroke: white;
+      stroke-width: 2rem;
+      z-index: 1;
+      left: -10rem;
+    }
+    .avatar {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .notification {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 8rem;
+    .message {
+      font-size: $size-16;
+      .nickname {
+        font-size: $size-16;
+        font-family: "semiBold";
+      }
+    }
+
+    .timestamp {
+      font-size: $size-14;
+      color: $silver;
+    }
+  }
+
+  &.not-readen {
+    background-color: $lightpale;
+  }
+}

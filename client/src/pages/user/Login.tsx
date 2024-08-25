@@ -9,13 +9,9 @@ import { RiKakaoTalkFill } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
 import { useAuthStore } from "../../store/userStore";
 
-const KAKAO_AUTH_URL = `${
-  import.meta.env.VITE_KAKAO_AUTH_URL
-}?response_type=code&client_id=${
+const KAKAO_AUTH_URL = `${import.meta.env.VITE_KAKAO_AUTH_URL}?response_type=code&client_id=${
   import.meta.env.VITE_KAKAO_REST_API_KEY
-}&redirect_uri=${
-  import.meta.env.VITE_KAKAO_REDIRECT_URI
-}&scope=profile_nickname,profile_image,account_email`;
+}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email`;
 
 export interface LoginProps {
   email: string;
@@ -35,19 +31,20 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginProps>();
 
-  const handleLogin = async (data: LoginProps) => { 
-      const response = await login({ ...data, autoLogin });
-      const { user, tokens } = response;
-      console.log("전체 response:", response);
-      
-      console.log("response.generalToken:", tokens.accessToken);
-      console.log("response.uuid:", user.uuid);
+  const handleLogin = async (data: LoginProps) => {
+    const response = await login({ ...data, autoLogin });
+    const { user, tokens } = response;
+    console.log("전체 response:", response);
 
-      useAuthStore.getState().storeLogin(user.uuid, autoLogin);
-      
-      navigate("/home");
+    console.log("response.generalToken:", tokens.accessToken);
+    console.log("response.uuid:", user.uuid);
+
+    useAuthStore.getState().storeLogin(user.uuid, autoLogin);
+
+    // NOTE 홈 경로가 / 이거라서 /로 고칩니다.
+    navigate("/");
     //   sessionStorage.setItem("uuid", user.uuid);
-      };
+  };
 
   const handleBack = () => {
     navigate(-1);
@@ -87,9 +84,7 @@ const Login = () => {
                 required: "이메일을 입력해주세요.",
               })}
             />
-            {errors.email && (
-              <p className="error-message">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="error-message">{errors.email.message}</p>}
           </fieldset>
           <fieldset className="input-field">
             <InputText
@@ -101,22 +96,18 @@ const Login = () => {
                 required: "비밀번호를 입력해주세요.",
               })}
             />
-            {errors.password && (
-              <p className="error-message">{errors.password.message}</p>
-            )}
+            {errors.password && <p className="error-message">{errors.password.message}</p>}
           </fieldset>
 
           <fieldset className="check-field">
             <label className="auto-login">
-              <input
-                type="checkbox"
-                checked={autoLogin}
-                onChange={(e) => setAutoLogin(e.target.checked)}
-              />
+              <input type="checkbox" checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)} />
               자동로그인
             </label>
             {/* <span>|</span> */}
-            <a href="/users/signup" className="signup-link">회원가입</a>
+            <a href="/users/signup" className="signup-link">
+              회원가입
+            </a>
           </fieldset>
 
           <button type="submit" className="login-btn">

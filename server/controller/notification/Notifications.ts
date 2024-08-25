@@ -1,28 +1,26 @@
 import { Request, Response } from "express";
-import { createNotification, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
-import { getUserId } from "../missing/Missings";
+import { createNotification, getLatestNotificationByReceiver, getNotificationListByReceiver, getNotificationsCount, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
+import { getUserId, getUserId2 } from "../missing/Missings";
 import { StatusCodes } from "http-status-codes";
 import { handleControllerError } from "../../util/errors/errors";
 import { TCategoryId } from "../../types/category";
 import { getFriendList } from "../../model/friend.model";
 import { getCategoryUrlStringById } from "../../constants/category";
 import { getPostAuthorUuid } from "../../model/common/uuid.model";
+import { IListData } from "../../types/post";
+import prisma from "../../client";
+import { getPostsCount } from "../../model/missing.model";
 
 /* CHECKLIST
 * [x] 알람글 isRead update API
-
-*  [x] 실종고양이 제보글 => 게시글 게시자
-*  [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
-*  [x] 실종고양이 제보글 수정 => 게시글 게시자
-*  
-*  [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
-*  
-*  [x] 신규 글 작성 => 친구
-*  [-] 좋아요 찍힘 => 게시글 게시자
-*  [x] 댓글 => 게시글 게시자
-* 
-*  [x] 친구 요청 => 요청 받은 사용자
-*  
+* [x] 실종고양이 제보글 => 게시글 게시자
+* [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
+* [x] 실종고양이 제보글 수정 => 게시글 게시자
+* [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
+* [x] 신규 글 작성 => 친구
+* [-] 좋아요 찍힘 => 게시글 게시자
+* [x] 댓글 => 게시글 게시자
+* [x] 친구 요청 => 요청 받은 사용자
 */
 
 interface INoticiationData {
@@ -35,11 +33,11 @@ interface INoticiationData {
 }
 
 export interface INotification extends INoticiationData {
-  // notificationTimeId: number;
   timestamp: string;
 }
 
 export const notifications: INotification[] = [];
+let lastNotification: INoticiationData | null = null;  // 마지막 알림을 추적하기 위한 변수
 
 export const serveNotifications = (req: Request, res: Response) => {
   try {
@@ -55,28 +53,29 @@ export const serveNotifications = (req: Request, res: Response) => {
     });
 
     const sendNotifications = async () => {
-      console.log(notifications);
-
-      while (notifications.length) {
+      console.log(notifications)
+      if (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {
           if (notification && userId && userIdBuffer.equals(notification.receiver)) {
-            res.write(`data: {
-              type: ${notification.type},
-              sender: ${notification.sender},
-              url: ${notification.url},
-              timestamp: ${notification.timestamp}
-            }\n\n`);
+            const notificationData = JSON.stringify({
+              type: notification.type,
+              sender: notification.sender,
+              url: notification.url,
+              timestamp: notification.timestamp
+            })
+            res.write(`data: ${notificationData}\n\n`);
           }
-        })
+        });
         notifications.length = 0;
+      } else {
+        res.write('\n\n');
       }
     };
 
     const intervalid = setInterval(sendNotifications, 10000);
 
     req.on('close', () => clearInterval(intervalid));
-
 
   } catch (error) {
     handleControllerError(error, res);
@@ -85,27 +84,32 @@ export const serveNotifications = (req: Request, res: Response) => {
 
 type TNotify = "newPost" | "comment" | "update" | "match" | "follow" | "found" | "like";
 
-
 const timestampObject = () => {
   const timestamp = new Date();
 
   return {
-    // notificationTimeId: Math.floor((timestamp.getTime() - DATE.BASETIME) / 1000),
     timestamp: timestamp.toISOString()
-  }
-}
+  };
+};
 
 export const notify = (data: INoticiationData) => {
+  // 동일한 알림이 아닌지 확인하는 로직
+  if (lastNotification &&
+    lastNotification.type === data.type &&
+    // lastNotification.receiver.equals(data.receiver) &&
+    // lastNotification.sender.equals(data.sender) &&
+    lastNotification.url === data.url &&
+    lastNotification.commentId === data.commentId &&
+    lastNotification.result === data.result) {
+    console.log("중복된 알림이므로 생성하지 않습니다.");
+    return;
+  }
   const timestamp = timestampObject();
-
-  return notifications.push({
-    ...timestamp,
-    ...data
-  });
-}
+  notifications.push({ ...data, ...timestamp });
+  lastNotification = data;
+};
 
 export const updateNotifications = async (req: Request, res: Response) => {
-  // NOTE header의 user 내용으로 변경할 것
   try {
     const userId = await getUserId();
     updateNotificationsIsReadByReceiver(userId);
@@ -114,7 +118,7 @@ export const updateNotifications = async (req: Request, res: Response) => {
   } catch (error) {
     handleControllerError(error, res);
   }
-}
+};
 
 export const notifyNewPostToFriends = async (
   userId: Buffer,
@@ -128,8 +132,8 @@ export const notifyNewPostToFriends = async (
     receiver: friend.followingId,
     sender: userId,
     url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`
-  }))
-}
+  }));
+};
 
 export const notifyNewComment = async (
   userId: Buffer,
@@ -159,3 +163,56 @@ export const notifyNewLike = async (
     url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}` //프론트 url에 맞출 것
   });
 };
+
+// export const getNotifitionList = async (
+//   req: Request, res: Response
+// ) => {
+//   try {
+//     const userId = await getUserId2();
+//     const notifications = await getNotificationListByReceiver(userId, 10);
+//     res.status(StatusCodes.OK).send(notifications);
+//   } catch (error) {
+//     console.log(error)
+//   }
+
+// };
+
+export const getNotificationList = async (req: Request, res: Response) => {
+  try {
+    const limit = 10;
+    const userId = await getUserId2(); //NOTE
+    let notifications = await getNotificationListByReceiver(userId, limit);
+    const count = await getNotificationsCount();
+
+    const nextCursor = notifications.length === limit ? notifications[notifications.length - 1].notificationId : null;
+
+    const result = {
+      notifications,
+      pagination: {
+        nextCursor,
+        totalCount: count
+      }
+    };
+
+    res.status(StatusCodes.OK).send(result);
+
+    await updateNotificationsIsReadByReceiver(userId);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal Server Error" });
+  }
+}
+
+export const getIsAllNotificationRead = async (req: Request, res: Response) => {
+  try {
+    const userId = await getUserId2();
+    const latest = await getLatestNotificationByReceiver(userId);
+    const isAllRead = latest?.isRead;
+
+    res.status(StatusCodes.OK).json({ isAllRead })
+  } catch (error) {
+    console.error(error);
+  }
+}

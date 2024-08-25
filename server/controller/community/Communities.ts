@@ -38,27 +38,8 @@ import { addNewImages } from "../../util/images/addNewImages";
 // [x] 인기순 정렬
 // [ ] 에러처리 자세하게 구현하기
 
-//NOTE 사용자 정보를 받아오기 위한 임시 함수
-export const getUserId = async () => {
-  const result = await prisma.$queryRaw<{ HEX: Buffer }[]>`
-    SELECT uuid AS HEX
-    FROM users
-    WHERE id = 1;
-  `;
-
-  if (!result) {
-    throw new Error("사용자 정보 없음");
-  }
-
-  return result[0].HEX;
-};
-
 export const getCommunities = async (req: Request, res: Response) => {
-    try {
-    //   const uuid = req.user?.uuid;
-    const uuid = req.headers["x-uuid"] as string;
-    console.log("getCommunities uuid가 나오는지: ", uuid);
-
+  try {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const sort = req.query.sort?.toString() ?? "latest";
@@ -91,14 +72,12 @@ export const getCommunities = async (req: Request, res: Response) => {
 // [ ] 에러처리 자세하게 구현하기
 
 export const getCommunity = async (req: Request, res: Response) => {
-    // const uuid = req.user?.uuid;
-    const uuid = req.headers["x-uuid"] as string;
-    console.log("getCommunity uuid가 나오는지: ", uuid);
+  const uuid = req.headers["x-uuid"] as string;
 
   try {
     const postId = Number(req.params.community_id);
     const categoryId = CATEGORY.COMMUNITIES;
-    const userId = Buffer.from(uuid, "hex");
+    const userId = uuid && Buffer.from(uuid, "hex");
 
     let result;
 
@@ -112,7 +91,11 @@ export const getCommunity = async (req: Request, res: Response) => {
       // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
       // community.views += viewIncrementResult || 0;
 
-      const liked = await getLiked(tx, postId, categoryId, userId);
+      let liked;
+
+      if (userId) {
+        liked = await getLiked(tx, postId, categoryId, userId);
+      }
 
       result = {
         ...community,

@@ -13,9 +13,9 @@ import ChatRouter from "./routes/chat";
 import EventsRouter from "./routes/events";
 import NotificationsRouter from "./routes/notifications";
 import SearchesRouter from "./routes/searches";
-import { handleJoinRoom ,handleMessage } from "./controller/chat/Chat";
+import { handleJoinRoom, handleMessage } from "./controller/chat/Chat";
 import LikesRouter from "./routes/likes";
-import cookieParser from "cookie-parser";  
+import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT || 8080;
 
@@ -43,7 +43,7 @@ io.on("connection", (socket: Socket) => {
 })
 
 app.use(express.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.CORS_ALLOW_ORIGIN,
@@ -59,7 +59,11 @@ app.use("/boards/Interests", InterestsRouter);
 app.use("/boards/missings", MissingRouter);
 app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
-app.use("/notifications", NotificationsRouter);
+app.use("/notifications", cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'PATCH'],
+  allowedHeaders: ["Content-Type"],
+}), NotificationsRouter);
 app.use("/searches", SearchesRouter);
 app.use("/chats", ChatRouter(io))
 app.use("/posts", LikesRouter);

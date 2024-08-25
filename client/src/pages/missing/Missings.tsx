@@ -1,5 +1,8 @@
+import NewPostButton from "../../components/common/NewPostButton";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import PostList from "../../components/communityAndEvent/PostList";
+import PostMenu from "../../components/communityAndEvent/PostMenu";
+import { isMissing } from "../../components/missing/missingPost/PostHead";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import useMissings from "../../hooks/useMissings";
 import "../../styles/scss/pages/missing/missing.scss";
@@ -13,7 +16,6 @@ const Missings = () => {
     isFetchingNextPage,
     isEmpty,
   } = useMissings();
-  console.log("페이지", data);
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
@@ -41,6 +43,8 @@ const Missings = () => {
           <div className="more" ref={moreRef}>
             {isFetchingNextPage && <div>loading...</div>}
           </div>
+
+          <NewPostButton path="/boards/missings/write" text="실종 신고" />
         </>
       )}
     </section>
