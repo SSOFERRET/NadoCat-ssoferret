@@ -25,7 +25,7 @@ import { IImage } from "../../types/image";
 import { ITag } from "../../types/tag";
 import { getLiked, removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
-import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
@@ -159,12 +159,13 @@ export const createCommunity = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
-      await indexOpensearchDocument(CATEGORY.COMMUNITIES, title, content, post.postId);
-
       return post;
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
+
+    await indexResultToOpensearch(CATEGORY.COMMUNITIES, newPost.postId);
+
   } catch (error) {
     handleControllerError(error, res);
   }

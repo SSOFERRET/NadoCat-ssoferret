@@ -12,152 +12,13 @@ import {
 } from "../../utils/localStorage/localStorage";
 import RecentKeywords from "./RecentKeywords";
 import { IoMdCloseCircle } from "react-icons/io";
-
-const data = [
-  {
-    postId: 15,
-    categoryId: 2,
-    title: "1",
-    content: "1",
-    views: 0,
-    createdAt: "2024-08-22T00:24:14.000Z",
-    updatedAt: "2024-08-22T00:24:14.000Z",
-
-    tags: [
-      {
-        tagId: 1,
-        tag: "태그야 잘되니..?",
-      },
-      {
-        tagId: 2,
-        tag: "이게 맞나..",
-      },
-    ],
-    thumbnail: "",
-    likes: 0,
-  },
-  {
-    postId: 17,
-    categoryId: 2,
-    title: "1",
-    content: "1",
-    views: 0,
-    createdAt: "2024-08-22T00:24:20.000Z",
-    updatedAt: "2024-08-22T00:24:20.000Z",
-
-    tags: [],
-    thumbnail: "",
-    likes: 0,
-  },
-  {
-    postId: 18,
-    categoryId: 2,
-    title: "1",
-    content: "1",
-    views: 0,
-    createdAt: "2024-08-22T00:55:09.000Z",
-    updatedAt: "2024-08-22T00:55:09.000Z",
-
-    tags: [
-      {
-        tagId: 3,
-        tag: "태그",
-      },
-      {
-        tagId: 4,
-        tag: "동네 고양이",
-      },
-    ],
-    thumbnail: "",
-    likes: 0,
-  },
-  {
-    postId: 21,
-    categoryId: 2,
-    title: "22",
-    content: "22",
-    views: 0,
-    createdAt: "2024-08-22T13:02:53.000Z",
-    updatedAt: "2024-08-22T13:02:53.000Z",
-
-    tags: [],
-    thumbnail: "",
-    likes: 1,
-  },
-  {
-    postId: 22,
-    categoryId: 2,
-    title: "1",
-    content: "1",
-    views: 0,
-    createdAt: "2024-08-22T13:35:43.000Z",
-    updatedAt: "2024-08-22T13:35:43.000Z",
-
-    tags: [],
-    thumbnail: "",
-    likes: 0,
-  },
-  {
-    postId: 23,
-    categoryId: 2,
-    title: "111",
-    content: "1111",
-    views: 0,
-    createdAt: "2024-08-22T13:58:37.000Z",
-    updatedAt: "2024-08-22T13:58:37.000Z",
-    tags: [],
-    thumbnail: "",
-    likes: 0,
-  },
-  {
-    postId: 24,
-    categoryId: 2,
-    title: "1111111",
-    content: "11111111111",
-    views: 0,
-    createdAt: "2024-08-22T14:00:51.000Z",
-    updatedAt: "2024-08-22T14:00:51.000Z",
-    tags: [],
-    thumbnail: "",
-    likes: 0,
-  },
-  {
-    postId: 25,
-    categoryId: 2,
-    title: "1111111",
-    content: "11111111111",
-    views: 0,
-    createdAt: "2024-08-22T14:00:52.000Z",
-    updatedAt: "2024-08-22T14:00:52.000Z",
-    tags: [],
-    thumbnail: "",
-    likes: 0,
-  },
-  {
-    postId: 26,
-    categoryId: 2,
-    title: "1111111",
-    content: "11111111111",
-    views: 0,
-    createdAt: "2024-08-22T14:00:52.000Z",
-    updatedAt: "2024-08-22T14:00:52.000Z",
-    tags: [],
-    thumbnail: "",
-    likes: 0,
-  },
-  {
-    postId: 27,
-    categoryId: 2,
-    title: "1111111",
-    content: "11111111111",
-    views: 0,
-    createdAt: "2024-08-22T14:00:52.000Z",
-    updatedAt: "2024-08-22T14:00:52.000Z",
-    tags: [],
-    thumbnail: "",
-    likes: 0,
-  },
-];
+import useSearch, { ISearch, ISearchInfo, TIndex } from "../../hooks/useSearch";
+import { ICommunity } from "../../models/community.model";
+import { IEvent } from "../../models/event.model";
+import MissingPost from "../../components/missing/MissingPost";
+import { IMissing } from "../../models/missing.model";
+import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
+import LoadingCat from "../../components/loading/LoadingCat";
 
 // NOTE 이건 지우면 아래 카테고리가 동작 안해용..
 const categories = [
@@ -167,6 +28,14 @@ const categories = [
   { id: 3, category: "실종고양이" },
   { id: 4, category: "동네고양이" },
 ];
+
+//opensearch 목록별 명칭
+const categoryNames = {
+  communities: "커뮤니티",
+  events: "이벤트",
+  missings: "실종 고양이",
+  "street-cats": "동네 고양이",
+};
 
 // CHECKLIST
 // [x] 검색어 입력 폼 만들기
@@ -181,13 +50,15 @@ const categories = [
 const Search = () => {
   const keywords = getLocalStorage();
   const [keyword, setKeyword] = useState(""); // 검색어
-  const [recentKeywords, setRecentKeywords] = useState<SearchKeyword[]>(keywords); // 최근 검색 키워드 들어갈 자리
+  const [recentKeywords, setRecentKeywords] =
+    useState<SearchKeyword[]>(keywords); // 최근 검색 키워드 들어갈 자리
   const [selected, setSelected] = useState(0);
-
-  // NOTE 일단은 넣어뒀는데 이게 검색어를 입력하는 동시에 관련된 서버 요청을 한다면 사용하면 될 것 같습니다.
-  // NOTE (버튼 클릭해서 조회하는게 아닌 경우, 예를 들면 마켓컬리 앱에서 검색할때 느낌? 마켓컬리는 검색 버튼을 누르기전에 검색어와 관련된 상품이 있는지 상품 이름을 먼저 보여줍니다.)
-  const debouncedKeyword = useDebounce(keyword);
+  const [enteredKeyword, setEnteredKeyword] = useState("");
   const [isRecentKeywords, setIsRecentKeywords] = useState(true); // 최근 검색어 보여줄지 결정하는 요소
+
+  const { data, isLoading, error } = useSearch(enteredKeyword);
+
+  console.log("page", data);
 
   const handleCategory = (id: number) => {
     setSelected(id);
@@ -211,8 +82,9 @@ const Search = () => {
     }
 
     setIsRecentKeywords(false);
-
     setRecentKeywords([...recentKeywords, { id: Date.now(), keyword }]);
+
+    setEnteredKeyword(keyword);
   };
 
   const deleteRecentKeyword = (id: number) => {
@@ -220,6 +92,13 @@ const Search = () => {
 
     setRecentKeywords(filtered);
     setLocalStorage(filtered);
+  };
+
+  const getTotalCount = () => {
+    return data?.reduce(
+      (acc: number, current: ISearchInfo) => acc + current.totalcount.value,
+      0
+    );
   };
 
   const deleteAllRecentKeyword = () => {
@@ -231,7 +110,6 @@ const Search = () => {
     setLocalStorage(recentKeywords);
   }, [recentKeywords]);
 
-  // NOTE 백버튼 헤더로 변경하셔야 합니다.
   return (
     <div className="search-container">
       <div className="category">
@@ -251,7 +129,6 @@ const Search = () => {
             type="button"
             disabled={!keyword.length}
             onClick={() => {
-              console.log("???");
               setKeyword("");
               setIsRecentKeywords(true);
             }}
@@ -259,13 +136,13 @@ const Search = () => {
           >
             <IoMdCloseCircle />
           </button>
-          <button className="search-button">
+          <button type="submit" className="search-button">
             <RiSearchLine />
           </button>
         </div>
       </form>
 
-      {isRecentKeywords && (
+      {isRecentKeywords && !isLoading && (
         <RecentKeywords
           recentKeywords={recentKeywords}
           deleteAll={deleteAllRecentKeyword}
@@ -273,8 +150,9 @@ const Search = () => {
         />
       )}
 
-      {/* 일단은 이렇게 해놨는데 필요에 따라 조건을 수정하면 됩니다. */}
-      {/* {data ? (
+      {isLoading && <LoadingCat />}
+
+      {data && !isRecentKeywords ? (
         <section className="search-results">
           <ul className="search-categories">
             {categories.map((item) => (
@@ -289,20 +167,50 @@ const Search = () => {
           </ul>
 
           <div className="search-result-list">
-            <span className="search-result-count">검색 결과 수 보여주는 자리</span>
-            <ul>
-              {data.map((post) => (
-                <Post key={post.postId} post={post} />
+            <span className="search-result-count">
+              총 검색 결과 수 - {getTotalCount()} 건
+            </span>
+            <ul className="total-results">
+              {data.map((category) => (
+                <li key={category.category} className="category-container">
+                  <span className="search-result-count">
+                    {`${
+                      categoryNames[
+                        category.category as keyof typeof categoryNames
+                      ]
+                    } ${category.totalcount.value} 건`}
+                  </span>
+                  <div className="results-container">
+                    {category.search.map((result) => (
+                      <div key={result._source.postId} className="result">
+                        {(category.category === "communities" ||
+                          category.category === "events") && (
+                          <Post post={result._source as ICommunity | IEvent} />
+                        )}
+                        {category.category === "missings" && (
+                          <MissingPost
+                            key={result._source.postId}
+                            post={result._source as IMissing}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </li>
               ))}
             </ul>
           </div>
         </section>
       ) : (
         <section className="search-no-results">
-          <img className="unfindable-cat" src={UnfindableCat} alt="UnfindableCat" />
+          <img
+            className="unfindable-cat"
+            src={UnfindableCat}
+            alt="UnfindableCat"
+          />
           <span>검색 결과가 없습니다.</span>
         </section>
-      )} */}
+      )}
     </div>
   );
 };

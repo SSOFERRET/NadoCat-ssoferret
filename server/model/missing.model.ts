@@ -308,6 +308,23 @@ export const getPostByPostId = async (
   }
 };
 
+export const getMissingById = async (
+  tx: Prisma.TransactionClient,
+  postId: number
+): Promise<any> => {
+  return await tx.missings.findUnique({
+    where: {
+      postId: postId,
+    },
+    select: {
+      ...missingDataSelect,
+      detail: true
+    }
+  });
+};
+
+
+
 export const getLocationFormatsByPostId = async (
   tx: Prisma.TransactionClient,
   postData: IPostData
