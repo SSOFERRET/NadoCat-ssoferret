@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createNotification, getNotificationListByReceiver, getNotificationsCount, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
+import { createNotification, getLatestNotificationByReceiver, getNotificationListByReceiver, getNotificationsCount, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
 import { getUserId, getUserId2 } from "../missing/Missings";
 import { StatusCodes } from "http-status-codes";
 import { handleControllerError } from "../../util/errors/errors";
@@ -200,5 +200,17 @@ export const getNotificationList = async (req: Request, res: Response) => {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Internal Server Error" });
+  }
+}
+
+export const getIsAllNotificationRead = async (req: Request, res: Response) => {
+  try {
+    const userId = await getUserId2();
+    const latest = await getLatestNotificationByReceiver(userId);
+    const isAllRead = latest?.isRead;
+
+    res.status(StatusCodes.OK).json({ isAllRead })
+  } catch (error) {
+    console.error(error);
   }
 }

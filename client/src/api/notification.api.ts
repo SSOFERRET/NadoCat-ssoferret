@@ -1,3 +1,4 @@
+import { IIsAllRead } from "../hooks/useNotifications";
 import { INotificationPage } from "../models/notification.model";
 import { httpClient } from "./http";
 
@@ -45,13 +46,13 @@ export const getNotifications = async ({
   }
 };
 
-// export const getLatestNotification = async () => {
-//   try {
-//     const data: INotificationFromDB = await httpClient.get(`/notifications/latest`).then((res) => res.data);
+export const getIsAllNotificationRead = async (): Promise<IIsAllRead> => {
+  try {
+    const data: IIsAllRead = await httpClient.get(`/notifications/all-read`).then((res) => res.data);
 
-//     return data as INotificationFromDB;
-//   } catch (error) {
-//     console.error("Error fetching notification posts:", error);
-//     throw error;
-//   }
-// }
+    return data;
+  } catch (error) {
+    console.error("Error fetching notification posts:", error);
+    throw error;
+  }
+}

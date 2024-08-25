@@ -1,11 +1,13 @@
 import { getNotifications } from "../../api/notification.api";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
+import LoadingCat from "../../components/loading/LoadingCat";
 import NotificationList from "../../components/notifications/NotificationList";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import useNotifications from "../../hooks/useNotifications";
 import "./../../styles/scss/pages/notification/notification.scss";
 
 const Notification = () => {
+  const { getNotificationList } = useNotifications();
   const {
     data,
     isLoading,
@@ -13,7 +15,7 @@ const Notification = () => {
     hasNextPage,
     isFetchingNextPage,
     isEmpty,
-  } = useNotifications();
+  } = getNotificationList();
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
@@ -27,7 +29,7 @@ const Notification = () => {
   return (
     <section className="notification-container">
       {isLoading ? (
-        <div>loading...</div>
+        <LoadingCat />
       ) : (
         <>
           <div className="category">
