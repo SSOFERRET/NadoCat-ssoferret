@@ -1,24 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { PiChatCircleBold } from "react-icons/pi";
 import "../../styles/css/base/reset.css";
 import "../../styles/scss/pages/streetCat/streetCatDetail.scss";
-import { useStreetCatPost } from "../../hooks/useStreetCat";
+import { useReadStreetCatPost } from "../../hooks/useStreetCat";
 import PostDetail from "../../components/streetCat/PostDetail";
 import DiscoveryLocation from "../../components/streetCat/DiscoveryLocation";
 import Author from "../../components/streetCat/Author";
 import CommentsEmpty from "../../components/comment/CommentsEmpty";
 import StreetCatComments from "../../components/streetCat/StreetCatComments";
 import CommentForm from "../../components/comment/CommentForm";
+import MapBox from "../../components/streetCat/testComp";
 
 const StreetCatDetail: React.FC = () => {
   const { id } = useParams();
-  const postId = Number(id);
-
-  const {data} = useStreetCatPost(postId);
-  console.log(data)
+  const postId = Number(id);  
+  const {data} = useReadStreetCatPost(postId);
 
   return (
     <>
@@ -28,7 +27,7 @@ const StreetCatDetail: React.FC = () => {
             <span className="page-guide">동네 고양이 도감</span>
           </div>
           <PostDetail {...data}/>
-          <DiscoveryLocation location={data?.location}/>
+          {data?.location && <DiscoveryLocation location={data?.location} />}
           <Author users={data?.users} createdAt={data?.createdAt} name={data?.name}/>
         </div>
       </section>

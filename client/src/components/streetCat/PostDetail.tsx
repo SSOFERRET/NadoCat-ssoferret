@@ -7,7 +7,7 @@ import ImageCarousel from "../common/ImageCarousel";
 import { IImage } from "../../models/image.model";
 import FavoriteButton from "../common/FavoriteButton";
 import PostMenu from "../communityAndEvent/PostMenu";
-import { useDeleteStreetCatPost, useStreetCatPost } from "../../hooks/useStreetCat";
+import { useDeleteStreetCatPost } from "../../hooks/useStreetCat";
 
 interface IProps {
   postId?: number; 
@@ -62,9 +62,9 @@ const PostDetail = (props: IProps) => {
         </div>
 
         <div className="cat-content">
-          <p>
+          <pre>
             {props.content}
-          </p>
+          </pre>
         </div>
       </div>
       <PostMenu
