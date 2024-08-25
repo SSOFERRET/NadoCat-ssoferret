@@ -1,3 +1,4 @@
+import { ISubmitData } from "../components/missing/MissingEventWriteForm";
 import { IMissing, IMissingPosts, IMissingReportPosts } from "../models/missing.model";
 import { httpClient } from "./http";
 
@@ -63,10 +64,24 @@ export const getMissingDetail = async ({ postId }: IMissingDetailParam): Promise
 
 export const deleteMissingPost = async ({ postId }: IMissingDetailParam) => {
   try {
-    const response = await httpClient.delete(`/boards/missing/${postId}`);
+    const response = await httpClient.delete(`/boards/missings/${postId}`);
     return response.data;
   } catch (error) {
     console.error("Error deleting missing post:", error);
+    throw error;
+  }
+};
+
+export const createMissingPost = async (submitData: ISubmitData) => {
+  try {
+    const response = await httpClient.post(`/boards/missings`, submitData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating missing post:", error);
     throw error;
   }
 };

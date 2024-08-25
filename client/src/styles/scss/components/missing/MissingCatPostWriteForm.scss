@@ -1,0 +1,86 @@
+@import "../../base/common.scss";
+
+.cat-post-write {
+  min-height: calc(100vh - 60rem);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 41rem;
+  min-height: calc(100vh - 60rem);
+
+  .gender-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8rem;
+    input {
+      background-color: $lightgray;
+      width: 30%;
+      padding: 4rem;
+      text-align: center;
+    }
+
+    .picked {
+      background-color: $primary;
+    }
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  input {
+    width: 100%;
+    font-family: "bold";
+    font-size: $size-20;
+    border: none;
+    outline: none;
+    padding: 14rem 20rem;
+    padding-top: 0;
+    border-bottom: 1px solid $lightgray;
+
+    &::placeholder {
+      color: $silver;
+    }
+  }
+
+  &::placeholder {
+    font-family: "bold";
+    color: $silver;
+  }
+
+  .hash-tag-btn {
+    position: relative;
+    background-color: transparent;
+    border: none;
+    font-family: "bold";
+    font-size: $size-16;
+    color: $dimgray;
+    padding-bottom: 22rem;
+    cursor: pointer;
+  }
+
+  .post-submit {
+    @include bigButton("on");
+    font-family: "bold";
+    margin: 20rem;
+  }
+
+  .post-submit[disabled] {
+    background-color: $lightgray;
+    cursor: not-allowed;
+  }
+
+  .abled {
+    background-color: $primary;
+  }
+
+  .hash-tag-wrapper {
+    width: 100%;
+    padding: 0 20rem;
+  }
+}

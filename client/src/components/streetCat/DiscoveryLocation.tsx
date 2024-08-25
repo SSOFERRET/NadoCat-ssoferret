@@ -22,7 +22,7 @@ interface ILocationProps {
 
 const DiscoveryLocation = (props: ILocationProps) => {
   const latitude = props.location?.latitude ?? 37.5665;
-  const longitude = props.location?.longitude ?? 126.9780;
+  const longitude = props.location?.longitude ?? 126.978;
 
   return (
     <>
@@ -50,7 +50,7 @@ const DiscoveryLocation = (props: ILocationProps) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default DiscoveryLocation;

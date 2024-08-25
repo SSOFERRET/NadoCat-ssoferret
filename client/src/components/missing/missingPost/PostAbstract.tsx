@@ -5,11 +5,12 @@ import "./../../../styles/scss/components/missing/postAbstract.scss";
 import PostSummary from "../common/PostSummary";
 import { IMenuList, IMissing } from "../../../models/missing.model";
 import { formatDate } from "../../../utils/format/format";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface IProps {
   post: IMissing;
   navigateUser?: boolean;
-  menuList?: IMenuList;
+  showMenu?: () => void;
 }
 
 const images: IImage[] = [
@@ -23,12 +24,19 @@ const images: IImage[] = [
   },
 ];
 
-const PostAbstract = ({ post, navigateUser, menuList }: IProps) => {
+const PostAbstract = ({ post, navigateUser, showMenu }: IProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const navigateToPostDetail = () =>
+    navigate(`${location.pathname}/${post.postId}`);
+
   return (
     <section className="post-abstract">
-      <PostHead data={post} navigateUser={navigateUser} menuList={menuList} />
-      <ImageCarousel images={images} />
-      <PostSummary data={post} />
+      <PostHead data={post} navigateUser={navigateUser} showMenu={showMenu} />
+      <div className="navigate-detail" onClick={navigateToPostDetail}>
+        <ImageCarousel images={images} />
+        <PostSummary data={post} />
+      </div>
     </section>
   );
 };

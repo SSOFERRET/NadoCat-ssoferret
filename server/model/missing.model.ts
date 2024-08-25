@@ -30,7 +30,7 @@ const missingDataSelect = {
     select: {
       missingCatId: true,
       name: true,
-      age: true,
+      birth: true,
       detail: true,
       gender: true
     }
