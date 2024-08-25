@@ -23,6 +23,7 @@ import UserProfile from "./pages/user/UserProfile";
 import CommunityPostWrite from "./pages/community/CommunityPostWrite";
 import EventPostWrite from "./pages/event/EventPostWrite";
 import EventPostEdit from "./pages/event/EventPostEdit";
+import StreetCatEdit from "./pages/streetCat/StreetCatEdit";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
               { path: "", element: <StreetCats /> },
               { path: ":id", element: <StreetCatDetail /> },
               { path: "write", element: <StreetCatWrite /> },
+              { path: "edit/:id", element: <StreetCatEdit /> },
             ],
           },
           {

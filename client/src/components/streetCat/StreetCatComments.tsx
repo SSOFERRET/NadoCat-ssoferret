@@ -57,7 +57,6 @@ const StreetCatComments = ({postId}: IProps) => {
     </>
     );
   }
-  // console.log("data", data)
 
   const transformedComments = data?.pages.map(page => ({
     comments: page.streetCatComments.map(comment => ({
@@ -69,20 +68,20 @@ const StreetCatComments = ({postId}: IProps) => {
     }))
   }));
 
-  console.log("transformedComments", transformedComments)
-
   return (
     <>
       <div className="street-cat-comment-list">
         {/* <StreetCatComment comments={streetCatComments} postId={postId}/> */}
-        <CommentList
-          postId={postId}
-          comments={{pages: transformedComments, pageParams: []}}
-          showMenu={showMenu}
-          isCommentEdit={isCommentEdit}
-          setIsCommentEdit={setIsCommentEdit}
-          editComment={editStreetCatComment}
-        />
+        <ul>  
+          <CommentList
+            postId={postId}
+            comments={{pages: transformedComments, pageParams: []}}
+            showMenu={showMenu}
+            isCommentEdit={isCommentEdit}
+            setIsCommentEdit={setIsCommentEdit}
+            editComment={editStreetCatComment}
+          />
+        </ul>
       </div>
       <CommentForm postId={postId} uuid={uuid} addComment={addStreetCatComment} />
 

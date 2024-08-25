@@ -16,12 +16,13 @@ import {
   updateStreetCatComment,
   deleteStreetCatComment
 } from "../controller/streetCat/StreetCatsComments";
+import uploadImages from "../multer";
 
 // 동네 고양이 도감
 router.get("/", getStreetCats);
 router.get("/:street_cat_id", getStreetCat);
-router.post("/", createStreetCat);
-router.put("/:street_cat_id", updateStreetCat);
+router.post("/", uploadImages.array("images"), createStreetCat);
+router.put("/:street_cat_id", uploadImages.array("images"), updateStreetCat);
 router.delete("/:street_cat_id", deleteStreetCat);
 
 // 동네 고양이 도감 댓글

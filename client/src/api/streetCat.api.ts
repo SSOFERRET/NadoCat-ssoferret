@@ -56,6 +56,32 @@ export const fetchStreetCatPosts = async (params: IReadStreetCatPostsParams) => 
   }
 }
 
+export const createStreetCatPost = async (formData: FormData) => {
+  try {
+    const response = await httpClient.post(`/boards/street-cats`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to create streetCatPost:", error);
+  }
+}
+
+export const updateStreetCatPost = async (formData: FormData, postId: number) => {
+  try {
+    const response = await httpClient.put(`/boards/street-cats/${postId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update streetCatPost:", error);
+  }
+}
+
 export const getStreetCatPost = async ({postId}: IStreetCatDetailParams): Promise<IStreetCatDetail> => {
   const response = await httpClient.get<IStreetCatDetail>(`/boards/street-cats/${postId}`);
   return response.data;
@@ -92,7 +118,6 @@ export const fetchStreetCatComments = async (params: IReadStreetCatCommentsParam
     const response = await httpClient.get(
       `/boards/street-cats/${params.postId}/comments?limit=${params.limit}&cursor=${params.cursor}`
     );
-    console.log("api console", response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch streetCatComments:", error);

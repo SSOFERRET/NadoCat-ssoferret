@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createFavoriteCat, deleteFavoriteCat, deleteStreetCatComment, deleteStreetCatPost, getStreetCatPost } from "../api/streetCat.api";
+import { createFavoriteCat, createStreetCatPost, deleteFavoriteCat, deleteStreetCatComment, deleteStreetCatPost, getStreetCatPost, updateStreetCatPost } from "../api/streetCat.api";
 import { IStreetCatDetail } from "../models/streetCat.model";
 import { queryClient } from "../api/queryClient";
 
@@ -13,7 +13,12 @@ interface IStreetCatCommentParams {
   commentId: number;
 }
 
-export const useStreetCatPost = (postId: number) => {
+interface IStreetCatEdit {
+  formData: FormData;
+  postId: number;
+}
+
+export const useReadStreetCatPost = (postId: number) => {
   const {data} = useQuery({
     queryKey: ["streetCatDetail", postId],
     queryFn: () => getStreetCatPost({postId})
@@ -24,13 +29,41 @@ export const useStreetCatPost = (postId: number) => {
   }
 }
 
+export const useAddStreetCatPost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (formData: FormData) => createStreetCatPost(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey:['createStreetCatPost']});
+    },
+    onError: (error) => {
+      console.error("Error creating street cat post:", error);
+    },
+  });
+};
+
+export const useUpdateStreetCatPost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({formData, postId}: IStreetCatEdit) => updateStreetCatPost(formData, postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey:['createStreetCatPost']});
+    },
+    onError: (error) => {
+      console.error("Error creating street cat post:", error);
+    },
+  });
+};
+
 export const useDeleteStreetCatPost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ postId }: IStreetCatDetailParams) => deleteStreetCatPost({ postId }),
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ["deleteStreetCatDetail", postId] });
+      queryClient.removeQueries({ queryKey: ["deleteStreetCatPost", postId] });
     },
     onError: (error) => {
       console.error("Error deleting street cat post:", error);

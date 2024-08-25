@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client"
-import { IImages, IStreetCatImages, IStreetCatPost, IStreetCats } from "../types/streetCat"
+import { IImages, ILocation, IStreetCatImages, IStreetCatPost, IStreetCats } from "../types/streetCat"
 
 // NOTE: 함수명 통일성 필요 (ex. delete | remove 중에 통일)
 
@@ -136,6 +136,17 @@ export const readPost = async (postId: number) => {
   }
 }
 
+export const createLoction = async (tx: Prisma.TransactionClient, location: ILocation) => {
+
+  return await tx.locations.create({
+    data: {
+      latitude: location.location.latitude,
+      longitude: location.location.longitude,
+      detail: location.location.detail
+    }
+  })
+}
+
 export const readLocation = async (tx: Prisma.TransactionClient, locationId: number) => {
   return await tx.locations.findUnique({
     where: {
@@ -155,10 +166,9 @@ export const createPost = async (tx: Prisma.TransactionClient, {
   gender,
   neutered,
   discoveryDate,
-  locationId,
   content,
   uuid,
-}: Omit<IStreetCatPost, "postId">) => {
+}: Omit<IStreetCatPost, "postId"|"locationId">, locationId: number) => {
 
   return await tx.streetCats.create({
     data: {
@@ -418,3 +428,7 @@ export const removeAllComment = async (streetCatId: number) => {
     }
   })
 }
+
+// export const readUserLocation = async (uuid: Buffer) => {
+//   return await prisma.locations.findMany
+// }
