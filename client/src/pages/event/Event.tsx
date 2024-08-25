@@ -1,6 +1,6 @@
 import "../../styles/scss/pages/event/event.scss";
 import useEvents from "../../hooks/useEvents";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import PostList from "../../components/communityAndEvent/PostList";
@@ -10,9 +10,12 @@ import { SortMenu, sortMenu } from "../../utils/sort/sortMenu";
 import SortButton from "../../components/communityAndEvent/SortButton";
 import Spinner from "../../components/loading/Spinner";
 import PostMenu from "../../components/communityAndEvent/PostMenu";
+import { getLocalStorageSortType, setLocalStorageSortType } from "../../utils/localStorage/localStorage";
 
 const Event = () => {
-  const [sort, setSort] = useState<SortMenu>(sortMenu[0]);
+  const sortType = getLocalStorageSortType("events");
+  const foundSortType = sortMenu.find((item) => item.sortType === sortType);
+  const [sort, setSort] = useState<SortMenu>(foundSortType || sortMenu[0]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useEvents(sort.sortType);
 
@@ -33,6 +36,10 @@ const Event = () => {
     setSort(item);
     handleMene();
   };
+
+  useEffect(() => {
+    setLocalStorageSortType("events", sort.sortType);
+  }, [sort]);
 
   return (
     <>

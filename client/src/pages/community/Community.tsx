@@ -5,18 +5,21 @@ import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import LoadingCat from "../../components/loading/LoadingCat";
 import NewPostButton from "../../components/common/NewPostButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SortMenu, sortMenu } from "../../utils/sort/sortMenu";
 import SortButton from "../../components/communityAndEvent/SortButton";
 import Spinner from "../../components/loading/Spinner";
 import PostMenu from "../../components/communityAndEvent/PostMenu";
+import { getLocalStorageSortType, setLocalStorageSortType } from "../../utils/localStorage/localStorage";
 
 // CHECKLIST
 // [x] 정렬 기준 동적으로 받아오게 수정
 // [x] 무한 스크롤 로딩 스피너 만들기
 
 const Community = () => {
-  const [sort, setSort] = useState<SortMenu>(sortMenu[0]);
+  const sortType = getLocalStorageSortType("communities");
+  const foundSortType = sortMenu.find((item) => item.sortType === sortType);
+  const [sort, setSort] = useState<SortMenu>(foundSortType || sortMenu[0]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useCommunities(sort.sortType);
 
@@ -37,6 +40,10 @@ const Community = () => {
     setSort(item);
     handleMene();
   };
+
+  useEffect(() => {
+    setLocalStorageSortType("communities", sort.sortType);
+  }, [sort]);
 
   return (
     <>
