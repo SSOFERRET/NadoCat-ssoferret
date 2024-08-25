@@ -26,6 +26,7 @@ model Chats {
   uuid      Bytes      @db.Binary(16)
   createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
   otherUuid Bytes      @map("other_uuid") @db.Binary(16)
+  users     Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "chats_uuid_fk")
   messages  Messages[]
 
   @@index([uuid, otherUuid], map: "chats_uuid_fk_idx")
@@ -40,7 +41,6 @@ model Communities {
   views             Int                 @default(0)
   createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt         DateTime            @default(now()) @map("updated_at") @db.Timestamp(0)
-  thumbnail         Int?
   uuid              Bytes               @db.Binary(16)
   boardCategories   BoardCategories     @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "communities_category_id_fk")
   users             Users               @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "communities_uuid_fk")
@@ -150,24 +150,20 @@ model Events {
   categoryId      Int             @default(2) @map("category_id")
   title           String          @db.VarChar(100)
   isClosed        Boolean         @default(false) @map("is_closed")
-  date            String?         @db.VarChar(45)
   content         String          @db.LongText
   views           Int             @default(0)
   createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt       DateTime        @default(now()) @map("updated_at") @db.Timestamp(0)
-  thumbnail       Int?
   uuid            Bytes           @db.Binary(16)
   eventComments   EventComments[]
   eventImages     EventImages[]
   eventLikes      EventLikes[]
   eventTags       EventTags[]
   boardCategories BoardCategories @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "events_category_id_fk")
-  images          Images?         @relation(fields: [thumbnail], references: [imageId], onDelete: NoAction, onUpdate: NoAction, map: "events_thumbnail_fk")
   users           Users           @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "events_uuid_fk")
 
   @@id([postId, categoryId])
   @@index([categoryId], map: "events_category_id_fk_idx")
-  @@index([thumbnail], map: "events_thumbnail_fk_idx")
   @@index([uuid], map: "events_uuid_fk_idx")
   @@map("events")
 }
@@ -187,10 +183,8 @@ model Friends {
 model Images {
   imageId             Int                  @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
   url                 String               @db.VarChar(2048)
-  thumbnail           Int                  @default(0) @db.TinyInt
   communityImages     CommunityImages?
   eventImages         EventImages?
-  events              Events[]
   missingImages       MissingImages?
   missingReportImages MissingReportImages?
   missingReports      MissingReports[]
@@ -247,7 +241,7 @@ model Messages {
 model MissingCats {
   missingCatId Int        @id @unique(map: "missing_cat_id_UNIQUE") @default(autoincrement()) @map("missing_cat_id")
   name         String     @db.VarChar(10)
-  age          Int?
+  birth        DateTime?  @db.Date
   gender       String?    @default("-") @db.Char(1)
   uuid         Bytes      @db.Binary(16)
   detail       String?    @db.MediumText
@@ -412,13 +406,12 @@ model StreetCatComments {
 }
 
 model StreetCatFavorites {
-  streetCatFavoriteId Int        @id @unique(map: "street_cat_favorite_id_UNIQUE") @default(autoincrement()) @map("street_cat_favorite_id")
-  uuid                Bytes      @db.Binary(16)
-  postId              Int        @map("post_id")
-  createdAt           DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
-  streetCats          StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
-  users               Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
+  uuid       Bytes      @db.Binary(16)
+  postId     Int        @map("post_id")
+  streetCats StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
+  users      Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
 
+  @@id([uuid, postId])
   @@index([postId], map: "street_cat_favorites_post_id_fk_idx")
   @@map("street_cat_favorites")
 }
@@ -485,6 +478,13 @@ model Tags {
   @@map("tags")
 }
 
+model UserImages {
+  imageId Int   @id @unique(map: "image_id_UNIQUE") @default(autoincrement()) @map("image_id")
+  uuid    Bytes @db.Binary(16)
+
+  @@map("user_images")
+}
+
 model UserOauthSecrets {
   userOauthSecretId Int    @id @unique(map: "user_oauth_secret_id_UNIQUE") @default(autoincrement()) @map("user_oauth_secret_id")
   uuid              Bytes  @db.Binary(16)
@@ -519,6 +519,7 @@ model Users {
   profileImage                              String?              @map("profile_image") @db.VarChar(100)
   createdAt                                 DateTime             @default(now()) @map("created_at") @db.Timestamp(0)
   status                                    String               @default("active") @db.VarChar(20)
+  chats                                     Chats[]
   communities                               Communities[]
   communityComments                         CommunityComments[]
   eventComments                             EventComments[]
