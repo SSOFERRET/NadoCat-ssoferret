@@ -26,6 +26,7 @@ import Search from "./pages/search/Search";
 import MissingDetail from "./pages/missing/MissingDetail";
 import Boards from "./pages/boards/Boards";
 import ProtectedPath from "./pages/protectedPath/ProtectedPath";
+import StreetCatEdit from "./pages/streetCat/StreetCatEdit";
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,7 @@ const router = createBrowserRouter([
               { path: "", element: <StreetCats /> },
               { path: ":id", element: <StreetCatDetail /> },
               { path: "write", element: <StreetCatWrite /> },
+              { path: "edit/:id", element: <StreetCatEdit /> },
             ],
           },
           {

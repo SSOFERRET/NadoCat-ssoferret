@@ -6,6 +6,7 @@ import { useStreetCatPosts } from "../../hooks/useStreetCats";
 import { useIntersectionObserver } from "./IntersectionObserver";
 import FavoriteButton from "../common/FavoriteButton";
 import WriteButton from "../common/WriteButton";
+import NewPostButton from "../common/NewPostButton";
 
 // NOTE 로그인 후 데이터 받아오기 해야함
 // CHECKLIST
@@ -35,8 +36,7 @@ const StreetCatPosts: React.FC = () => {
 
   console.log(streetCatPosts);
   return (
-    <div className="street-cat-posts">
-      <WriteButton />
+    <>
       <p className="title">우리 동네 고양이</p>
       <ul className="street-cat-list">
         {streetCatPosts.map((cat) => (

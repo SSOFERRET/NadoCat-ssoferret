@@ -108,3 +108,37 @@ export interface ICommentDeleteRequest {
   postId: number;
   commentId: number;
 }
+
+interface IStreetCatImage {
+  imageId: number;
+  url: string;
+}
+
+interface ILocation {
+  longitude: number;
+  latitude: number;
+  detail: string;
+}
+
+export interface IStreetCatEdit {
+  postId: number;
+  categoryId: number;
+  name: string;
+  gender: string;
+  neutered: string;
+  discoveryDate: string;
+  locationId: number;
+  content: string;
+  views: number;
+  createdAt: string;
+  streetCatImages: IStreetCatImage[];
+  users: {
+    uuid: Buffer;
+    nickname: string;
+    profileImage: string;
+  };
+  streetCatFavorites: {
+    postId: number;
+  }[];
+  location: ILocation;
+}

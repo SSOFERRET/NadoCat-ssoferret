@@ -1,14 +1,26 @@
 @import "../../base/common.scss";
 
 .write-btn {
-  background-color: $primary;
+  position: sticky;
+  bottom: 73rem;
+  right: 20rem;
+  float: right;
+  width: 107rem;
+  height: 54rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50rem;
+  background-color: #f2b705;
+  color: #ffffff;
   border: none;
-  border-radius: $rount-30;
-  font-size: 16rem;
-  padding: 16rem 20rem;
-  position: absolute;
-  right: 5%;
-  z-index: 100;
+  font-family: "bold";
+  font-size: 18rem !important;
+  z-index: 10000;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 20rem;
+  box-shadow: 0 5px 10px -7px rgb(87, 87, 87);
 
   svg {
     width: 19rem;

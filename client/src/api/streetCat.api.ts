@@ -35,11 +35,12 @@ export interface ICommentCreateRequest {
 export interface ICommentUpdateRequest {
   uuid: Buffer;
   postId: number;
+  commentId: number;
   comment: string;
 }
 
 export interface ICommentDeleteRequest {
-  uuid: Buffer;
+  uuid?: Buffer;
   postId: number;
   commentId: number;
 }
@@ -55,8 +56,39 @@ export const fetchStreetCatPosts = async (params: IReadStreetCatPostsParams) => 
   }
 }
 
+export const createStreetCatPost = async (formData: FormData) => {
+  try {
+    const response = await httpClient.post(`/boards/street-cats`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to create streetCatPost:", error);
+  }
+}
+
+export const updateStreetCatPost = async (formData: FormData, postId: number) => {
+  try {
+    const response = await httpClient.put(`/boards/street-cats/${postId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update streetCatPost:", error);
+  }
+}
+
 export const getStreetCatPost = async ({postId}: IStreetCatDetailParams): Promise<IStreetCatDetail> => {
   const response = await httpClient.get<IStreetCatDetail>(`/boards/street-cats/${postId}`);
+  return response.data;
+}
+
+export const deleteStreetCatPost = async ({postId}: IStreetCatDetailParams) => {
+  const response = await httpClient.delete(`/boards/street-cats/${postId}`);
   return response.data;
 }
 
@@ -97,12 +129,14 @@ export const createStreetCatComment = async ({uuid, postId, comment}: ICommentCr
   return response.data;
 }
 
-export const updateStreetCatComment = async ({postId, comment}: ICommentUpdateRequest) => {
-  const response = await httpClient.put(`/boards/street-cats/${postId}.comments`, {postId, comment});
+export const updateStreetCatComment = async ({postId, comment, commentId}: ICommentUpdateRequest) => {
+  const response = await httpClient.put(`/boards/street-cats/${postId}/comments/${commentId}`, {
+    comment,
+  });
   return response.data;
 }
 
 export const deleteStreetCatComment = async ({postId, commentId}: ICommentDeleteRequest) => {
-  const response = await httpClient.delete(`/boards/street-cats/${postId}.comments/${commentId}`);
+  const response = await httpClient.delete(`/boards/street-cats/${postId}/comments/${commentId}`);
   return response.data;
 }
