@@ -7,7 +7,6 @@ const useCommunities = (sort?: Sort) => {
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["community", sort],
     queryFn: ({ pageParam = 0 }) => getCommunityPosts({ pageParam, sort }),
-    initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const nextCursor = lastPage.pagination.nextCursor;
       if (nextCursor) {
@@ -15,6 +14,8 @@ const useCommunities = (sort?: Sort) => {
       }
       return undefined;
     },
+    initialPageParam: 0,
+    staleTime: 1000 * 60 * 5,
   });
 
   const posts = data ? data.pages.flatMap((page) => page.posts) : [];

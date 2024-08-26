@@ -9,7 +9,6 @@ const useEventComment = (postId: number) => {
   const { data, error, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["eventComment", postId],
     queryFn: ({ pageParam = 0 }) => getEventComments({ pageParam, postId }),
-    initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const nextCursor = lastPage.pagination.nextCursor;
       if (nextCursor) {
@@ -17,6 +16,8 @@ const useEventComment = (postId: number) => {
       }
       return undefined;
     },
+    initialPageParam: 0,
+    staleTime: 1000 * 60 * 5,
   });
 
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];
