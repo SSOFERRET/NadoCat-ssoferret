@@ -1,7 +1,7 @@
-import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
-import { useNavigate } from "react-router-dom";
-import useMissings from "../../hooks/useMissings";
-import MissingCatWriteForm from "../../components/missing/MissingCatWriteForm";
+// import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
+// import { useNavigate } from "react-router-dom";
+// import useMissings from "../../hooks/useMissings";
+// import MissingCatWriteForm from "../../components/missing/MissingCatWriteForm";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ILocation } from "../../models/location.model";
 import { ICatInfo } from "../../pages/missing/MissingPostWrite";
@@ -35,9 +35,9 @@ export interface ISubmitData {
 const MissingEventWriteForm = ({ catInfo, addPost }: IProps) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [time, setTime] = useState<string>("");
-  const [location, setLocation] = useState<ILocation | undefined>();
+  // const [location, setLocation] = useState<ILocation | undefined>();
   const [detail, setDetail] = useState<string>("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {

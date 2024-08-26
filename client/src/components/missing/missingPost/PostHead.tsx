@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import {
   IMenuList,
   IMissing,
@@ -8,8 +8,8 @@ import { formatDate } from "../../../utils/format/format";
 import Avatar from "../../common/Avatar";
 import "./../../../styles/scss/components/missing/postHead.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { useState } from "react";
-import PostMenu from "../../communityAndEvent/PostMenu";
+// import { useState } from "react";
+// import PostMenu from "../../communityAndEvent/PostMenu";
 
 export interface IMissingComponentProps {
   data: IMissing | IMissingReport;
@@ -23,11 +23,11 @@ export const isMissing = (data: IMissing | IMissingReport): data is IMissing =>
 
 const PostHead = ({
   data,
-  navigateUser,
-  menuList,
+  // navigateUser,
+  // menuList,
   showMenu,
 }: IMissingComponentProps) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const navigateToUser = () =>
   //   navigateUser ? navigate(`/users/${1234}/profile`) : null; // 내비게이트값 변경 (-)
 

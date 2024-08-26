@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"
-import { IStreetCatPost } from "../models/streetCat.model";
+// import { useEffect, useState } from "react";
+// import { useLocation } from "react-router-dom"
+// import { IStreetCatPost } from "../models/streetCat.model";
 import { fetchMyStreetCatPosts } from "../api/streetCat.api";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery/*, useQuery*/ } from "@tanstack/react-query";
 
 const LIMIT = 8;
 
@@ -16,7 +16,7 @@ export const useMyStreetCatPosts = (enabled: boolean) => {
     status
   } = useInfiniteQuery({
     queryKey: ["myStreetCats"],
-    queryFn: ({pageParam}) => fetchMyStreetCatPosts({
+    queryFn: ({ pageParam }) => fetchMyStreetCatPosts({
       limit: LIMIT,
       cursor: pageParam,
     }),
@@ -35,7 +35,7 @@ export const useMyStreetCatPosts = (enabled: boolean) => {
   const myStreetCatPosts = data ? data.pages.flatMap((page) => page?.favoriteCatPosts) : [];
   const isEmpty = myStreetCatPosts.length === 0;
 
-  return { 
+  return {
     data,
     fetchNextPage,
     hasNextPage,

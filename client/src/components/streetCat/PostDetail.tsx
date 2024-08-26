@@ -1,7 +1,7 @@
-import React, { useCallback, useRef, useState } from "react";
+import { /*React,*/ /*useCallback, useRef, */ useState } from "react";
 import "../../styles/scss/components/streetCat/postDetail.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { IStreetCatDetail } from "../../models/streetCat.model";
+// import { IStreetCatDetail } from "../../models/streetCat.model";
 import ImageCarousel from "../common/ImageCarousel";
 import { IImage } from "../../models/image.model";
 import FavoriteButton from "../common/FavoriteButton";
@@ -9,23 +9,21 @@ import PostMenu from "../communityAndEvent/PostMenu";
 import { useDeleteStreetCatPost } from "../../hooks/useStreetCat";
 
 interface IProps {
-  postId?: number; 
+  postId?: number;
   name?: string;
   createdAt?: Date;
   gender?: string;
   neutered?: string;
   content?: string;
   streetCatImages?: IImage[];
-  streetCatFavorites?: [
-    postId: number
-  ]
+  streetCatFavorites?: [postId: number];
 }
 
 const PostDetail = (props: IProps) => {
   const images: IImage[] = props.streetCatImages || [];
   const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const {mutateAsync: removeStreetCatPost} = useDeleteStreetCatPost();
+  const { mutateAsync: removeStreetCatPost } = useDeleteStreetCatPost();
 
   const toggleMenu = () => {
     setMenuVisible((prev) => !prev);
@@ -41,19 +39,25 @@ const PostDetail = (props: IProps) => {
           <div className="cat-tag">
             <span>{props.gender}</span>
             <span>{props.neutered}</span>
-            <span>{props.createdAt ? 
-              (typeof props.createdAt === 'string' || typeof props.createdAt === 'number'
-                ? new Date(props.createdAt).toLocaleDateString()
-                : props.createdAt.toLocaleDateString()) 
-              : ""}
+            <span>
+              {props.createdAt
+                ? typeof props.createdAt === "string" ||
+                  typeof props.createdAt === "number"
+                  ? new Date(props.createdAt).toLocaleDateString()
+                  : props.createdAt.toLocaleDateString()
+                : ""}
             </span>
           </div>
           <div className="btn-box">
-            {
-              props.postId !== undefined && props.streetCatFavorites?.length !== undefined
-              ? <FavoriteButton postId={props.postId} like={props.streetCatFavorites?.length}/>
-              : ""
-            }
+            {props.postId !== undefined &&
+            props.streetCatFavorites?.length !== undefined ? (
+              <FavoriteButton
+                postId={props.postId}
+                like={props.streetCatFavorites?.length}
+              />
+            ) : (
+              ""
+            )}
             <span className="more-btn" onClick={toggleMenu}>
               <HiOutlineDotsVertical />
             </span>
@@ -61,9 +65,7 @@ const PostDetail = (props: IProps) => {
         </div>
 
         <div className="cat-content">
-          <pre>
-            {props.content}
-          </pre>
+          <pre>{props.content}</pre>
         </div>
       </div>
       <PostMenu
@@ -75,8 +77,7 @@ const PostDetail = (props: IProps) => {
         deletePost={removeStreetCatPost}
       />
     </>
-  )
-}
+  );
+};
 
 export default PostDetail;
-

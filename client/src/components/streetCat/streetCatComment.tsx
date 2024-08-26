@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { /*useRef,*/ useState } from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import PostMenu from "../communityAndEvent/PostMenu";
-import { useDeleteComment } from "../../hooks/useStreetCat";
+// import PostMenu from "../communityAndEvent/PostMenu";
+// import { useDeleteComment } from "../../hooks/useStreetCat";
 import useCommentStore from "../../store/comment";
 
 interface IUser {
@@ -24,24 +24,30 @@ interface IStreetCatCmmentProps {
   postId: number;
 }
 
-const StreetCatComment: React.FC<IStreetCatCmmentProps> = ({ comments, postId }) => {
+const StreetCatComment: React.FC<IStreetCatCmmentProps> = ({
+  comments,
+  // postId,
+}) => {
   // const oldComment = comments.comment;
-  const { selectedCommentId, setSelectedCommentId, clearSelectedCommentId } = useCommentStore();
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const {
+    selectedCommentId,
+    setSelectedCommentId /*, clearSelectedCommentId*/,
+  } = useCommentStore();
+  // const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   // const [commentText, setCommentText] = useState(oldComment);
 
-
-  const {mutateAsync: removeComment} = useDeleteComment();
+  // const { mutateAsync: removeComment } = useDeleteComment();
   const [isShowMenu, setIsShowMenu] = useState(false);
 
   const showMenu = () => {
+    console.log(isShowMenu);
     setIsShowMenu((prev) => !prev);
   };
 
-  const handelCommentFormOpen = () => {
-    showMenu();
-    // setCommentText(true);
-  };
+  // const handelCommentFormOpen = () => {
+  //   showMenu();
+  //   // setCommentText(true);
+  // };
 
   const handleComment = (commentId: number) => {
     setSelectedCommentId(commentId);
@@ -79,27 +85,29 @@ const StreetCatComment: React.FC<IStreetCatCmmentProps> = ({ comments, postId })
   //   setCommentText(oldComment);
   // };
 
-  console.log("selectedCommentId: ", selectedCommentId)
-  console.log(".........")
+  console.log("selectedCommentId: ", selectedCommentId);
+  console.log(".........");
 
   return (
     <>
       {comments.map((comment) => (
         <div className="street-cat-comment" key={comment.streetCatCommentId}>
           <div className="user-img">
-            <img
-              src={comment.users.profileImage}
-              alt="profileImage"
-            />
+            <img src={comment.users.profileImage} alt="profileImage" />
           </div>
           <div className="user-info">
             <div className="user-profile">
               <span className="nickname">{comment.users.nickname}</span>
-              <span className="date">{new Date(comment.createdAt).toLocaleDateString()}</span>
+              <span className="date">
+                {new Date(comment.createdAt).toLocaleDateString()}
+              </span>
             </div>
             <p className="content">{comment.comment}</p>
           </div>
-          <HiOutlineDotsVertical className="comment-more" onClick={() => handleComment(comment.streetCatCommentId)}/>
+          <HiOutlineDotsVertical
+            className="comment-more"
+            onClick={() => handleComment(comment.streetCatCommentId)}
+          />
         </div>
       ))}
       {/* <PostMenu

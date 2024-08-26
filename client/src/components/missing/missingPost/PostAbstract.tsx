@@ -3,8 +3,8 @@ import ImageCarousel from "../../common/ImageCarousel";
 import PostHead from "./PostHead";
 import "./../../../styles/scss/components/missing/postAbstract.scss";
 import PostSummary from "../common/PostSummary";
-import { IMenuList, IMissing } from "../../../models/missing.model";
-import { formatDate } from "../../../utils/format/format";
+import { /*IMenuList, */ IMissing } from "../../../models/missing.model";
+// import { formatDate } from "../../../utils/format/format";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface IProps {
