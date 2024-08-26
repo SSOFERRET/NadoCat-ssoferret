@@ -19,26 +19,25 @@ const Friends = () => {
     }
   });
 
+  if (error) {
+    return <ServerError text="친구 목록을 불러올 수 없습니다." />;
+  }
+
+  if (isEmpty) {
+    return <PostEmpty text="등록된 친구가 없어요." />;
+  }
+
   return (
     <section className={`friends-container`}>
       {isLoading ? (
         <LoadingCat />
       ) : (
         <>
-          <div className="category">
-            <span>친구</span>
+          {data && <FriendList friends={data} />}
+
+          <div className="more" ref={moreRef}>
+            {isFetchingNextPage && <Spinner />}
           </div>
-          <>
-            {isEmpty && <PostEmpty text="등록된 친구가 없어요." />}
-
-            {error && <ServerError text="친구 목록을 불러올 수 없습니다." />}
-
-            {data && <FriendList friends={data} />}
-
-            <div className="more" ref={moreRef}>
-              {isFetchingNextPage && <Spinner />}
-            </div>
-          </>
         </>
       )}
     </section>
