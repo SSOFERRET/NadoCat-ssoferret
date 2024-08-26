@@ -17,11 +17,14 @@ interface IProps {
   isShowMenu: boolean;
   showMenu: () => void;
   deletePost?: ({ postId }: DeletePost) => Promise<void>;
-  deleteComment?: ({ postId, commentId }: ICommentDeleteRequest) => Promise<void>;
+  deleteComment?: ({
+    postId,
+    commentId,
+  }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
   handelCommentFormOpen?: () => void;
-  uploadImage: (file: File) => void;
-  setDefaultImage: () => void;
+  uploadImage?: (file: File) => void;
+  setDefaultImage?: () => void;
 }
 
 const PostMenu = ({
@@ -34,12 +37,15 @@ const PostMenu = ({
   deleteComment,
   handelCommentFormOpen,
   uploadImage,
-  setDefaultImage
+  setDefaultImage,
 }: IProps) => {
   const navigate = useNavigate();
-  const { selectedCommentId: commentId, clearSelectedCommentId } = useCommentStore();
+  const { selectedCommentId: commentId, clearSelectedCommentId } =
+    useCommentStore();
 
-  const handleMenu = (e: React.MouseEvent<HTMLDivElement | HTMLUListElement>) => {
+  const handleMenu = (
+    e: React.MouseEvent<HTMLDivElement | HTMLUListElement>
+  ) => {
     if (e.target === e.currentTarget) {
       showMenu();
 
@@ -105,38 +111,48 @@ const PostMenu = ({
   };
 
   const handleUploadClick = () => {
-    const fileInput = document.createElement("input");
+    if (uploadImage) {
+      const fileInput = document.createElement("input");
 
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
-    fileInput.onchange = (event) => {
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      fileInput.onchange = (event) => {
         const target = event.target as HTMLInputElement;
-        
-        if(target && target.files && target.files.length > 0) {
-            const file = target.files[0];
-            uploadImage(file); 
+
+        if (target && target.files && target.files.length > 0) {
+          const file = target.files[0];
+          uploadImage(file);
         }
-    };
-    fileInput.click(); 
-}
+      };
+      fileInput.click();
+    }
+  };
 
-const handleDefaultImageClick = () => {
-    setDefaultImage();
-}
+  const handleDefaultImageClick = () => {
+    if (setDefaultImage) {
+      setDefaultImage();
+    }
+  };
 
-const handleSetting = () => {
-  navigate("/users/my/setting");
-}
+  const handleSetting = () => {
+    navigate("/users/my/setting");
+  };
 
   return (
-    <div className={`overlay ${isShowMenu ? "visible" : "hidden"}`} onClick={handleMenu}>
+    <div
+      className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
+      onClick={handleMenu}
+    >
       <div className={`button-container ${isShowMenu ? "visible" : "hidden"}`}>
         <button className="close-button" onClick={onClickCloseButton}>
           <RxCross1 />
         </button>
       </div>
 
-      <ul className={`menu ${isShowMenu ? "show" : "hide"}`} onClick={handleMenu}>
+      <ul
+        className={`menu ${isShowMenu ? "show" : "hide"}`}
+        onClick={handleMenu}
+      >
         {menuType === "post" && (
           <>
             <li onClick={handleUpdatePost}>
@@ -153,7 +169,12 @@ const handleSetting = () => {
             <li onClick={handelUpdateComment}>
               <span>댓글 수정</span>
             </li>
-            <li className="delete" onClick={() => commentId && postId && handleCommentDelete(postId, commentId)}>
+            <li
+              className="delete"
+              onClick={() =>
+                commentId && postId && handleCommentDelete(postId, commentId)
+              }
+            >
               <span>댓글 삭제</span>
             </li>
           </>
