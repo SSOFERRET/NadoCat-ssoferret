@@ -4,6 +4,7 @@
   overflow-y: hidden;
   height: 100vh;
   background: $white;
+  font-family: medium;
 
   .login-header {
     margin-top: 5rem;
@@ -68,6 +69,7 @@
         &::placeholder {
           color: #bababa;
           font-size: $size-14;
+          font-family: medium;
         }
       }
     }
@@ -81,6 +83,8 @@
       margin: 20rem auto 0;
       width: 340rem;
       padding: 12rem;
+      font-family: medium;
+      cursor: pointer;
 
       svg {
         margin-right: 10rem;
@@ -98,12 +102,12 @@
 
       &.kakao {
         background-color: #fee500;
-        color: black;
+        color: rgb(44, 40, 40);
       }
 
       &.google {
         background-color: white;
-        color: black;
+        color: rgb(44, 40, 40);
         border: 1rem solid $primary;
       }
     }

@@ -5,13 +5,14 @@ import Avatar from "../../common/Avatar";
 import { AiOutlineSetting } from "react-icons/ai";
 import PostMenu from "../../communityAndEvent/PostMenu";
 import { deleteProfile, uploadProfile } from "../../../api/user.api";
-import ProfileChangeModal from "./ProfileChangeModal";
+// import ProfileChangeModal from "./ProfileChangeModal";
 
 export interface MyInfoProps {
   nickname: string;
   profileImageUrl: string;
   uuid: string;
   onAvatarClick?: () => void;
+  isMyPage?: boolean;
 }
 
 const MyInfo = ({
@@ -30,9 +31,9 @@ const MyInfo = ({
   };
 
   //모달 닫기
-  const handleCloseProfileChange = () => {
-    setIsOpenModal(false);
-  };
+  // const handleCloseProfileChange = () => {
+  //   setIsOpenModal(false);
+  // };
 
   // NOTE 여기 추가했습니다.
   const handelMenu = () => {
@@ -86,17 +87,6 @@ const MyInfo = ({
             <button onClick={handleOpenProfileChange}>프로필 변경</button>
           </div>
 
-          <div className="change-profile-btn">
-            <button onClick={handleOpenProfileChange}>프로필 변경</button>
-            {isOpenModal && (
-              <ProfileChangeModal
-                closeModal={handleCloseProfileChange}
-                uploadImage={handleImageUpload}
-                setDefaultImage={handleDefaultImage}
-                isShowMenu={isOpenModal}
-              />
-            )}
-          </div>
 
           <button
             className="settings-button"
@@ -123,11 +113,8 @@ const MyInfo = ({
       </div>
 
       {/* 이게 props로 필요한 함수를 넘겨주시면 됩니다. PostMenu 컴포넌트 안에 꼭 타입을 옵셔널로 주셔야 합니다. 안그러면 다른 컴포넌트에 영향이 갑니다.*/}
-      <PostMenu
-        menuType="user"
-        isShowMenu={isOpenModal}
-        showMenu={handelMenu}
-      />
+
+      <PostMenu menuType="user" isShowMenu={isOpenModal} showMenu={handelMenu} uploadImage={handleImageUpload} setDefaultImage={handleDefaultImage} />
     </>
   );
 };

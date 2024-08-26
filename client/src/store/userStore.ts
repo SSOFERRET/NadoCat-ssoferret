@@ -28,16 +28,18 @@ export const useAuthStore = create<StoreState>((set) => ({
   authType: null,
   uuid: getUuid() || "",
 
-  storeLogin: (uuid: string, isAutoLogin: boolean) => {
-    set({ isLoggedIn: true, isAutoLogin });
+  storeLogin: (uuid: string, isAutoLogin: boolean)  => {
+    set({isLoggedIn: true, isAutoLogin});
+    // localStorage.setItem("uuid", uuid);
     setUuid(uuid);
 
-    // 자동로그인 상태 저장
-    if (isAutoLogin) {
-      localStorage.setItem("isAutoLogin", "true");
-    } else {
-      localStorage.removeItem("isAutoLogin");
-    }
+     // 자동로그인 상태 저장
+     if (isAutoLogin) {
+        isAutoLogin= true;
+        localStorage.setItem("isAutoLogin", "true");
+      } else {
+        localStorage.removeItem("isAutoLogin");
+      }
   },
 
   storeAuthType: (authType: string) => {
@@ -57,4 +59,7 @@ export const useAuthStore = create<StoreState>((set) => ({
       console.error("로그아웃 중 오류 발생:", error);
     }
   },
+
+
+
 }));

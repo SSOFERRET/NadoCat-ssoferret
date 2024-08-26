@@ -9,7 +9,7 @@
 //   profileImageUrl: string;
 // }
 
-// const MyInfo = ({ nickname, profileImageUrl }: ProfileProps) => {
+// const UserInfo = ({ nickname, profileImageUrl }: ProfileProps) => {
 //     const [isOpenModal, setIsOpenModal] = useState(false);
 //     const navigate = useNavigate();
 //     const StartChat = () => {
@@ -46,4 +46,4 @@
 //   );
 // };
 
-// export default MyInfo;
+// export default UserInfo;
