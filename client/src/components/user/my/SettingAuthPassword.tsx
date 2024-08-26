@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect} from "react";
 import HeaderWithBackButton from "../../../components/common/HeaderWithBackButton";
 import { useNavigate } from "react-router-dom";
 import InputText from "../InputText";
 import "../../../styles/scss/components/user/my/settingAuthPassword.scss";
 import { authPassword } from "../../../api/user.api";
 import { useForm } from "react-hook-form";
+import { AxiosError } from "axios";
 
 export interface SettingAuthPasswordProps {
   password: string;
@@ -12,7 +13,7 @@ export interface SettingAuthPasswordProps {
 
 const SettingAuthPassword = () => {
   const navigate = useNavigate();
-
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
     setFocus,
@@ -20,11 +21,26 @@ const SettingAuthPassword = () => {
     formState: { errors },
   } = useForm<SettingAuthPasswordProps>();
 
-  const handleAuthPassword = (data: SettingAuthPasswordProps) => {
-    const result = authPassword(data);
-    console.log("비밀번호 인증 성공:", result);
+  const handleAuthPassword = async (data: SettingAuthPasswordProps) => {
+    try {
+      const result = await authPassword(data);
 
-    navigate("/users/my/setting/password");
+      if(result.password === "correct"){
+        console.log("비밀번호 인증 성공:", result);
+        navigate("/users/my/setting/password");
+      }
+     } catch (error) {
+      if(error instanceof AxiosError){
+        if (error.response && error.response.status === 401) {
+          alert("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+          
+        } else {
+          console.error("비밀번호 인증 중 오류 발생:", error);
+          alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+      }
+    }
+    
   };
 
   useEffect(() => {
