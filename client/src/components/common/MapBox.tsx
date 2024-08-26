@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+// import React, { useCallback, useRef, useState } from "react";
 import "../../styles/scss/components/streetCat/discoveryLocation.scss";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 

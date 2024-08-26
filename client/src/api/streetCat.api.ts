@@ -1,4 +1,4 @@
-import { IStreetCatComment, IStreetCatDetail, IStreetCatPost } from "../models/streetCat.model";
+import { IStreetCatDetail, IStreetCatPost } from "../models/streetCat.model";
 import { httpClient } from "./http";
 
 interface IReadStreetCatPostsParams {
@@ -83,12 +83,12 @@ export const updateStreetCatPost = async (formData: FormData, postId: number) =>
   }
 }
 
-export const getStreetCatPost = async ({postId}: IStreetCatDetailParams): Promise<IStreetCatDetail> => {
+export const getStreetCatPost = async ({ postId }: IStreetCatDetailParams): Promise<IStreetCatDetail> => {
   const response = await httpClient.get<IStreetCatDetail>(`/boards/street-cats/${postId}`);
   return response.data;
 }
 
-export const deleteStreetCatPost = async ({postId}: IStreetCatDetailParams) => {
+export const deleteStreetCatPost = async ({ postId }: IStreetCatDetailParams) => {
   const response = await httpClient.delete(`/boards/street-cats/${postId}`);
   return response.data;
 }
@@ -125,19 +125,19 @@ export const fetchStreetCatComments = async (params: IReadStreetCatCommentsParam
   }
 }
 
-export const createStreetCatComment = async ({uuid, postId, comment}: ICommentCreateRequest) => {
-  const response = await httpClient.post(`/boards/street-cats/${postId}/comments`, {uuid, postId, comment});
+export const createStreetCatComment = async ({ uuid, postId, comment }: ICommentCreateRequest) => {
+  const response = await httpClient.post(`/boards/street-cats/${postId}/comments`, { uuid, postId, comment });
   return response.data;
 }
 
-export const updateStreetCatComment = async ({postId, comment, commentId}: ICommentUpdateRequest) => {
+export const updateStreetCatComment = async ({ postId, comment, commentId }: ICommentUpdateRequest) => {
   const response = await httpClient.put(`/boards/street-cats/${postId}/comments/${commentId}`, {
     comment,
   });
   return response.data;
 }
 
-export const deleteStreetCatComment = async ({postId, commentId}: ICommentDeleteRequest) => {
+export const deleteStreetCatComment = async ({ postId, commentId }: ICommentDeleteRequest) => {
   const response = await httpClient.delete(`/boards/street-cats/${postId}/comments/${commentId}`);
   return response.data;
 }

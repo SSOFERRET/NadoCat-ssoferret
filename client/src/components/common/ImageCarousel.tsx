@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../../styles/scss/components/common/imageCarousel.scss";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IImage } from "../../models/image.model";
@@ -33,7 +33,10 @@ const ImageCarousel = ({ images }: IProps) => {
 
   return (
     <div className="carousel-container">
-      <div className="carousel-slider" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+      <div
+        className="carousel-slider"
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
         {images.map((image, index) => (
           <div className="carousel-item" key={image.imageId}>
             <img src={image.url} alt={`Slide ${index}`} />

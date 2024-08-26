@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { /*React,*/ useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import InputText from "../../components/user/InputText";
@@ -9,9 +9,13 @@ import { RiKakaoTalkFill } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
 import { useAuthStore } from "../../store/userStore";
 
-const KAKAO_AUTH_URL = `${import.meta.env.VITE_KAKAO_AUTH_URL}?response_type=code&client_id=${
+const KAKAO_AUTH_URL = `${
+  import.meta.env.VITE_KAKAO_AUTH_URL
+}?response_type=code&client_id=${
   import.meta.env.VITE_KAKAO_REST_API_KEY
-}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email`;
+}&redirect_uri=${
+  import.meta.env.VITE_KAKAO_REDIRECT_URI
+}&scope=profile_nickname,profile_image,account_email`;
 
 export interface LoginProps {
   email: string;
@@ -84,7 +88,9 @@ const Login = () => {
                 required: "이메일을 입력해주세요.",
               })}
             />
-            {errors.email && <p className="error-message">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="error-message">{errors.email.message}</p>
+            )}
           </fieldset>
           <fieldset className="input-field">
             <InputText
@@ -96,12 +102,18 @@ const Login = () => {
                 required: "비밀번호를 입력해주세요.",
               })}
             />
-            {errors.password && <p className="error-message">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="error-message">{errors.password.message}</p>
+            )}
           </fieldset>
 
           <fieldset className="check-field">
             <label className="auto-login">
-              <input type="checkbox" checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)} />
+              <input
+                type="checkbox"
+                checked={autoLogin}
+                onChange={(e) => setAutoLogin(e.target.checked)}
+              />
               자동로그인
             </label>
             {/* <span>|</span> */}

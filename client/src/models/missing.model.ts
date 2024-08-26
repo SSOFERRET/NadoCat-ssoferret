@@ -1,7 +1,7 @@
 import { UseMutateAsyncFunction } from "@tanstack/react-query";
 import { IImage } from "./image.model";
 import { IMissingDetailParam } from "../api/missing.api";
-import { DeletePost } from "../components/communityAndEvent/PostMenu";
+// import { DeletePost } from "../components/communityAndEvent/PostMenu";
 
 export interface IMissingPosts {
   posts: IMissing[];

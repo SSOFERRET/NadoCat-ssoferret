@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../../styles/scss/pages/user/my.scss";
 import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
@@ -19,7 +19,7 @@ export interface MyProps {
 }
 
 export const My = () => {
-  const {  uuid  } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
+  const { uuid } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
   const UserUuid = uuid || "";
   // 소영추가코드
   const navigate = useNavigate();
@@ -34,7 +34,6 @@ export const My = () => {
 
   const isLoggedIn = useAuthStore((store) => store.isLoggedIn); // 로그인 상태 가져오기
   const myUuid = useAuthStore((store) => store.uuid); // 현재 로그인된 사용자의 uuid 가져오기
-
 
   useEffect(() => {
     // NOTE 여기 주석 처리 했습니다. 안그러면 무한 굴레에 빠져서 여기서 나갈 수 없어요. 대신 App.tsx에서 처리 했습니다.
@@ -65,8 +64,8 @@ export const My = () => {
 
   //소영 추가 코드
   const handleSendToChat = () => {
-    navigate("/chats/chat", {state: { userData: userData }})
-}
+    navigate("/chats/chat", { state: { userData: userData } });
+  };
 
   return (
     <div className="my-container">
@@ -76,7 +75,12 @@ export const My = () => {
         uuid={userData.uuid}
         onAvatarClick={handleAvatarClick}
       />
-      <div style={{width: "7vh", fontSize:"15px", backgroundColor: "yellow"}} onClick={handleSendToChat}>채팅하기</div>
+      <div
+        style={{ width: "7vh", fontSize: "15px", backgroundColor: "yellow" }}
+        onClick={handleSendToChat}
+      >
+        채팅하기
+      </div>
       <Logout />
       <MyTab />
     </div>

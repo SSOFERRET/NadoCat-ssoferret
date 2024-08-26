@@ -99,7 +99,7 @@ export interface ICommentPostRequest {
 
 export interface ICommentPutRequest {
   postId: number;
-  // uuid: Buffer;
+  uuid?: Buffer; // <= 여기 주석처리 되어있었는데 풉니다
   commentId: number;
   comment: string;
 }

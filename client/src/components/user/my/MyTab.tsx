@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { /*React,*/ useState } from "react";
 import "../../../styles/scss/components/user/my/myTab.scss";
-import MyPage from "../../../pages/mypage/MyPage";
+// import MyPage from "../../../pages/mypage/MyPage";
 import Friends from "../../../pages/user/Friends";
 import useFriends from "../../../hooks/useFriends";
 
@@ -19,7 +19,10 @@ const MyTab = () => {
           >
             관심글
           </button>
-          <button onClick={() => setActiveTab("tab-mypost")} className={activeTab === "tab-mypost" ? "active-btn" : ""}>
+          <button
+            onClick={() => setActiveTab("tab-mypost")}
+            className={activeTab === "tab-mypost" ? "active-btn" : ""}
+          >
             작성한글
           </button>
           <button
