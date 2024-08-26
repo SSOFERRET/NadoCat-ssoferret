@@ -47,7 +47,7 @@ const router = createBrowserRouter([
         children: [
           { path: "interest", element: <MyPage /> },
           {
-            path: "my/:uuid",
+            path: "user/:uuid",
             element: (
               <ProtectedPath>
                 <My />
@@ -56,7 +56,13 @@ const router = createBrowserRouter([
           },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
-
+          { path: "my", 
+            element: (
+              <ProtectedPath>
+                <My />
+              </ProtectedPath>
+            ),
+          },
           { path: "my/setting", element: <Setting /> },
           { path: "my/setting/nickname", element: <SettingNickname /> },
           { path: "my/setting/auth-password", element: <SettingAuthPassword /> },
