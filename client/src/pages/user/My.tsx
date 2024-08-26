@@ -2,75 +2,117 @@ import React, { useEffect, useState } from "react";
 import "../../styles/scss/pages/user/my.scss";
 import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
-import { my } from "../../api/user.api";
-import { useParams } from "react-router-dom";
-import Logout from "../../components/user/my/Logout";
-import { useAuthStore } from "../../store/userStore";
+import { myPage, userPage } from "../../api/user.api";
+import { useNavigate } from "react-router-dom";
+import { getUuid, useAuthStore } from "../../store/userStore";
+// import Spinner from "../../components/loading/Spinner"; 
+import LoadingCat from "../../components/loading/LoadingCat";
 
 export interface MyProps {
-  email: string;
-  password: string;
   nickname: string;
   profileImageUrl: string;
   uuid: string;
-  authType: string;
-  autoLogin: boolean;
+  email?: string;
+  authType?: string;
+  autoLogin?: boolean;
 }
 
 export const My = () => {
-  const { uuid } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
-  const UserUuid = uuid || "";
+  const navigate = useNavigate();
 
-  const [userData, setUserData] = useState({
-    email: "",
-    nickname: "",
-    profileImageUrl: "",
-    uuid: "",
-    authType: "",
-  });
+  const  {uuid: loggedUser } = useAuthStore(); // 현재 로그인한 사용자의 UUID
+  console.log("loggedUser:", loggedUser);
 
-  const isLoggedIn = useAuthStore((store) => store.isLoggedIn); // 로그인 상태 가져오기
-  const myUuid = useAuthStore((store) => store.uuid); // 현재 로그인된 사용자의 uuid 가져오기
+  const [userData, setUserData] = useState<MyProps | null>(null);
+  const [isLoading, setIsLoading] = useState(true); //로딩 상태관리
+
+  const currentUrl = window.location.pathname;
+  const currentUuid = currentUrl.split("/").pop(); // URL에서 마지막 부분 추출
+  console.log("currentUuid::", currentUuid);
+
+  const [forceRender, setForceRender] = useState(false);
+
+   useEffect(() => { //처음 렌더링시 storedUuid설정
+      const storedUuid = getUuid();
+      console.log("storedUuid::", storedUuid);
+
+      if(!loggedUser && storedUuid){
+        useAuthStore.setState({ uuid: storedUuid }); // zustand의 상태 업데이트
+        setForceRender(prev => !prev); //상태변경 강제 렌더링
+      }
+  }, [loggedUser]);  // loggedUser가 업데이트될 때마다 실행
 
 
+//loggedUser가 업데이트될 때마다 로드
   useEffect(() => {
-    // NOTE 여기 주석 처리 했습니다. 안그러면 무한 굴레에 빠져서 여기서 나갈 수 없어요. 대신 App.tsx에서 처리 했습니다.
-    // if (!isLoggedIn) {
-    //     window.location.href = "/users/login"; // 로그인이 안되어 있으면 리다이렉트
-    //     return;
-    // }
-
     const fetchUserData = async () => {
+      if (!loggedUser) {
+        //로그인 안됨
+        alert("로그인이 필요합니다!");
+        // navigate("/users/login");
+        return;
+      } 
+
       try {
-        const response = await my(UserUuid);
-        console.log("response:", response);
-        setUserData(response.user);
+        setIsLoading(true); // 로딩 시작
+        if(currentUuid){
+          const response = currentUuid === "my" ? await myPage() : await userPage(currentUuid);
+          setUserData(response.user);
+        }
+
       } catch (error) {
-        console.error("사용자 조회에 실패했습니다: ", error);
+        console.error("마이페이지 정보를 가져오는 데 실패했습니다: ", error);
+      
+      }finally{
+        setIsLoading(false) //로딩완료
       }
     };
 
-    fetchUserData();
-  }, [isLoggedIn, UserUuid]); // isLoggedIn 상태와 UserUuid를 의존성 배열에 추가
+    // fetchUserData(); // loggedUser가 있을 때만 데이터 로드
+
+    if (loggedUser) {
+      fetchUserData();
+    }
+    
+  }, [loggedUser, currentUuid, navigate, forceRender]); // isLoggedIn 상태와 UserUuid를 의존성 배열에 추가
+
+
+
+
+
+ 
+
+
+
+
+  
+  if (isLoading) {
+    return <LoadingCat />;
+  }
 
   const handleAvatarClick = () => {
-    if (UserUuid === myUuid) {
+    if (loggedUser === currentUuid) {
       // 본인의 마이페이지일 때 프로필 사진 크게 보기 모달 열기
       // 예: openModal(userData.profileImageUrl);
     }
   };
 
   return (
-    <div className="my-container">
-      <MyInfo
-        nickname={userData.nickname}
-        profileImageUrl={userData.profileImageUrl}
-        uuid={userData.uuid}
-        onAvatarClick={handleAvatarClick}
-      />
-      <Logout />
-      <MyTab></MyTab>
-    </div>
+    <>
+      {userData && (
+        <div className={currentUuid === loggedUser? "my-container": "user-container"}>
+          <MyInfo
+            nickname={userData.nickname}
+            profileImageUrl={userData.profileImageUrl}
+            uuid={userData.uuid}
+            onAvatarClick={handleAvatarClick}
+            // isMyPage={currentUuid === loggedUser} //본인 페이지 여부
+          />
+          {/* <Logout /> */}
+          <MyTab></MyTab>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -4,6 +4,7 @@ import { LoginProps } from "../pages/user/Login";
 import {SettingNicknameProps} from "../components/user/my/SettingNickname";
 import { SettingAuthPasswordProps } from "../components/user/my/SettingAuthPassword";
 import { SettingPasswordProps } from "../components/user/my/SettingPassword";
+import { SettingDetailProps } from "../components/user/my/SettingDetail";
 // import  {Post}  from "../pages/MyPage";
 
 export const signup = async (userData: SignupProps) => {
@@ -46,11 +47,23 @@ export const login = async (data: LoginProps) => {
   }
 };
 
-// localStorage.getItem("uuid");
-export const my = async (uuid: string) => {
+//사용자 프로필
+export const userPage = async (userUuid: string) => {
   try {
     // const response = await httpClient.get(`/users/my`);
-    const response = await httpClient.get(`/users/my/${uuid}`);
+    const response = await httpClient.get(`/users/user/${userUuid}`);
+    return response.data;
+  } catch (error) {
+    console.error("사용자 프로필 정보를 가져오는 데 실패했습니다:", error);
+    throw error;
+  }
+};
+
+//내 마이페이지
+export const myPage = async () => {
+  try {
+    // const response = await httpClient.get(`/users/my`);
+    const response = await httpClient.get(`/users/my`);
     return response.data;
   } catch (error) {
     console.error("마이페이지 정보를 가져오는 데 실패했습니다:", error);
@@ -92,7 +105,7 @@ export const deleteProfile = async (imageUrl: string) => {
 //세팅
 export const updateNickname = async (data: SettingNicknameProps) => {
   try {
-    const response = await httpClient.put("/users/setting/nickname", data);
+    const response = await httpClient.put("/users/my/setting/nickname", data);
     return response.data;
   } catch (error) {
     console.error("닉네임 업데이트에 실패했습니다:", error);
@@ -102,7 +115,7 @@ export const updateNickname = async (data: SettingNicknameProps) => {
 
 export const authPassword = async (data: SettingAuthPasswordProps) => {
   try {
-    const response = await httpClient.put("/users/setting/auth-password", data);
+    const response = await httpClient.put("/users/my/setting/auth-password", data);
     return response.data;
   } catch (error) {
     console.error("사용자 비밀번호 인증에 실패했습니다:", error);
@@ -112,7 +125,7 @@ export const authPassword = async (data: SettingAuthPasswordProps) => {
 
 export const updatePassword = async (data: SettingPasswordProps) => {
   try {
-    const response = await httpClient.put("/users/setting/password", data);
+    const response = await httpClient.put("/users/my/setting/password", data);
     return response.data;
   } catch (error) {
     console.error("비밀번호 업데이트에 실패했습니다:", error);
@@ -122,7 +135,7 @@ export const updatePassword = async (data: SettingPasswordProps) => {
 
 export const updateDetail = async (data: SettingDetailProps) => {
   try {
-    const response = await httpClient.put("/users/setting/detail", data);
+    const response = await httpClient.put("/users/my/setting/detail", data);
     return response.data;
   } catch (error) {
     console.error("자기소개 업데이트에 실패했습니다:", error);

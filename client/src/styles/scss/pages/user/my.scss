@@ -10,3 +10,14 @@
         font-size: 20rem;
     }
 }
+
+.user-container {
+    font-family: "medium";
+    display: flex;
+    flex-direction: column;
+    height: 100vh;  
+    background: $white;
+    p {
+        font-size: 20rem;
+    }
+}

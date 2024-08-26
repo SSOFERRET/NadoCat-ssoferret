@@ -5,13 +5,14 @@ import Avatar from "../../common/Avatar";
 import { AiOutlineSetting } from "react-icons/ai";
 import PostMenu from "../../communityAndEvent/PostMenu";
 import { deleteProfile, uploadProfile } from "../../../api/user.api";
-import ProfileChangeModal from "./ProfileChangeModal";
+// import ProfileChangeModal from "./ProfileChangeModal";
 
 export interface MyInfoProps {
   nickname: string;
   profileImageUrl: string;
   uuid: string;
   onAvatarClick?: () => void;
+  isMyPage?: boolean;
 }
 
 const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps) => {
@@ -25,9 +26,9 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
   };
 
   //모달 닫기
-  const handleCloseProfileChange = () => {
-    setIsOpenModal(false);
-  };
+  // const handleCloseProfileChange = () => {
+  //   setIsOpenModal(false);
+  // };
 
   // NOTE 여기 추가했습니다.
   const handelMenu = () => {
