@@ -4,21 +4,7 @@
   font-size: $size;
 }
 
-html {
-  font-size: 0.2325581395vw;
-  overflow-x: hidden;
-}
 
-@media screen and (min-width: 430px) {
-  html {
-    font-size: 1px;
-  }
-}
-@media screen and (max-width: 429px) {
-  html {
-    font-size: 0.2325581395vw;
-  }
-}
 .background{
   scrollbar-width: none;
   &::-webkit-scrollbar{
@@ -94,5 +80,9 @@ html {
         
       }
     } 
+  }
+  .nolike{
+    height: 40vh;
+    margin-top: 15vh;
   }
 }

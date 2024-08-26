@@ -9,14 +9,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
   .Chat{
     width: 430px;
     height: 100vh;
+
     background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-x: hidden;
+    overflow: hidden;
     #title{
       margin-top: 1vh;
       @include font($size-14, $silver);

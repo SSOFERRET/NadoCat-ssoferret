@@ -6,6 +6,7 @@ import { my } from "../../api/user.api";
 import { useParams } from "react-router-dom";
 import Logout from "../../components/user/my/Logout";
 import { useAuthStore } from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 export interface MyProps {
   email: string;
@@ -18,8 +19,10 @@ export interface MyProps {
 }
 
 export const My = () => {
-  const { uuid } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
+  const {  uuid  } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
   const UserUuid = uuid || "";
+  // 소영추가코드
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
     email: "",
@@ -60,14 +63,20 @@ export const My = () => {
     }
   };
 
+  //소영 추가 코드
+  const handleSendToChat = () => {
+    navigate("/chats/chat", {state: { userData: userData }})
+}
+
   return (
     <div className="my-container">
       <MyInfo
         nickname={userData.nickname}
-        profileImageUrl={userData.profileImageUrl
+        profileImageUrl={userData.profileImageUrl}
         uuid={userData.uuid}
         onAvatarClick={handleAvatarClick}
       />
+      <div style={{width: "7vh", fontSize:"15px", backgroundColor: "yellow"}} onClick={handleSendToChat}>채팅하기</div>
       <Logout />
       <MyTab></MyTab>
     </div>

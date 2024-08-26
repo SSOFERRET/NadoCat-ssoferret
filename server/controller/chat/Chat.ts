@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 
 let CHATID = ""
 
+
 export const startChat = async (req: Request, res: Response, io: SocketIOServer) => {
   const { userUuid, otherUserUuid } = req.body;
 
@@ -15,9 +16,9 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
       return res.status(400).json({ error: "Invalid UUIDs provided" });
     }
 
-    const userUuidBuffer = Buffer.from(userUuid.replace(/-/g, ''), 'hex');
-    const otherUserUuidBuffer = Buffer.from(otherUserUuid.replace(/-/g, ''), 'hex');
-    
+    const userUuidBuffer = Buffer.from(userUuid, 'hex');
+    const otherUserUuidBuffer = Buffer.from(otherUserUuid, 'hex');
+
     let chat = await prisma.chats.findFirst({
       where: {
         OR: [
@@ -60,18 +61,17 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
     io.to(chatRoomId).emit('chat_created', { chatId: chatRoomId });
     CHATID = chatRoomId
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ error: "Failed to start chat" });
   }
 };
-
-
 
 export const sendMessage = async (req: Request, res: Response, io: SocketIOServer) => {
   const { uuid, content, sentAt } = req.body;
   const chatId = parseInt(CHATID);
 
   try {
-    const userUuidBuffer = Buffer.from(uuid.replace(/-/g, ''), 'hex');
+    const userUuidBuffer = Buffer.from(uuid, 'hex');
   
     const message = await prisma.messages.create({
         data: {
@@ -105,10 +105,15 @@ export const getChatList = async (req: Request, res: Response) => {
   const userUuid = req.headers["x-user-uuid"] as string;
 
   try {
-      const userUuidBuffer = Buffer.from(userUuid.replace(/-/g, ''), 'hex');
+      const userUuidBuffer = Buffer.from(userUuid, 'hex');
       const chats = await prisma.chats.findMany({
           where: {
-            uuid: userUuidBuffer,
+            OR : [{
+              uuid: userUuidBuffer
+            },{
+              otherUuid: userUuidBuffer
+            }],
+            
           },
           include: {
               messages: {
@@ -130,6 +135,26 @@ export const getChatList = async (req: Request, res: Response) => {
   }
 };
 
+// userid 되는지 test
+export const testUuid = async (req: Request, res: Response) => {
+  const { uuid } = req.body;
+  const userUuidBuffer = Buffer.from(uuid, 'hex');
+  try{
+    const users = await prisma.users.findFirst({
+      where: {
+        uuid: userUuidBuffer
+      }
+    })
+    if (users) {
+      res.status(200).json(users);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  }catch (error) {
+    console.log(error)
+  }
+}
+
 export const deleteChat = async (req: Request, res: Response, io: SocketIOServer) => {
   const { chatId } = req.body;
 
@@ -145,6 +170,7 @@ export const deleteChat = async (req: Request, res: Response, io: SocketIOServer
 
     io.to(chatId).emit('chat_deleted', { chatId });
     io.socketsLeave(chatId);
+    res.status(200).json({message : "채팅방에서 나갔습니다."});
   } catch (error) {
     console.error("Error deleting chat:", error);
     res.status(500).json({ error: "채팅방 나가기에 실패했습니다." });
@@ -156,7 +182,7 @@ export const handleMessage = async (socket: Socket, io: SocketIOServer) => {
     try {
       const messageRecord = await prisma.messages.create({
         data: {
-          uuid: Buffer.from(uuid.replace(/-/g, ''), 'hex'),
+          uuid: Buffer.from(uuid, 'hex'),
           chatId: parseInt(roomId),
           content: message,
           sentAt: new Date(time),
@@ -179,7 +205,6 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
   socket.on("join", async ({ uuid, roomId }) => {
     try {
       const chatId = parseInt(roomId, 10);
-      console.log(roomId)
       const previousMessages = await prisma.messages.findMany({
         where: {
           chatId: chatId, 
@@ -190,7 +215,7 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
       });
 
       socket.emit('previousMessages', previousMessages.map(msg => ({
-        uuid: Buffer.from(msg.uuid).toString('hex'),
+        uuid: msg.uuid,
         message: msg.content,
         time: msg.sentAt.toLocaleTimeString(),
       })));

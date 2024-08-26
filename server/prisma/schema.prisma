@@ -399,6 +399,7 @@ model StreetCatFavorites {
   streetCats          StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
   users               Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
 
+  @@id([uuid, postId])
   @@index([postId], map: "street_cat_favorites_post_id_fk_idx")
   @@map("street_cat_favorites")
 }
