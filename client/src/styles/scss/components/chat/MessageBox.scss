@@ -1,17 +1,17 @@
 @import "../../base/common.scss"; 
 
 .messageBox{
-  width: 400px;
+  width: 380px;
   height: 6vh;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  bottom: 2vh;
+  bottom: 4vh;
   .inputBox{
     background-color: $whitesmoke;
     width: 90%;
-    min-height: 3vh;
+    min-height: 2vh;
     border-radius: 3vh;
     border: 1px solid $lightgray;
     color: black;
@@ -22,6 +22,8 @@
     overflow-wrap: break-word; 
     box-sizing: border-box;
     resize: none;
+    margin-left: 1vh;
+
     &::placeholder{
       margin-left: 2vh;
       color: $silver;

@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
 import { IImages, IStreetCatImages, IStreetCatPosts, IStreetCats } from "../../types/streetCat";
-import { addImage, createFavoriteCat, createLoction, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, deleteThumbnail, readFavoriteCat, readFavoriteCatPostIds, readLocation, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, removeComment, removeFavoriteCat, updatePost } from "../../model/streetCat.model";
+import { createLoction, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, deleteThumbnail, readLocation, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, updatePost } from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
-import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
@@ -28,7 +28,13 @@ const categoryId = CATEGORY.STREET_CATS;
 
 // 동네 고양이 도감 목록 조회
 export const getStreetCats = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+
+  console.log("uuidString: ", uuidString);
+  console.log("uuid: ", uuid);
+
   const limit = Number(req.query.limit);
   const cursor = Number(req.query.cursor);
 
@@ -60,7 +66,12 @@ export const getStreetCats = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 상세 조회
 export const getStreetCat = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+
+  console.log("uuidString: ", uuidString);
+  console.log("uuid: ", uuid);
   const postId = Number(req.params.street_cat_id);
 
   try {
@@ -88,14 +99,18 @@ export const getStreetCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 생성
 export const createStreetCat = async (req: Request, res: Response) => {
-  const uuid = await getUuid();
-  const userId = await getUuid(); // addNewImages 사용할 용으로 가져옴... 이름 통일 필요?
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+
+  console.log("uuidString: ", uuidString);
+  console.log("uuid: ", uuid);
   const { name, gender, neutered, discoveryDate, content } = req.body;
   const location = JSON.parse(req.body.location);
   const postData = { categoryId, name, gender, neutered, discoveryDate, content, uuid };
   
   try {
-    await prisma.$transaction(async (tx) => {
+    const post = await prisma.$transaction(async (tx) => {
       // location 생성
       const newLocation = await createLoction(tx, location);
       const locationId = newLocation.locationId;
@@ -112,7 +127,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
         const newImages = await addNewImages(
           tx,
           {
-            userId,
+            userId: uuid,
             postId,
             categoryId: categoryId,
           },
@@ -129,11 +144,14 @@ export const createStreetCat = async (req: Request, res: Response) => {
         await createStreetCatImages(tx, getStreetCatImages);
       }
 
-      await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
-      await indexOpensearchDocument(CATEGORY.STREET_CATS, name, content, postId);
+      // await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
+      // await indexOpensearchDocument(CATEGORY.STREET_CATS, name, content, postId);
 
-      res.status(201).json({ message: "동네 고양이 도감 생성" });
+      return newPost;
     })
+    res.status(201).json({ message: "동네 고양이 도감 생성" });
+
+    await indexResultToOpensearch(CATEGORY.STREET_CATS, post.postId);
 
   } catch (error) {
     console.error(error);
@@ -143,12 +161,13 @@ export const createStreetCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 수정
 export const updateStreetCat = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+
+  console.log("uuidString: ", uuidString);
+  console.log("uuid: ", uuid);
   const { name, gender, neutered, discoveryDate, locationId, content, deleteImageIds } = req.body;
-  // const addImages = JSON.parse(req.body.images);
-  // console.log(addImages);
-  const uuid = await getUuid();
-  const userId = await getUuid(); // addNewImages 사용할 용으로 가져옴... 이름 통일 필요?
   const postId = Number(req.params.street_cat_id);
   const postData = { postId, categoryId, name, gender, neutered, discoveryDate, locationId, content, uuid };
   const imageIds = JSON.parse(deleteImageIds);
@@ -166,7 +185,7 @@ export const updateStreetCat = async (req: Request, res: Response) => {
         const newImages = await addNewImages(
           tx,
           {
-            userId,
+            userId: uuid,
             postId,
             categoryId: categoryId,
           },
@@ -199,7 +218,12 @@ export const updateStreetCat = async (req: Request, res: Response) => {
 // 동네 고양이 도감 삭제
 export const deleteStreetCat = async (req: Request, res: Response) => {
   // TODO: 로그인한 유저와 게시글 작성 유저가 같은지 판별 필요
-  const uuid = await getUuid();
+  // const uuid = await getUuid();
+  const uuidString = req.headers["x-uuid"] as string;
+  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+
+  console.log("uuidString: ", uuidString);
+  console.log("uuid: ", uuid);
   const postId = Number(req.params.street_cat_id);
 
   try {
@@ -227,10 +251,3 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-// 동네 고양이 지도(test)
-// export const getLocation = async (req: Request, res: Response) => {
-//   const uuid = await getUuid();
-
-  
-// }

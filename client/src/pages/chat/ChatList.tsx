@@ -1,10 +1,9 @@
 import "../../styles/scss/pages/chat/ChatList.scss";
 import ChatListC from "../../components/chat/ChatList";
-import Test from "../../assets/img/test.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuthStore } from "../../store/userStore";
 import NoList from "../../assets/img/StartChat.png";
+import { Buffer } from "buffer";
 
 interface IList{
   img: string;
@@ -23,31 +22,52 @@ interface IList{
   };
   chatId: string;
 }
+const ENDPOINT = "http://localhost:8080";
 
 const ChatList = () => {
   const [list, setList] = useState<IList[]>([]);
-  const userUuid = sessionStorage.getItem("uuid");
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  useEffect(() => {
-    if (userUuid && isLoggedIn) {
-      const fetchChatList = async () => {
-        try {
-          const response = await axios.get('http://localhost:8080/chats/chatlist', {
-            headers: {
-              'X-User-UUID': userUuid,
-            },
-          });
-          setList(response.data);
-          console.log(list);
-          console.log(sessionStorage.getItem("uuid"))
-        } catch (error) {
-          console.error('Error fetching chat list:', error);
-        }
-      };
+  
+  // const generalToken = localStorage.getItem("generalToken");
+  // const refreshToken = localStorage.getItem("refreshToken");
 
-      fetchChatList();
-    }
-  }, [userUuid, isLoggedIn]);
+  useEffect(() => {
+    const fetchChatLists = async () => {
+      try {
+        const response = await axios.get(ENDPOINT + '/chats/chatlist', {
+          headers: {
+            "x-user-uuid": localStorage.getItem("uuid")
+          },
+        });
+        const chatLists = response.data;
+
+        const updatedLists = await Promise.all(
+          chatLists.map(async (list: IList) => {
+            console.log("otherUuid :", Buffer.from(list.otherUuid.data).toString("hex"), localStorage.getItem("uuid"));
+            const otherUuid = (Buffer.from(list.otherUuid.data).toString("hex") === localStorage.getItem("uuid") ?
+              list.uuid.data : list.otherUuid.data);
+            const userResponse = await axios.post(`${ENDPOINT}/chats`, {
+              uuid: otherUuid,
+            });
+            const nickname = userResponse.data.nickname;
+            return {
+              ...list,
+              users: {
+                ...list.users,
+                nickname: nickname,
+              },
+            };
+          })
+        );
+
+
+        setList(updatedLists);
+      } catch (error) {
+        console.error('Error fetching chat lists:', error);
+      }
+    };
+
+    fetchChatLists();
+  }, []);
 
   return (
     <div className="chatList">

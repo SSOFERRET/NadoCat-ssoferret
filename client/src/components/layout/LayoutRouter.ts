@@ -4,3 +4,4 @@ export const authPaths = ["/users/signup",
 "/users/my/setting/auth-password", "/users/my/setting/password","/users/my/setting/detail"];
 export const postPaths = ["/write", "/edit"];
 export const boardsDetailRegex = /\/boards\/(communities|events)\/\d+$/;
+export const chatPaths = ["/chats/chat"];

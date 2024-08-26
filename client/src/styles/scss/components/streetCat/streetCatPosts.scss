@@ -19,7 +19,7 @@
     }
   }
 
-  li {
+  .street-cat {
     position: relative;
 
     .img-box {
@@ -45,6 +45,7 @@
       right: 10rem;
       bottom: 62rem;
       z-index: 1;
+      cursor: pointer;
 
       &.active {
         fill: $primary;

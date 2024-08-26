@@ -86,8 +86,16 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <StreetCats /> },
               { path: ":id", element: <StreetCatDetail /> },
-              { path: "write", element: <StreetCatWrite /> },
-              { path: "edit/:id", element: <StreetCatEdit /> },
+              { path: "write", element: (
+              //  <ProtectedPath>
+                  <StreetCatWrite />
+              //  </ProtectedPath>
+              )},
+              { path: "edit/:id", element: (
+              // <ProtectedPath>
+                <StreetCatEdit /> 
+              // </ProtectedPath>
+              )},
             ],
           },
           {

@@ -1,0 +1,32 @@
+@import "../../base/common.scss";
+
+.friends-container {
+  .frienddList {
+    display: flex;
+    flex-direction: column;
+    gap: 10rem;
+
+    .friend {
+      display: flex;
+      padding: 10rem 0;
+
+      .user-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: 1;
+        margin-left: 8rem;
+        .nickname {
+          word-break: break-all;
+          font-family: "bold";
+          font-size: $size-14;
+        }
+        .friend-delete {
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

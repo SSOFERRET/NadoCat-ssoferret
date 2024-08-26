@@ -1,6 +1,8 @@
 @import "../../../base/common.scss";
 
 .tab-container {
+
+  /*
   display: flex;
   flex-direction: column;
   
@@ -30,5 +32,44 @@
         padding: 20rem;
         background-color: aqua;
         font-size: $size-16;
+  */
+
+  width: 100%;
+  max-width: 430rem;
+  display: flex;
+  flex-direction: column;
+
+  .tab-header {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0 20rem;
+
+    .tab-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 0.5px solid $lightgray;
+
+      button {
+        flex: 1;
+        cursor: pointer;
+        padding: 10rem 20rem;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        font-size: $size-14;
+        font-family: "regular";
+      }
+
+      button.active-btn {
+        border-bottom: 2px solid #ffcc00;
+      }
     }
+  }
+
+  .tab-content {
+    padding: 20rem;
+    // background-color: aqua;
+    font-size: $size-16;
+  }
 }

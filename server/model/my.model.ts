@@ -153,8 +153,11 @@ export const addProfileImageFormats = async (
 
 //[x]프로필 이미지 삭제 로직 추가(기본이미지 변경)
 export const deleteProfileImageFormats = async (
-  uuid: string,
-  imageUrl: string
-) => {
-  await deleteProfileImages(imageUrl, uuid);
-};
+
+    uuid: string,
+    imageUrl: string
+  ) => {
+    await deleteProfileImages(imageUrl, uuid);
+  };
+  
+

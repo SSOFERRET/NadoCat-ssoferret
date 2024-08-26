@@ -4,10 +4,11 @@ import { ICommentDeleteRequest } from "../../api/community.api";
 import useCommentStore from "../../store/comment";
 import { BoardType, getPostPath } from "../../utils/boards/boards";
 import { RxCross1 } from "react-icons/rx";
+import { SortMenu } from "../../utils/sort/sortMenu";
 
 export type DeletePost = { postId: number };
 
-type MenuType = "post" | "comment" | "user";
+type MenuType = "post" | "comment" | "user" | "sort";
 
 interface IProps {
   boardType?: BoardType;
@@ -23,6 +24,9 @@ interface IProps {
   }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
   handelCommentFormOpen?: () => void;
+  sortMenu?: SortMenu[];
+  handleSortMenu?: (item: SortMenu) => void;
+  sort?: SortMenu;
   uploadImage?: (file: File) => void;
   setDefaultImage?: () => void;
 }
@@ -36,8 +40,12 @@ const PostMenu = ({
   deletePost,
   deleteComment,
   handelCommentFormOpen,
+  handleSortMenu,
+  sortMenu,
+  sort,
   uploadImage,
   setDefaultImage,
+
 }: IProps) => {
   const navigate = useNavigate();
   const { selectedCommentId: commentId, clearSelectedCommentId } =
@@ -110,6 +118,9 @@ const PostMenu = ({
     showMenu();
   };
 
+
+  const isPostSortMenu = menuType === "sort" && sortMenu && sort;
+        
   const handleUploadClick = () => {
     if (uploadImage) {
       const fileInput = document.createElement("input");
@@ -137,6 +148,7 @@ const PostMenu = ({
   const handleSetting = () => {
     navigate("/users/my/setting");
   };
+
 
   return (
     <div
@@ -177,6 +189,22 @@ const PostMenu = ({
             >
               <span>댓글 삭제</span>
             </li>
+          </>
+        )}
+
+        {isPostSortMenu && (
+          <>
+            {sortMenu.map((item) => (
+              <li
+                key={item.id}
+                className={`${sort.name === item.name ? "seleted" : ""}`}
+                onClick={() => {
+                  handleSortMenu && handleSortMenu(item);
+                }}
+              >
+                <span>{item.name}</span>
+              </li>
+            ))}
           </>
         )}
 

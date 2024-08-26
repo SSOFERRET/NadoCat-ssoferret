@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AiFillHeart } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { PiChatCircleBold } from "react-icons/pi";
 import "../../styles/css/base/reset.css";

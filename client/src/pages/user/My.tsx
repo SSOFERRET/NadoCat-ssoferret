@@ -3,9 +3,11 @@ import "../../styles/scss/pages/user/my.scss";
 import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
 import { myPage, userPage } from "../../api/user.api";
+import { useParams } from "react-router-dom";
+import Logout from "../../components/user/my/Logout";
+import { useAuthStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
 import { getUuid, useAuthStore } from "../../store/userStore";
-// import Spinner from "../../components/loading/Spinner"; 
 import LoadingCat from "../../components/loading/LoadingCat";
 
 export interface MyProps {
@@ -19,6 +21,11 @@ export interface MyProps {
 }
 
 export const My = () => {
+
+  const {  uuid  } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
+  const UserUuid = uuid || "";
+  // 소영추가코드
+
   const navigate = useNavigate();
 
   const  {uuid: loggedUser } = useAuthStore(); // 현재 로그인한 사용자의 UUID
@@ -98,8 +105,13 @@ export const My = () => {
     }
   };
 
+  //소영 추가 코드
+  const handleSendToChat = () => {
+    navigate("/chats/chat", {state: { userData: userData }})
+}
+
   return (
-    <>
+   <>
       {userData && (
         <div className={currentUuid === loggedUser? "my-container": "user-container"}>
           <MyInfo

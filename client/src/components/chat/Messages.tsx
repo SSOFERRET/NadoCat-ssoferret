@@ -2,13 +2,9 @@ import React, { useEffect } from 'react';
 import BasicScrollToBottom from "react-scroll-to-bottom";
 import Message from './Message';
 import "../../styles/scss/components/chat/Messages.scss";
-
-interface MessageData {
-  // chatId: number; 
-  // userUuid: string;
-  // content: string;
-  // timeZone: string;
-  uuid: string;
+import { Buffer } from 'buffer';
+export interface MessageData {
+  uuid: number[],
   content: string;
   sentAt: string;
 }
@@ -26,7 +22,7 @@ const Messages: React.FC<Props> = ({ messages}) => {
     <BasicScrollToBottom className="messages">
       {messages.map((message, index) => (
         <div key={index}>
-          {sessionStorage.getItem("uuid") === "0619-eba4-9bf1-496d-a690-e158-2de9-9871"? 
+          { Buffer.from(message.uuid).toString("hex") === localStorage.getItem("uuid") ? 
           <div className="end"><Message message={message} /></div> :
           <div className="start"><Message message={message}/></div>
           }

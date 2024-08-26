@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
 import "../../styles/scss/components/chat/Modal.scss";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 interface Props {
   isOpen: boolean;
   onClosed: () => void;
   chatId: string|null;
 }
 const Modal: React.FC<Props> = ({isOpen, onClosed, chatId}) => {
+  const navigate = useNavigate();
   if (!isOpen) return null;
 
-  const handleLeaveChat = async () => {
-    try {
-      await axios.post('http://localhost:8080/chats/delete', { chatId});
-      onClosed();
-    } catch (error) {
-      alert("채팅방 나가기에 실패했습니다.");
-    }
+  const handleLeaveChat = () => {
+    axios.post('http://localhost:8080/chats/delete', { chatId })
+      .then(res => {
+        console.log(res);
+        alert("채팅방에서 나갔습니다.");
+        onClosed();
+        window.location.reload();
+      })
+      .catch(err => {
+        console.log(err);
+        alert("채팅방 나가기에 실패했습니다.");
+        onClosed();
+        window.location.reload();
+      })
   };
   return (
     <div className='modal'>

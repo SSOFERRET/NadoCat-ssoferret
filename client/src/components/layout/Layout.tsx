@@ -3,7 +3,7 @@ import { Header } from "../common/Header";
 import { Footer } from "../common/Footer";
 import { Outlet, useLocation } from "react-router-dom";
 import "../../styles/scss/components/layout/layout.scss";
-import { authPaths, postPaths, boardsDetailRegex } from "./LayoutRouter";
+import { authPaths, postPaths, boardsDetailRegex, chatPaths } from "./LayoutRouter";
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -13,8 +13,9 @@ const Layout: React.FC = () => {
     const isAuthPath = authPaths.includes(pathname);
     const isPostFormPage = postPaths.some(path => pathname.includes(path));
     const isBoardsDetailPath = boardsDetailRegex.test(pathname);
+    const isChatPaths = chatPaths.includes(pathname);
   
-    return isAuthPath || isPostFormPage || isBoardsDetailPath;
+    return isAuthPath || isPostFormPage || isBoardsDetailPath || isChatPaths;
   };
 
   const hideHeaderFooter = shouldHideHeaderFooter();

@@ -25,7 +25,7 @@ import { ITag } from "../../types/tag";
 import { IImage } from "../../types/image";
 import { getLiked, removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
-import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
@@ -72,7 +72,7 @@ export const getEvent = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.event_id);
     const categoryId = CATEGORY.EVENTS;
-    const userId = uuid && Buffer.from(req.user.uuid, "hex");
+    const userId = uuid && Buffer.from(uuid, "hex");
 
     let result;
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -109,10 +109,14 @@ export const getEvent = async (req: Request, res: Response) => {
 // [ ] 예외 처리
 // [ ] 에러처리
 export const createEvent = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
     const { title, content, isClosed, tags } = req.body;
     const tagList = JSON.parse(tags);
-    const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = Buffer.from(uuid, "hex");
 
     const newPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await addEvent(tx, userId, title, content, !!isClosed);
@@ -150,12 +154,12 @@ export const createEvent = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.EVENTS, post.postId);
 
-      await indexOpensearchDocument(CATEGORY.EVENTS, title, content, post.postId);
-
       return post;
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
+
+    await indexResultToOpensearch(CATEGORY.EVENTS, newPost.postId);
   } catch (error) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientValidationError) {
@@ -170,13 +174,18 @@ export const createEvent = async (req: Request, res: Response) => {
 // [x] 이미지 업로드 구현
 // [ ] 에러처리
 export const updateEvent = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = Buffer.from(req.user.uuid, "hex");
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const postId = Number(req.params.event_id);
 
     const { title, content, tags, deleteTagIds, deleteImageIds, isClosed } = req.body;
+    console.log(req.body)
 
-    if (!title || !content || !tags || !isClosed || !deleteTagIds || !deleteImageIds) {
+    if (!title || !content || !tags || !deleteTagIds || !deleteImageIds ) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 
@@ -225,7 +234,7 @@ export const updateEvent = async (req: Request, res: Response) => {
 
       await deleteImages(tx, imageIds);
 
-      await updateOpensearchDocument(CATEGORY.EVENTS, postId, { content });
+      await updateOpensearchDocument(CATEGORY.EVENTS, postId, { title, content });
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
@@ -239,9 +248,13 @@ export const updateEvent = async (req: Request, res: Response) => {
 // [x] 관련 댓글 삭제
 // [ ] 에러처리
 export const deleteEvent = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
     const postId = Number(req.params.event_id);
-    const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = Buffer.from(uuid, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await getEventById(tx, postId);
