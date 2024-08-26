@@ -17,9 +17,6 @@ export const signup = async (userData: SignupProps) => {
   }
 };
 
-//비밀번호 변경요청
-//비밀번호 변경
-
 interface ILoginResponse {
   message: string;
   user: {
@@ -115,7 +112,7 @@ export const updateNickname = async (data: SettingNicknameProps) => {
 
 export const authPassword = async (data: SettingAuthPasswordProps) => {
   try {
-    const response = await httpClient.put("/users/my/setting/auth-password", data);
+    const response = await httpClient.post("/users/my/setting/auth-password", data);
     return response.data;
   } catch (error) {
     console.error("사용자 비밀번호 인증에 실패했습니다:", error);

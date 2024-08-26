@@ -26,7 +26,7 @@ const SettingPassword = () => {
     const result = updatePassword(data);
     console.log("비밀번호 인증 성공:", result);
 
-    navigate("/users/my");password
+    navigate("/users/my");
   };
 
   useEffect(() => {

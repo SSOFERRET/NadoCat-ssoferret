@@ -1,5 +1,5 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import bcryto from "bcrypt";
+import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { indexOpensearchUser } from "../controller/search/Searches";
@@ -8,7 +8,7 @@ import { addProfileImages } from "../util/images/addNewImages";
 
 const prisma = new PrismaClient();
 
-//[ ]마이페이지
+//[x]사용자 조회
 export const getUser = async (uuid: string) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
 
@@ -33,7 +33,8 @@ export const getUser = async (uuid: string) => {
   }
 };
 
-export const updateUser = async (uuid: string) => {
+// [x]사용자 닉네임 변경
+export const updateNewNickname = async (uuid: string, newNickname: string) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
 
   try {
@@ -43,39 +44,106 @@ export const updateUser = async (uuid: string) => {
         uuid: uuidBuffer,
       },
       data: {
-        nickname: "테스트",
+        nickname: newNickname,
       },
     });
 
-    return {updateUser}
+    return { updateUser };
+  } catch (error) {
+    console.log("마이페이지 사용자 닉네임 업데이트 error:", error);
+    throw new Error("마이페이지 사용자 닉네임 업데이트에서 오류 발생");
+  }
+};
+
+// [x]사용자 자기소개
+export const updateNewDetail = async (uuid: string, newDetail: string) => {
+  const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
+
+  try {
+    // 사용자 정보 업데이트
+    const updateUser = await prisma.users.update({
+      where: {
+        uuid: uuidBuffer,
+      },
+      data: {
+        detail: newDetail,
+      },
+    });
+
+    return { updateUser };
+  } catch (error) {
+    console.log("마이페이지 사용자 자기소개 업데이트 error:", error);
+    throw new Error("마이페이지 사용자 자기소개 업데이트에서 오류 발생");
+  }
+};
+
+// [x]사용자 비밀번호 검증
+export const getAuthPassword = async (uuid: string) => {
+  const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
+
+  try {
+    //사용자 정보 가져오기
+    const selectUserSecrets = await prisma.userSecrets.findFirst({
+      where: {
+        uuid: uuidBuffer,
+      },
+    });
+
+    if (!selectUserSecrets) {
+      //사실 자기정보라 이러면 안되긴 함
+      console.log("사용자를 찾을 수 없습니다.");
+      return null;
+    }
+
+    return { selectUserSecrets };
+  } catch (error) {
+    console.log("마이페이지 사용자 조회 error:", error);
+    throw new Error("마이페이지 사용자 조회에서 오류 발생");
+  }
+};
+
+// [ ]사용자 비밀번호 변경
+export const updateNewPassword = async (uuid: string, newPassword: string) => {
+  const hashing = async (password: string) => {
+    const saltRound = 10;
+    const salt = await bcrypt.genSalt(saltRound);
+    const hashPassword = await bcrypt.hash(password, salt);
+    return { salt, hashPassword };
+  };
+
+  const { salt, hashPassword } = await hashing(newPassword);
+
+  const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
+  try {
+    const selectUserSecrets = await prisma.userSecrets.findFirst({
+      where: {
+        uuid: uuidBuffer,
+      },
+    });
+
+    if (!selectUserSecrets) {
+      throw new Error("사용자를 찾을 수 없습니다.");
+    }
+
+    // 사용자 정보 업데이트
+    const updateUser = await prisma.userSecrets.update({
+      where: {
+        userSecretId: selectUserSecrets.userSecretId,
+      },
+      data: {
+        salt: salt,
+        hashPassword: hashPassword,
+      },
+    });
+
+    return { updateUser };
   } catch (error) {
     console.log("마이페이지 사용자 정보 업데이트 error:", error);
     throw new Error("마이페이지 사용자 정보 업데이트에서 오류 발생");
   }
 };
 
-export const deleteUser = async (uuid: string) => {
-  const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
-
-  try {
-    // 사용자 삭제(inactive로 상태변경)
-    const deleteUser = await prisma.users.update({
-      where: {
-        uuid: uuidBuffer,
-      },
-      data: {
-        status: "inactive",
-      },
-    });
-
-    return {deleteUser}
-  } catch (error) {
-    console.log("마이페이지 사용자 삭제 error:", error);
-    throw new Error("마이페이지 사용자 삭제에서 오류 발생");
-  }
-};
-
-//프로필 이미지 저장 로직 추가
+//[x]프로필 이미지 저장 로직 추가
 export const addProfileImageFormats = async (
   uuid: string,
   imageUrl: string
@@ -83,11 +151,10 @@ export const addProfileImageFormats = async (
   await addProfileImages(imageUrl, uuid);
 };
 
-//프로필 이미지 삭제 로직 추가(기본이미지 변경)
+//[x]프로필 이미지 삭제 로직 추가(기본이미지 변경)
 export const deleteProfileImageFormats = async (
-    uuid: string,
-    imageUrl: string
-  ) => {
-    await deleteProfileImages(imageUrl, uuid);
-  };
-  
+  uuid: string,
+  imageUrl: string
+) => {
+  await deleteProfileImages(imageUrl, uuid);
+};

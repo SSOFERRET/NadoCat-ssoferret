@@ -13,6 +13,7 @@ export interface MyProps {
   profileImageUrl: string;
   uuid: string;
   email?: string;
+  detail?: string;
   authType?: string;
   autoLogin?: boolean;
 }
@@ -109,6 +110,7 @@ export const My = () => {
             // isMyPage={currentUuid === loggedUser} //본인 페이지 여부
           />
           {/* <Logout /> */}
+          <p>{userData.detail}</p>
           <MyTab></MyTab>
         </div>
       )}
