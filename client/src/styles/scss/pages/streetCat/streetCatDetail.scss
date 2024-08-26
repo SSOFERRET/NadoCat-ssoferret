@@ -69,7 +69,8 @@
 
   .street-cat-comment {
     display: flex;
-    padding: 20rem 0;
+    padding-bottom: 20rem;
+    margin: 20rem;
     border-bottom: 0.5rem solid $lightgray;
     position: relative;
 
@@ -100,6 +101,7 @@
     }
 
     .content {
+      // width: 90%;
       font-family: "medium";
       font-size: $size-14;
       color: $dimgray;
@@ -108,18 +110,19 @@
 
     .comment-more {
       position: absolute;
-      right: 0;
+      right: 20rem;
       margin: 0;
-      top: 26rem;
+      top: 10rem;
       color: $silver;
     }
   }
-  .street-cat-comment:last-child {
-    border: none;
-    margin-bottom: 70rem;
-  }
-}
 
-.street-cat-comment-list {
-  padding: 0 20rem;
+  .street-cat-comment-list {
+    padding: 0 20rem;
+
+    .comment-card:last-child {
+      border: none;
+      margin-bottom: 70rem;
+    }
+  }
 }

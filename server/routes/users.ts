@@ -1,18 +1,18 @@
 import express from "express";
-import {signup, login, kakao, google, getNewAccessToken, logout} from "../controller/user/Users";
+import { signup, login, kakao, google, getNewAccessToken, logout } from "../controller/user/Users";
 import { signupValidator, loginValidator } from "../middleware/validator";
 import { mypage, updateNickname, updatePassword, updateProfile, deleteProfile } from "../controller/user/MyPage";
 import {
   getFavoriteCats,
   getFavoriteCat,
   addFavoriteCat,
-  deleteFavoriteCat
-} from "../controller/streetCat/StreetCatsFavorite"
+  deleteFavoriteCat,
+} from "../controller/streetCat/StreetCatsFavorite";
 import { follow, followings, unfollow } from "../controller/friend/Friends";
 import { ensureAutorization } from "../middleware/auth";
 import uploadImages from "../multer";
 
-const router= express.Router();
+const router = express.Router();
 
 //사용자
 router.post("/signup", signupValidator, signup);
@@ -21,12 +21,12 @@ router.post("/logout", ensureAutorization, logout);
 router.post("/refresh-token", getNewAccessToken);
 router.get("/auth/kakao/callback", kakao);
 router.get("/auth/google", google);
-// router.get("/my", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
-router.get("/my/:uuid", ensureAutorization, mypage); //마이페이지 + auth.ts 미들웨어(인증필요)
+router.get("/my/:uuid", ensureAutorization, mypage); 
 router.put("/update-nickname", updateNickname);
 router.put("/update-password", updatePassword);
-router.put("/update-profile", uploadImages.single("profileImage"),updateProfile);
-router.put("/delete-profile", uploadImages.single("profileImage"),deleteProfile);
+
+router.post("/update-profile",ensureAutorization, uploadImages.single("profileImage"),updateProfile);
+router.put("/delete-profile",ensureAutorization, deleteProfile);
 
 // 동네 고양이 도감 즐겨찾기(내 도감)
 router.get("/street-cats", getFavoriteCats);
@@ -35,8 +35,8 @@ router.post("/street-cats/:street_cat_id", addFavoriteCat);
 router.delete("/street-cats/:street_cat_id", deleteFavoriteCat);
 
 // 친구 맺기
-router.post("/follows/:following_id", follow);
-router.delete("/follows/:following_id", unfollow);
-router.get("/followings", followings);
+router.post("/follows/:following_id", ensureAutorization, follow);
+router.delete("/follows/:following_id", ensureAutorization, unfollow);
+router.get("/followings", ensureAutorization, followings);
 
 export default router;

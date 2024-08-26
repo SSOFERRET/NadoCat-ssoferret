@@ -1,21 +1,22 @@
 import "../../styles/scss/components/comment/comments.scss";
+import { useState } from "react";
 import useCommunityComment from "../../hooks/useCommunityComment";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import CommentList from "../comment/CommentList";
 import CommentsEmpty from "../comment/CommentsEmpty";
 import PostMenu from "../communityAndEvent/PostMenu";
-import { useState } from "react";
-import { useAuthStore } from "../../store/userStore";
+import Spinner from "../loading/Spinner";
+import ServerError from "../comment/CommentError";
 
 interface IProps {
   postId: number;
 }
 
 const CommunityComments = ({ postId }: IProps) => {
-  const {uuid, storeLogin} = useAuthStore()
-  console.log("여기", uuid)
   const {
     data,
+    isLoading,
+    error,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -52,18 +53,26 @@ const CommunityComments = ({ postId }: IProps) => {
   return (
     <>
       <section className="comment-list">
-        <CommentList
-          postId={postId}
-          comments={data}
-          showMenu={showMenu}
-          isCommentEdit={isCommentEdit}
-          setIsCommentEdit={setIsCommentEdit}
-          editComment={editCommunityComment}
-        />
+        {error && <ServerError text="댓글을 불러올 수 없습니다." />}
 
-        <div className="more" ref={moreRef}>
-          {isFetchingNextPage && <div>loading...</div>}
-        </div>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <CommentList
+              postId={postId}
+              comments={data}
+              showMenu={showMenu}
+              isCommentEdit={isCommentEdit}
+              setIsCommentEdit={setIsCommentEdit}
+              editComment={editCommunityComment}
+            />
+
+            <div className="more" ref={moreRef}>
+              {isFetchingNextPage && <Spinner />}
+            </div>
+          </>
+        )}
       </section>
 
       <PostMenu

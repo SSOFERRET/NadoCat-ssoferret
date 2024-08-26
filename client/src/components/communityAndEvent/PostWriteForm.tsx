@@ -4,7 +4,7 @@ import NewTagForm from "./NewTagForm";
 import NewTags from "./NewTags";
 
 interface IProps {
-  boardCategory: "community" | "event";
+  boardCategory: "community" | "event" | "missing";
   addPost: (formData: FormData) => void;
 }
 
@@ -25,7 +25,9 @@ const PostWriteForm = ({ boardCategory, addPost }: IProps) => {
     }
   };
 
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  const handleChange = (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     const { name, value } = event.target;
 
     if (name === "content") {
@@ -61,7 +63,8 @@ const PostWriteForm = ({ boardCategory, addPost }: IProps) => {
 
     formData.append("title", title);
     formData.append("content", content);
-    boardCategory === "event" && formData.append("isClosed", isClosed ? "true" : "");
+    boardCategory === "event" &&
+      formData.append("isClosed", isClosed ? "true" : "");
     formData.append("tags", JSON.stringify(newTags));
 
     Array.from(newImages).forEach((image) => {
@@ -79,16 +82,19 @@ const PostWriteForm = ({ boardCategory, addPost }: IProps) => {
     <div className="community-post-write">
       <form onSubmit={handleSubmit} className="post-form">
         <div>
-          <input
-            className="title"
-            name="title"
-            value={title}
-            onChange={handleChange}
-            min={1}
-            type="text"
-            placeholder="제목"
-            required
-          />
+          {boardCategory !== "missing" && (
+            <input
+              className="title"
+              name="title"
+              value={title}
+              onChange={handleChange}
+              min={1}
+              type="text"
+              placeholder="제목"
+              required
+            />
+          )}
+
           <textarea
             className="post-textarea"
             onChange={handleChange}
@@ -101,7 +107,10 @@ const PostWriteForm = ({ boardCategory, addPost }: IProps) => {
             required
           ></textarea>
 
-          <ImageUploader newImages={newImages} setNewImageFiles={setNewImageFiles} />
+          <ImageUploader
+            newImages={newImages}
+            setNewImageFiles={setNewImageFiles}
+          />
 
           {boardCategory === "event" && (
             <div className="status-selection">
@@ -133,19 +142,34 @@ const PostWriteForm = ({ boardCategory, addPost }: IProps) => {
           )}
 
           <div className="hash-tag-wrapper">
-            <button type="button" className="hash-tag-btn" onClick={handleTagFormOpen}>
+            <button
+              type="button"
+              className="hash-tag-btn"
+              onClick={handleTagFormOpen}
+            >
               &#035; 해시태그를 입력해주세요 &#62;
             </button>
 
             <NewTags tags={newTags} removeTags={removeTags} />
           </div>
         </div>
-        <button className={`post-submit ${!title || !content ? "submit-disabled" : ""}`} disabled={!title || !content}>
+        <button
+          className={`post-submit ${
+            !title || !content ? "submit-disabled" : ""
+          }`}
+          disabled={!title || !content}
+        >
           작성완료
         </button>
       </form>
 
-      {isOpen && <NewTagForm initialTags={newTags} addNewTags={addNewTags} handleTagFormOpen={handleTagFormOpen} />}
+      {isOpen && (
+        <NewTagForm
+          initialTags={newTags}
+          addNewTags={addNewTags}
+          handleTagFormOpen={handleTagFormOpen}
+        />
+      )}
     </div>
   );
 };

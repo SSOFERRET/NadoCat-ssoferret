@@ -53,3 +53,32 @@ export const my = async(uuid: string) => {
         
     }
 }
+
+export const uploadProfile = async(file: File) => {
+    const formData = new FormData();
+    formData.append("profileImage", file);
+    
+    try {
+        const response = await httpClient.post("/users/update-profile", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
+
+        return response.data.imageUrl;
+    } catch (error) {
+        console.error("프로필 사진 정보를 가져오는 데 실패했습니다:", error);
+        throw error;
+    }
+}
+
+export const deleteProfile = async(imageUrl: string) => {
+    try {
+    const response = await httpClient.put("/users/delete-profile", {imageUrl});
+    return response.data;
+        
+    } catch (error) {
+        console.error("기본 사진 정보를 가져오는 데 실패했습니다:", error);
+        throw error;
+    }
+}

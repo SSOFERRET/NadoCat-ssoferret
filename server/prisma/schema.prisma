@@ -212,8 +212,8 @@ model Likes {
 
 model Locations {
   locationId             Int                     @id @unique(map: "idlocation_id_UNIQUE") @default(autoincrement()) @map("location_id")
-  longitude              Float                   @db.Float
   latitude               Float                   @db.Float
+  longitude              Float                   @db.Float
   detail                 String                  @db.VarChar(100)
   missingLocations       MissingLocations?
   missingReportLocations MissingReportLocations?
@@ -392,10 +392,12 @@ model StreetCatComments {
 }
 
 model StreetCatFavorites {
-  uuid       Bytes      @db.Binary(16)
-  postId     Int        @map("post_id")
-  streetCats StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
-  users      Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
+  streetCatFavoriteId Int        @id @unique(map: "street_cat_favorite_id_UNIQUE") @default(autoincrement()) @map("street_cat_favorite_id")
+  uuid                Bytes      @db.Binary(16)
+  postId              Int        @map("post_id")
+  createdAt           String     @default("CURRENT_TIMESTAMP()") @map("created_at") @db.VarChar(45)
+  streetCats          StreetCats @relation(fields: [postId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_post_id_fk")
+  users               Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_favorites_uuid_fk")
 
   @@id([uuid, postId])
   @@index([postId], map: "street_cat_favorites_post_id_fk_idx")

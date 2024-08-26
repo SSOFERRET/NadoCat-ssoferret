@@ -1,0 +1,23 @@
+@import "../../base/common.scss";
+
+.notification-icon {
+  width: 24rem;
+  height: 24rem;
+  position: relative;
+
+  .bell-icon {
+    width: 100%;
+    height: 100%;
+  }
+
+  .new-sign {
+    width: 12rem;
+    height: 12rem;
+    position: absolute;
+    fill: red;
+    stroke: white;
+    stroke-width: 2rem;
+    z-index: 1;
+    right: 0;
+  }
+}

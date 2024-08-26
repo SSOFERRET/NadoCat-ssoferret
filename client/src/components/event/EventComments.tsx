@@ -5,14 +5,25 @@ import CommentsEmpty from "../comment/CommentsEmpty";
 import CommentList from "../comment/CommentList";
 import { useState } from "react";
 import PostMenu from "../communityAndEvent/PostMenu";
+import Spinner from "../loading/Spinner";
+import ServerError from "../comment/CommentError";
 
 interface IProps {
   postId: number;
 }
 
 const EventComments = ({ postId }: IProps) => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty, removeEventComment, editEventComment } =
-    useEventComment(postId);
+  const {
+    data,
+    error,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isEmpty,
+    removeEventComment,
+    editEventComment,
+  } = useEventComment(postId);
 
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [isCommentEdit, setIsCommentEdit] = useState(false);
@@ -42,18 +53,25 @@ const EventComments = ({ postId }: IProps) => {
   return (
     <>
       <section className="comment-list">
-        <CommentList
-          postId={postId}
-          comments={data}
-          showMenu={showMenu}
-          isCommentEdit={isCommentEdit}
-          setIsCommentEdit={setIsCommentEdit}
-          editComment={editEventComment}
-        />
+        {error && <ServerError text="댓글을 불러올 수 없습니다." />}
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <CommentList
+              postId={postId}
+              comments={data}
+              showMenu={showMenu}
+              isCommentEdit={isCommentEdit}
+              setIsCommentEdit={setIsCommentEdit}
+              editComment={editEventComment}
+            />
 
-        <div className="more" ref={moreRef}>
-          {isFetchingNextPage && <div>loading...</div>}
-        </div>
+            <div className="more" ref={moreRef}>
+              {isFetchingNextPage && <Spinner />}
+            </div>
+          </>
+        )}
       </section>
 
       <PostMenu

@@ -1,15 +1,19 @@
+import prisma from "../../client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { getUserId } from "../community/Communities";
 import { addFriend, getFriendById, getFriendCounts, getFriends, removeFriend } from "../../model/friend.model";
 import { handleControllerError } from "../../util/errors/errors";
 import { notify } from "../notification/Notifications";
-import prisma from "../../client";
 import { Prisma } from "@prisma/client";
 
 export const followings = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = Buffer.from(req.user.uuid, "hex");
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+
+    const userId = Buffer.from(uuid, "hex");
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
 
@@ -32,9 +36,15 @@ export const followings = async (req: Request, res: Response) => {
 };
 
 export const follow = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
+
   try {
-    const userId = Buffer.from(req.user.uuid, "hex");
-    const followingId = Buffer.from(req.params.following_idm, "hex");
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+
+    const userId = Buffer.from(uuid, "hex");
+    const followingId = Buffer.from(req.params.following_id, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await addFriend(tx, userId, followingId);
@@ -54,9 +64,15 @@ export const follow = async (req: Request, res: Response) => {
 };
 
 export const unfollow = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
+  console.log("following_id", req.params.following_id);
   try {
-    const userId = Buffer.from(req.user.uuid, "hex");
-    const followingId = Buffer.from(req.params.following_idm, "hex");
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+
+    const userId = Buffer.from(uuid, "hex");
+    const followingId = Buffer.from(req.params.following_id, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const friend = await getFriendById(tx, userId, followingId);

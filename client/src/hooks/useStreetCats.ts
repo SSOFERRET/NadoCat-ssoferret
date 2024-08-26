@@ -6,7 +6,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 const LIMIT = 8;
 
-export const useStreetCatPosts = () => {
+export const useStreetCatPosts = (enabled: boolean) => {
   const {
     data,
     fetchNextPage,
@@ -15,7 +15,7 @@ export const useStreetCatPosts = () => {
     isLoading,
     status
   } = useInfiniteQuery({
-    queryKey: ["streetCats"],
+    queryKey: ["streetCatPosts"],
     queryFn: ({pageParam}) => fetchStreetCatPosts({
       limit: LIMIT,
       cursor: pageParam,
@@ -27,6 +27,7 @@ export const useStreetCatPosts = () => {
       }
       return lastPage.streetCatPosts[LIMIT - 1]?.postId;
     },
+    enabled,
   });
 
   const streetCatPosts = data ? data.pages.flatMap((page) => page?.streetCatPosts) : [];

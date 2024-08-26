@@ -26,10 +26,10 @@ export const deleteImagesByImageIds = async (
 };
 
 
-//프로필 이미지 삭제
+// 프로필 이미지 삭제
 export const deleteProfileImages = async (
-    tx: Prisma.TransactionClient, uuid: string, imageUrl: string) => {
-    const deleteImage = await deleteProfileImage(tx, uuid, imageUrl);
+    uuid: string, imageUrl: string) => {
+    const deleteImage = await deleteProfileImage(uuid, imageUrl);
 
     return deleteImage;
 }

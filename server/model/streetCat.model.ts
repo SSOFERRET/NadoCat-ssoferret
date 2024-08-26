@@ -1,11 +1,10 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client"
-import { IImages, IStreetCatImages, IStreetCatPost, IStreetCats } from "../types/streetCat"
+import { IImages, ILocation, IStreetCatImages, IStreetCatPost, IStreetCats } from "../types/streetCat"
 
 // NOTE: 함수명 통일성 필요 (ex. delete | remove 중에 통일)
 
 export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cursor?: number) => {
-  console.log("readPosts()");
   const streetCatPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
@@ -32,7 +31,7 @@ export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cur
   }
 }
 
-export const readPostsWithFavorites = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number) => {
+  export const readPostsWithFavorites = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number) => {
   const streetCatPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
@@ -136,6 +135,28 @@ export const readPost = async (postId: number) => {
   }
 }
 
+export const getStreetCatById = async (
+  tx: Prisma.TransactionClient,
+  postId: number
+) => {
+  return await tx.streetCats.findUnique({
+    where: {
+      postId: postId,
+    },
+  });
+};
+
+export const createLoction = async (tx: Prisma.TransactionClient, location: ILocation) => {
+
+  return await tx.locations.create({
+    data: {
+      latitude: location.location.latitude,
+      longitude: location.location.longitude,
+      detail: location.location.detail
+    }
+  })
+}
+
 export const readLocation = async (tx: Prisma.TransactionClient, locationId: number) => {
   return await tx.locations.findUnique({
     where: {
@@ -155,10 +176,9 @@ export const createPost = async (tx: Prisma.TransactionClient, {
   gender,
   neutered,
   discoveryDate,
-  locationId,
   content,
   uuid,
-}: Omit<IStreetCatPost, "postId">) => {
+}: Omit<IStreetCatPost, "postId" | "locationId">, locationId: number) => {
 
   return await tx.streetCats.create({
     data: {
@@ -251,6 +271,17 @@ export const addImage = async (tx: Prisma.TransactionClient, url: string) => {
   });
 };
 
+export const deleteThumbnail = async (tx: Prisma.TransactionClient, postId: number) => {
+  return await tx.streetCats.update({
+    where: {
+      postId
+    },
+    data: {
+      thumbnail: null
+    }
+  })
+}
+
 export const deleteImages = async (
   tx: Prisma.TransactionClient,
   imageIds: number[]
@@ -264,24 +295,73 @@ export const deleteImages = async (
   });
 };
 
-export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number) => {
+// export const getNickname = async (tx: Prisma.TransactionClient, uuid: Buffer) => {
+//   return await prisma.users.findUnique({
+//     where: {
+//       uuid
+//     }
+//   })
+// }
+
+export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number, postIds?: number[]) => {
   const favoriteCatPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
+
     ...(cursor && { cursor: { postId: cursor} }),
-    where: {
-      uuid,
+    orderBy: {
+      createdAt: "desc"
     },
-    select: {
-      postId: true,
-      thumbnail: true,
-      name: true,
-      createdAt: true
+    where: {
+      postId: {
+        in: postIds,
+      },
+    },
+    include: {
+      streetCatImages: {
+        take: 1,
+        select: {
+          images: {
+            select: {
+              url: true
+            }
+          }
+        }
+      },
+      streetCatFavorites: {
+        where: {
+          uuid
+        },
+        select: {
+          postId: true
+        }
+      },
+    }
+  })
+
+  const favoriteCatPostCount = await prisma.streetCats.count({
+    where: {
+      postId: {
+        in: postIds,
+      },
+      streetCatFavorites: {
+        some: {
+          uuid,
+        },
+      },
+    },
+  });
+
+  const nickname = await prisma.users.findUnique({
+    where: {
+      uuid
     }
   })
 
   return {
-    favoriteCatPosts
+    favoriteCatPosts,
+    favoriteCatPostCount,
+    nickname
   }
 }
 
@@ -350,14 +430,15 @@ export const readComments = async (tx: Prisma.TransactionClient, streetCatId: nu
       streetCatCommentId: true,
       comment: true,
       createdAt: true,
+      updatedAt: true,
       users: {
         select: {
+          id: true,
           uuid: true,
           nickname: true,
           profileImage: true,
         }
       },
-
     }
   })
 
@@ -365,50 +446,6 @@ export const readComments = async (tx: Prisma.TransactionClient, streetCatId: nu
     streetCatComments
   }
 }
-
-// export const readComments = async (
-//   tx: Prisma.TransactionClient,
-//   streetCatId: number,
-//   limit: number,
-//   cursor?: number
-// ) => {
-//   const streetCatComments = await prisma.streetCatComments.findMany({
-//     take: limit,
-//     skip: cursor ? 1 : 0,
-//     ...(cursor && { cursor: { streetCatCommentId: cursor } }),
-//     where: {
-//       streetCatId,
-//     },
-//     orderBy: {
-//       createdAt: "asc",
-//     },
-//     select: {
-//       streetCatCommentId: true,
-//       comment: true,
-//       createdAt: true,
-//       users: {
-//         select: {
-//           nickname: true,
-//           profileImage: true,
-//         },
-//       },
-//     },
-//   });
-
-//   return streetCatComments.map((item) => ({
-//     commentId: item.streetCatCommentId,
-//     comment: item.comment,
-//     createdAt: item.createdAt,
-//     updatedAt: null,
-//     users: {
-//       id: null,
-//       uuid: "",
-//       nickname: item.users.nickname,
-//       profileImage: item.users.profileImage,
-//     },
-//   }));
-// };
-
 
 export const addComment = async (uuid: Buffer, postId: number, comment: string) => {
   return await prisma.streetCatComments.create({
@@ -450,3 +487,7 @@ export const removeAllComment = async (streetCatId: number) => {
     }
   })
 }
+
+// export const readUserLocation = async (uuid: Buffer) => {
+//   return await prisma.locations.findMany
+// }

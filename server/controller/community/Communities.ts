@@ -25,7 +25,7 @@ import { IImage } from "../../types/image";
 import { ITag } from "../../types/tag";
 import { getLiked, removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
-import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
@@ -38,27 +38,8 @@ import { addNewImages } from "../../util/images/addNewImages";
 // [x] 인기순 정렬
 // [ ] 에러처리 자세하게 구현하기
 
-//NOTE 사용자 정보를 받아오기 위한 임시 함수
-export const getUserId = async () => {
-  const result = await prisma.$queryRaw<{ HEX: Buffer }[]>`
-    SELECT uuid AS HEX
-    FROM users
-    WHERE id = 1;
-  `;
-
-  if (!result) {
-    throw new Error("사용자 정보 없음");
-  }
-
-  return result[0].HEX;
-};
-
 export const getCommunities = async (req: Request, res: Response) => {
-    try {
-    //   const uuid = req.user?.uuid;
-    const uuid = req.headers["x-uuid"] as string;
-    console.log("getCommunities uuid가 나오는지: ", uuid);
-
+  try {
     const limit = Number(req.query.limit) || 5;
     const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
     const sort = req.query.sort?.toString() ?? "latest";
@@ -91,14 +72,12 @@ export const getCommunities = async (req: Request, res: Response) => {
 // [ ] 에러처리 자세하게 구현하기
 
 export const getCommunity = async (req: Request, res: Response) => {
-    // const uuid = req.user?.uuid;
-    const uuid = req.headers["x-uuid"] as string;
-    console.log("getCommunity uuid가 나오는지: ", uuid);
+  const uuid = req.headers["x-uuid"] as string;
 
   try {
     const postId = Number(req.params.community_id);
     const categoryId = CATEGORY.COMMUNITIES;
-    const userId = Buffer.from(uuid, "hex");
+    const userId = uuid && Buffer.from(uuid, "hex");
 
     let result;
 
@@ -112,7 +91,11 @@ export const getCommunity = async (req: Request, res: Response) => {
       // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
       // community.views += viewIncrementResult || 0;
 
-      const liked = await getLiked(tx, postId, categoryId, userId);
+      let liked;
+
+      if (userId) {
+        liked = await getLiked(tx, postId, categoryId, userId);
+      }
 
       result = {
         ...community,
@@ -133,8 +116,12 @@ export const getCommunity = async (req: Request, res: Response) => {
 // [ ] 사용자 정보 받아오는 부분 구현 필요
 
 export const createCommunity = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = Buffer.from(req.user.uuid, "hex");
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const { title, content, tags } = req.body;
 
     const tagList = JSON.parse(tags);
@@ -172,12 +159,13 @@ export const createCommunity = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
-      await indexOpensearchDocument(CATEGORY.COMMUNITIES, title, content, post.postId);
-
       return post;
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
+
+    await indexResultToOpensearch(CATEGORY.COMMUNITIES, newPost.postId);
+
   } catch (error) {
     handleControllerError(error, res);
   }
@@ -190,9 +178,13 @@ export const createCommunity = async (req: Request, res: Response) => {
 // [ ] 사용자 정보 받아오는 부분 구현 필요
 // [x] 원래 이미지, 태그는 받아오지 않기
 export const updateCommunity = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
     const postId = Number(req.params.community_id);
-    const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = Buffer.from(uuid, "hex");
 
     const { title, content, tags, deleteTagIds, deleteImageIds } = req.body;
 
@@ -246,7 +238,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
 
       await deleteImages(tx, imageIds);
 
-      await updateOpensearchDocument(CATEGORY.COMMUNITIES, postId, { content });
+      await updateOpensearchDocument(CATEGORY.COMMUNITIES, postId, { title, content });
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
@@ -261,9 +253,13 @@ export const updateCommunity = async (req: Request, res: Response) => {
 // [x] 테이블 변경에 따른 태그, 이미지 삭제 수정
 // [x] 게시글 삭제 시 댓글 삭제 구현
 export const deleteCommunity = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
     const postId = Number(req.params.community_id);
-    const userId = Buffer.from(req.user.uuid, "hex");
+    const userId = Buffer.from(uuid, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const post = await getCommunityById(tx, postId);
