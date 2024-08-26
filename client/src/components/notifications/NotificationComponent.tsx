@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {
-  INotification,
+  // INotification,
   INotificationFromDB,
 } from "../../hooks/useNotifications";
 import { formatAgo } from "../../utils/format/format";

@@ -1,4 +1,4 @@
-import { fetchStreetCatComments, createStreetCatComment, deleteStreetCatComment, updateStreetCatComment } from "../api/streetCat.api";
+import { fetchStreetCatComments, createStreetCatComment, deleteStreetCatComment, updateStreetCatComment, ICommentUpdateRequest } from "../api/streetCat.api";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ICommentDeleteRequest, ICommentPutRequest } from "../models/streetCat.model";
 
@@ -69,8 +69,8 @@ export const useStreetCatComments = (postId: number) => {
 
   // 수정해야됨
   const { mutateAsync: editStreetCatComment } = useMutation({
-    mutationFn: ({ postId, uuid, comment, commentId }: ICommentPutRequest) =>
-      updateStreetCatComment({ postId, commentId, comment, uuid }),
+    mutationFn: ({ postId/*, uuid*/, comment, commentId }: ICommentPutRequest) =>
+      updateStreetCatComment({ postId, commentId, comment } as ICommentUpdateRequest),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["streetCatComments", postId],

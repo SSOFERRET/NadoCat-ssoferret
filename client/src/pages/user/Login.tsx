@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { /*React,*/ useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import InputText from "../../components/user/InputText";
@@ -9,9 +9,13 @@ import { RiKakaoTalkFill } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
 import { useAuthStore } from "../../store/userStore";
 
-const KAKAO_AUTH_URL = `${import.meta.env.VITE_KAKAO_AUTH_URL}?response_type=code&client_id=${
+const KAKAO_AUTH_URL = `${
+  import.meta.env.VITE_KAKAO_AUTH_URL
+}?response_type=code&client_id=${
   import.meta.env.VITE_KAKAO_REST_API_KEY
-}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email`;
+}&redirect_uri=${
+  import.meta.env.VITE_KAKAO_REDIRECT_URI
+}&scope=profile_nickname,profile_image,account_email`;
 
 export interface LoginProps {
   email: string;
@@ -24,25 +28,25 @@ export interface LoginProps {
 const Login = () => {
   const navigate = useNavigate();
   const [autoLogin, setAutoLogin] = useState(false);
-  const {
-    register,
-    setFocus,
-    handleSubmit,
-    formState: { errors },
+  const {register, setFocus, handleSubmit, formState: { errors },
   } = useForm<LoginProps>();
+  const {storeLogin} = useAuthStore(); //로컬에 UUID저장
+  console.log("storeLogin:::", storeLogin);
 
   const handleLogin = async (data: LoginProps) => {
-    const response = await login({ ...data, autoLogin });
-    const { user, tokens } = response;
-    console.log("전체 response:", response);
+    try {
+      const response = await login({ ...data, autoLogin });
+      const { user, tokens } = response;
+      console.log("전체 response:", response);
+      console.log("response.generalToken:", tokens.accessToken);
+      console.log("response.uuid:", user.uuid);
+      
+      await storeLogin(user.uuid, autoLogin);// 상태 업데이트 후
+      navigate("/");
 
-    console.log("response.generalToken:", tokens.accessToken);
-    console.log("response.uuid:", user.uuid);
-
-    useAuthStore.getState().storeLogin(user.uuid, autoLogin);
-
-    // NOTE 홈 경로가 / 이거라서 /로 고칩니다.
-    navigate("/");
+    } catch (error) {
+      console.error("로그인 오류:", error);
+    }
     //   sessionStorage.setItem("uuid", user.uuid);
   };
 
@@ -84,7 +88,9 @@ const Login = () => {
                 required: "이메일을 입력해주세요.",
               })}
             />
-            {errors.email && <p className="error-message">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="error-message">{errors.email.message}</p>
+            )}
           </fieldset>
           <fieldset className="input-field">
             <InputText
@@ -96,12 +102,18 @@ const Login = () => {
                 required: "비밀번호를 입력해주세요.",
               })}
             />
-            {errors.password && <p className="error-message">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="error-message">{errors.password.message}</p>
+            )}
           </fieldset>
 
           <fieldset className="check-field">
             <label className="auto-login">
-              <input type="checkbox" checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)} />
+              <input
+                type="checkbox"
+                checked={autoLogin}
+                onChange={(e) => setAutoLogin(e.target.checked)}
+              />
               자동로그인
             </label>
             {/* <span>|</span> */}

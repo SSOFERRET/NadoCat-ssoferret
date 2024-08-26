@@ -1,4 +1,4 @@
-import { IMissing, IMissingReport } from "../../models/missing.model";
+import { /*IMissing,*/ IMissingReport } from "../../models/missing.model";
 import "./../../styles/scss/components/missing/missingReportPost.scss";
 import PostHead from "./missingPost/PostHead";
 import PostSummary from "./common/PostSummary";

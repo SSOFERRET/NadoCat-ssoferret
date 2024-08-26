@@ -29,6 +29,11 @@ import Notification from "./pages/notification/Notification";
 import Boards from "./pages/boards/Boards";
 import ProtectedPath from "./pages/protectedPath/ProtectedPath";
 import StreetCatEdit from "./pages/streetCat/StreetCatEdit";
+import Setting from "./pages/user/Setting";
+import SettingAuthPassword from "./components/user/my/SettingAuthPassword";
+import SettingDetail from "./components/user/my/SettingDetail";
+import SettingNickname from "./components/user/my/SettingNickname";
+import SettingPassword from "./components/user/my/SettingPassword";
 
 const router = createBrowserRouter([
   {
@@ -42,7 +47,7 @@ const router = createBrowserRouter([
         children: [
           { path: "interest", element: <MyPage /> },
           {
-            path: "my/:uuid",
+            path: "user/:uuid",
             element: (
               <ProtectedPath>
                 <My />
@@ -51,6 +56,18 @@ const router = createBrowserRouter([
           },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
+          { path: "my", 
+            element: (
+              <ProtectedPath>
+                <My />
+              </ProtectedPath>
+            ),
+          },
+          { path: "my/setting", element: <Setting /> },
+          { path: "my/setting/nickname", element: <SettingNickname /> },
+          { path: "my/setting/auth-password", element: <SettingAuthPassword /> },
+          { path: "my/setting/password", element: <SettingPassword /> },
+          { path: "my/setting/detail", element: <SettingDetail /> },
         ],
       },
       {

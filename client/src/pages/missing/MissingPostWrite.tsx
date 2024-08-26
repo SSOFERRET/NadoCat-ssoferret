@@ -25,7 +25,7 @@ const MissingPostWrite = () => {
   const navigate = useNavigate();
   const { addMissingPost } = useMissings();
   const [catInfo, setCatInfo] = useState<ICatInfo | undefined>();
-  const [eventInfo, setEventInfo] = useState<IMissingEventInfo | undefined>();
+  // const [eventInfo, setEventInfo] = useState<IMissingEventInfo | undefined>();
 
   const addPost = (submitData: ISubmitData) => {
     addMissingPost(submitData).then((data) => {

@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { /*React,*/ useEffect, useState } from "react";
 import "../../../styles/scss/components/user/my/myInfo.scss";
 // import { IoIosSettings } from "react-icons/io";
 import Avatar from "../../common/Avatar";
 import { AiOutlineSetting } from "react-icons/ai";
 import PostMenu from "../../communityAndEvent/PostMenu";
 import { deleteProfile, uploadProfile } from "../../../api/user.api";
-import ProfileChangeModal from "./ProfileChangeModal";
+// import ProfileChangeModal from "./ProfileChangeModal";
 
 export interface MyInfoProps {
   nickname: string;
   profileImageUrl: string;
   uuid: string;
   onAvatarClick?: () => void;
+  isMyPage?: boolean;
 }
 
 const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps) => {
@@ -25,41 +26,39 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
   };
 
   //모달 닫기
-  const handleCloseProfileChange = () => {
-    setIsOpenModal(false);
-  };
+  // const handleCloseProfileChange = () => {
+  //   setIsOpenModal(false);
+  // };
 
   // NOTE 여기 추가했습니다.
   const handelMenu = () => {
     setIsOpenModal((prev) => !prev);
   };
 
- //사진 업로드
+  //사진 업로드
   const handleImageUpload = async (file: File) => {
     try {
-        const newImageUrl = await uploadProfile(file);
-        // setAvatarUrl(newImageUrl);
-        setAvatarUrl(`${newImageUrl}?timestamp=${new Date().getTime()}`); //이미지 캐싱방지
-        setIsOpenModal(false);
-
+      const newImageUrl = await uploadProfile(file);
+      // setAvatarUrl(newImageUrl);
+      setAvatarUrl(`${newImageUrl}?timestamp=${new Date().getTime()}`); //이미지 캐싱방지
+      setIsOpenModal(false);
     } catch (error) {
-        console.error("프로필 업로드 에러: ",error);
+      console.error("프로필 업로드 에러: ", error);
     }
-  };     
-          
- //기본이미지 변경
+  };
+
+  //기본이미지 변경
   const handleDefaultImage = async () => {
     const defaultImageUrl = "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
     await deleteProfile(defaultImageUrl);
     setAvatarUrl(defaultImageUrl);
     setIsOpenModal(false);
   };
-          
+
   useEffect(() => {
     setAvatarUrl(profileImageUrl);
-  }, [profileImageUrl]);        
- 
-     
+  }, [profileImageUrl]);
+
   return (
     <>
       <div className="info-container">
@@ -76,51 +75,41 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
           <div className="change-profile-btn">
             <button onClick={handleOpenProfileChange}>프로필 변경</button>
           </div>
-          
-          
-          
-          
-                 {/* <div className="change-profile-btn">
-            <button onClick={handleOpenProfileChange}>프로필 변경</button>
-            {isOpenModal &&  <ProfileChangeModal 
-            closeModal={handleCloseProfileChange}
-            uploadImage={handleImageUpload} 
-            setDefaultImage={handleDefaultImage}
-            isShowMenu={isOpenModal}
-            />}  */}
-          
 
+          <button
+            className="settings-button"
+            onClick={() => {
+              handelMenu();
+              ("프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.");
+            }}
+          >
+            <AiOutlineSetting />
+          </button>
+
+          {/* 프로필 변경 버튼을 눌렀을 때 모달 띄우기 */}
+          {/* {isOpenModal &&  <ProfileChangeModal closeModal={handleCloseProfileChange}></ProfileChangeModal>} */}
         </div>
 
         <button
           className="settings-button"
           onClick={() => {
-            handelMenu();
-            ("프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.");
+            "프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.";
           }}
         >
           <AiOutlineSetting />
         </button>
-
-        {/* 프로필 변경 버튼을 눌렀을 때 모달 띄우기 */}
-        {/* {isOpenModal &&  <ProfileChangeModal closeModal={handleCloseProfileChange}></ProfileChangeModal>} */}
       </div>
 
-
-       {/* <button
-        className="settings-button" onClick={() => {
-          "프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.";
-        }}
-      >
-        <AiOutlineSetting />
-      </button>
-
-    </div> */}
-
       {/* 이게 props로 필요한 함수를 넘겨주시면 됩니다. PostMenu 컴포넌트 안에 꼭 타입을 옵셔널로 주셔야 합니다. 안그러면 다른 컴포넌트에 영향이 갑니다.*/}
-      <PostMenu menuType="user" isShowMenu={isOpenModal} showMenu={handelMenu} />
-    </>
 
+      <PostMenu
+        menuType="user"
+        isShowMenu={isOpenModal}
+        showMenu={handelMenu}
+        uploadImage={handleImageUpload}
+        setDefaultImage={handleDefaultImage}
+      />
+    </>
   );
 };
 

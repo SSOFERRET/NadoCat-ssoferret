@@ -2,7 +2,7 @@ import { IMissing } from "../../models/missing.model";
 import PostAbstract from "./missingPost/PostAbstract";
 import PostInfo from "./missingPost/PostInfo";
 import "./../../styles/scss/components/missing/missingPost.scss";
-import { useLocation, useNavigate } from "react-router-dom";
+// import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PostMenu from "../communityAndEvent/PostMenu";
 import useMissing from "../../hooks/useMissing";
@@ -12,11 +12,12 @@ interface IProps {
 }
 
 const MissingPost = ({ post }: IProps) => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const navigate = useNavigate();
+  // const location = useLocation();
   const [isShowMenu, setIsShowMenu] = useState(false);
 
-  const navigateToPostDetail = () => navigate(`${location.pathname}/${post.postId}`);
+  // const navigateToPostDetail = () =>
+  //   navigate(`${location.pathname}/${post.postId}`);
 
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);

@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import "../../styles/scss/components/common/tags.scss";
 import { ITag } from "../../models/tag.model";
 

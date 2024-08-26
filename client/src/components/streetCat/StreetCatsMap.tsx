@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React /*, { useEffect }*/ from "react";
 import "../../styles/scss/components/streetCat/streetCatsMap.scss";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
@@ -44,7 +44,7 @@ const StreetCatsMap: React.FC = () => {
       }}
       level={3} // 지도의 확대 레벨
     >
-      {locations.map((location, index) => (
+      {locations.map((location /*, index*/) => (
         <MapMarker
           key={`${location.title}-${location.latlng}`}
           position={location.latlng} // 마커를 표시할 위치

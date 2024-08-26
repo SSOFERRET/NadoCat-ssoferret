@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
 import { SearchKeyword } from "../../utils/localStorage/localStorage";
@@ -9,7 +9,11 @@ interface IProps {
   deleteRecentKeyword: (id: number) => void;
 }
 
-const RecentKeywords = ({ recentKeywords, deleteAll, deleteRecentKeyword }: IProps) => {
+const RecentKeywords = ({
+  recentKeywords,
+  deleteAll,
+  deleteRecentKeyword,
+}: IProps) => {
   return (
     <section className="recent-keyword-container">
       <div className="recent-keyword-top-menu">
@@ -22,7 +26,10 @@ const RecentKeywords = ({ recentKeywords, deleteAll, deleteRecentKeyword }: IPro
             <AiOutlineClockCircle className="clock-icon" />
             <div className="recent-keyword-wrapper">
               <span>{item.keyword}</span>
-              <button className="recent-keyword-delete-btn" onClick={() => deleteRecentKeyword(item.id)}>
+              <button
+                className="recent-keyword-delete-btn"
+                onClick={() => deleteRecentKeyword(item.id)}
+              >
                 <RxCross1 className="cross-icon" />
               </button>
             </div>

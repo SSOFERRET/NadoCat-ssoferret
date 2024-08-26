@@ -15,13 +15,16 @@ interface IProps {
   liked: boolean;
 }
 
-const ActionBar = ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
+const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
   const {uuid} = useAuthStore();  // 현재 로그인된 사용자의 uuid
-    const navigate = useNavigate(); //이동을 위해 추가
-
+  const navigate = useNavigate(); //이동을 위해 추가
+  
     //Avatar클릭 시 동작 정의
-    const handleAvatarClick = () => {
-        navigate(`/users/my/${userInfo.uuid}`); //마이페이지 이동
+    const handleAvatarClick = async() => {
+      if(userInfo.uuid === uuid){
+        navigate("/users/my");
+      }
+        navigate(`/users/user/${userInfo.uuid}`); //사용자 페이지 이동
     }
 
   return (

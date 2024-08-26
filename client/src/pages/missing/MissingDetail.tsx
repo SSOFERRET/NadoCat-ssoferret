@@ -5,11 +5,11 @@ import useMissing from "../../hooks/useMissing";
 import "../../styles/scss/pages/missing/missingDetail.scss";
 import {
   IMissing,
-  IMissingReport,
-  IMissingReportPosts,
+  // IMissingReport,
+  // IMissingReportPosts,
 } from "../../models/missing.model";
 import LoadingCat from "../../components/loading/LoadingCat";
-import MissingReportPost from "../../components/missing/MissingReportPost";
+// import MissingReportPost from "../../components/missing/MissingReportPost";
 import useMissingReports from "../../hooks/useMissingReports";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import MissingReportPostList from "../../components/missing/MissingReportPostList";
@@ -21,7 +21,7 @@ const MissingDetail = () => {
   const postId = Number(params.id);
   const {
     data: post,
-    error,
+    // error,
     isLoading,
     removeMissingPost,
   } = useMissing(postId);
@@ -31,12 +31,12 @@ const MissingDetail = () => {
   const {
     reportsData,
     isReportsLoading,
-    reportsError,
+    // reportsError,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isFetching,
-    isEmpty,
+    // isFetching,
+    // isEmpty,
   } = useMissingReports();
 
   const moreRef = useIntersectionObserver(([entry]) => {
