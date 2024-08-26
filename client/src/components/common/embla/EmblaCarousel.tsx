@@ -20,7 +20,7 @@ const EmblaCarousel = ({ options, children, isShowButon = true, category }: IPro
   return (
     <section className={`embla ${category}`}>
       <div className="embla__viewport" ref={emblaRef}>
-        <div className="embla__container">{children}</div>
+        <div className={`embla__container ${category}`}>{children}</div>
       </div>
 
       {isShowButon && (
@@ -33,29 +33,8 @@ const EmblaCarousel = ({ options, children, isShowButon = true, category }: IPro
           </button>
         </>
       )}
-
-      {/* <div className="embla__controls">
-        <div className="embla__buttons"></div>
-      </div> */}
     </section>
   );
 };
 
 export default EmblaCarousel;
-
-// <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-// <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
-
-{
-  /* {slides.map((index) => (
-            <div className="embla__slide" key={index}>
-              <div className="embla__slide__number">
-                <img
-                  className="embla__slide__img"
-                  src={`https://picsum.photos/600/350?v=${index}`}
-                  alt="Your alt text"
-                />
-              </div>
-            </div>
-          ))} */
-}

@@ -16,8 +16,7 @@ const MissingPost = ({ post }: IProps) => {
   const location = useLocation();
   const [isShowMenu, setIsShowMenu] = useState(false);
 
-  const navigateToPostDetail = () =>
-    navigate(`${location.pathname}/${post.postId}`);
+  const navigateToPostDetail = () => navigate(`${location.pathname}/${post.postId}`);
 
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);
@@ -37,7 +36,6 @@ const MissingPost = ({ post }: IProps) => {
         isShowMenu={isShowMenu}
         deletePost={removeMissingPost}
       />
-      ;
     </section>
   );
   // 좋아요 리포트 수 (-)
