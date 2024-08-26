@@ -13,7 +13,7 @@ const FriendList = ({ friends }: IProps) => {
       {friends?.pages.map((group: IFriendPage, i: number) => (
         <React.Fragment key={i}>
           {group.follows.map((friend: IFriend) => (
-            <Friend friend={friend} />
+            <Friend key={friend.id} friend={friend} />
           ))}
         </React.Fragment>
       ))}
