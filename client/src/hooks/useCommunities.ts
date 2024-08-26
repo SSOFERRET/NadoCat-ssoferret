@@ -1,7 +1,12 @@
 import { createCommunityPost, getCommunityPosts, Sort } from "../api/community.api";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-const useCommunities = (sort?: Sort) => {
+interface IProps {
+  sort?: Sort;
+  enabled: boolean;
+}
+
+const useCommunities = ({ sort, enabled }: IProps) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -16,6 +21,7 @@ const useCommunities = (sort?: Sort) => {
     },
     initialPageParam: 0,
     staleTime: 1000 * 60 * 5,
+    enabled,
   });
 
   const posts = data ? data.pages.flatMap((page) => page.posts) : [];
