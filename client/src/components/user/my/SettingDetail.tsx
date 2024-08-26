@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import HeaderWithBackButton from "../../../components/common/HeaderWithBackButton";
 import { useNavigate } from "react-router-dom";
-import InputText from "../InputText";
 import "../../../styles/scss/components/user/my/settingDetail.scss";
 import { updateDetail } from "../../../api/user.api";
 import { useForm } from "react-hook-form";
