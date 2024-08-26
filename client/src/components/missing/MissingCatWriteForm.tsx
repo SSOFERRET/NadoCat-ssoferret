@@ -1,6 +1,6 @@
 import "../../styles/scss/components/missing/MissingCatPostWriteForm.scss";
 
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ICatInfo } from "../../pages/missing/MissingPostWrite";
 
 interface IProps {

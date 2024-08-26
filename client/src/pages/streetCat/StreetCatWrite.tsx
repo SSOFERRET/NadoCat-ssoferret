@@ -7,18 +7,18 @@ import { useAddStreetCatPost } from "../../hooks/useStreetCat";
 import { useNavigate } from "react-router-dom";
 
 const StreetCatWrite: React.FC = () => {
-  const { mutate: submitPost, isLoading, error } = useAddStreetCatPost();
+  const { mutate: submitPost } = useAddStreetCatPost();
   const navigate = useNavigate();
 
   const handleFormSubmit = async (formData: FormData) => {
     await submitPost(formData);
-    navigate("/boards/street-cats")
+    navigate("/boards/street-cats");
   };
 
   return (
     <>
       <HeaderWithBackButton />
-      <WriteForm onSubmit={handleFormSubmit}/>
+      <WriteForm onSubmit={handleFormSubmit} />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import "../../styles/scss/components/user/customModal.scss";
 
 interface CustomModalProps {
@@ -30,12 +30,12 @@ const CustomModal = ({
 
         <h2>{title}</h2>
         <p>
-            {message.map((line, index)=>(
-                <span key={index}>
-                    {line}
-                    {index < message.length - 1 && <br />}
-                </span>
-            ))}
+          {message.map((line, index) => (
+            <span key={index}>
+              {line}
+              {index < message.length - 1 && <br />}
+            </span>
+          ))}
         </p>
         <button onClick={onClose}>확인</button>
       </div>

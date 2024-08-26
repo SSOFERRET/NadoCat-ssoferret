@@ -13,7 +13,7 @@
 //   }
 // }
 
-import { ISearch, ISearchInfo } from "../hooks/useSearch";
+import { ISearchInfo } from "../hooks/useSearch";
 import { httpClient } from "./http";
 
 export const fetchSearch = async (keyword: string): Promise<ISearchInfo[] | undefined> => {

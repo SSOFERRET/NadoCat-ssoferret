@@ -1,9 +1,9 @@
-import PostEmpty from "../communityAndEvent/PostEmpty";
-import PostList from "../communityAndEvent/PostList";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import useMissings from "../../hooks/useMissings";
+// import PostEmpty from "../communityAndEvent/PostEmpty";
+// import PostList from "../communityAndEvent/PostList";
+// import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+// import useMissings from "../../hooks/useMissings";
 import "../../styles/scss/pages/missing/missing.scss";
-import useMissingReports from "../../hooks/useMissingReports";
+// import useMissingReports from "../../hooks/useMissingReports";
 import {
   IMissingReport,
   IMissingReportPosts,

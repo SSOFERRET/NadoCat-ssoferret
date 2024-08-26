@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import UnfindableCat from "../../assets/img/unfindableCat.png";
 import Post from "../../components/communityAndEvent/Post";
-import useDebounce from "../../hooks/useDebounce";
+// import useDebounce from "../../hooks/useDebounce";
 import {
   deleteAllLocalStorage,
   getLocalStorage,
@@ -12,12 +12,14 @@ import {
 } from "../../utils/localStorage/localStorage";
 import RecentKeywords from "./RecentKeywords";
 import { IoMdCloseCircle } from "react-icons/io";
-import useSearch, { ISearch, ISearchInfo, TIndex } from "../../hooks/useSearch";
+import useSearch, {
+  /*ISearch,*/ ISearchInfo /*TIndex*/,
+} from "../../hooks/useSearch";
 import { ICommunity } from "../../models/community.model";
 import { IEvent } from "../../models/event.model";
 import MissingPost from "../../components/missing/MissingPost";
 import { IMissing } from "../../models/missing.model";
-import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
+// import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
 import LoadingCat from "../../components/loading/LoadingCat";
 
 // NOTE 이건 지우면 아래 카테고리가 동작 안해용..
@@ -56,7 +58,7 @@ const Search = () => {
   const [enteredKeyword, setEnteredKeyword] = useState("");
   const [isRecentKeywords, setIsRecentKeywords] = useState(true); // 최근 검색어 보여줄지 결정하는 요소
 
-  const { data, isLoading, error } = useSearch(enteredKeyword);
+  const { data, isLoading /*, error*/ } = useSearch(enteredKeyword);
 
   console.log("page", data);
 

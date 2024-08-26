@@ -2,28 +2,39 @@ import React from "react";
 import "../../styles/css/base/reset.css";
 import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
-import { useReadStreetCatPost, useUpdateStreetCatPost } from "../../hooks/useStreetCat";
+import {
+  useReadStreetCatPost,
+  useUpdateStreetCatPost,
+} from "../../hooks/useStreetCat";
 import EditForm from "../../components/streetCat/EditForm";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingCat from "../../components/loading/LoadingCat";
+import { IStreetCatDetail } from "../../models/streetCat.model";
 
 const StreetCatEdit: React.FC = () => {
   const { id } = useParams();
-  const postId = Number(id);  
-  const {data} = useReadStreetCatPost(postId);
-  const { mutate: editPost, isLoading, error } = useUpdateStreetCatPost();
+  const postId = Number(id);
+  const { data } = useReadStreetCatPost(postId);
+  const { mutate: editPost /*, isLoading, error*/ } = useUpdateStreetCatPost();
   const navigate = useNavigate();
 
   const handleFormSubmit = async (formData: FormData) => {
-    await editPost({formData, postId});
+    await editPost({ formData, postId });
     navigate("/boards/street-cats");
   };
 
   return (
     <>
       <HeaderWithBackButton />
-      {isLoading && <LoadingCat />}
-      {data ? <EditForm initialData={data} onSubmit={handleFormSubmit} /> : <LoadingCat />}
+      {/* {isLoading && <LoadingCat />} */}
+      {data ? (
+        <EditForm
+          initialData={data as IStreetCatDetail}
+          onSubmit={handleFormSubmit}
+        />
+      ) : (
+        <LoadingCat />
+      )}
     </>
   );
 };
