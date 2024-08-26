@@ -7,7 +7,6 @@ const useEvents = (sort?: Sort) => {
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["event", sort],
     queryFn: ({ pageParam = 0 }) => getEventPosts({ pageParam, sort }),
-    initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const nextCursor = lastPage.pagination.nextCursor;
       if (nextCursor) {
@@ -15,6 +14,8 @@ const useEvents = (sort?: Sort) => {
       }
       return undefined;
     },
+    initialPageParam: 0,
+    staleTime: 1000 * 60 * 5,
   });
 
   const { mutateAsync: addEventPost } = useMutation({

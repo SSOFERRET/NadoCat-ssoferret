@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getFriends } from "../api/friend.apit";
 import { useEffect, useState } from "react";
+import { IFriendPage } from "../models/friend.model";
 
 const useFriends = () => {
   const [enabled, setEnabled] = useState(false);
@@ -23,7 +24,7 @@ const useFriends = () => {
 
   useEffect(() => {
     if (data && data.pages.length > 0) {
-      const all = data.pages.flatMap((group: any) => group.follows);
+      const all = data.pages.flatMap((group: IFriendPage) => group.follows);
       setIsEmpty(all.length === 0);
     }
   }, [data]);

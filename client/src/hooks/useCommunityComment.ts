@@ -20,7 +20,6 @@ const useCommunityComment = (postId: number) => {
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["communityComment", postId],
     queryFn: ({ pageParam = 0 }) => getCommunityComments({ pageParam, postId }),
-    initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const nextCursor = lastPage.pagination.nextCursor;
       if (nextCursor) {
@@ -28,7 +27,8 @@ const useCommunityComment = (postId: number) => {
       }
       return undefined;
     },
-    staleTime: 60000,
+    initialPageParam: 0,
+    staleTime: 1000 * 60 * 5,
   });
 
   const comments = data ? data.pages.flatMap((page) => page.comments) : [];
