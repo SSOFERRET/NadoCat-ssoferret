@@ -1,0 +1,44 @@
+@import "../../base/common.scss";
+
+.setting-container {
+  overflow-y: hidden;
+  height: 100vh;
+  background: $white;
+
+  .setting-menu {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    justify-content: flex-start;
+    font-family: "medium";
+
+    li {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin: 20rem;
+
+      svg {
+        color: $gray;
+        width: 15rem;
+        height: 15rem;
+      }
+
+      & + li + li {
+        border-bottom: 2px solid $lightgray;
+        padding-bottom: 30rem;
+      }
+
+      span {
+        font-size: $size-16;
+      }
+    }
+
+    .inactive {
+      font-size: $size-14;
+      color: #c6c5c5;
+      margin-left: 20rem;
+      margin-top: -5rem;
+    }
+  }
+}

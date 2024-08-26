@@ -5,13 +5,14 @@ import Avatar from "../../common/Avatar";
 import { AiOutlineSetting } from "react-icons/ai";
 import PostMenu from "../../communityAndEvent/PostMenu";
 import { deleteProfile, uploadProfile } from "../../../api/user.api";
-import ProfileChangeModal from "./ProfileChangeModal";
+// import ProfileChangeModal from "./ProfileChangeModal";
 
 export interface MyInfoProps {
   nickname: string;
   profileImageUrl: string;
   uuid: string;
   onAvatarClick?: () => void;
+  isMyPage?: boolean;
 }
 
 const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps) => {
@@ -25,9 +26,9 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
   };
 
   //모달 닫기
-  const handleCloseProfileChange = () => {
-    setIsOpenModal(false);
-  };
+  // const handleCloseProfileChange = () => {
+  //   setIsOpenModal(false);
+  // };
 
   // NOTE 여기 추가했습니다.
   const handelMenu = () => {
@@ -76,19 +77,6 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
           <div className="change-profile-btn">
             <button onClick={handleOpenProfileChange}>프로필 변경</button>
           </div>
-          
-          
-          
-          
-<!--                 <div className="change-profile-btn">
-            <button onClick={handleOpenProfileChange}>프로필 변경</button>
-            {isOpenModal &&  <ProfileChangeModal 
-            closeModal={handleCloseProfileChange}
-            uploadImage={handleImageUpload} 
-            setDefaultImage={handleDefaultImage}
-            isShowMenu={isOpenModal}
-            />} -->
-          
 
         </div>
 
@@ -106,19 +94,8 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
         {/* {isOpenModal &&  <ProfileChangeModal closeModal={handleCloseProfileChange}></ProfileChangeModal>} */}
       </div>
 
-
-<!--       <button
-        className="settings-button" onClick={() => {
-          "프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.";
-        }}
-      >
-        <AiOutlineSetting />
-      </button>
-
-    </div> -->
-
       {/* 이게 props로 필요한 함수를 넘겨주시면 됩니다. PostMenu 컴포넌트 안에 꼭 타입을 옵셔널로 주셔야 합니다. 안그러면 다른 컴포넌트에 영향이 갑니다.*/}
-      <PostMenu menuType="user" isShowMenu={isOpenModal} showMenu={handelMenu} />
+      <PostMenu menuType="user" isShowMenu={isOpenModal} showMenu={handelMenu} uploadImage={handleImageUpload} setDefaultImage={handleDefaultImage} />
     </>
 
   );

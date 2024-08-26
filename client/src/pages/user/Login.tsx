@@ -24,25 +24,25 @@ export interface LoginProps {
 const Login = () => {
   const navigate = useNavigate();
   const [autoLogin, setAutoLogin] = useState(false);
-  const {
-    register,
-    setFocus,
-    handleSubmit,
-    formState: { errors },
+  const {register, setFocus, handleSubmit, formState: { errors },
   } = useForm<LoginProps>();
+  const {storeLogin} = useAuthStore(); //로컬에 UUID저장
+  console.log("storeLogin:::", storeLogin);
 
   const handleLogin = async (data: LoginProps) => {
-    const response = await login({ ...data, autoLogin });
-    const { user, tokens } = response;
-    console.log("전체 response:", response);
+    try {
+      const response = await login({ ...data, autoLogin });
+      const { user, tokens } = response;
+      console.log("전체 response:", response);
+      console.log("response.generalToken:", tokens.accessToken);
+      console.log("response.uuid:", user.uuid);
+      
+      await storeLogin(user.uuid, autoLogin);// 상태 업데이트 후
+      navigate("/");
 
-    console.log("response.generalToken:", tokens.accessToken);
-    console.log("response.uuid:", user.uuid);
-
-    useAuthStore.getState().storeLogin(user.uuid, autoLogin);
-
-    // NOTE 홈 경로가 / 이거라서 /로 고칩니다.
-    navigate("/");
+    } catch (error) {
+      console.error("로그인 오류:", error);
+    }
     //   sessionStorage.setItem("uuid", user.uuid);
   };
 
