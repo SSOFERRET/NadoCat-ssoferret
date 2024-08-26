@@ -1,29 +1,12 @@
 @import "../../base/common.scss";
 
 .friends-container {
-  margin-top: 10rem;
-
-  .category {
-    margin: 0 20rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: "semiBold";
-    font-size: $size-14;
-    color: silver;
-    border-bottom: 0.5rem solid $lightgray;
-    padding-bottom: 10rem;
-  }
-
   .frienddList {
-    padding: 10rem 20rem;
     display: flex;
     flex-direction: column;
-    gap: 18rem;
-    // background-color: antiquewhite;
+    gap: 10rem;
 
     .friend {
-      // background-color: aquamarine;
       display: flex;
       padding: 10rem 0;
 

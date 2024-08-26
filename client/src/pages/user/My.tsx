@@ -78,7 +78,7 @@ export const My = () => {
       />
       <div style={{width: "7vh", fontSize:"15px", backgroundColor: "yellow"}} onClick={handleSendToChat}>채팅하기</div>
       <Logout />
-      <MyTab></MyTab>
+      <MyTab />
     </div>
   );
 };
