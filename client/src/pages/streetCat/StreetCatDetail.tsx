@@ -11,6 +11,7 @@ import Author from "../../components/streetCat/Author";
 // import CommentsEmpty from "../../components/comment/CommentsEmpty";
 import StreetCatComments from "../../components/streetCat/StreetCatComments";
 import LoadingCat from "../../components/loading/LoadingCat";
+import LoginModal from "../../components/common/LoginModal";
 // import CommentForm from "../../components/comment/CommentForm";
 // import MapBox from "../../components/streetCat/testComp";
 
@@ -26,6 +27,7 @@ const StreetCatDetail: React.FC = () => {
   return (
     <>
       <section className="street-cat-detail-section">
+        {/* <LoginModal /> */}
         <div className="detial-section">
           <div className="page-guide-box">
             <span className="page-guide">동네 고양이 도감</span>

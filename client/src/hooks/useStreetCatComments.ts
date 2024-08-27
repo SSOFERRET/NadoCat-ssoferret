@@ -33,7 +33,7 @@ export const useStreetCatComments = (postId: number) => {
       if (!lastPage || lastPage.streetCatComments.length < LIMIT) {
         return undefined;
       }
-      return lastPage.streetCatComments[LIMIT - 1]?.streetCatCommentId;
+      return lastPage.streetCatComments[LIMIT - 1]?.commentId;
     },
     // queryFn: ({ pageParam = 0 }) => fetchStreetCatComments({ postId: postId, limit: LIMIT, cursor: pageParam, }),
     // initialPageParam: 0,
