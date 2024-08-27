@@ -1,11 +1,33 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
 import { IImages, IStreetCatImages, IStreetCatPosts, IStreetCats } from "../../types/streetCat";
-import { createLoction, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, deleteThumbnail, readLocation, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, updatePost } from "../../model/streetCat.model";
+import {
+  createLoction,
+  createPost,
+  createStreetCatImages,
+  deleteAllStreetCatImages,
+  deleteImages,
+  deletePost,
+  deleteStreetCatImages,
+  deleteThumbnail,
+  readLocation,
+  readPost,
+  readPosts,
+  readPostsWithFavorites,
+  readStreetCatImages,
+  removeAllComment,
+  removeAllFavoriteCat,
+  updatePost,
+} from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
-import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
+import {
+  deleteOpensearchDocument,
+  indexOpensearchDocument,
+  indexResultToOpensearch,
+  updateOpensearchDocument,
+} from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
@@ -17,11 +39,9 @@ import { addNewImages } from "../../util/images/addNewImages";
 
 // NOTE uuid 받아오는 임시함수 / 추후 삭제
 export const getUuid = async () => {
-  const result = await prisma.$queryRaw<{ "uuid": Buffer }[]>(
-    Prisma.sql`SELECT uuid FROM users WHERE id = 1`
-  )
+  const result = await prisma.$queryRaw<{ uuid: Buffer }[]>(Prisma.sql`SELECT uuid FROM users WHERE id = 1`);
 
-  return result[0]['uuid'];
+  return result[0]["uuid"];
 };
 
 const categoryId = CATEGORY.STREET_CATS;
@@ -30,7 +50,8 @@ const categoryId = CATEGORY.STREET_CATS;
 export const getStreetCats = async (req: Request, res: Response) => {
   // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+  // const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
+  const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
 
   console.log("uuidString: ", uuidString);
   console.log("uuid: ", uuid);
@@ -44,20 +65,15 @@ export const getStreetCats = async (req: Request, res: Response) => {
         // 도감 목록 좋아요 유무
         const getPostsWithFavorites = await (isNaN(cursor)
           ? readPostsWithFavorites(tx, uuid, limit)
-          : readPostsWithFavorites(tx, uuid, limit, cursor)
-        );
-        
+          : readPostsWithFavorites(tx, uuid, limit, cursor));
+
         res.status(201).json(getPostsWithFavorites);
       } else {
-        const getPosts = await (isNaN(cursor)
-          ? readPosts(tx, limit)
-          : readPosts(tx, limit, cursor)
-        );
+        const getPosts = await (isNaN(cursor) ? readPosts(tx, limit) : readPosts(tx, limit, cursor));
 
         res.status(201).json(getPosts);
       }
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -68,7 +84,8 @@ export const getStreetCats = async (req: Request, res: Response) => {
 export const getStreetCat = async (req: Request, res: Response) => {
   // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+  // const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
+  const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
 
   console.log("uuidString: ", uuidString);
   console.log("uuid: ", uuid);
@@ -79,37 +96,43 @@ export const getStreetCat = async (req: Request, res: Response) => {
       const getPost = await readPost(postId);
       const locationId = Number(getPost?.locationId);
       const getLocation = await readLocation(tx, locationId);
-      const postData = {...getPost, location: getLocation};
+      const postData = { ...getPost, location: getLocation };
 
       // if (!getPost) throw new Error("No Post"); // 타입 가드 필요해서 추가
 
-      // redis 서버 연결 필요하여 주석 처리함. 
+      // redis 서버 연결 필요하여 주석 처리함.
       // 공동의 서버에는 나중에 설치할 예정
       // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
       // getPost.views += viewIncrementResult || 0;
 
       res.status(200).json(postData);
-    })
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-
 // 동네 고양이 도감 생성
 export const createStreetCat = async (req: Request, res: Response) => {
   // const uuid = await getUuid();
-  const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+  // const uuidString = req.headers["x-uuid"] as string;
+  // const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
 
-  console.log("uuidString: ", uuidString);
-  console.log("uuid: ", uuid);
+  const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
+  const uuid = Buffer.from(uuidString, "hex");
+
+  // console.log("uuidString: ", uuidString);
+  // console.log("uuid: ", uuid);
+
   const { name, gender, neutered, discoveryDate, content } = req.body;
   const location = JSON.parse(req.body.location);
   const postData = { categoryId, name, gender, neutered, discoveryDate, content, uuid };
-  
+
   try {
+    if (!uuidString) {
+      throw new Error("User UUID is missing."); // ⬅️ 혹시라도 만약을 대비해서 uuid가 없으면 에러 던지기
+    }
     const post = await prisma.$transaction(async (tx) => {
       // location 생성
       const newLocation = await createLoction(tx, location);
@@ -137,7 +160,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
         // 생성한 image_id, post_id 받기
         const getStreetCatImages = newImages.map((imageId: number) => ({
           imageId,
-          postId
+          postId,
         }));
 
         // street_cat_images 데이터 생성
@@ -148,11 +171,10 @@ export const createStreetCat = async (req: Request, res: Response) => {
       // await indexOpensearchDocument(CATEGORY.STREET_CATS, name, content, postId);
 
       return newPost;
-    })
+    });
     res.status(201).json({ message: "동네 고양이 도감 생성" });
 
     await indexResultToOpensearch(CATEGORY.STREET_CATS, post.postId);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -162,17 +184,24 @@ export const createStreetCat = async (req: Request, res: Response) => {
 // 동네 고양이 도감 수정
 export const updateStreetCat = async (req: Request, res: Response) => {
   // const uuid = await getUuid();
-  const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+  // const uuidString = req.headers["x-uuid"] as string;
+  // const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
 
-  console.log("uuidString: ", uuidString);
-  console.log("uuid: ", uuid);
+  const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
+  const uuid = Buffer.from(uuidString, "hex");
+
+  // console.log("uuidString: ", uuidString);
+  // console.log("uuid: ", uuid);
   const { name, gender, neutered, discoveryDate, locationId, content, deleteImageIds } = req.body;
   const postId = Number(req.params.street_cat_id);
   const postData = { postId, categoryId, name, gender, neutered, discoveryDate, locationId, content, uuid };
   const imageIds = JSON.parse(deleteImageIds);
 
   try {
+    if (!uuidString) {
+      throw new Error("User UUID is missing."); // ⬅️ 혹시라도 만약을 대비해서 uuid가 없으면 에러 던지기
+    }
+
     await prisma.$transaction(async (tx) => {
       // 도감 게시글 수정
       const editPost = await updatePost(tx, postData);
@@ -196,7 +225,7 @@ export const updateStreetCat = async (req: Request, res: Response) => {
           imageId,
           postId,
         }));
-        
+
         await createStreetCatImages(tx, getStreetCatImages);
       }
       // 게시글에서 지운 이미지 삭제
@@ -208,7 +237,7 @@ export const updateStreetCat = async (req: Request, res: Response) => {
       await updateOpensearchDocument(categoryId, postId, { content });
 
       res.status(201).json({ message: "동네 고양이 도감 수정" });
-    })
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -219,17 +248,25 @@ export const updateStreetCat = async (req: Request, res: Response) => {
 export const deleteStreetCat = async (req: Request, res: Response) => {
   // TODO: 로그인한 유저와 게시글 작성 유저가 같은지 판별 필요
   // const uuid = await getUuid();
-  const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+  // const uuidString = req.headers["x-uuid"] as string;
+  // const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
 
-  console.log("uuidString: ", uuidString);
-  console.log("uuid: ", uuid);
+  const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
+
+  // console.log("uuidString: ", uuidString);
+  // console.log("uuid: ", uuid);
   const postId = Number(req.params.street_cat_id);
 
   try {
+    if (!uuidString) {
+      throw new Error("User UUID is missing."); // ⬅️ 혹시라도 만약을 대비해서 uuid가 없으면 에러 던지기
+    }
+
+    const uuid = Buffer.from(uuidString, "hex");
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const getStreetCatImages = await readStreetCatImages(postId);
-      const imageIds = getStreetCatImages.map(image => image.imageId);
+      const imageIds = getStreetCatImages.map((image) => image.imageId);
 
       console.log("imageIds", imageIds);
 
@@ -240,12 +277,11 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
       await removeAllFavoriteCat(postId);
       await removeAllComment(postId);
       await deletePost(tx, postId, uuid);
-      await deleteOpensearchDocument(CATEGORY.STREET_CATS, postId)
+      await deleteOpensearchDocument(CATEGORY.STREET_CATS, postId);
 
       // status 204는 message가 보내지지 않아 임시로 200
       res.status(200).json({ message: "동네 고양이 도감 삭제" });
-    })
-
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });

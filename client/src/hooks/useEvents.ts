@@ -6,7 +6,7 @@ interface IProps {
   enabled: boolean;
 }
 
-const useEvents = ({ sort, enabled }: IProps) => {
+const useEvents = ({ sort = "latest", enabled }: IProps) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({

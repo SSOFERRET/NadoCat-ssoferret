@@ -14,21 +14,22 @@ import {
   getStreetCatComments,
   createStreetCatComment,
   updateStreetCatComment,
-  deleteStreetCatComment
+  deleteStreetCatComment,
 } from "../controller/streetCat/StreetCatsComments";
 import uploadImages from "../multer";
+import { ensureAutorization } from "../middleware/auth";
 
 // 동네 고양이 도감
 router.get("/", getStreetCats);
 router.get("/:street_cat_id", getStreetCat);
-router.post("/", uploadImages.array("images"), createStreetCat);
-router.put("/:street_cat_id", uploadImages.array("images"), updateStreetCat);
-router.delete("/:street_cat_id", deleteStreetCat);
+router.post("/", ensureAutorization, uploadImages.array("images"), createStreetCat);
+router.put("/:street_cat_id", ensureAutorization, uploadImages.array("images"), updateStreetCat);
+router.delete("/:street_cat_id", ensureAutorization, deleteStreetCat);
 
 // 동네 고양이 도감 댓글
 router.get("/:street_cat_id/comments", getStreetCatComments);
-router.post("/:street_cat_id/comments", createStreetCatComment);
-router.put("/:street_cat_id/comments/:street_cat_comment_id", updateStreetCatComment);
-router.delete("/:street_cat_id/comments/:street_cat_comment_id", deleteStreetCatComment);
+router.post("/:street_cat_id/comments", ensureAutorization, createStreetCatComment);
+router.put("/:street_cat_id/comments/:street_cat_comment_id", ensureAutorization, updateStreetCatComment);
+router.delete("/:street_cat_id/comments/:street_cat_comment_id", ensureAutorization, deleteStreetCatComment);
 
 export default router;
