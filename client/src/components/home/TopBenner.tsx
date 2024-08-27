@@ -4,12 +4,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import { DotButton, useDotButton } from "../common/embla/EmblaCarouselDotButton";
 import { usePrevNextButtons } from "../common/embla/EmblaCarouselArrowButtons";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import Autoplay from "embla-carousel-autoplay";
-
-type PropType = {
-  slides: number[];
-  options?: EmblaOptionsType;
-};
 
 const bannersData = [
   {
