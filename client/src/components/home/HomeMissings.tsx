@@ -66,7 +66,7 @@ const missings = [
     postId: 4,
     found: 0,
     time: "2024-08-12T00:00:00.000Z",
-    createdAt: "2024-08-25T19:27:23.000Z",
+    createdAt: "2024-08-25T10:16:12.000Z",
     users: {
       nickname: "test4",
       profileImage: null,
@@ -137,7 +137,7 @@ const HomeMissings = () => {
                   <div className="missing-detail">
                     <div>
                       <MdDateRange />
-                      <span>{item.time}</span>
+                      <span>{formatDate(item.time)}</span>
                     </div>
                     <div>
                       <AiOutlineExclamationCircle />

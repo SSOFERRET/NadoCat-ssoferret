@@ -22,9 +22,10 @@ export const formatDate = (date: string, time?: boolean) => {
     month: "long",
     day: "numeric",
     hour: time ? "numeric" : undefined,
-    minute: time ? "numeric" : undefined
+    minute: time ? "numeric" : undefined,
+    timeZone: "UTC",
   });
 
-  const parsedDate = new Date(date); // 문자열을 Date 객체로 변환
+  const parsedDate = new Date(date);
   return dateFormat.format(parsedDate);
 };
