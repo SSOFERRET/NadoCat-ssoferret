@@ -15,6 +15,26 @@ export interface Post {
 
 const ENDPOINT = "http://localhost:8080";
 
+/*
+const MyPage: React.FC = () => {
+  const [lists, setLists] = useState<Post[]>([]);
+
+  const uuid = sessionStorage.getItem("uuid");
+
+  try {
+    axios
+      .post(ENDPOINT + "/boards/Interests", {
+        userId: uuid,
+      })
+      .then((response) => {
+        setLists(response.data);
+        console.log(response.data);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+*/
+
 const MyPage = () => {
   
   return (

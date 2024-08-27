@@ -12,7 +12,7 @@ const ENDPOINT = "http://localhost:8080";
 let socket: Socket;
 
 const Chat = () => {
-  const myUserId = localStorage.getItem("uuid") || "";
+  const myUserId = sessionStorage.getItem("uuid") || "";
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Array<MessageData>>([]);
   const [roomId, setRoomId] = useState<string>("");
@@ -25,7 +25,7 @@ const Chat = () => {
   useEffect(() => {
     socket = io(ENDPOINT);
 
-    if (!localStorage.getItem("uuid") || (!realOtherUuid && !userData)) {
+    if (!sessionStorage.getItem("uuid") || (!realOtherUuid && !userData)) {
       alert("유효한 사용자 ID가 없습니다.");
       navigate(-1);
       return;
@@ -55,7 +55,7 @@ const Chat = () => {
       console.log("initiateChat");
       try {
         const response = await axios.post(ENDPOINT + "/chats/startchat", {
-          userUuid: localStorage.getItem("uuid"),
+          userUuid: sessionStorage.getItem("uuid"),
           otherUserUuid: userUuidForHere,
         });
         if (response.data.messages) {
@@ -63,7 +63,7 @@ const Chat = () => {
         }
         setRoomId(response.data.chatId);
         socket.emit("join", {
-          uuid: localStorage.getItem("uuid"),
+          uuid: sessionStorage.getItem("uuid"),
           roomId: response.data.chatId,
         });
 
