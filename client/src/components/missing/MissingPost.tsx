@@ -6,7 +6,6 @@ import "./../../styles/scss/components/missing/missingPost.scss";
 import { useState } from "react";
 import PostMenu from "../communityAndEvent/PostMenu";
 import useMissing from "../../hooks/useMissing";
-// import MissingPostMenu from "./MissingReportPostMenu";
 
 interface IProps {
   post: IMissing;

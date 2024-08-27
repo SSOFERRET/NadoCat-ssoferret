@@ -29,7 +29,6 @@ const MissingReportPostMenu = ({
   matchState,
 }: IProps) => {
   const navigate = useNavigate();
-  // constn [match, setMatch] =
   const { mutate: updateMatch } = useUpdateMatch();
   const { isOwnerUser, isPostUser } = useCompareUsers(
     loginUser,
