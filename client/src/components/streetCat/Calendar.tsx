@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import DatePicker, { CalendarContainer } from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
+import React /*, { useState }*/ from "react";
+import DatePicker /*, { CalendarContainer }*/ from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/scss/components/streetCat/calendar.scss";
 import { getMonth, getYear } from "date-fns";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -11,13 +11,32 @@ interface IProps {
   setSelectedDate: (date: Date | null) => void;
 }
 
-const YEARS = Array.from({ length: getYear(new Date()) + 1 - 2000 }, (_, i) => getYear(new Date()) - i);
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const YEARS = Array.from(
+  { length: getYear(new Date()) + 1 - 2000 },
+  (_, i) => getYear(new Date()) - i
+);
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
-const Calendar: React.FC<IProps> = ({ selectedDate, setSelectedDate }: IProps) => {
+const Calendar: React.FC<IProps> = ({
+  selectedDate,
+  setSelectedDate,
+}: IProps) => {
   return (
     <div className="datePicker">
-      <FaRegCalendar className="calendar-icon"/>
+      <FaRegCalendar className="calendar-icon" />
       <DatePicker
         selected={selectedDate}
         onChange={(date) => setSelectedDate(date)}
@@ -37,12 +56,12 @@ const Calendar: React.FC<IProps> = ({ selectedDate, setSelectedDate }: IProps) =
         }) => (
           <div className="customHeaderContainer">
             <button
-              type='button'
+              type="button"
               onClick={decreaseMonth}
               className="monthButton"
               disabled={prevMonthButtonDisabled}
             >
-              <IoIosArrowBack fill='#ffffff' />
+              <IoIosArrowBack fill="#ffffff" />
             </button>
             <div>
               <span className="month">{MONTHS[getMonth(date)]}</span>
@@ -60,12 +79,12 @@ const Calendar: React.FC<IProps> = ({ selectedDate, setSelectedDate }: IProps) =
             </div>
             <div>
               <button
-                type='button'
+                type="button"
                 onClick={increaseMonth}
                 className="monthButton"
                 disabled={nextMonthButtonDisabled}
               >
-                <IoIosArrowForward fill='#ffffff' />
+                <IoIosArrowForward fill="#ffffff" />
               </button>
             </div>
           </div>

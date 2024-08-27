@@ -3,26 +3,28 @@ import { useStreetCatComments } from "../../hooks/useStreetCatComments";
 import "../../styles/scss/pages/streetCat/streetCatDetail.scss";
 import CommentsEmpty from "../comment/CommentsEmpty";
 import { useIntersectionObserver } from "./IntersectionObserver";
-import StreetCatComment from "./streetCatComment";
+// import StreetCatComment from "./streetCatComment";
 import CommentForm from "./CommentForm";
 import PostMenu from "../communityAndEvent/PostMenu";
 import CommentList from "../comment/CommentList";
+import { ICommentPage } from "../../models/comment.model";
+import { ICommentPutRequest } from "../../models/streetCat.model";
 
 interface IProps {
   postId: number;
 }
 
-const StreetCatComments = ({postId}: IProps) => {
-  const { 
-    data, 
-    fetchNextPage, 
-    hasNextPage, 
-    isFetchingNextPage, 
+const StreetCatComments = ({ postId }: IProps) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isEmpty,
     addStreetCatComment,
     editStreetCatComment,
     removeStreetCatComment,
-    streetCatComments
+    // streetCatComments,
   } = useStreetCatComments(postId);
 
   const moreRef = useIntersectionObserver(([entry]) => {
@@ -46,24 +48,26 @@ const StreetCatComments = ({postId}: IProps) => {
     setIsCommentEdit(true);
   };
 
-  
-  const transformedComments = data?.pages.map(page => ({
-    comments: page.streetCatComments.map(comment => ({
+  const transformedComments = data?.pages.map((page) => ({
+    comments: page.streetCatComments.map((comment: any) => ({
+      //<여기 타입 에러나서 :any 추가했습니다
       commentId: comment.streetCatCommentId,
       comment: comment.comment,
       createdAt: comment.createdAt,
       updatedAt: comment.updatedAt,
-      users: comment.users
-    }))
+      users: comment.users,
+    })),
   }));
 
-  const areAllCommentsEmpty = transformedComments?.every(page => page.comments.length === 0);
+  const areAllCommentsEmpty = transformedComments?.every(
+    (page) => page.comments.length === 0
+  );
   if (isEmpty || areAllCommentsEmpty) {
-    return ( 
-    <>
-      <CommentsEmpty />
-      <CommentForm postId={postId} addComment={addStreetCatComment} />
-    </>
+    return (
+      <>
+        <CommentsEmpty />
+        <CommentForm postId={postId} addComment={addStreetCatComment} />
+      </>
     );
   }
 
@@ -71,14 +75,24 @@ const StreetCatComments = ({postId}: IProps) => {
     <>
       <div className="street-cat-comment-list">
         {/* <StreetCatComment comments={streetCatComments} postId={postId}/> */}
-        <ul>  
+        <ul>
           <CommentList
             postId={postId}
-            comments={{pages: transformedComments, pageParams: []}}
+            comments={{
+              pages: transformedComments as ICommentPage[],
+              pageParams: [],
+            }}
             showMenu={showMenu}
             isCommentEdit={isCommentEdit}
             setIsCommentEdit={setIsCommentEdit}
-            editComment={editStreetCatComment}
+            editComment={
+              editStreetCatComment as ({
+                postId,
+                uuid,
+                comment,
+                commentId,
+              }: ICommentPutRequest) => Promise<void>
+            }
           />
         </ul>
       </div>
@@ -99,6 +113,6 @@ const StreetCatComments = ({postId}: IProps) => {
       />
     </>
   );
-}
+};
 
 export default StreetCatComments;

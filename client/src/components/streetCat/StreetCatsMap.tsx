@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../../styles/scss/components/streetCat/streetCatsMap.scss";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 import deleteBtn from "../../assets/img/deleteBtn.png";

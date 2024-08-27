@@ -1,0 +1,60 @@
+@import "../../../base/common.scss";
+
+.setting-detail-container{
+  overflow-y: hidden;
+  height: 100vh;
+  background: $white;
+
+  .title{
+    font-size: $size-14;
+    font-family: "medium";
+    margin-left: 30rem;
+    
+    textarea {
+      resize: none;
+      width: 370rem;
+      height: 150rem;
+      
+      padding: 10rem; /* 내부 패딩 추가 */
+      font-size: $size-14;
+      border: 1px solid #e3e5e8;
+      border-radius: 5rem; /* 둥근 테두리 */
+
+
+      &:focus {
+        outline: none;
+        border: 1px solid $primary;
+      }
+
+      &::placeholder {
+        color: #bababa;
+        font-size: $size-14;
+        font-family: medium;
+        
+      }
+    }
+
+    .error-message {
+      margin-top: 10rem;
+      margin-bottom: 10rem;
+      color: red;
+      font-size: $size-11;
+    }
+    
+    p{
+      margin: 10rem 0 10rem 0;
+    }
+  }
+
+  .complete-btn {
+    @include midiumButton(on);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 20rem auto 0;
+    width: 370rem;
+    padding: 12rem;
+    cursor: pointer;
+  }
+}

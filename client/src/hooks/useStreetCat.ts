@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFavoriteCat, createStreetCatPost, deleteFavoriteCat, deleteStreetCatComment, deleteStreetCatPost, getStreetCatMap, getStreetCatPost, updateStreetCatPost } from "../api/streetCat.api";
-import { IStreetCatDetail } from "../models/streetCat.model";
-import { queryClient } from "../api/queryClient";
 
 interface IStreetCatDetailParams {
   postId: number;
@@ -19,9 +16,9 @@ interface IStreetCatEdit {
 }
 
 export const useReadStreetCatPost = (postId: number) => {
-  const {data} = useQuery({
+  const { data } = useQuery({
     queryKey: ["streetCatDetail", postId],
-    queryFn: () => getStreetCatPost({postId})
+    queryFn: () => getStreetCatPost({ postId })
   });
 
   return {
@@ -47,7 +44,7 @@ export const useUpdateStreetCatPost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({formData, postId}: IStreetCatEdit) => updateStreetCatPost(formData, postId),
+    mutationFn: ({ formData, postId }: IStreetCatEdit) => updateStreetCatPost(formData, postId),
     onSuccess: () => {
       queryClient.invalidateQueries();
     },
@@ -73,7 +70,7 @@ export const useDeleteStreetCatPost = () => {
 
 export const useAddFavoriteCat = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: createFavoriteCat,
     onSuccess: () => {
@@ -84,7 +81,7 @@ export const useAddFavoriteCat = () => {
 
 export const useDeleteFavoriteCat = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: deleteFavoriteCat,
     onSuccess: () => {
@@ -98,7 +95,7 @@ export const useDeleteComment = () => {
 
   return useMutation({
     mutationFn: ({ postId, commentId }: IStreetCatCommentParams) => deleteStreetCatComment({ postId, commentId }),
-    onSuccess: (_, { postId, commentId }) => { 
+    onSuccess: (_, { postId, commentId }) => {
       queryClient.removeQueries({ queryKey: ["deleteStreetCatComment", { postId, commentId }] });
     },
     onError: (error) => {

@@ -1,4 +1,4 @@
-import { create } from "zustand";
+// import { create } from "zustand";
 import { getIsAllNotificationRead, getNotifications } from "../api/notification.api";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
@@ -27,10 +27,10 @@ export interface INotificationFromDB {
 //   setAlarms: (alarms: INotification[]) => void;
 // }
 
-interface NotificationState {
-  alarms: INotification[];
-  setAlarms: (update: (prevAlarms: INotification[]) => INotification[]) => void;
-}
+// interface NotificationState {
+//   alarms: INotification[];
+//   setAlarms: (update: (prevAlarms: INotification[]) => INotification[]) => void;
+// }
 
 export interface IIsAllRead {
   isAllRead: boolean;

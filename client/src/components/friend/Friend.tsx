@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { IFriend } from "../../models/friend.model";
 import Avatar from "../common/Avatar";
 import { RxCross1 } from "react-icons/rx";
@@ -12,10 +12,17 @@ const Friend = ({ friend }: IProps) => {
   const { unfollow } = useFriend();
   return (
     <li className="friend">
-      <Avatar nickname={friend.nickname} profileImage={friend.profileImage} onClick={() => {}} />
+      <Avatar
+        nickname={friend.nickname}
+        profileImage={friend.profileImage}
+        onClick={() => {}}
+      />
       <div className="user-info">
         <span className="nickname">{friend.nickname}</span>
-        <button className="friend-delete" onClick={() => unfollow(friend.userId)}>
+        <button
+          className="friend-delete"
+          onClick={() => unfollow(friend.userId)}
+        >
           <RxCross1 />
         </button>
       </div>

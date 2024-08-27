@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import bcryto from "bcrypt";
+import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { indexOpensearchUser } from "../controller/search/Searches";
@@ -12,8 +12,8 @@ export const createUser = async (email: string, nickname: string, password: stri
 
   const hashing = async (password: string) => {
     const saltRound = 10;
-    const salt = await bcryto.genSalt(saltRound);
-    const hashPassword = await bcryto.hash(password, salt);
+    const salt = await bcrypt.genSalt(saltRound);
+    const hashPassword = await bcrypt.hash(password, salt);
     return { salt, hashPassword };
   };
 
@@ -107,7 +107,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
     }
 
     const { selectUser, selectUserSecret } = result;
-    const isPasswordValid = await bcryto.compare(password, selectUserSecret.hashPassword);
+    const isPasswordValid = await bcrypt.compare(password, selectUserSecret.hashPassword);
 
     if (!isPasswordValid) {
       throw new Error("사용자 정보가 일치하지 않습니다.");

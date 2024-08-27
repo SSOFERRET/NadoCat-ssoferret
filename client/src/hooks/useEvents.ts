@@ -1,7 +1,12 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createEventPost, getEventPosts, Sort } from "../api/event.api";
 
-const useEvents = (sort?: Sort) => {
+interface IProps {
+  sort?: Sort;
+  enabled: boolean;
+}
+
+const useEvents = ({ sort = "latest", enabled }: IProps) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -16,6 +21,7 @@ const useEvents = (sort?: Sort) => {
     },
     initialPageParam: 0,
     staleTime: 1000 * 60 * 5,
+    enabled,
   });
 
   const { mutateAsync: addEventPost } = useMutation({

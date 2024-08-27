@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+// import React, { useCallback, useRef } from "react";
 import "../../styles/scss/components/streetCat/discoveryLocation.scss";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
@@ -39,10 +39,10 @@ const DiscoveryLocation = (props: ILocationProps) => {
               height: 42,
             },
           }}
-          >
-            {/* <div style={{color:"#000"}}>Hello World!</div> */}
-          </MapMarker>
-        </Map>
+            >
+              {/* <div style={{color:"#000"}}>Hello World!</div> */}
+            </MapMarker>
+          </Map>
         </div>
       </div>
     </>
