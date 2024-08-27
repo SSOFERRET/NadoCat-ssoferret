@@ -5,7 +5,7 @@ import { useIntersectionObserver } from "./IntersectionObserver";
 import FavoriteButton from "../common/FavoriteButton";
 import PostEmpty from "../communityAndEvent/PostEmpty";
 import LoadingCat from "../loading/LoadingCat";
-import { useLocation /*,useNavigate*/ } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const StreetCatPosts: React.FC = () => {
   const location = useLocation();
@@ -52,16 +52,13 @@ const StreetCatPosts: React.FC = () => {
       );
     }
 
-  console.log("1 data ", data);
-
   return (
     <div className="street-cat-posts">
       <p className="title">우리 동네 고양이</p>
       <ul className="street-cat-list">
         {streetCatPosts.map((cat) => (
           <li key={cat?.postId} className="street-cat">
-            {cat?.postId !== undefined &&
-            cat?.streetCatFavorites !== undefined ? (
+            {cat?.postId !== undefined ? (
               <FavoriteButton
                 postId={cat.postId}
                 like={cat.streetCatFavorites?.length}

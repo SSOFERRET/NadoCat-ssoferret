@@ -142,7 +142,17 @@ export const deleteStreetCatComment = async ({ postId, commentId }: ICommentDele
   return response.data;
 }
 
-export const getStreetCatMap = async () => {
-  const response = await httpClient.get(`/boards/street-cats/map`);
+// export const getStreetCatMap = async () => {
+//   const response = await httpClient.get(`/boards/street-cats/map`);
+//   return response.data;
+// }
+interface IMapData {
+  lat: number;
+  lng: number;
+  latRange: number;
+  lngRange: number;
+}
+export const getStreetCatMap = async ({lat, lng, latRange, lngRange}: IMapData) => {
+  const response = await httpClient.get(`/boards/street-cats/map?lat=${lat}&lng=${lng}&latRange=${latRange}&lngRange=${lngRange}`);
   return response.data;
 }
