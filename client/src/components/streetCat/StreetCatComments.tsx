@@ -24,7 +24,6 @@ const StreetCatComments = ({ postId }: IProps) => {
     addStreetCatComment,
     editStreetCatComment,
     removeStreetCatComment,
-    // streetCatComments,
   } = useStreetCatComments(postId);
 
   const moreRef = useIntersectionObserver(([entry]) => {
@@ -49,15 +48,10 @@ const StreetCatComments = ({ postId }: IProps) => {
   };
 
   const transformedComments = data?.pages.map((page) => ({
-    comments: page.streetCatComments.map((comment: any) => ({
-      //<여기 타입 에러나서 :any 추가했습니다
-      commentId: comment.streetCatCommentId,
-      comment: comment.comment,
-      createdAt: comment.createdAt,
-      updatedAt: comment.updatedAt,
-      users: comment.users,
-    })),
+    comments: page.streetCatComments,
   }));
+
+  console.log("transformedComments ", transformedComments)
 
   const areAllCommentsEmpty = transformedComments?.every(
     (page) => page.comments.length === 0
@@ -74,7 +68,6 @@ const StreetCatComments = ({ postId }: IProps) => {
   return (
     <>
       <div className="street-cat-comment-list">
-        {/* <StreetCatComment comments={streetCatComments} postId={postId}/> */}
         <ul>
           <CommentList
             postId={postId}
@@ -85,14 +78,7 @@ const StreetCatComments = ({ postId }: IProps) => {
             showMenu={showMenu}
             isCommentEdit={isCommentEdit}
             setIsCommentEdit={setIsCommentEdit}
-            editComment={
-              editStreetCatComment as ({
-                postId,
-                uuid,
-                comment,
-                commentId,
-              }: ICommentPutRequest) => Promise<void>
-            }
+            editComment={editStreetCatComment}
           />
         </ul>
       </div>

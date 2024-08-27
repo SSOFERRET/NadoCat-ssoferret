@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/scss/components/streetCat/streetCatsMap.scss";
-import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
+import { CustomOverlayMap, Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
 import deleteBtn from "../../assets/img/deleteBtn.png";
 import { useReadStreetMap } from "../../hooks/useStreetCat";
 
@@ -91,6 +91,7 @@ const CustomOverlayStyle = () => (
       background-color: transparent;
       border: none;
       cursor: pointer;
+      z-index: 1001;
 
       img {
         width: 30rem;
@@ -138,35 +139,75 @@ const CustomOverlayStyle = () => (
 );
 
 const StreetCatsMap: React.FC = () => {
-  const { data: locations } = useReadStreetMap(); // 데이터 가져오기
+  useKakaoLoader();
+  const [mapData, setMapData] = useState<{
+    level: number;
+    position: {
+      lat: number;
+      lng: number;
+    };
+  }>({
+    level: 4,
+    position: {
+      lat: 37.485615979201,
+      lng: 127.01099825247,
+    },
+  });
   const [selectedCat, setSelectedCat] = useState<IStreetCat | null>(null);
+
+  // mapData가 변경될 때마다 근처 데이터 통신
+  const { data: nearLocations, isLoading, error } = useReadStreetMap(
+    mapData.position.lat,
+    mapData.position.lng,
+    mapData.level
+  );
 
   const handleMarkerClick = (streetCat: IStreetCat) => {
     setSelectedCat(streetCat);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
     setSelectedCat(null);
   };
+
+  const handleDragEnd = (map: kakao.maps.Map) => {
+    const level = map.getLevel();
+    const latlng = map.getCenter();
+
+    const newMapData = {
+      level: level,
+      position: {
+        lat: latlng.getLat(),
+        lng: latlng.getLng(),
+      },
+    };
+
+    setMapData(newMapData);
+  };
+
+  useEffect(() => {
+    if (!isLoading && !error && nearLocations) {
+      console.log("Fetched nearby data:", nearLocations);
+    }
+  }, [nearLocations, isLoading, error]);
 
   return (
     <>
       <CustomOverlayStyle />
       <Map
         id="map"
-        center={{
-          lat: 37.488323517993,
-          lng: 127.01231116925,
-        }}
+        center={mapData.position}
         style={{
           width: "100%",
         }}
-        level={3}
+        level={mapData.level}
+        onDragEnd={handleDragEnd}
       >
-        {locations && locations.map((location: ILocationData) => (
+        {nearLocations && nearLocations.map((location: ILocationData) =>
           location.streetCats.map((cat: IStreetCat) => (
             <MapMarker
-              key={location.locationId}
+              key={cat.postId}
               position={{ lat: location.latitude, lng: location.longitude }}
               onClick={() => handleMarkerClick(cat)}
               image={{
@@ -184,7 +225,7 @@ const StreetCatsMap: React.FC = () => {
               }}
             />
           ))
-        ))}
+        )}
       </Map>
 
       {selectedCat && (

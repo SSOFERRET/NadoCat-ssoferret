@@ -5,8 +5,6 @@ import { addComment, putComment, readComments, readPost, removeComment } from ".
 // import { notifyNewComment } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
 
-// NOTE: 임시 데이터 streetCatCommentId 값 주의
-
 // 동네 고양이 도감 댓글 목록 조회
 export const getStreetCatComments = async (req: Request, res: Response) => {
   const postId = Number(req.params.street_cat_id);
@@ -30,9 +28,8 @@ export const getStreetCatComments = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 댓글 등록
 export const createStreetCatComment = async (req: Request, res: Response) => {
-  // const uuid = await getUuid();
-  const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+  const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
+  const uuid = Buffer.from(uuidString, "hex");
   const postId = Number(req.params.street_cat_id);
   const { comment } = req.body;
 
@@ -51,9 +48,8 @@ export const createStreetCatComment = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 댓글 수정
 export const updateStreetCatComment = async (req: Request, res: Response) => {
-  // const uuid = await getUuid();
-  const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+  const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
+  const uuid = Buffer.from(uuidString, "hex");
   const streetCatId = Number(req.params.street_cat_id);
   const streetCatCommentId = Number(req.params.street_cat_comment_id);
   const { comment } = req.body;
@@ -70,9 +66,8 @@ export const updateStreetCatComment = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 댓글 삭제
 export const deleteStreetCatComment = async (req: Request, res: Response) => {
-  // const uuid = await getUuid();
-  const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
+  const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
+  const uuid = Buffer.from(uuidString, "hex");
   const streetCatId = Number(req.params.street_cat_id);
   const streetCatCommentId = Number(req.params.street_cat_comment_id);
 

@@ -13,7 +13,7 @@ interface IUser {
 }
 
 interface IComment {
-  streetCatCommentId: number;
+  commentId: number;
   comment: string;
   createdAt: string;
   users: IUser;
