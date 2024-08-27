@@ -8,7 +8,6 @@ interface Props {
 }
 
 const Message: React.FC<Props> = ({ message: { uuid, content, sentAt }}) => {
-  // console.log("uuid === ", Buffer.from(uuid).toString("hex"))
   const isSentByCurrentUser = Buffer.from(uuid).toString("hex") === localStorage.getItem("uuid");
 
   function formatTime(sentAt: string) {

@@ -27,7 +27,7 @@ const Chat = () => {
 
     if (!localStorage.getItem("uuid") || (!realOtherUuid && !userData)) {
       alert("유효한 사용자 ID가 없습니다.");
-      // navigate(-1);
+      navigate(-1);
       return;
     }
 

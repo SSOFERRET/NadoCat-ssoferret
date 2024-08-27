@@ -7,19 +7,22 @@
 
 .background{
   scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   &::-webkit-scrollbar{
     display: none;
   }
   .postsBox{
     border-bottom: .5px solid $silver;
-    height: 12vh;
+    height: 11vh;
     display: flex;
-    align-items: center;
-    width: 360px;
+    width: 100%;
+    
     .postsContents{
       display: flex;
       flex-direction: column;
-      height: 10vh;
+      height: auto;
       &.withImg{
         width:75%;
       }
@@ -29,12 +32,12 @@
       .title{
         @include font(16px, black);
         font-family: "bold";
-        line-height: 1em;
+        line-height: 1.2em;
         margin: 0;
         width: 100%;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-height: 3vh;
+        max-height: 20em;
         overflow: hidden;
         height: 30%;
         padding: .5em 0;
@@ -42,7 +45,7 @@
       .contents{
         @include font(14px, $black);
         font-family: "medium";
-        line-height: 1.4em;
+        line-height: 1.2em;
         width: 90%;
         margin: 0;
         display: -webkit-box;
@@ -51,7 +54,7 @@
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
         overflow: hidden;
-        height: 40%;
+        height: 35%;
         
       }
       #time{
@@ -73,6 +76,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      margin-top: 1vh;
       img{
         height: 100%;
         width: 100%;

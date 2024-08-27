@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import "../../styles/scss/components/chat/ChatList.scss";
 import "../../styles/css/base/reset.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
 import DefaultImg from "../../assets/img/DefaultImg.png";
-// import axios from 'axios';
-import { Buffer } from "buffer";
+import { Buffer } from 'buffer';
 
 interface IList {
   img: string;
@@ -29,7 +28,7 @@ interface IList {
 interface ChatProps {
   lists: IList[];
 }
-// const ENDPOINT = "http://localhost:8080";
+
 const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
