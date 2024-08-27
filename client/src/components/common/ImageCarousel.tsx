@@ -1,7 +1,10 @@
-import { useState } from "react";
 import "../../styles/scss/components/common/imageCarousel.scss";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IImage } from "../../models/image.model";
+import { EmblaOptionsType } from "embla-carousel";
+import useEmblaCarousel from "embla-carousel-react";
+import { DotButton, useDotButton } from "../common/embla/EmblaCarouselDotButton";
+import { usePrevNextButtons } from "../common/embla/EmblaCarouselArrowButtons";
 
 interface IProps {
   images: IImage[];
@@ -9,56 +12,56 @@ interface IProps {
   size?: "sm" | "md";
 }
 
+const OPTIONS: EmblaOptionsType = {
+  containScroll: "trimSnaps",
+  align: "start",
+  startIndex: 0,
+  dragFree: false,
+  loop: true,
+};
+
 const ImageCarousel = ({ images, round = "round-5", size = "md" }: IProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS);
 
-  const nextSlide = () => {
-    if (currentIndex === images.length - 1) {
-      return;
-    }
-    setCurrentIndex((prevIndex) => prevIndex + 1);
-  };
+  const { selectedIndex, onDotButtonClick } = useDotButton(emblaApi);
 
-  const prevSlide = () => {
-    if (!currentIndex) {
-      return;
-    }
-
-    setCurrentIndex((prevIndex) => prevIndex - 1);
-  };
-
-  const paginationHandler = (index: number) => {
-    setCurrentIndex(index);
-  };
+  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
 
   return (
-    <div className={`carousel-container ${round} ${size}`}>
-      <div className="carousel-slider" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-        {images.map((image, index) => (
-          <div className="carousel-item" key={image.imageId}>
-            <img src={image.url} alt={`Slide ${index}`} />
+    <section className={`carousel-container ${round} ${size}`}>
+      <div className="image-embla">
+        <div className="image-embla__viewport" ref={emblaRef}>
+          <div className="image-embla__container">
+            {images.map((item) => (
+              <div className="image-embla__slide" key={item.imageId}>
+                <div className="image-embla__slide__img">
+                  <img src={item.url} alt={item.imageId.toString()} />
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <button className="carousel-button prev-button" onClick={prevSlide}>
-        <IoIosArrowBack />
-      </button>
-      <button className="carousel-button next-button" onClick={nextSlide}>
-        <IoIosArrowForward />
-      </button>
+        </div>
 
-      <div className="pagination-container">
-        <ul>
-          {Array.from({ length: images.length }, (_, i) => i).map((item) => (
-            <li
-              key={item}
-              className={currentIndex === item ? "active" : ""}
-              onClick={() => paginationHandler(item)}
-            ></li>
-          ))}
-        </ul>
+        <button className="carousel-button prev-button" onClick={onPrevButtonClick} disabled={prevBtnDisabled}>
+          <IoIosArrowBack />
+        </button>
+        <button className="carousel-button next-button" onClick={onNextButtonClick} disabled={nextBtnDisabled}>
+          <IoIosArrowForward />
+        </button>
+
+        <div className="image-embla__controls">
+          <div className="image-embla__dots">
+            {images.map((item) => (
+              <DotButton
+                key={item.imageId}
+                onClick={() => onDotButtonClick(item.imageId)}
+                className={"image-embla__dot".concat(item.imageId - 1 === selectedIndex ? " active" : "")}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

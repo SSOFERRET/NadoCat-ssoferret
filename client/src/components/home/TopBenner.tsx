@@ -47,7 +47,6 @@ const TopBenner = () => {
             {bannersData.map((item) => (
               <div className="embla__slide" key={item.id}>
                 <div className="embla__slide__img">
-                  {/* {item.id} */}
                   <img src={item.url} alt="" />
                 </div>
               </div>
