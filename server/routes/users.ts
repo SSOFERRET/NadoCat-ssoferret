@@ -17,7 +17,7 @@ import {
   addFavoriteCat,
   deleteFavoriteCat,
 } from "../controller/streetCat/StreetCatsFavorite";
-import { follow, followings, unfollow } from "../controller/friend/Friends";
+import { follow, followings, getFollowing, unfollow } from "../controller/friend/Friends";
 import { ensureAutorization } from "../middleware/auth";
 import uploadImages from "../multer";
 
@@ -51,6 +51,7 @@ router.delete("/street-cats/:street_cat_id", deleteFavoriteCat);
 // 친구 맺기
 router.post("/follows/:following_id", ensureAutorization, follow);
 router.delete("/follows/:following_id", ensureAutorization, unfollow);
+router.get("/follows/:following_id", ensureAutorization, getFollowing);
 router.get("/followings", ensureAutorization, followings);
 
 export default router;
