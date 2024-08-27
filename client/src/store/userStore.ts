@@ -6,12 +6,13 @@ interface StoreState {
   isAutoLogin: boolean;
   authType: string | null;
   uuid: string;
+  storeAutoLogin: (isAutoLogin: boolean) => void
   storeLogin: (uuid: string, isAutoLogin: boolean) => void;
   storeAuthType: (authType: string) => void;
   storeLogout: (uuid: string) => void;
 }
 
-//[ ]세션 수정1
+//[x]uuid
 export const getUuid = () => {
   const uuid = sessionStorage.getItem("uuid");
   // const uuid = localStorage.getItem("uuid");
@@ -23,28 +24,41 @@ export const setUuid = (uuid: string) => {
   // localStorage.setItem("uuid", uuid);
 }
 
+//[ ]AutoLogin상태 저장
+export const getAutoLogin = () => {
+  const autoLogin = localStorage.getItem("isAutoLogin") === "true";
+  return autoLogin;
+}
+
+export const setAutoLogin = (isAutoLogin: boolean) => {
+  if(isAutoLogin){
+    localStorage.setItem("isAutoLogin", "true");
+  }else{
+    localStorage.removeItem("isAutoLogin");
+  }
+}
 
 export const useAuthStore = create<StoreState>((set) => ({
   isLoggedIn: !!getUuid(), // UUID가 존재하면 로그인 상태
-  isAutoLogin: false,
+  isAutoLogin: getAutoLogin(), // localStorage에서 자동 로그인 상태 불러오기
   authType: null,
   uuid: getUuid() || "",
 
   storeLogin: (uuid: string, isAutoLogin: boolean)  => {
     set({isLoggedIn: true, isAutoLogin});
-    // localStorage.setItem("uuid", uuid);
     setUuid(uuid);
 
      // 자동로그인 상태 저장
-     if (isAutoLogin) {
-        isAutoLogin= true;
-        sessionStorage.setItem("isAutoLogin", "true");
-      } else {
-        sessionStorage.removeItem("isAutoLogin");
-      }
+    setAutoLogin(isAutoLogin);
   },
+  
   storeAuthType: (authType: string) => {
     set({ authType });
+  },
+
+  storeAutoLogin: (isAutoLogin: boolean) => {
+    set({ isAutoLogin });
+    setAutoLogin(isAutoLogin);
   },
 
   storeLogout: async (uuid: string) => {
@@ -52,9 +66,6 @@ export const useAuthStore = create<StoreState>((set) => ({
       sessionStorage.removeItem("uuid"); //동기적 처리
       await logout(uuid); //비동기적 처리
       set({ isLoggedIn: false, isAutoLogin: false, authType: null, uuid: "" });
-      //서버에 로그아웃 요청
-      // await axios.post("/users/logout", { uuid }, { withCredentials: true });
-
 
       console.log("uuid제거 성공!");
     } catch (error) {
