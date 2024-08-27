@@ -10,13 +10,18 @@ import DiscoveryLocation from "../../components/streetCat/DiscoveryLocation";
 import Author from "../../components/streetCat/Author";
 // import CommentsEmpty from "../../components/comment/CommentsEmpty";
 import StreetCatComments from "../../components/streetCat/StreetCatComments";
+import LoadingCat from "../../components/loading/LoadingCat";
 // import CommentForm from "../../components/comment/CommentForm";
 // import MapBox from "../../components/streetCat/testComp";
 
 const StreetCatDetail: React.FC = () => {
   const { id } = useParams();
   const postId = Number(id);
-  const { data } = useReadStreetCatPost(postId);
+  const { data, isLoading } = useReadStreetCatPost(postId);
+
+  if (isLoading) {
+    <LoadingCat />
+  }
 
   return (
     <>
