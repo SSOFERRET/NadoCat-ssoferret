@@ -5,7 +5,6 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
 import DefaultImg from "../../assets/img/DefaultImg.png";
-// import axios from 'axios';
 import { Buffer } from "buffer";
 
 interface IList {
@@ -29,7 +28,6 @@ interface IList {
 interface ChatProps {
   lists: IList[];
 }
-// const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -45,7 +43,7 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
     setModalOpen(true);
   };
   const handleChatClick = (list: IList) => {
-    const uuid = localStorage.getItem("uuid");
+    const uuid = sessionStorage.getItem("uuid");
     const otherUuid = Buffer.from(list.otherUuid.data).toString("hex");
     let realOtherUuid;
     if (uuid === otherUuid) {

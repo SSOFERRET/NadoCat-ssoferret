@@ -22,7 +22,7 @@ const Messages: React.FC<Props> = ({ messages}) => {
     <BasicScrollToBottom className="messages">
       {messages.map((message, index) => (
         <div key={index}>
-          { Buffer.from(message.uuid).toString("hex") === localStorage.getItem("uuid") ? 
+          { Buffer.from(message.uuid).toString("hex") === sessionStorage.getItem("uuid") ? 
           <div className="end"><Message message={message} /></div> :
           <div className="start"><Message message={message}/></div>
           }

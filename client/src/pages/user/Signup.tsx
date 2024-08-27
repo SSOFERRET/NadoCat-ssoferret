@@ -126,13 +126,16 @@ const Signup = () => {
 
       <CustomModal
         isOpen={isOpenModal}
-        onClose={handleModalClose}
+        size="lg"
         title="가입이 완료되었습니다."
         message={[
           "동네 고양이 정보부터 커뮤니티까지",
           "로그인 후 다양한 서비스를 이용해보세요!",
         ]}
         imageUrl={WelcomeCatImage}
+        buttons= {[{
+          label: "확인", onClick: handleModalClose
+        }]}
       />
     </div>
   );

@@ -38,7 +38,6 @@ const MissingPost = ({ post }: IProps) => {
         isShowMenu={isShowMenu}
         deletePost={removeMissingPost}
       />
-      ;
     </section>
   );
   // 좋아요 리포트 수 (-)

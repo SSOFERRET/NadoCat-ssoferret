@@ -1,11 +1,9 @@
-import React, { /*useEffect,*/ useState } from "react";
+// import React, { /*useEffect,*/ useState } from "react";
 import BackButton from "../../components/common/BackButton";
 import "../../styles/scss/pages/mypage/MyPage.scss";
 import "../../styles/css/base/reset.css";
 import Posts from "../../components/mypage/Posts";
-import axios from "axios";
-// import { useAuthStore } from "../../store/userStore";
-// import NoLike from "../../assets/img/NoLike.png";
+// import axios from "axios";
 
 export interface Post {
   title: string;
@@ -15,11 +13,13 @@ export interface Post {
   img?: string;
 }
 
-const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
+// const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
+
+/*
 const MyPage: React.FC = () => {
   const [lists, setLists] = useState<Post[]>([]);
 
-  const uuid = localStorage.getItem("uuid");
+  const uuid = sessionStorage.getItem("uuid");
 
   try {
     axios
@@ -33,14 +33,16 @@ const MyPage: React.FC = () => {
   } catch (error) {
     console.log(error);
   }
+*/
 
+const MyPage = () => {
   return (
     <div className="myPage">
       <div className="header">
         <BackButton userName="" />
         <div id="title">관심글</div>
       </div>
-      <Posts lists={lists} />:
+      <Posts />
     </div>
   );
 };

@@ -6,6 +6,6 @@ router.use(express.json());
 
 import { getInterests } from "../controller/interest/Interests";
 
-router.post('/', getInterests);
+router.post('/', ensureAutorization , getInterests);
 
 export default router;

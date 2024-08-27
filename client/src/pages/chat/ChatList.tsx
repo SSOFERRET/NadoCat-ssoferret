@@ -27,15 +27,12 @@ const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 const ChatList = () => {
   const [list, setList] = useState<IList[]>([]);
 
-  // const generalToken = localStorage.getItem("generalToken");
-  // const refreshToken = localStorage.getItem("refreshToken");
-
   useEffect(() => {
     const fetchChatLists = async () => {
       try {
         const response = await axios.get(ENDPOINT + "/chats/chatlist", {
           headers: {
-            "x-user-uuid": localStorage.getItem("uuid"),
+            "x-user-uuid": sessionStorage.getItem("uuid"),
           },
         });
         const chatLists = response.data;
@@ -45,11 +42,11 @@ const ChatList = () => {
             console.log(
               "otherUuid :",
               Buffer.from(list.otherUuid.data).toString("hex"),
-              localStorage.getItem("uuid")
+              sessionStorage.getItem("uuid")
             );
             const otherUuid =
               Buffer.from(list.otherUuid.data).toString("hex") ===
-              localStorage.getItem("uuid")
+              sessionStorage.getItem("uuid")
                 ? list.uuid.data
                 : list.otherUuid.data;
             const userResponse = await axios.post(`${ENDPOINT}/chats`, {
