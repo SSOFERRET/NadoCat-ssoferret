@@ -5,6 +5,7 @@ import Avatar from "../../common/Avatar";
 import { AiOutlineSetting } from "react-icons/ai";
 import PostMenu from "../../communityAndEvent/PostMenu";
 import { deleteProfile, uploadProfile } from "../../../api/user.api";
+import FriendButton from "../../friend/FriendButton";
 // import ProfileChangeModal from "./ProfileChangeModal";
 
 export interface MyInfoProps {
@@ -75,6 +76,9 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
           <div className="change-profile-btn">
             <button onClick={handleOpenProfileChange}>프로필 변경</button>
           </div>
+
+          {/* ⬇️ 여기 추가했습니다. change-profile-btn안에 넣으시면 CSS 충돌 납니다.. */}
+          <FriendButton followingId={uuid} />
 
           <button
             className="settings-button"

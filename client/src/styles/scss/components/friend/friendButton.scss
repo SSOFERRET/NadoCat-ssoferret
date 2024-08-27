@@ -1,0 +1,30 @@
+@import "../../base/common.scss";
+
+.friend-button-container {
+  .friend-button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: $size-12;
+    border: none;
+    padding: 5rem 9rem;
+    border-radius: $round-5;
+    font-family: "medium";
+    background-color: $primary;
+
+    &.default {
+      background-color: $primary;
+      color: $white;
+    }
+
+    &.active {
+      background-color: $whitesmoke;
+    }
+
+    &:hover {
+      background-color: $secondary;
+      color: $white;
+    }
+  }
+}

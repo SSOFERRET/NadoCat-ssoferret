@@ -21,6 +21,16 @@ export const getFriends = async ({ pageParam, limit }: IFriendsParams) => {
   }
 };
 
+export const getFriend = async (followingId: string) => {
+  try {
+    const response = await httpClient.get(`/users/follows/${followingId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching friend:", error);
+    throw error;
+  }
+};
+
 export const addFriend = async (followingId: string) => {
   try {
     const response = await httpClient.post(`/users/follows/${followingId}`);

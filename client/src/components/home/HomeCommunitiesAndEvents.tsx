@@ -2,6 +2,7 @@ import { useState } from "react";
 import HomeCommunity from "./HomeCommunity";
 import HomeEvent from "./HomeEvent";
 import Cat from "../../assets/img/Maskgroup.png";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 type Menu = {
   id: number;
@@ -17,10 +18,17 @@ const menu: Menu[] = [
 ];
 
 const HomeCommunitiesAndEvents = () => {
+  const [isShow, setIsShow] = useState(false);
   const [category, setCategory] = useState<Category>(menu[0].category);
 
+  const postRef = useIntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      setIsShow(true);
+    }
+  });
+
   return (
-    <section className="home-communities-events">
+    <section className="home-communities-events" ref={postRef}>
       <div className="header">
         <div className="main-title">
           <span>혹시</span>
@@ -46,9 +54,13 @@ const HomeCommunitiesAndEvents = () => {
         </ul>
       </div>
 
-      {category === "community" && <HomeCommunity category={category} />}
+      {isShow && (
+        <>
+          {category === "community" && <HomeCommunity category={category} />}
 
-      {category === "event" && <HomeEvent category={category} />}
+          {category === "event" && <HomeEvent category={category} />}
+        </>
+      )}
     </section>
   );
 };

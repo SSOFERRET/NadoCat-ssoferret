@@ -1,6 +1,5 @@
 import useEvents from "../../hooks/useEvents";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
-import LoadingCat from "../loading/LoadingCat";
 import PostEmpty from "../communityAndEvent/PostEmpty";
 import PostList from "../communityAndEvent/PostList";
 import Spinner from "../loading/Spinner";
@@ -28,7 +27,7 @@ const HomeEvent = ({ category }: IProps) => {
   return (
     <section className={`community-container`}>
       {isLoading ? (
-        <LoadingCat />
+        <Spinner />
       ) : (
         <section className={`community-post-list`}>
           {isEmpty && <PostEmpty />}
