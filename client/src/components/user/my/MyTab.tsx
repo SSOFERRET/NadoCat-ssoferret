@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../../styles/scss/components/user/my/myTab.scss";
-import MyPage from "../../../pages/mypage/MyPage";
+import Posts from "../../mypage/Posts";
 import Friends from "../../../pages/user/Friends";
 import useFriends from "../../../hooks/useFriends";
 
@@ -35,8 +35,7 @@ const MyTab = () => {
       </div>
 
       <div className="tab-content">
-        {/* {activeTab === "tab-likepost" && <MyPage />} */}
-        {activeTab === "tab-likepost" && <div>관심글 내용입니다.</div>}
+        {activeTab === "tab-likepost" && <div className="interest-posts"><Posts /></div>}
         {activeTab === "tab-mypost" && <div>작성한글 내용입니다.</div>}
         {activeTab === "tab-myfriends" && <Friends />}
       </div>

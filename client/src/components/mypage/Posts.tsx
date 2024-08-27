@@ -2,32 +2,61 @@ import React from "react";
 import "../../styles/scss/components/user/Posts.scss";
 import "../../styles/css/base/reset.css";
 import NoLike from "../../assets/img/NoLike.png";
-
-interface Post {
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+export interface Post {
   title: string;
-  contents: string;
-  created_at: number;
+  content: string;
+  updatedAt: string;
   views: number;
-  img?: string;
+  postId: number;
+  thumbnail?: string;
 }
 
-interface PostsProps {
-  lists: Post[]
-}
-const Posts: React.FC<PostsProps> = ({ lists }) => {
+const ENDPOINT = "http://localhost:8080";
+
+const Posts: React.FC = () => {
+  const navigate = useNavigate();
+
+  const [lists, setLists] = useState<Post[]>([]);
+
+  const uuid = localStorage.getItem("uuid");
+
+  useEffect(() => {
+    axios.post(ENDPOINT + "/boards/Interests", {
+      userId: uuid
+    })
+    .then(response => {
+      setLists(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, [])
+
+  const dateChanger = (isoString: string) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  }
+  console.log(lists)
   return (
     <div className="background">
       {
         lists.length ?
         lists.map((list, index) => (
-          <div key={index} className="postsBox">
-            <div className={`postsContents ${list.img ? "withImg" : "withoutImg"}`}>
+          <div key={index} className="postsBox" onClick={() => navigate(`/boards/communities/${list.postId}`)}>
+            <div className={`postsContents ${list.thumbnail ? "withImg" : "withoutImg"}`}>
               <b className="title">{list.title}</b>
-              <p className="contents">{list.contents}</p>
-              <p id="time">{list.created_at} 전 • 조회 {list.views}</p>
+              <p className="contents">{list.content}</p>
+              <p id="time">{dateChanger(list.updatedAt)} • 조회 {list.views}</p>
             </div>
-            {list.img && (
-                <div className="postsImg"><img className="img"src={list.img} /></div>
+            {list.thumbnail && (
+                <div className="postsImg"><img className="img"src={list.thumbnail} /></div>
             )}
           </div>
         )):
