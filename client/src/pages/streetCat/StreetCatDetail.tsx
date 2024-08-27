@@ -39,10 +39,8 @@ const StreetCatDetail: React.FC = () => {
 
       <section className="street-cat-comment-section">
         <div className="counts">
-          <PiChatCircleBold />
-          <span className="comment-count">0</span>
-          <span>조회수</span>
-          <span className="view-count">29</span>
+          <PiChatCircleBold /><span className="comment-count">0</span>
+          <span>조회수</span><span className="view-count">0</span>
         </div>
 
         <StreetCatComments postId={postId} />
