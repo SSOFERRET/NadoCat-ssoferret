@@ -3,13 +3,9 @@ import "../../styles/scss/components/streetCat/streetCatPosts.scss";
 import { useStreetCatPosts } from "../../hooks/useStreetCats";
 import { useIntersectionObserver } from "./IntersectionObserver";
 import FavoriteButton from "../common/FavoriteButton";
-// import WriteButton from "../common/WriteButton";
-// import NewPostButton from "../common/NewPostButton";
 import PostEmpty from "../communityAndEvent/PostEmpty";
 import LoadingCat from "../loading/LoadingCat";
 import { useLocation /*,useNavigate*/ } from "react-router-dom";
-
-// NOTE 로그인 후 데이터 받아오기 해야함
 
 const StreetCatPosts: React.FC = () => {
   const location = useLocation();
@@ -29,9 +25,31 @@ const StreetCatPosts: React.FC = () => {
     isEmpty,
   } = useStreetCatPosts(shouldFetchData);
 
-  const moreRef = useIntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) {
-      loadMore();
+    const moreRef = useIntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        loadMore();
+      }
+    });
+  
+    const loadMore = () => {
+      if (!hasNextPage) return;
+      fetchNextPage();
+    };
+  
+    if (!shouldFetchData) {
+      return null;
+    }
+  
+    if (isLoading) {
+      return <LoadingCat />;
+    }
+  
+    if (isEmpty) {
+      return (
+      <div className="empty-box">
+        <PostEmpty />
+      </div>
+      );
     }
   });
 
