@@ -30,6 +30,7 @@ import { getPosts } from "./Common";
 // import { notify } from "../notification/Notifications";
 import { handleControllerError } from "../../util/errors/errors";
 import { incrementViewCountAsAllowed } from "../common/Views";
+import { uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 
 /* CHECKLIST
 * [ ] 사용자 정보 가져오기 반영
@@ -98,13 +99,22 @@ export const getMissingReport = async (req: Request, res: Response) => {
 };
 
 export const createMissingReport = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+
+    // const userId = await getUserId();
+    const userId = Buffer.from(uuid, "hex");
     const missingId = Number(req.params.postId);
-    const { report, location, images } = req.body;
+    console.log(req.body)
+    const report = JSON.parse(req.body.report);
+    const location = JSON.parse(req.body.location);
+    console.log("받은 데이터", report, location)
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newLocation = await addLocation(tx, location);
-
-      const userId = await getUserId(); //NOTE
 
       const post = await addMissingReport(tx, {
         ...report,
@@ -119,7 +129,8 @@ export const createMissingReport = async (req: Request, res: Response) => {
         locationId: newLocation.locationId,
       });
 
-      if (images)
+      if (req.files) {
+        const imageUrls = (await uploadImagesToS3(req)) as any;
         await addNewImages(
           tx,
           {
@@ -127,8 +138,9 @@ export const createMissingReport = async (req: Request, res: Response) => {
             postId: post.postId,
             categoryId: CATEGORY.MISSING_REPORTS,
           },
-          images
+          imageUrls
         );
+      }
 
       // notify({
       //   type: "newPost",
@@ -136,6 +148,7 @@ export const createMissingReport = async (req: Request, res: Response) => {
       //   sender: userId,
       //   url: `/boards/missings/${missingId}/reports/${post.postId}`
       // });
+      console.log(post)
     });
 
     return res
@@ -263,6 +276,7 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
       userId,
     };
     const { match } = req.body;
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const reportPost = await getPostByPostId(tx, postData);
       const missingPost = await getPostByPostId(tx, {

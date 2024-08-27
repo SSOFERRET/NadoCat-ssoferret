@@ -1,11 +1,13 @@
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useMissings from "../../hooks/useMissings";
 import { useState } from "react";
 import { ILocation } from "../../models/location.model";
 import MissingWriteForm from "../../components/missing/MissingWriteForm";
 import { useAddStreetCatPost } from "../../hooks/useStreetCat";
 import useMissing, { addMissingPost } from "../../hooks/useMissing";
+import MissingReportWriteForm from "../../components/missing/MissingReportWriteForm";
+import { useAddMissingReportPost } from "../../hooks/useMissingReport";
 
 export interface ICatInfo {
   catName: string;
@@ -14,21 +16,22 @@ export interface ICatInfo {
   detail: string;
 }
 
-const MissingPostWrite: React.FC = () => {
-  const { mutate: submitPost } = addMissingPost();
+const MissingReportPostWrite: React.FC = () => {
+  const { mutate: submitPost } = useAddMissingReportPost();
   const navigate = useNavigate();
+  const postId = Number(useParams().id);
 
   const handleFormSubmit = async (formData: FormData) => {
-    await submitPost(formData);
-    navigate("/boards/missings");
+    await submitPost({ formData, postId });
+    navigate(`/boards/missings/${postId}`);
   };
 
   return (
     <>
       <HeaderWithBackButton />
-      <MissingWriteForm onSubmit={handleFormSubmit} />
+      <MissingReportWriteForm onSubmit={handleFormSubmit} />
     </>
   );
 };
 
-export default MissingPostWrite;
+export default MissingReportPostWrite;
