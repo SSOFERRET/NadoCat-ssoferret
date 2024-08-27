@@ -16,7 +16,7 @@ import PostWriteForm from "../../components/communityAndEvent/PostWriteForm";
 
 const CommunityPostWrite = () => {
   const navigate = useNavigate();
-  const { addCommunityPost } = useCommunities();
+  const { addCommunityPost } = useCommunities({ enabled: true });
 
   const addPost = (formData: FormData) => {
     addCommunityPost(formData).then((data) => {

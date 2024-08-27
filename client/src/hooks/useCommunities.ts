@@ -6,7 +6,7 @@ interface IProps {
   enabled: boolean;
 }
 
-const useCommunities = ({ sort, enabled }: IProps) => {
+const useCommunities = ({ sort = "latest", enabled }: IProps) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
