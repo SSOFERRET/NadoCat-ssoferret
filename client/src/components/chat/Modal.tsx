@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import "../../styles/scss/components/chat/Modal.scss";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 interface Props {
   isOpen: boolean;
@@ -9,7 +8,6 @@ interface Props {
   chatId: string|null;
 }
 const Modal: React.FC<Props> = ({isOpen, onClosed, chatId}) => {
-  const navigate = useNavigate();
   if (!isOpen) return null;
 
   const handleLeaveChat = () => {

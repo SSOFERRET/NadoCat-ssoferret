@@ -1,11 +1,9 @@
-// interest.controller.ts
-
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { getLikedPostIds, getInterestPosts } from "../../model/interest.model";
 
 export const getInterests = async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  const userId = req.user?.uuid; //수정된 부분
 
   try {
     if (!userId) {

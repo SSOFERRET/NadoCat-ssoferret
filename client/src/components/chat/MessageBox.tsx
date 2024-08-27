@@ -12,10 +12,10 @@ const MessageBox: React.FC<MessageBoxProps> = ({ message, setMessage, sendMessag
 
   const handleSendMessage = (event: React.FormEvent) => {
     event.preventDefault();
-    const trimmedMessage = message.trim(); // 메시지의 양 끝 공백 제거
+    const trimmedMessage = message.trim();
     if (trimmedMessage) {
-      sendMessage(event); // 공백이 제거된 메시지 전송
-      setMessage(''); // 메시지 박스를 비움
+      sendMessage(event);
+      setMessage(''); 
     }
   };
 

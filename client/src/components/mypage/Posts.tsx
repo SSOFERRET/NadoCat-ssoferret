@@ -5,6 +5,7 @@ import NoLike from "../../assets/img/NoLike.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+
 export interface Post {
   title: string;
   content: string;
@@ -21,12 +22,8 @@ const Posts: React.FC = () => {
 
   const [lists, setLists] = useState<Post[]>([]);
 
-  const uuid = localStorage.getItem("uuid");
-
   useEffect(() => {
-    axios.post(ENDPOINT + "/boards/Interests", {
-      userId: uuid
-    })
+    axios.post(ENDPOINT + "/boards/Interests")
     .then(response => {
       setLists(response.data);
     })
