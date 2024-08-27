@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import InputText from "../../components/user/InputText";
@@ -31,7 +31,7 @@ const Signup = () => {
   //[x]여기에서 폼 데이터 백엔드로 보내는 로직 추가!!
   const handleModalOpen = (data: SignupProps) => {
     signup(data).then(() => {
-      setIsOpenModal(true);//회원가입 끝나면 modal open
+      setIsOpenModal(true); //회원가입 끝나면 modal open
     });
   };
 
@@ -124,10 +124,16 @@ const Signup = () => {
         </form>
       </div>
 
-      <CustomModal isOpen={isOpenModal} onClose={handleModalClose} title="가입이 완료되었습니다." 
-      message={["동네 고양이 정보부터 커뮤니티까지", "로그인 후 다양한 서비스를 이용해보세요!"]}
-      imageUrl={WelcomeCatImage} />
-
+      <CustomModal
+        isOpen={isOpenModal}
+        onClose={handleModalClose}
+        title="가입이 완료되었습니다."
+        message={[
+          "동네 고양이 정보부터 커뮤니티까지",
+          "로그인 후 다양한 서비스를 이용해보세요!",
+        ]}
+        imageUrl={WelcomeCatImage}
+      />
     </div>
   );
 };

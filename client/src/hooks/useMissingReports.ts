@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getMissingPosts, getMissingReportPosts, Sort } from "../api/missing.api";
+import { /*getMissingPosts,*/ getMissingReportPosts/*, Sort*/ } from "../api/missing.api";
 
 const useMissingReports = () => {
   const {

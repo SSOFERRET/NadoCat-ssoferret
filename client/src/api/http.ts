@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { useAuthStore } from "../store/userStore";
+// import { useAuthStore } from "../store/userStore";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const DEFAULT_TIMEOUT = import.meta.env.VITE_DEFAULT_TIMEOUT;
@@ -19,20 +19,20 @@ export const createClient = (config?: AxiosRequestConfig) => {
     //request
     (config) => {
       const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("generalToken="))
-      ?.split("=")[1];
+        .split("; ")
+        .find((row) => row.startsWith("generalToken="))
+        ?.split("=")[1];
 
       // localStorage에서 uuid 가져오기
       const uuid = localStorage.getItem("uuid");
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
 
-    if (uuid){
-      config.headers["X-UUID"] = uuid;
-    }
+      if (uuid) {
+        config.headers["X-UUID"] = uuid;
+      }
 
       console.log("HTTP 요청:", config); // 요청 로그 추가
       return config;
@@ -58,9 +58,9 @@ export const createClient = (config?: AxiosRequestConfig) => {
       if (error.response?.status === 401) {
 
         //[ ]추가된 부분?
-         // JWT 토큰 만료 시 uuid 삭제
-    //   localStorage.removeItem("uuid");
-    //   console.log("401 Unauthorized - 토큰 만료로 인해 UUID 삭제");
+        // JWT 토큰 만료 시 uuid 삭제
+        //   localStorage.removeItem("uuid");
+        //   console.log("401 Unauthorized - 토큰 만료로 인해 UUID 삭제");
 
         console.log("401 Unauthorized - 토큰만료");
 

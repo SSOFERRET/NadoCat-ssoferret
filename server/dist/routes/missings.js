@@ -1,0 +1,28 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const MissingsFavorites_1 = require("../controller/missing/MissingsFavorites");
+const Missings_1 = require("../controller/missing/Missings");
+const MissingReports_1 = require("../controller/missing/MissingReports");
+const multer_1 = __importDefault(require("../multer"));
+const router = express_1.default.Router();
+router.use(express_1.default.json());
+router.get("", Missings_1.getMissings);
+router.get("/:postId", Missings_1.getMissing);
+router.post("", multer_1.default.array("images"), Missings_1.createMissing);
+router.delete("/:postId", Missings_1.deleteMissing);
+router.put("/:postId", Missings_1.updateMissing);
+router.patch("/:postId", Missings_1.updateFoundState);
+router.get("/:missingId/reports/:postId", MissingReports_1.getMissingReport);
+router.post("/:postId/reports", MissingReports_1.createMissingReport);
+router.get("/:missingId/reports", MissingReports_1.getMissingReports);
+router.delete("/:missingId/reports/:postId", MissingReports_1.deleteMissingReportHandler);
+router.put("/:missingId/reports/:postId", MissingReports_1.updateMissingReport);
+router.patch("/:missingId/reports/:postId", MissingReports_1.updateMissingReportCheck);
+router.get("/favorites", MissingsFavorites_1.getMissingFavorites);
+router.post("/favorites", MissingsFavorites_1.postMissingFavorites);
+router.delete("/favorites/:postId", MissingsFavorites_1.deleteMissingFavorites);
+exports.default = router;

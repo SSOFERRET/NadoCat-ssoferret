@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../../styles/scss/pages/user/my.scss";
 import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
@@ -21,7 +21,8 @@ export interface MyProps {
 
 export const My = () => {
 
-  const {  uuid  } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
+  const { uuid } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
+
   const UserUuid = uuid || "";
   // 소영추가코드
 
@@ -32,6 +33,7 @@ export const My = () => {
 
   const [userData, setUserData] = useState<MyProps | null>(null);
   const [isLoading, setIsLoading] = useState(true); //로딩 상태관리
+
 
   const currentUrl = window.location.pathname;
   const currentUuid = currentUrl.split("/").pop(); // URL에서 마지막 부분 추출
@@ -106,8 +108,8 @@ export const My = () => {
 
   //소영 추가 코드
   const handleSendToChat = () => {
-    navigate("/chats/chat", {state: { userData: userData }})
-}
+    navigate("/chats/chat", { state: { userData: userData } });
+  };
 
   return (
    <>

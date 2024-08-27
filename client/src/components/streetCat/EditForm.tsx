@@ -4,29 +4,35 @@ import ImageUploader from "../communityAndEvent/ImageUploader";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Calendar from "./Calendar";
 import LocationForm from "./LocationForm";
-import { IStreetCatEdit } from "../../models/streetCat.model";
+import { IStreetCatDetail, IStreetCatEdit } from "../../models/streetCat.model";
 
 interface IEditFormProps {
   onSubmit: (formData: FormData) => void;
-  initialData: IStreetCatEdit; // 적절한 타입을 설정하세요
+  initialData: IStreetCatEdit | IStreetCatDetail; // 적절한 타입을 설정하세요
 }
 
 const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
   const oldImages = initialData.streetCatImages.map((image) => image.url);
   const [newImages, setNewImages] = useState<(string | File)[]>(oldImages);
   const [name, setName] = useState<string>(initialData.name);
-  const [selectedGender, setSelectedGender] = useState<string>(initialData.gender);
-  const [selectedNeutered, setSelectedNeutered] = useState<string>(initialData.neutered);
+  const [selectedGender, setSelectedGender] = useState<string>(
+    initialData.gender
+  );
+  const [selectedNeutered, setSelectedNeutered] = useState<string>(
+    initialData.neutered
+  );
   const [selectedDate, setSelectedDate] = useState<Date | null>(
     initialData.discoveryDate ? new Date(initialData.discoveryDate) : null
   );
-  const [selectedLocation, setSelectedLocation] = useState<string>(initialData.location.detail);
+  const [selectedLocation, setSelectedLocation] = useState<string>(
+    initialData.location.detail
+  );
   const [coordinates, setCoordinates] = useState<{ lat: string; lng: string }>({
     lat: initialData.location.latitude.toString(),
     lng: initialData.location.longitude.toString(),
   });
   const [description, setDescription] = useState<string>(initialData.content);
-  
+
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -40,8 +46,10 @@ const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}rem`;
     }
   };
-  
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+
+  const handleChange = (
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
 
     if (name === "description") {
@@ -69,10 +77,18 @@ const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
     }
   };
 
-
   useEffect(() => {
     checkFormValidity();
-  }, [name, selectedGender, selectedNeutered, selectedDate, selectedLocation, coordinates, description, newImages]);
+  }, [
+    name,
+    selectedGender,
+    selectedNeutered,
+    selectedDate,
+    selectedLocation,
+    coordinates,
+    description,
+    newImages,
+  ]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -84,8 +100,12 @@ const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
         detail: selectedLocation,
       },
     };
-    const filteredImageIds = initialData.streetCatImages.filter((image) => !newImages.includes(image.url)).map((item) => item.imageId);
-    const filteredImages = newImages.filter((image): image is File => image instanceof File);
+    const filteredImageIds = initialData.streetCatImages
+      .filter((image) => !newImages.includes(image.url))
+      .map((item) => item.imageId);
+    const filteredImages = newImages.filter(
+      (image): image is File => image instanceof File
+    );
 
     console.log("filteredImages", filteredImages);
     filteredImages.forEach((image) => {
@@ -94,7 +114,10 @@ const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
     formData.append("name", name);
     formData.append("gender", selectedGender);
     formData.append("neutered", selectedNeutered);
-    formData.append("discoveryDate", selectedDate ? selectedDate.toISOString() : "");
+    formData.append(
+      "discoveryDate",
+      selectedDate ? selectedDate.toISOString() : ""
+    );
     formData.append("location", JSON.stringify(locationData));
     formData.append("content", description);
     formData.append("deleteImageIds", JSON.stringify(filteredImageIds));
@@ -104,7 +127,10 @@ const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
 
   return (
     <>
-      <ImageUploader newImages={newImages} setNewImageFiles={setNewImageFiles} />
+      <ImageUploader
+        newImages={newImages}
+        setNewImageFiles={setNewImageFiles}
+      />
       <section className="street-cat-write-section">
         <form className="write-form-container" onSubmit={handleSubmit}>
           <div className="write-form name">
@@ -202,13 +228,20 @@ const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
           <div className="write-form discovery">
             <span className="input-title">발견날짜</span>
             <div className="discovery-date">
-              <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+              <Calendar
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+              />
             </div>
           </div>
 
           <div className="write-form location">
             <span className="input-title">발견장소</span>
-            <LocationForm location={selectedLocation} setLocation={setSelectedLocation} setCoordinates={setCoordinates} />
+            <LocationForm
+              location={selectedLocation}
+              setLocation={setSelectedLocation}
+              setCoordinates={setCoordinates}
+            />
           </div>
 
           <div className="write-form description">
@@ -223,7 +256,11 @@ const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
             ></textarea>
           </div>
 
-          <button type="submit" className={`submit-btn ${isFormValid ? "active" : ""}`} disabled={!isFormValid}>
+          <button
+            type="submit"
+            className={`submit-btn ${isFormValid ? "active" : ""}`}
+            disabled={!isFormValid}
+          >
             수정완료
           </button>
         </form>

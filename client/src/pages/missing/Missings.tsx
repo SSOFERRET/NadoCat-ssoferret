@@ -1,8 +1,8 @@
 import NewPostButton from "../../components/common/NewPostButton";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import PostList from "../../components/communityAndEvent/PostList";
-import PostMenu from "../../components/communityAndEvent/PostMenu";
-import { isMissing } from "../../components/missing/missingPost/PostHead";
+// import PostMenu from "../../components/communityAndEvent/PostMenu";
+// import { isMissing } from "../../components/missing/missingPost/PostHead";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import useMissings from "../../hooks/useMissings";
 import "../../styles/scss/pages/missing/missing.scss";

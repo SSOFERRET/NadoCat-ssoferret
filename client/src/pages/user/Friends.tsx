@@ -1,7 +1,6 @@
 import "../../styles/scss/pages/friends/friends.scss";
 import useFriends from "../../hooks/useFriends";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
-import LoadingCat from "../../components/loading/LoadingCat";
 import Spinner from "../../components/loading/Spinner";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import FriendList from "../../components/friend/FriendList";
@@ -30,7 +29,7 @@ const Friends = () => {
   return (
     <section className={`friends-container`}>
       {isLoading ? (
-        <LoadingCat />
+        <Spinner />
       ) : (
         <>
           {data && <FriendList friends={data} />}

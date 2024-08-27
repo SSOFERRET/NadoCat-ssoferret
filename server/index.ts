@@ -16,9 +16,7 @@ import SearchesRouter from "./routes/searches";
 import { handleJoinRoom, handleMessage } from "./controller/chat/Chat";
 import LikesRouter from "./routes/likes";
 import cookieParser from "cookie-parser";
-
-
-const PORT = process.env.PORT || 8080;
+import { FRONTEND_URL, IP, PORT } from "./constants/ip";
 
 //chat 관련
 const app = express();
@@ -26,7 +24,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // 클라이언트 돌아가고 있는 경로
+    origin: FRONTEND_URL,
     methods: ['GET', 'POST'],
     credentials: true,
   }
@@ -61,7 +59,7 @@ app.use("/boards/missings", MissingRouter);
 app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);
 app.use("/notifications", cors({
-  origin: 'http://localhost:5173',
+  origin: FRONTEND_URL,
   methods: ['GET', 'PATCH'],
   allowedHeaders: ["Content-Type"],
 }), NotificationsRouter);
@@ -78,6 +76,6 @@ app.use((error: any, _req: Request, res: Response) => {
   res.sendStatus(500);
 });
 
-server.listen(PORT, () => {
-  console.log(`http://localhost:${PORT}`);
+server.listen(Number(PORT), "0.0.0.0", () => {
+  console.log(`${IP}:${PORT}`);
 });
