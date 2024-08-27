@@ -117,7 +117,7 @@ const HomeMissings = () => {
             <div className="embla__slide__number">
               <div className="home-missing" onClick={() => navigate(`/boards/missings/${item.postId}`)}>
                 <div className="image-container">
-                  {item.images.length < 0 ? (
+                  {item.images.length > 0 ? (
                     <img src={item.images[0].url} alt={item.users.nickname} />
                   ) : (
                     <div className="no-image"></div>
