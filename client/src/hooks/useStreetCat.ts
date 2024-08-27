@@ -16,13 +16,14 @@ interface IStreetCatEdit {
 }
 
 export const useReadStreetCatPost = (postId: number) => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["streetCatDetail", postId],
     queryFn: () => getStreetCatPost({ postId })
   });
 
   return {
-    data
+    data,
+    isLoading
   }
 }
 
