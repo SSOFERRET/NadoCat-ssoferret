@@ -49,12 +49,12 @@ export const useAuthStore = create<StoreState>((set) => ({
 
   storeLogout: async (uuid: string) => {
     try {
-      sessionStorage.removeItem("uuid");
+      sessionStorage.removeItem("uuid"); //동기적 처리
+      await logout(uuid); //비동기적 처리
+      set({ isLoggedIn: false, isAutoLogin: false, authType: null, uuid: "" });
       //서버에 로그아웃 요청
       // await axios.post("/users/logout", { uuid }, { withCredentials: true });
-      await logout(uuid);
 
-      set({ isLoggedIn: false, isAutoLogin: false, authType: null, uuid: "" });
 
       console.log("uuid제거 성공!");
     } catch (error) {
