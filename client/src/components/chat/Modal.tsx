@@ -14,7 +14,12 @@ const Modal: React.FC<Props> = ({ isOpen, onClosed, chatId }) => {
 
   const handleLeaveChat = () => {
     axios
-      .post("http://localhost:8080/chats/delete", { chatId })
+      .post(
+        `${
+          import.meta.env.VITE_ENDPOINT || "http://localhost:8080"
+        }/chats/delete`,
+        { chatId }
+      )
       .then((res) => {
         console.log(res);
         alert("채팅방에서 나갔습니다.");

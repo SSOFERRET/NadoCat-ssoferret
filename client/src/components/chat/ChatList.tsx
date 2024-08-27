@@ -29,7 +29,7 @@ interface IList {
 interface ChatProps {
   lists: IList[];
 }
-// const ENDPOINT = "http://localhost:8080";
+// const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
