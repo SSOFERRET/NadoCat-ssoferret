@@ -31,6 +31,16 @@ const Post = <T extends PostType>({ post }: IProps<T>) => {
   const titleRef = useRef<HTMLSpanElement | null>(null);
   const [isSingleLine, setIsSingleLine] = useState<boolean>(true);
 
+  const getPath = () => {
+    const currentPath = location.pathname;
+
+    if (currentPath === "/") {
+      return isClosed(post) ? "/boards/events" : "/boards/communities";
+    }
+
+    return currentPath;
+  };
+
   useEffect(() => {
     if (titleRef.current) {
       setIsSingleLine(calculateLine(titleRef.current));
@@ -38,7 +48,7 @@ const Post = <T extends PostType>({ post }: IProps<T>) => {
   }, [post.title]);
 
   return (
-    <li className="board-post" onClick={() => navigate(`${location.pathname}/${post.postId}`)}>
+    <li className="board-post" onClick={() => navigate(`${getPath()}/${post.postId}`)}>
       <div className="board-post-info">
         <div className="post-title-container">
           <span className="post-title" ref={titleRef}>
