@@ -1,8 +1,5 @@
-// import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createFavoriteCat, createStreetCatPost, deleteFavoriteCat, deleteStreetCatComment, deleteStreetCatPost, getStreetCatPost, updateStreetCatPost } from "../api/streetCat.api";
-// import { IStreetCatDetail } from "../models/streetCat.model";
-// import { queryClient } from "../api/queryClient";
+import { createFavoriteCat, createStreetCatPost, deleteFavoriteCat, deleteStreetCatComment, deleteStreetCatPost, getStreetCatMap, getStreetCatPost, updateStreetCatPost } from "../api/streetCat.api";
 
 interface IStreetCatDetailParams {
   postId: number;
@@ -106,3 +103,17 @@ export const useDeleteComment = () => {
     },
   });
 };
+
+export const useReadStreetMap = () => {
+  console.log("use - useReadStreetMap()")
+  const {data} = useQuery({
+    queryKey: ["streetCatMap"],
+    queryFn: () => getStreetCatMap()
+  });
+
+  console.log("use", data)
+
+  return {
+    data
+  }
+}

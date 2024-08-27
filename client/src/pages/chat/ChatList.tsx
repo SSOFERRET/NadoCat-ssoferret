@@ -27,9 +27,6 @@ const ENDPOINT = "http://localhost:8080";
 const ChatList = () => {
   const [list, setList] = useState<IList[]>([]);
   
-  // const generalToken = localStorage.getItem("generalToken");
-  // const refreshToken = localStorage.getItem("refreshToken");
-
   useEffect(() => {
     const fetchChatLists = async () => {
       try {

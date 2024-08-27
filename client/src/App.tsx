@@ -45,7 +45,12 @@ const router = createBrowserRouter([
       {
         path: "users",
         children: [
-          { path: "interest", element: <MyPage /> },
+          { path: "interest", element: (
+            <ProtectedPath>
+              <MyPage /> 
+            </ProtectedPath>
+          )
+        },
           {
             path: "user/:uuid",
             element: (
@@ -73,8 +78,16 @@ const router = createBrowserRouter([
       {
         path: "chats",
         children: [
-          { path: "list", element: <ChatList /> },
-          { path: "chat", element: <Chat /> },
+          { path: "list", element: (
+          <ProtectedPath>
+            <ChatList />
+          </ProtectedPath>
+          )},
+          { path: "chat", element: (
+          <ProtectedPath>
+            <Chat />
+          </ProtectedPath>
+          )},
         ],
       },
       {
@@ -87,14 +100,14 @@ const router = createBrowserRouter([
               { path: "", element: <StreetCats /> },
               { path: ":id", element: <StreetCatDetail /> },
               { path: "write", element: (
-              //  <ProtectedPath>
+               <ProtectedPath>
                   <StreetCatWrite />
-              //  </ProtectedPath>
+               </ProtectedPath>
               )},
               { path: "edit/:id", element: (
-              // <ProtectedPath>
+              <ProtectedPath>
                 <StreetCatEdit /> 
-              // </ProtectedPath>
+              </ProtectedPath>
               )},
             ],
           },

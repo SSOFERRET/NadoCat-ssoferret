@@ -4,15 +4,7 @@ import { queryClient } from "../api/queryClient";
 import { ISubmitData } from "../components/missing/MissingEventWriteForm";
 
 const useMissings = (sort?: Sort) => {
-  const {
-    data,
-    isLoading,
-    error,
-    isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["missing", sort],
     queryFn: ({ pageParam = 0 }) => getMissingPosts({ pageParam, sort }),
     initialPageParam: 0,
@@ -48,7 +40,8 @@ const useMissings = (sort?: Sort) => {
     isFetchingNextPage,
     isFetching,
     isEmpty,
-    addMissingPost
+    addMissingPost,
+    missings: posts,
   };
 };
 

@@ -35,6 +35,25 @@ export const followings = async (req: Request, res: Response) => {
   }
 };
 
+export const getFollowing = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
+
+  try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+
+    const userId = Buffer.from(uuid, "hex");
+    const followingId = Buffer.from(req.params.following_id, "hex");
+
+    const friend = await getFriendById(userId, followingId);
+
+    res.status(StatusCodes.CREATED).json(friend);
+  } catch (error) {
+    handleControllerError(error, res);
+  }
+};
+
 export const follow = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
 
@@ -65,7 +84,7 @@ export const follow = async (req: Request, res: Response) => {
 
 export const unfollow = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
-  console.log("following_id", req.params.following_id);
+
   try {
     if (!uuid) {
       throw new Error("User UUID is missing.");
@@ -75,16 +94,16 @@ export const unfollow = async (req: Request, res: Response) => {
     const followingId = Buffer.from(req.params.following_id, "hex");
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const friend = await getFriendById(tx, userId, followingId);
+      const friend = await getFriendById(userId, followingId, tx);
 
       if (!friend) {
-        return res.status(StatusCodes.NOT_FOUND).json({ meesage: "요청한 친구 정보를 찾을 수 없습니다." });
+        throw new Error("요청한 친구 정보를 찾을 수 없습니다.");
       }
 
       await removeFriend(tx, friend.friendId);
     });
 
-    res.status(StatusCodes.OK).json({ message: "친구 삭제가 완료되었습니다." });
+    res.sendStatus(StatusCodes.NO_CONTENT);
   } catch (error) {
     handleControllerError(error, res);
   }

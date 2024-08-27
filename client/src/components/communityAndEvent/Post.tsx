@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
 import "../../styles/scss/components/communityAndEvent/post.scss";
+import { useEffect, useRef, useState } from "react";
+import Tags from "../common/Tags";
 import { ICommunity } from "../../models/community.model";
 import { formatAgo, formatViews } from "../../utils/format/format";
 import { useLocation, useNavigate } from "react-router-dom";
-import Tags from "../common/Tags";
 import { IEvent } from "../../models/event.model";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 // NOTE 타입 이거 맞나..
 type PostType = ICommunity | IEvent;
@@ -12,7 +13,6 @@ interface IProps<T> {
   post: T;
 }
 
-// 이게 맞나...
 const calculateLine = (element: HTMLElement | null) => {
   if (element) {
     const lineHeight = parseInt(window.getComputedStyle(element).lineHeight, 10);
@@ -31,6 +31,29 @@ const Post = <T extends PostType>({ post }: IProps<T>) => {
   const titleRef = useRef<HTMLSpanElement | null>(null);
   const [isSingleLine, setIsSingleLine] = useState<boolean>(true);
 
+  const getPath = () => {
+    const currentPath = location.pathname;
+
+    if (currentPath === "/") {
+      return isClosed(post) ? "/boards/events" : "/boards/communities";
+    }
+
+    return currentPath;
+  };
+
+  const imageRef = useIntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      const target = entry.target;
+      if (target instanceof HTMLImageElement) {
+        const dataSrc = target.dataset.src;
+        if (dataSrc) {
+          target.src = dataSrc;
+          console.log(`Image src updated to: ${target.src}`);
+        }
+      }
+    }
+  });
+
   useEffect(() => {
     if (titleRef.current) {
       setIsSingleLine(calculateLine(titleRef.current));
@@ -38,7 +61,7 @@ const Post = <T extends PostType>({ post }: IProps<T>) => {
   }, [post.title]);
 
   return (
-    <li className="board-post" onClick={() => navigate(`${location.pathname}/${post.postId}`)}>
+    <li className="board-post" onClick={() => navigate(`${getPath()}/${post.postId}`)}>
       <div className="board-post-info">
         <div className="post-title-container">
           <span className="post-title" ref={titleRef}>
@@ -59,7 +82,9 @@ const Post = <T extends PostType>({ post }: IProps<T>) => {
           <Tags tags={post.tags.slice(0, 2)} size="sm" />
         </div>
       </div>
-      <div className="post-image">{post.thumbnail && <img src={post.thumbnail} alt={post.title} />}</div>
+      <div className="post-image">
+        {post.thumbnail && <img ref={imageRef} data-src={post.thumbnail} alt={post.title} />}
+      </div>
     </li>
   );
 };
