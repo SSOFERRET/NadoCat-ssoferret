@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../../client";
 import { IImages, IStreetCatImages, IStreetCatPosts, IStreetCats } from "../../types/streetCat";
-import { createLoction, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, deleteThumbnail, readLocation, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, removeAllComment, removeAllFavoriteCat, updatePost } from "../../model/streetCat.model";
+import { createLoction, createPost, createStreetCatImages, deleteAllStreetCatImages, deleteImages, deletePost, deleteStreetCatImages, deleteThumbnail, readLocation, readPost, readPosts, readPostsWithFavorites, readStreetCatImages, readStreetCatMap, removeAllComment, removeAllFavoriteCat, updatePost } from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
@@ -28,12 +28,13 @@ const categoryId = CATEGORY.STREET_CATS;
 
 // 동네 고양이 도감 목록 조회
 export const getStreetCats = async (req: Request, res: Response) => {
+  console.log("동네 고양이 도감 목록 조회")
   // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
   const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
 
-  console.log("uuidString: ", uuidString);
-  console.log("uuid: ", uuid);
+  // console.log("uuidString: ", uuidString);
+  // console.log("uuid: ", uuid);
 
   const limit = Number(req.query.limit);
   const cursor = Number(req.query.cursor);
@@ -66,6 +67,7 @@ export const getStreetCats = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 상세 조회
 export const getStreetCat = async (req: Request, res: Response) => {
+  console.log("동네 고양이 도감 상세 조회")
   // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
   const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
@@ -99,6 +101,7 @@ export const getStreetCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 생성
 export const createStreetCat = async (req: Request, res: Response) => {
+  console.log("동네 고양이 도감 생성")
   // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
   const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
@@ -161,6 +164,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 수정
 export const updateStreetCat = async (req: Request, res: Response) => {
+  console.log("동네 고양이 도감 수정")
   // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
   const uuid = Buffer.from(uuidString.replace(/-/g, ''), 'hex');
@@ -217,6 +221,7 @@ export const updateStreetCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 삭제
 export const deleteStreetCat = async (req: Request, res: Response) => {
+  console.log("동네 고양이 도감 삭제")
   // TODO: 로그인한 유저와 게시글 작성 유저가 같은지 판별 필요
   // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
@@ -251,3 +256,21 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
+// 동네 고양이 지도
+export const getStreetCatMap = async (req: Request, res: Response) => {
+  console.log("ts - getStreetCatMap()")
+  try {
+    await prisma.$transaction(async () => {
+      const streetCatMap = await readStreetCatMap();
+      console.log("streetCatMap")
+      console.log(streetCatMap)
+
+      res.status(200).json(streetCatMap);
+    })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "동네 고양이 지도 error" });
+  }
+}

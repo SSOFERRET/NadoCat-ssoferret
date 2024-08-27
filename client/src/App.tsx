@@ -70,14 +70,14 @@ const router = createBrowserRouter([
               { path: "", element: <StreetCats /> },
               { path: ":id", element: <StreetCatDetail /> },
               { path: "write", element: (
-              //  <ProtectedPath>
+               <ProtectedPath>
                   <StreetCatWrite />
-              //  </ProtectedPath>
+               </ProtectedPath>
               )},
               { path: "edit/:id", element: (
-              // <ProtectedPath>
+              <ProtectedPath>
                 <StreetCatEdit /> 
-              // </ProtectedPath>
+              </ProtectedPath>
               )},
             ],
           },

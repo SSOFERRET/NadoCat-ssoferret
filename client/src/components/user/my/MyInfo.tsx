@@ -80,14 +80,14 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
           
           
           
-<!--                 <div className="change-profile-btn">
+<div className="change-profile-btn">
             <button onClick={handleOpenProfileChange}>프로필 변경</button>
             {isOpenModal &&  <ProfileChangeModal 
             closeModal={handleCloseProfileChange}
             uploadImage={handleImageUpload} 
             setDefaultImage={handleDefaultImage}
             isShowMenu={isOpenModal}
-            />} -->
+            />}
           
 
         </div>
@@ -107,7 +107,7 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
       </div>
 
 
-<!--       <button
+<button
         className="settings-button" onClick={() => {
           "프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.";
         }}
@@ -115,7 +115,7 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps)
         <AiOutlineSetting />
       </button>
 
-    </div> -->
+    </div>
 
       {/* 이게 props로 필요한 함수를 넘겨주시면 됩니다. PostMenu 컴포넌트 안에 꼭 타입을 옵셔널로 주셔야 합니다. 안그러면 다른 컴포넌트에 영향이 갑니다.*/}
       <PostMenu menuType="user" isShowMenu={isOpenModal} showMenu={handelMenu} />

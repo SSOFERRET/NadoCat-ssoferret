@@ -141,3 +141,8 @@ export const deleteStreetCatComment = async ({postId, commentId}: ICommentDelete
   const response = await httpClient.delete(`/boards/street-cats/${postId}/comments/${commentId}`);
   return response.data;
 }
+
+export const getStreetCatMap = async () => {
+  const response = await httpClient.get(`/boards/street-cats/map`);
+  return response.data;
+}

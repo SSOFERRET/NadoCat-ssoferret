@@ -8,6 +8,7 @@ import {
   createStreetCat,
   updateStreetCat,
   deleteStreetCat,
+  getStreetCatMap,
 } from "../controller/streetCat/StreetCats";
 
 import {
@@ -19,6 +20,7 @@ import {
 import uploadImages from "../multer";
 
 // 동네 고양이 도감
+router.get("/map", getStreetCatMap);
 router.get("/", getStreetCats);
 router.get("/:street_cat_id", getStreetCat);
 router.post("/", uploadImages.array("images"), createStreetCat);

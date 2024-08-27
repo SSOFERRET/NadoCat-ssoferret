@@ -3,8 +3,6 @@ import "../../styles/scss/components/streetCat/streetCatPosts.scss";
 import { useStreetCatPosts } from "../../hooks/useStreetCats";
 import { useIntersectionObserver } from "./IntersectionObserver";
 import FavoriteButton from "../common/FavoriteButton";
-import WriteButton from "../common/WriteButton";
-import NewPostButton from "../common/NewPostButton";
 import PostEmpty from "../communityAndEvent/PostEmpty";
 import LoadingCat from "../loading/LoadingCat";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -40,7 +38,11 @@ const StreetCatPosts: React.FC = () => {
     }
   
     if (isEmpty) {
-      return <PostEmpty />;
+      return (
+      <div className="empty-box">
+        <PostEmpty />
+      </div>
+      );
     }
 
     console.log("1 data ", data);
