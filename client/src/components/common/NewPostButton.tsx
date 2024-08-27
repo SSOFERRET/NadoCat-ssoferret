@@ -12,7 +12,7 @@ const NewPostButton = ({ path, text }: IProps) => {
 
   return (
     <button className="new-post-button" onClick={() => navigate(path)}>
-      <FaPlus />
+      {!text && <FaPlus />}
       {text ?? "글쓰기"}
     </button>
   );

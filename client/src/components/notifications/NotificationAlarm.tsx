@@ -13,7 +13,7 @@ import "./../../styles/scss/components/notification/notificationAlarm.scss";
 
 const NotificationAlarm: React.FC = () => {
   const [alarmExists, setAlarmExists] = useState<boolean>(false);
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8080";
 
   // const { isAllRead, isAllReadLoading } = useNotifications();
 

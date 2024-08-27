@@ -3,13 +3,13 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId, addMissingCat } from "../../model/missing.model";
+import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId, addMissingCat, updateMissingCatByCat, addImageFormats, removeImagesByIds } from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
 import { deleteLocationsByLocationIds, getAndDeleteLocationFormats } from "../../util/locations/deleteLocations";
 import { deleteMissingReport } from "./MissingReports";
-import { getImageById } from "../../model/image.model";
+import { deleteImages, getImageById } from "../../model/image.model";
 import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 import { getMissingFavoriteAdders, getMissingReporters } from "../../model/notification.model";
@@ -19,6 +19,8 @@ import ensureAuthorization from "../../util/auth/auth";
 import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
+import { ILocation } from "../../types/location";
+import { handleControllerError } from "../../util/errors/errors";
 
 
 
@@ -43,7 +45,7 @@ const getOrderBy = (sort: string) => {
 };
 
 export const getMissings = async (req: Request, res: Response) => {
-  const sort = req.query.sort?.toString() ?? "latest";
+  const sort = "latest";
 
   const listData = {
     limit: Number(req.query.limit) || PAGINATION.LIMIT,
@@ -75,6 +77,10 @@ export const getMissing = async (req: Request, res: Response) => {
       }
 
       let post = await getPostByPostId(tx, postData);
+      const imagesFormats = await getImageFormatsByPostId(tx, postData);
+      const images = await Promise.all(
+        imagesFormats?.map(async (format) => await getImageById(tx, format.imageId)) || []
+      );
 
       //NOTE view
       // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
@@ -82,7 +88,7 @@ export const getMissing = async (req: Request, res: Response) => {
 
       return res
         .status(StatusCodes.CREATED)
-        .json(post);
+        .json({ ...post, images });
     });
   } catch (error) {
     console.log(error);
@@ -98,14 +104,19 @@ export const getMissing = async (req: Request, res: Response) => {
 
 
 export const createMissing = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const { missing, location, cat } = req.body;
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const missing = JSON.parse(req.body.missing);
+    const cat = JSON.parse(req.body.cat);
+    const location = JSON.parse(req.body.location);
 
     const newPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const newLocation = await addLocation(tx, location);
+      const newLocation = await addLocation(tx, location as ILocation);
 
-      // const userId = Buffer.from((authorization.uuid as string).split("-").join(""), "hex");
-      const userId = await getUserId();
+      const userId = Buffer.from(uuid, "hex");
 
       const catData = {
         ...cat,
@@ -128,20 +139,18 @@ export const createMissing = async (req: Request, res: Response) => {
         locationId: newLocation.locationId
       });
 
-      // if (req.files) {
-      //   const imageUrls = await uploadImageToS3(req) as string[];
-      //   console.log("결과 출력", imageUrls);
-      //   await addNewImages(tx, {
-      //     userId,
-      //     postId: post.postId,
-      //     categoryId: CATEGORY.MISSINGS,
-      //   }, imageUrls);
-      // }
-      // await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
+      if (req.files) {
+        const imageUrls = await uploadImagesToS3(req) as string[];
+        console.log("결과 출력", imageUrls);
+        await addNewImages(tx, {
+          userId,
+          postId: post.postId,
+          categoryId: CATEGORY.MISSINGS,
+        }, imageUrls);
+      }
+      await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
       return post;
     });
-
-    // if (!postId) throw Error("포스트아이디값 없다")
 
     res
       .status(StatusCodes.CREATED)
@@ -243,55 +252,53 @@ export const getUserId2 = async () => { // 임시
  * [x] 상태 수정
  * [ ] 조회수 업데이트?
  */
-
-export const updateMissing = async (req: Request, res: Response) => { // NOTE Full Update?인지 확인
+export const updateMissing = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const postId = Number(req.params.postId);
-    const userId = await getUserId(); // NOTE
-    const { missing, location, images } = req.body;
-    const postData = {
-      postId,
-      userId,
-      categoryId: CATEGORY.MISSINGS
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
     }
+    const postId = Number(req.params.postId);
+    const userId = Buffer.from(uuid, "hex");
+
+    const missing = JSON.parse(req.body.missing);
+    const cat = JSON.parse(req.body.cat);
+    const location = JSON.parse(req.body.location);
+    const imageIds = JSON.parse(req.body.deleteImageIds);
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const post = await getPostByPostId(tx, postData);
-      if (!post || !missing.catId || !missing.time || !location || !missing.detail)
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값 확인 요망" });
+      const oldPost = await getPostByPostId(tx, { categoryId: CATEGORY.MISSINGS, postId })
+      console.log(oldPost);
+      await updateMissingByPostId(tx, postId, userId, missing);
 
-      const locationId = post.locationId;
-      if (locationId)
-        await updateLocationById(tx, locationId, location);
+      await updateMissingCatByCat(tx, oldPost.missingCats.missingCatId, cat);
 
-      await updateMissingByPostId(tx, postId, userId, missing.catId, missing.detail, new Date(missing.time))
+      await deleteImageFromS3ByImageId(tx, imageIds);
 
-      const imagesToDelete = await getAndDeleteImageFormats(tx, postData);
+      await removeImagesByIds(tx, imageIds);
 
-      if (imagesToDelete)
-        await deleteImagesByImageIds(tx, imagesToDelete);
+      await deleteImages(tx, imageIds);
 
-      if (images) {
-        await addNewImages(tx, {
-          userId,
-          postId,
-          categoryId: CATEGORY.MISSINGS,
-        }, images)
-      };
 
-      await updateOpensearchDocument(CATEGORY.MISSINGS, postId, {
-        content: missing.detail
-      })
-    })
+      if (req.files) {
+        const imageUrls = (await uploadImagesToS3(req)) as any;
+        await addNewImages(
+          tx,
+          {
+            userId,
+            postId,
+            categoryId: CATEGORY.MISSINGS,
+          },
+          imageUrls
+        );
+      }
 
-    return res
-      .status(StatusCodes.OK)
-      .json({ message: "게시글이 수정되었습니다." });
+      await updateOpensearchDocument(CATEGORY.MISSINGS, postId, { missing, cat, location });
+    });
+
+    res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
-    console.log(error);
-
-    if (error instanceof Error)
-      return validateError(res, error);
+    handleControllerError(error, res);
   }
 };
 

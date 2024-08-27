@@ -5,6 +5,7 @@
 import "../../styles/scss/pages/missing/missing.scss";
 // import useMissingReports from "../../hooks/useMissingReports";
 import {
+  IMissing,
   IMissingReport,
   IMissingReportPosts,
 } from "../../models/missing.model";
@@ -14,9 +15,10 @@ import MissingReportPost from "./MissingReportPost";
 
 interface IProps {
   posts: InfiniteData<IMissingReportPosts> | undefined;
+  missing: IMissing;
 }
 
-const MissingReportPostList = ({ posts }: IProps) => {
+const MissingReportPostList = ({ posts, missing }: IProps) => {
   return (
     <ul className="report-list">
       {posts?.pages.map((group: IMissingReportPosts, i: number) => (
@@ -25,6 +27,7 @@ const MissingReportPostList = ({ posts }: IProps) => {
             <MissingReportPost
               key={post.postId}
               post={post as IMissingReport}
+              missing={missing}
             />
           ))}
         </React.Fragment>

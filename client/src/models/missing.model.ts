@@ -30,7 +30,7 @@ export interface IMissing {
   missingCats: {
     missingCatId: number
     name: string;
-    age?: number;
+    birth: string;
     gender?: string;
     detail?: string;
   };

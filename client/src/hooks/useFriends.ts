@@ -18,7 +18,6 @@ const useFriends = () => {
       return undefined;
     },
     initialPageParam: 0,
-    staleTime: 1000 * 60 * 5,
     enabled,
   });
 
