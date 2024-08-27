@@ -23,7 +23,8 @@ const Posts: React.FC = () => {
   const [lists, setLists] = useState<Post[]>([]);
 
   useEffect(() => {
-    axios.post(ENDPOINT + "/boards/Interests")
+    const uuid = localStorage.getItem("uuid")
+    axios.post(ENDPOINT + "/boards/Interests", {uuid})
     .then(response => {
       setLists(response.data);
     })
