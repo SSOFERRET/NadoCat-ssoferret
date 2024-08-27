@@ -71,5 +71,17 @@
     padding: 20rem;
     // background-color: aqua;
     font-size: $size-16;
+
+    .interest-posts{
+      height: 60vh;
+      width: 100%;
+      overflow-y: auto;
+      padding: 1rem;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; // 추가: 콘텐츠가 위쪽으로 붙도록 설정
+      align-items: stretch; // 추가: 내부 아이템들이 너비를 꽉 채우도록 설정
+    }
   }
 }

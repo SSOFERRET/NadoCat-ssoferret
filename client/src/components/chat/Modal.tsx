@@ -8,8 +8,7 @@ interface Props {
   onClosed: () => void;
   chatId: string | null;
 }
-const Modal: React.FC<Props> = ({ isOpen, onClosed, chatId }) => {
-  // const navigate = useNavigate();
+const Modal: React.FC<Props> = ({isOpen, onClosed, chatId}) => {
   if (!isOpen) return null;
 
   const handleLeaveChat = () => {
