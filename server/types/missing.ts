@@ -3,7 +3,7 @@ export interface IMissingCat {
   name: string;
   detail?: string;
   gender?: string;
-  age?: number;
+  birth?: string;
   uuid: Buffer;
 }
 
