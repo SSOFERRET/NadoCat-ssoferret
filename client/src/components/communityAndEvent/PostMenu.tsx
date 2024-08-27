@@ -162,9 +162,10 @@ const PostMenu = ({
     }
 
     try {
-      await storeLogout(uuid);
+      await storeLogout(uuid); //클라이언트 삭제
+      // const response = await logout(userUuid);//서버삭제
       console.log("로그아웃 되었습니다.");
-      console.log("uuid: ", uuid);
+
       navigate("/users/login");
     } catch (error) {
       console.error("로그아웃 중 오류 발생:", error);

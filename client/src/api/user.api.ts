@@ -44,6 +44,16 @@ export const login = async (data: LoginProps) => {
   }
 };
 
+export const logout = async (uuid: string) => {
+  try {
+    const response = await httpClient.post("/users/logout", {uuid}); // uuid를 올바른 JSON 형식으로 전송
+    return response.data;
+  } catch (error) {
+    console.error("login error:", error);
+    throw error;
+  }
+};
+
 //사용자 프로필
 export const userPage = async (userUuid: string) => {
   try {

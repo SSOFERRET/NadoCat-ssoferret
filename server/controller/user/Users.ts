@@ -114,8 +114,6 @@ export const getNewAccessToken = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
     try {
         const { uuid } = req.body;
-        console.log("유저 컨트롤러 로그아웃 uuid: ", uuid);
-
         if(!uuid) {
             return res.status(400).json({ message: "UUID가 없습니다." });
         }
@@ -127,14 +125,13 @@ export const logout = async (req: Request, res: Response) => {
         res.clearCookie("generalToken", { httpOnly: true, secure: true });
         res.clearCookie("refreshToken", { httpOnly: true, secure: true });
         res.clearCookie("uuid", { httpOnly: true, secure: true });
-    
         return res.status(200).json({ message: "로그아웃 성공" });
         
     } catch (error) {
         console.log("로그아웃 에러:", error);
         return res.status(500).json({ message: "로그아웃 중 오류 발생" });
     }
-} 
+};
 
 
 //[ ]카카오
