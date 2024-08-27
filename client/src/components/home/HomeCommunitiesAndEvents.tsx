@@ -2,7 +2,7 @@ import { useState } from "react";
 import HomeCommunity from "./HomeCommunity";
 import HomeEvent from "./HomeEvent";
 import Cat from "../../assets/img/Maskgroup.png";
-import { useIntersectionObserver } from "../streetCat/IntersectionObserver";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 type Menu = {
   id: number;
