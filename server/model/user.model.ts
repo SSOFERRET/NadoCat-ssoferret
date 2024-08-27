@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { indexOpensearchUser } from "../controller/search/Searches";
+import { StatusCodes } from "http-status-codes";
 
 
 const prisma = new PrismaClient();
@@ -84,7 +85,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
 
       if (!selectUser || selectUser.status === "inactive") {
         console.log("사용자를 찾을 수 없습니다.");
-        return null;
+        throw { status: StatusCodes.UNAUTHORIZED, message: "사용자를 찾을 수 없습니다." }; 
       }
 
       const userUuid = selectUser.uuid;
@@ -96,14 +97,14 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
 
       if (!selectUserSecret) {
         console.log("사용자를 찾을 수 없습니다.");
-        return null;
+        throw { status: StatusCodes.UNAUTHORIZED, message: "사용자를 찾을 수 없습니다." }; 
       }
 
       return { selectUser, selectUserSecret };
     });
 
     if (!result) {
-      throw new Error("사용자를 찾을 수 없습니다.");
+      throw { status: StatusCodes.UNAUTHORIZED, message: "사용자를 찾을 수 없습니다." }; 
     }
 
     const { selectUser, selectUserSecret } = result;

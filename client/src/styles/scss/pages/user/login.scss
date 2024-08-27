@@ -44,9 +44,17 @@
     margin-top: 50rem;
     height: auto;
 
+
     .error-message {
       margin-top: 10rem;
       margin-bottom: 10rem;
+      color: red;
+      font-size: $size-11;
+    }
+
+    .login-error-message {
+      margin-top: 10rem;
+      margin-bottom: 20rem;
       color: red;
       font-size: $size-11;
     }
