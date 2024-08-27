@@ -51,24 +51,6 @@ const StreetCatPosts: React.FC = () => {
       </div>
       );
     }
-  });
-
-  const loadMore = () => {
-    if (!hasNextPage) return;
-    fetchNextPage();
-  };
-
-  if (!shouldFetchData) {
-    return null;
-  }
-
-  if (isLoading) {
-    return <LoadingCat />;
-  }
-
-  if (isEmpty) {
-    return <PostEmpty />;
-  }
 
   console.log("1 data ", data);
 
