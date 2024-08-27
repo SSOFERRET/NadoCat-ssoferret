@@ -1,6 +1,8 @@
-import React /*, { useEffect }*/ from "react";
+import React, { useState } from "react";
 import "../../styles/scss/components/streetCat/streetCatsMap.scss";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
+import deleteBtn from "../../assets/img/deleteBtn.png";
+import { useReadStreetMap } from "../../hooks/useStreetCat";
 
 declare global {
   interface Window {
@@ -8,57 +10,193 @@ declare global {
   }
 }
 
-// NOTE 좌표 DB 연결 후 테스트 해야함
-// CHECKLIST
-// [x] 중심 좌표 기준 근처의 location들을 불러와야 함
-const locations = [
-  {
-    title: "삼색이",
-    latlng: { lat: 33.450705, lng: 126.570677 },
-  },
-  {
-    title: "턱시도",
-    latlng: { lat: 33.450936, lng: 126.569477 },
-  },
-  {
-    title: "치즈",
-    latlng: { lat: 33.450879, lng: 126.56994 },
-  },
-  {
-    title: "고등어",
-    latlng: { lat: 33.451393, lng: 126.570738 },
-  },
-];
+interface IStreetCat {
+  discoveryDate: string;
+  name: string;
+  postId: number;
+  streetCatImages: { imageId: number; images: string }[];
+}
 
-// 경복궁
-const lat = 37.5759;
-const lng = 126.9768;
+interface ILocationData {
+  locationId: number;
+  latitude: number;
+  longitude: number;
+  detail: string;
+  streetCats: IStreetCat[];
+}
+
+interface IStreetCatModalProps {
+  onClose: () => void;
+  postId: number;
+  name: string;
+  discoveryDate: string;
+  url: string;
+}
+
+const StreetCatModal: React.FC<IStreetCatModalProps> = ({ onClose, postId, name, discoveryDate, url }) => (
+  <div className="street-cat-modal">
+    <a href={`/boards/street-cats/${postId}`}>
+      <div className="modal-box">
+        <button className="close-btn" onClick={onClose}>
+          <img src={deleteBtn} alt="close-btn" />
+        </button>
+        <div className="cat-thumbnail">
+          <img src={url} alt="cat-thumbnail" />
+        </div>
+        <div className="cat-info">
+          <span className="name">{name}</span>
+          <span className="discovery-date">{new Date(discoveryDate).toLocaleDateString()}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+);
+
+const CustomOverlayStyle = () => (
+  <style>{`
+    .street-cat-modal {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      width: 144rem;
+      height: 120rem;
+      background-color: #fff;
+      border-radius: 5rem;
+      position: absolute;
+      bottom: 10rem;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      box-shadow: 0 5px 10px -7px rgb(87, 87, 87);
+    }
+
+    a {
+      text-decoration: unset;
+    }
+
+    .modal-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%
+      position: relative;
+    }
+
+    .close-btn {
+      width: 30rem;
+      height: 30rem;
+      position: absolute;
+      right: -14px;
+      top: -12rem;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+
+      img {
+        width: 30rem;
+        height: 30rem;
+      }
+    }
+
+    .cat-thumbnail {
+      width: 50rem;
+      height: 50rem;
+      background-color: #F2B705;
+      border-radius: 50%;
+      margin-top: 15rem;
+
+      img {
+        width: 50rem;
+        height: 50rem;
+        border-radius: 50%;
+      }
+    }
+
+    .cat-info {
+      font-size: 14rem;
+      text-align: center;
+      margin-top: 8rem;
+
+      span {
+        display: block;
+      }
+        
+      .name {
+        font-family: "bold";
+        font-size: 14rem;
+        color: #191919;
+      }
+
+      .discovery-date {
+        font-family: "medium";
+        font-size: 12rem;
+        margin-top: 3rem;
+        color: #B8BCBF;
+      }
+    }
+  `}</style>
+);
 
 const StreetCatsMap: React.FC = () => {
+  const { data: locations } = useReadStreetMap(); // 데이터 가져오기
+  const [selectedCat, setSelectedCat] = useState<IStreetCat | null>(null);
+
+  const handleMarkerClick = (streetCat: IStreetCat) => {
+    setSelectedCat(streetCat);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedCat(null);
+  };
+
   return (
-    <Map
-      id="map"
-      center={{
-        lat: lat,
-        lng: lng,
-      }}
-      level={3} // 지도의 확대 레벨
-    >
-      {locations.map((location /*, index*/) => (
-        <MapMarker
-          key={`${location.title}-${location.latlng}`}
-          position={location.latlng} // 마커를 표시할 위치
-          image={{
-            src: "https://lh3.google.com/u/0/d/1oxnGR7Fqzu6EgddS18uKrpK62jqTUGHe=w1062-h918-iv2",
-            size: {
-              width: 30,
-              height: 30,
-            },
-          }}
-          title={location.title}
+    <>
+      <CustomOverlayStyle />
+      <Map
+        id="map"
+        center={{
+          lat: 37.488323517993,
+          lng: 127.01231116925,
+        }}
+        style={{
+          width: "100%",
+        }}
+        level={3}
+      >
+        {locations && locations.map((location: ILocationData) => (
+          location.streetCats.map((cat: IStreetCat) => (
+            <MapMarker
+              key={location.locationId}
+              position={{ lat: location.latitude, lng: location.longitude }}
+              onClick={() => handleMarkerClick(cat)}
+              image={{
+                src: "https://nadocat.s3.ap-northeast-2.amazonaws.com/static/HiLocationMarker.png",
+                size: {
+                  width: 42,
+                  height: 42,
+                },
+                options: {
+                  offset: {
+                    x: 27,
+                    y: 69,
+                  },
+                },
+              }}
+            />
+          ))
+        ))}
+      </Map>
+
+      {selectedCat && (
+        <StreetCatModal
+          postId={selectedCat.postId}
+          onClose={handleCloseModal}
+          name={selectedCat.name}
+          discoveryDate={selectedCat.discoveryDate}
+          url={selectedCat.streetCatImages[0]?.images}
         />
-      ))}
-    </Map>
+      )}
+    </>
   );
 };
 
