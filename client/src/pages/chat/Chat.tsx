@@ -8,7 +8,7 @@ import Messages, { MessageData } from "../../components/chat/Messages";
 import axios from "axios";
 import { Buffer } from "buffer";
 
-const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 let socket: Socket;
 
 const Chat = () => {

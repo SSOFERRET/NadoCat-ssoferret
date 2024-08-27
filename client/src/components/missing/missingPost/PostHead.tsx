@@ -1,10 +1,11 @@
 // import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 import {
   IMenuList,
   IMissing,
   IMissingReport,
 } from "../../../models/missing.model";
-import { formatDate } from "../../../utils/format/format";
+import { formatAgo, formatDate } from "../../../utils/format/format";
 import Avatar from "../../common/Avatar";
 import "./../../../styles/scss/components/missing/postHead.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -30,6 +31,17 @@ const PostHead = ({
   // const navigate = useNavigate();
   // const navigateToUser = () =>
   //   navigateUser ? navigate(`/users/${1234}/profile`) : null; // 내비게이트값 변경 (-)
+  const formatDateOrAgo = (date: string) => {
+    const now = dayjs();
+    const targetDate = dayjs(date);
+    const differenceInDays = now.diff(targetDate, "day");
+
+    if (differenceInDays < 7) {
+      return formatAgo(date);
+    } else {
+      return formatDate(date);
+    }
+  };
 
   const navigateToUser = () => console.log("내비게이트");
 
@@ -51,7 +63,7 @@ const PostHead = ({
           {!isMissing(data) && <p>{data.users.nickname} 님의 제보</p>}
         </div>
         <div className="created-at">
-          <p>{formatDate(data.createdAt)}</p>
+          <p>{formatDateOrAgo(data.createdAt)}</p>
           {data.createdAt === data.updatedAt ? null : <p>(수정됨)</p>}
         </div>
       </div>

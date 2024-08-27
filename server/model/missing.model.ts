@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { IMissingCat, IMissingCreate, IMissingReport } from "../types/missing";
+import { IMissingCat, IMissingCreate, IMissingGet, IMissingReport } from "../types/missing";
 import { IImageBridge } from "../types/image";
 import { TCategoryId } from "../types/category";
 import { IListData, IPostData } from "../types/post";
@@ -88,9 +88,11 @@ export const addMissingCat = async (
   tx: Prisma.TransactionClient,
   cat: IMissingCat
 ) => {
-  console.log("고양이 정보:", cat);
   return await tx.missingCats.create({
-    data: cat,
+    data: {
+      ...cat,
+      birth: new Date(cat.birth as string)
+    },
   })
 }
 
@@ -123,7 +125,7 @@ const getMissingsList = async (
       cursor: cursor ? { postId: cursor } : undefined,
       orderBy: [
         {
-          [orderBy.sortBy]: orderBy.sortOrder,
+          createdAt: "desc",
         },
         {
           postId: "desc",
@@ -264,6 +266,16 @@ export const deleteImageFormats = async (
   }
 };
 
+export const removeImagesByIds = async (tx: Prisma.TransactionClient, imageIds: number[]) => {
+  return await tx.missingImages.deleteMany({
+    where: {
+      imageId: {
+        in: imageIds,
+      },
+    },
+  });
+};
+
 export const deleteLocationFormats = async (
   tx: Prisma.TransactionClient,
   postData: IPostData
@@ -388,9 +400,10 @@ export const updateMissingByPostId = async (
   tx: Prisma.TransactionClient,
   postId: number,
   uuid: Buffer,
-  catId: number,
-  detail: string,
-  time: Date
+  missing: {
+    time: string,
+    detail: string
+  }
 ) => {
   return await tx.missings.update({
     where: {
@@ -398,9 +411,29 @@ export const updateMissingByPostId = async (
       uuid,
     },
     data: {
-      catId,
-      time,
-      detail,
+      time: new Date(missing.time),
+      detail: missing.detail
+    },
+  });
+};
+
+export const updateMissingCatByCat = async (
+  tx: Prisma.TransactionClient,
+  catId: number,
+  cat: {
+    name: string,
+    birth: string,
+    detail: string,
+    gender: string
+  }
+) => {
+  return await tx.missingCats.update({
+    where: {
+      missingCatId: catId
+    },
+    data: {
+      ...cat,
+      birth: new Date(cat.birth as string)
     },
   });
 };
@@ -445,9 +478,10 @@ export const updateMissingReportCheckByPostId = async (
   postData: IPostData,
   match: string
 ) => {
+  console.log(match)
   return await tx.missingReports.update({
     where: {
-      uuid: postData.userId,
+      // uuid: postData.userId,
       postId: postData.postId,
     },
     data: {
@@ -455,21 +489,6 @@ export const updateMissingReportCheckByPostId = async (
     },
   });
 };
-
-export const createMissingCat = async (
-  tx: Prisma.TransactionClient,
-  data: {
-    name: string,
-    age?: number,
-    gender?: string,
-    uuid: Buffer,
-    detail?: string
-  }
-) => {
-  await tx.missingCats.create({
-    data
-  });
-}
 
 export const deleteMissingCat = async (
   tx: Prisma.TransactionClient,

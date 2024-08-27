@@ -34,6 +34,9 @@ import SettingAuthPassword from "./components/user/my/SettingAuthPassword";
 import SettingDetail from "./components/user/my/SettingDetail";
 import SettingNickname from "./components/user/my/SettingNickname";
 import SettingPassword from "./components/user/my/SettingPassword";
+import MissingPostEdit from "./pages/missing/MissingPostEdit";
+import MissingReportPostWrite from "./pages/missing/MissingReportPostWrite";
+import MissingReportPostEdit from "./pages/missing/MissingReportPostEdit";
 
 const router = createBrowserRouter([
   {
@@ -56,7 +59,8 @@ const router = createBrowserRouter([
           },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
-          { path: "my", 
+          {
+            path: "my",
             element: (
               <ProtectedPath>
                 <My />
@@ -65,7 +69,10 @@ const router = createBrowserRouter([
           },
           { path: "my/setting", element: <Setting /> },
           { path: "my/setting/nickname", element: <SettingNickname /> },
-          { path: "my/setting/auth-password", element: <SettingAuthPassword /> },
+          {
+            path: "my/setting/auth-password",
+            element: <SettingAuthPassword />,
+          },
           { path: "my/setting/password", element: <SettingPassword /> },
           { path: "my/setting/detail", element: <SettingDetail /> },
         ],
@@ -86,16 +93,22 @@ const router = createBrowserRouter([
             children: [
               { path: "", element: <StreetCats /> },
               { path: ":id", element: <StreetCatDetail /> },
-              { path: "write", element: (
-              //  <ProtectedPath>
+              {
+                path: "write",
+                element: (
+                  //  <ProtectedPath>
                   <StreetCatWrite />
-              //  </ProtectedPath>
-              )},
-              { path: "edit/:id", element: (
-              // <ProtectedPath>
-                <StreetCatEdit /> 
-              // </ProtectedPath>
-              )},
+                  //  </ProtectedPath>
+                ),
+              },
+              {
+                path: "edit/:id",
+                element: (
+                  // <ProtectedPath>
+                  <StreetCatEdit />
+                  // </ProtectedPath>
+                ),
+              },
             ],
           },
           {
@@ -150,6 +163,12 @@ const router = createBrowserRouter([
               { path: "", element: <Missings /> },
               { path: ":id", element: <MissingDetail /> },
               { path: "write", element: <MissingPostWrite /> },
+              { path: "edit/:id", element: <MissingPostEdit /> },
+              { path: ":id/report/write", element: <MissingReportPostWrite /> },
+              {
+                path: ":id/report/:reportId/edit",
+                element: <MissingReportPostEdit />,
+              },
             ],
           },
         ],

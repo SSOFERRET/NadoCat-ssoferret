@@ -15,7 +15,7 @@ export interface Post {
   img?: string;
 }
 
-const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 const MyPage: React.FC = () => {
   const [lists, setLists] = useState<Post[]>([]);
 

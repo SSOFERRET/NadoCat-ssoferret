@@ -45,7 +45,6 @@ const PostMenu = ({
   sort,
   uploadImage,
   setDefaultImage,
-
 }: IProps) => {
   const navigate = useNavigate();
   const { selectedCommentId: commentId, clearSelectedCommentId } =
@@ -118,9 +117,15 @@ const PostMenu = ({
     showMenu();
   };
 
+  const handleAddMissingReport = () => {
+    if (!boardType) return;
+
+    navigate(`${getPostPath(boardType)}/${postId}/report/write`);
+    showMenu();
+  };
 
   const isPostSortMenu = menuType === "sort" && sortMenu && sort;
-        
+
   const handleUploadClick = () => {
     if (uploadImage) {
       const fileInput = document.createElement("input");
@@ -149,7 +154,6 @@ const PostMenu = ({
     navigate("/users/my/setting");
   };
 
-
   return (
     <div
       className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
@@ -167,6 +171,11 @@ const PostMenu = ({
       >
         {menuType === "post" && (
           <>
+            {boardType === "missing" && (
+              <li onClick={handleAddMissingReport}>
+                <span>제보글 작성하기</span>
+              </li>
+            )}
             <li onClick={handleUpdatePost}>
               <span>게시글 수정</span>
             </li>

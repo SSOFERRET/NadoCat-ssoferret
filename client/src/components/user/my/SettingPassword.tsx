@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { /*React,*/ useEffect } from "react";
 import HeaderWithBackButton from "../../../components/common/HeaderWithBackButton";
 import { useNavigate } from "react-router-dom";
 import InputText from "../InputText";
@@ -49,24 +49,23 @@ const SettingPassword = () => {
           {errors.password && (
             <p className="error-message">{errors.password.message}</p>
           )}
-           <p>비밀번호 확인</p>
-             <InputText
-              type="password"
-              placeholder="비밀번호를 한번 더 입력해주세요."
-              className="input-field"
-              {...register("confirmPassword", {
-                required: "비밀번호를 한번 더 입력해주세요.",
-                validate: (value) => {
-                  return (
-                    value === watch("password") ||
-                    "비밀번호가 일치하지 않습니다."
-                  );
-                },
-              })}
-            />
-                {errors.confirmPassword && (
-              <p className="error-message">{errors.confirmPassword.message}</p>
-            )}
+          <p>비밀번호 확인</p>
+          <InputText
+            type="password"
+            placeholder="비밀번호를 한번 더 입력해주세요."
+            className="input-field"
+            {...register("confirmPassword", {
+              required: "비밀번호를 한번 더 입력해주세요.",
+              validate: (value) => {
+                return (
+                  value === watch("password") || "비밀번호가 일치하지 않습니다."
+                );
+              },
+            })}
+          />
+          {errors.confirmPassword && (
+            <p className="error-message">{errors.confirmPassword.message}</p>
+          )}
         </fieldset>
         <button type="submit" className="complete-btn">
           완료

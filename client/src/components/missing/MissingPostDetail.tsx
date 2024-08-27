@@ -17,9 +17,8 @@ interface IProps {
 const MissingPostDetail = ({ post, showMenu }: IProps) => {
   return (
     <section className="missing-detail-box">
-      {/* <PostAbstract post={post} navigateUser={true} showMenu={showMenu} /> */}
       <PostHead data={post} navigateUser={true} showMenu={showMenu} />
-      <ImageCarousel images={[]} />
+      <ImageCarousel images={post.images} />
       <PostSummary data={post} />
       <MapBox locations={post.locations} />
       <PostExplanation detail={post.detail} />
