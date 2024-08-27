@@ -15,6 +15,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
     ...config,
   });
 
+  //[ ]수정2
   axiosInstance.interceptors.request.use(
     //request
     (config) => {
@@ -23,8 +24,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
         .find((row) => row.startsWith("generalToken="))
         ?.split("=")[1];
 
-      // localStorage에서 uuid 가져오기
-      const uuid = localStorage.getItem("uuid");
+      const uuid = sessionStorage.getItem("uuid");
 
       if (token) {
         config.headers["Authorization"] = `Bearer ${token}`;
@@ -34,7 +34,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
         config.headers["X-UUID"] = uuid;
       }
 
-      console.log("HTTP 요청:", config); // 요청 로그 추가
+      console.log("HTTP 요청:", config); 
       return config;
     },
 

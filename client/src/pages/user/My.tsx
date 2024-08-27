@@ -4,11 +4,10 @@ import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
 import { myPage, userPage } from "../../api/user.api";
 import { useParams } from "react-router-dom";
-import Logout from "../../components/user/my/Logout";
-import { useAuthStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
 import { getUuid, useAuthStore } from "../../store/userStore";
 import LoadingCat from "../../components/loading/LoadingCat";
+
 
 export interface MyProps {
   nickname: string;
