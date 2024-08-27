@@ -43,8 +43,10 @@ export const getFriends = async (userId: Buffer, limit: number, cursor: number |
   });
 };
 
-export const getFriendById = async (tx: Prisma.TransactionClient, userId: Buffer, followingId: Buffer) => {
-  return await tx.friends.findFirst({
+export const getFriendById = async (userId: Buffer, followingId: Buffer, tx?: Prisma.TransactionClient) => {
+  const client = tx ?? prisma;
+
+  return await client.friends.findFirst({
     where: {
       uuid: userId,
       followingId: followingId,

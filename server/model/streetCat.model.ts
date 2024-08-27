@@ -3,7 +3,6 @@ import prisma from "../client"
 import { IImages, ILocation, IStreetCatImages, IStreetCatPost, IStreetCats } from "../types/streetCat"
 
 // NOTE: 함수명 통일성 필요 (ex. delete | remove 중에 통일)
-
 export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cursor?: number) => {
   const streetCatPosts = await prisma.streetCats.findMany({
     take: limit,
@@ -295,14 +294,6 @@ export const deleteImages = async (
   });
 };
 
-// export const getNickname = async (tx: Prisma.TransactionClient, uuid: Buffer) => {
-//   return await prisma.users.findUnique({
-//     where: {
-//       uuid
-//     }
-//   })
-// }
-
 export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number, postIds?: number[]) => {
   const favoriteCatPosts = await prisma.streetCats.findMany({
     take: limit,
@@ -488,6 +479,48 @@ export const removeAllComment = async (streetCatId: number) => {
   })
 }
 
-// export const readUserLocation = async (uuid: Buffer) => {
-//   return await prisma.locations.findMany
-// }
+export const readStreetCatMap = async () => {
+  try {
+    const locations = await prisma.locations.findMany({
+      select: {
+        locationId: true,
+        latitude: true,
+        longitude: true,
+        detail: true,
+        streetCats: {
+          select: {
+            postId: true,
+            name: true,
+            discoveryDate: true,
+            streetCatImages: {
+              select: {
+                imageId: true,
+                images: {
+                  select: {
+                    url: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const streetCatMap = locations.map(location => ({
+      ...location,
+      streetCats: location.streetCats.map(cat => ({
+        ...cat,
+        streetCatImages: cat.streetCatImages.map(catImage => ({
+          ...catImage,
+          images: catImage.images.url || null,
+        })),
+      })),
+    }));
+
+    return streetCatMap;
+  } catch (error) {
+    console.error("Error in readStreetCatMap:", error);
+    throw new Error("Failed to fetch street cat map");
+  }
+};

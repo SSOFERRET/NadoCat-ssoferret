@@ -17,7 +17,10 @@ const Event = () => {
   const foundSortType = sortMenu.find((item) => item.sortType === sortType);
   const [sort, setSort] = useState<SortMenu>(foundSortType || sortMenu[0]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useEvents(sort.sortType);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useEvents({
+    sort: sort.sortType,
+    enabled: true,
+  });
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {

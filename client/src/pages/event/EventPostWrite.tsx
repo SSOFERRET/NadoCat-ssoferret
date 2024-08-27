@@ -6,7 +6,7 @@ import PostWriteForm from "../../components/communityAndEvent/PostWriteForm";
 
 const EventPostWrite = () => {
   const navigate = useNavigate();
-  const { addEventPost } = useEvents();
+  const { addEventPost } = useEvents({ enabled: true });
 
   const addPost = (formData: FormData) => {
     addEventPost(formData).then((data) => {

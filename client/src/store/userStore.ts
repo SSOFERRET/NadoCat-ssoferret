@@ -1,5 +1,5 @@
-import axios from "axios";
 import { create } from "zustand";
+import { logout } from "../api/user.api";
 
 interface StoreState {
   isLoggedIn: boolean;
@@ -11,14 +11,16 @@ interface StoreState {
   storeLogout: (uuid: string) => void;
 }
 
-//uuid
+//[ ]세션 수정1
 export const getUuid = () => {
-  const uuid = localStorage.getItem("uuid");
+  const uuid = sessionStorage.getItem("uuid");
+  // const uuid = localStorage.getItem("uuid");
   return uuid;
 }
 
 export const setUuid = (uuid: string) => {
-  localStorage.setItem("uuid", uuid);
+  sessionStorage.setItem("uuid", uuid);
+  // localStorage.setItem("uuid", uuid);
 }
 
 
@@ -36,30 +38,28 @@ export const useAuthStore = create<StoreState>((set) => ({
      // 자동로그인 상태 저장
      if (isAutoLogin) {
         isAutoLogin= true;
-        localStorage.setItem("isAutoLogin", "true");
+        sessionStorage.setItem("isAutoLogin", "true");
       } else {
-        localStorage.removeItem("isAutoLogin");
+        sessionStorage.removeItem("isAutoLogin");
       }
   },
-
   storeAuthType: (authType: string) => {
     set({ authType });
   },
 
   storeLogout: async (uuid: string) => {
     try {
-      // const uuid = getUuid(); // localStorage에서 uuid 가져오기
-      await axios.post("/users/logout", { uuid }, { withCredentials: true });
+      sessionStorage.removeItem("uuid"); //동기적 처리
+      await logout(uuid); //비동기적 처리
       set({ isLoggedIn: false, isAutoLogin: false, authType: null, uuid: "" });
-      console.log("uuid:", uuid);
-      localStorage.removeItem("uuid");
-      localStorage.removeItem("isAutoLogin");
-      // window.location.href = "/users/login";
+      //서버에 로그아웃 요청
+      // await axios.post("/users/logout", { uuid }, { withCredentials: true });
+
+
+      console.log("uuid제거 성공!");
     } catch (error) {
-      console.error("로그아웃 중 오류 발생:", error);
+      console.error("uuid제거 중 오류 발생:", error);
     }
   },
-
-
 
 }));

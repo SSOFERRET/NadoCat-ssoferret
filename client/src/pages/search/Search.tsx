@@ -12,9 +12,7 @@ import {
 } from "../../utils/localStorage/localStorage";
 import RecentKeywords from "./RecentKeywords";
 import { IoMdCloseCircle } from "react-icons/io";
-import useSearch, {
-  /*ISearch,*/ ISearchInfo /*TIndex*/,
-} from "../../hooks/useSearch";
+import useSearch, { /*ISearch,*/ ISearchInfo /*TIndex*/ } from "../../hooks/useSearch";
 import { ICommunity } from "../../models/community.model";
 import { IEvent } from "../../models/event.model";
 import MissingPost from "../../components/missing/MissingPost";
@@ -52,8 +50,7 @@ const categoryNames = {
 const Search = () => {
   const keywords = getLocalStorage();
   const [keyword, setKeyword] = useState(""); // 검색어
-  const [recentKeywords, setRecentKeywords] =
-    useState<SearchKeyword[]>(keywords); // 최근 검색 키워드 들어갈 자리
+  const [recentKeywords, setRecentKeywords] = useState<SearchKeyword[]>(keywords); // 최근 검색 키워드 들어갈 자리
   const [selected, setSelected] = useState(0);
   const [enteredKeyword, setEnteredKeyword] = useState("");
   const [isRecentKeywords, setIsRecentKeywords] = useState(true); // 최근 검색어 보여줄지 결정하는 요소
@@ -79,12 +76,15 @@ const Search = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const foundKeyword = recentKeywords.find((item) => keyword === item.keyword);
+
     if (keyword.trim() === "") {
       return;
     }
 
     setIsRecentKeywords(false);
-    setRecentKeywords([...recentKeywords, { id: Date.now(), keyword }]);
+
+    !foundKeyword && setRecentKeywords([...recentKeywords, { id: Date.now(), keyword }]);
 
     setEnteredKeyword(keyword);
   };
@@ -97,15 +97,18 @@ const Search = () => {
   };
 
   const getTotalCount = () => {
-    return data?.reduce(
-      (acc: number, current: ISearchInfo) => acc + current.totalcount.value,
-      0
-    );
+    return data?.reduce((acc: number, current: ISearchInfo) => acc + current.totalcount.value, 0);
   };
 
   const deleteAllRecentKeyword = () => {
     deleteAllLocalStorage();
     setRecentKeywords([]);
+  };
+
+  const selectKeyword = (selectedKeyword: string) => {
+    console.log(selectedKeyword);
+    setKeyword("");
+    setKeyword(selectedKeyword);
   };
 
   useEffect(() => {
@@ -149,6 +152,7 @@ const Search = () => {
           recentKeywords={recentKeywords}
           deleteAll={deleteAllRecentKeyword}
           deleteRecentKeyword={deleteRecentKeyword}
+          selectKeyword={selectKeyword}
         />
       )}
 
@@ -169,31 +173,23 @@ const Search = () => {
           </ul>
 
           <div className="search-result-list">
-            <span className="search-result-count">
-              총 검색 결과 수 - {getTotalCount()} 건
-            </span>
+            <span className="search-result-count">총 검색 결과 수 - {getTotalCount()} 건</span>
             <ul className="total-results">
               {data.map((category) => (
                 <li key={category.category} className="category-container">
                   <span className="search-result-count">
-                    {`${
-                      categoryNames[
-                        category.category as keyof typeof categoryNames
-                      ]
-                    } ${category.totalcount.value} 건`}
+                    {`${categoryNames[category.category as keyof typeof categoryNames]} ${
+                      category.totalcount.value
+                    } 건`}
                   </span>
                   <div className="results-container">
                     {category.search.map((result) => (
                       <div key={result._source.postId} className="result">
-                        {(category.category === "communities" ||
-                          category.category === "events") && (
+                        {(category.category === "communities" || category.category === "events") && (
                           <Post post={result._source as ICommunity | IEvent} />
                         )}
                         {category.category === "missings" && (
-                          <MissingPost
-                            key={result._source.postId}
-                            post={result._source as IMissing}
-                          />
+                          <MissingPost key={result._source.postId} post={result._source as IMissing} />
                         )}
                       </div>
                     ))}
@@ -205,11 +201,7 @@ const Search = () => {
         </section>
       ) : (
         <section className="search-no-results">
-          <img
-            className="unfindable-cat"
-            src={UnfindableCat}
-            alt="UnfindableCat"
-          />
+          <img className="unfindable-cat" src={UnfindableCat} alt="UnfindableCat" />
           <span>검색 결과가 없습니다.</span>
         </section>
       )}
