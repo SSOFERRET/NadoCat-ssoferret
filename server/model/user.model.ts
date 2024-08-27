@@ -124,7 +124,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
     });
 
     let refreshToken: string | null = null;
-    if (autoLogin) {
+    if (autoLogin === true) {
       refreshToken = jwt.sign(
         {
           uuid: userUuidString,
@@ -147,7 +147,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
 };
 
 
-//[x] 자동로그인(리프레시 토큰)
+//[x] 자동로그인(리프레시 토큰 발급)
 export const saveRefreshToken = async (uuid: string, refreshToken: string) => {
   try {
     const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
@@ -220,7 +220,7 @@ export const refreshAccessToken = async(refreshToken: string) => {
     }
 }
 
-//[ ] 로그아웃
+//[x] 로그아웃
  export const logoutUser = async (uuid: string) => {
     try {
         const uuidBuffer = Buffer.from(uuid, "hex");

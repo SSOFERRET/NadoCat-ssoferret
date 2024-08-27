@@ -32,15 +32,15 @@ const ChatList = () => {
       try {
         const response = await axios.get(ENDPOINT + '/chats/chatlist', {
           headers: {
-            "x-user-uuid": localStorage.getItem("uuid")
+            "x-user-uuid": sessionStorage.getItem("uuid")
           },
         });
         const chatLists = response.data;
 
         const updatedLists = await Promise.all(
           chatLists.map(async (list: IList) => {
-            console.log("otherUuid :", Buffer.from(list.otherUuid.data).toString("hex"), localStorage.getItem("uuid"));
-            const otherUuid = (Buffer.from(list.otherUuid.data).toString("hex") === localStorage.getItem("uuid") ?
+            console.log("otherUuid :", Buffer.from(list.otherUuid.data).toString("hex"), sessionStorage.getItem("uuid"));
+            const otherUuid = (Buffer.from(list.otherUuid.data).toString("hex") === sessionStorage.getItem("uuid") ?
               list.uuid.data : list.otherUuid.data);
             const userResponse = await axios.post(`${ENDPOINT}/chats`, {
               uuid: otherUuid,
