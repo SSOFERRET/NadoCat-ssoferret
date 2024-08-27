@@ -4,7 +4,7 @@ import { getLikedPostIds, getInterestPosts } from "../../model/interest.model";
 
 export const getInterests = async (req: Request, res: Response) => {
   const userId = req.user?.uuid; //수정된 부분
-
+  console.log("백엔드 userId: ", userId)
   try {
     if (!userId) {
       return res
