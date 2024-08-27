@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createMissingPost, deleteMissingPost, getMissingDetail, IMissingDetailParam, updateMissingPost } from "../api/missing.api";
-import { ISubmitData } from "../pages/missing/MissingPostWrite";
 
 
 const useMissing = (postId: number) => {

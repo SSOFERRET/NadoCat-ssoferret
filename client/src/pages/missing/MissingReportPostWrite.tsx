@@ -1,11 +1,5 @@
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 import { useNavigate, useParams } from "react-router-dom";
-import useMissings from "../../hooks/useMissings";
-import { useState } from "react";
-import { ILocation } from "../../models/location.model";
-import MissingWriteForm from "../../components/missing/MissingWriteForm";
-import { useAddStreetCatPost } from "../../hooks/useStreetCat";
-import useMissing, { addMissingPost } from "../../hooks/useMissing";
 import MissingReportWriteForm from "../../components/missing/MissingReportWriteForm";
 import { useAddMissingReportPost } from "../../hooks/useMissingReport";
 

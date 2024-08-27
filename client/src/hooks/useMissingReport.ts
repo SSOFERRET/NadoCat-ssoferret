@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createMissingPost, createMissingReportPost, deleteMissingPost, deleteMissingReport, getMissingDetail, getMissingReport, IMissingDetailParam, updateFound, updateMatch, updateMissingPost, updateMissingReportPost } from "../api/missing.api";
-import { ISubmitData } from "../pages/missing/MissingPostWrite";
+import { createMissingReportPost, deleteMissingReport, getMissingReport, updateMatch, updateMissingReportPost } from "../api/missing.api";
 import { Buffer } from 'buffer';
 
 interface IMissingReportPostParams {

@@ -1,10 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 import LoadingCat from "../../components/loading/LoadingCat";
-import useMissing from "../../hooks/useMissing";
-import MissingPostEditForm from "../../components/missing/MissingPostEditForm";
-import { IMissing, IMissingReport } from "../../models/missing.model";
-import useMissingReports from "../../hooks/useMissingReports";
+import { IMissingReport } from "../../models/missing.model";
 import {
   useReadMissingReport,
   useUpdateMissingReportPost,

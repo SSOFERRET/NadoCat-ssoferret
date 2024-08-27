@@ -1,5 +1,5 @@
-import { IImage } from "../../../models/image.model";
-import ImageCarousel from "../../common/ImageCarousel";
+// import { IImage } from "../../../models/image.model";
+// import ImageCarousel from "../../common/ImageCarousel";
 import PostHead from "./PostHead";
 import "./../../../styles/scss/components/missing/postAbstract.scss";
 import PostSummary from "../common/PostSummary";

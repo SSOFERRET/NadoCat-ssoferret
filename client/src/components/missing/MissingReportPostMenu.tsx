@@ -1,10 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "../../styles/scss/components/communityAndEvent/postMenu.scss";
-import { ICommentDeleteRequest } from "../../api/community.api";
-import useCommentStore from "../../store/comment";
-import { BoardType, getPostPath } from "../../utils/boards/boards";
 import { RxCross1 } from "react-icons/rx";
-import { SortMenu } from "../../utils/sort/sortMenu";
 import { useCompareUsers, useUpdateMatch } from "../../hooks/useMissingReport";
 
 export type DeletePost = { postId: number };

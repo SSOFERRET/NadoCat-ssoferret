@@ -2,11 +2,10 @@ import { BiCheck } from "react-icons/bi";
 import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import ImageUploader from "../communityAndEvent/ImageUploader";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { IMissing, IMissingReport } from "../../models/missing.model";
+import { IMissingReport } from "../../models/missing.model";
 import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import LocationForm from "../streetCat/LocationForm";
 import Calendar from "../streetCat/Calendar";
-import { formatGenderToString } from "./common/PostSummary";
 import { formatDateTime } from "./MissingWriteForm";
 import { extractDateTimeComponents } from "./MissingPostEditForm";
 

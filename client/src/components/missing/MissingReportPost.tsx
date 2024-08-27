@@ -10,7 +10,6 @@ import { useState } from "react";
 import MissingReportPostMenu from "./MissingReportPostMenu";
 import { useParams } from "react-router-dom";
 import { useDeleteMissingReport } from "../../hooks/useMissingReport";
-import MissingPostMenu from "./MissingReportPostMenu";
 
 interface IProps {
   post: IMissingReport;

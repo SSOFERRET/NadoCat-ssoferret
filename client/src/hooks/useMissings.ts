@@ -1,6 +1,5 @@
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { createMissingPost, getMissingPosts, Sort } from "../api/missing.api";
-import { queryClient } from "../api/queryClient";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getMissingPosts, Sort } from "../api/missing.api";
 
 const useMissings = (sort?: Sort) => {
   const {

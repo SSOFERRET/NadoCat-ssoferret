@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { ILocation } from "../models/location.model";
 import { IMissing, IMissingPosts, IMissingReport, IMissingReportPosts } from "../models/missing.model";
 import { httpClient } from "./http";
 
