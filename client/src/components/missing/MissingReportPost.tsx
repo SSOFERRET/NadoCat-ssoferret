@@ -22,7 +22,7 @@ const MissingReportPost = ({ post, missing }: IProps) => {
     setIsShowMenu((prev) => !prev);
     console.log("show?", isShowMenu);
   };
-  const loginUser = localStorage.getItem("uuid") || "";
+  const loginUser = sessionStorage.getItem("uuid") || "";
   const postId = Number(useParams().id);
   const { mutate: deletePost } = useDeleteMissingReport();
   const handleDelete = () => {
