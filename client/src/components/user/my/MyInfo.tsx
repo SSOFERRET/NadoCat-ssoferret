@@ -15,12 +15,7 @@ export interface MyInfoProps {
   isMyPage?: boolean;
 }
 
-const MyInfo = ({
-  nickname,
-  uuid,
-  profileImageUrl,
-  onAvatarClick,
-}: MyInfoProps) => {
+const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick }: MyInfoProps) => {
   console.log("MyInfo의 uuid:", uuid);
   const [isOpenModal, setIsOpenModal] = useState(false); //모달 여닫는거 저장
   const [avatarUrl, setAvatarUrl] = useState(profileImageUrl);
@@ -54,8 +49,7 @@ const MyInfo = ({
 
   //기본이미지 변경
   const handleDefaultImage = async () => {
-    const defaultImageUrl =
-      "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
+    const defaultImageUrl = "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
     await deleteProfile(defaultImageUrl);
     setAvatarUrl(defaultImageUrl);
     setIsOpenModal(false);
@@ -69,12 +63,7 @@ const MyInfo = ({
     <>
       <div className="info-container">
         {/* Avatar에 onClick이라는 함수를 넣을 수 있습니다. 여기다가 원하는 동작을 하는 함수를 props로 전달하면 됩니다. */}
-        <Avatar
-          size="lg"
-          nickname={nickname}
-          profileImage={avatarUrl}
-          onClick={onAvatarClick}
-        />
+        <Avatar size="lg" nickname={nickname} profileImage={avatarUrl} onClick={onAvatarClick} />
 
         <div className="nickname-container">
           <div className="nickname-text">
@@ -86,7 +75,6 @@ const MyInfo = ({
           <div className="change-profile-btn">
             <button onClick={handleOpenProfileChange}>프로필 변경</button>
           </div>
-
 
           <button
             className="settings-button"
@@ -114,7 +102,13 @@ const MyInfo = ({
 
       {/* 이게 props로 필요한 함수를 넘겨주시면 됩니다. PostMenu 컴포넌트 안에 꼭 타입을 옵셔널로 주셔야 합니다. 안그러면 다른 컴포넌트에 영향이 갑니다.*/}
 
-      <PostMenu menuType="user" isShowMenu={isOpenModal} showMenu={handelMenu} uploadImage={handleImageUpload} setDefaultImage={handleDefaultImage} />
+      <PostMenu
+        menuType="user"
+        isShowMenu={isOpenModal}
+        showMenu={handelMenu}
+        uploadImage={handleImageUpload}
+        setDefaultImage={handleDefaultImage}
+      />
     </>
   );
 };

@@ -1,0 +1,82 @@
+@import "../../base/common.scss";
+
+.embla {
+  position: relative;
+  max-width: 430rem;
+  margin: 0 auto;
+
+  &.streetCat {
+    --slide-height: 230rem; //190rem
+    --slide-spacing: 10rem;
+    --slide-size: 190rem;
+  }
+
+  &.missings {
+    --slide-height: 390rem;
+    --slide-spacing: 14rem;
+    --slide-size: 220rem;
+  }
+
+  .embla__viewport {
+    overflow: hidden;
+    padding: 0 20rem;
+  }
+
+  .embla__container {
+    display: flex;
+    touch-action: pan-y pinch-zoom;
+    margin-left: calc(var(--slide-spacing) * -1);
+    gap: var(--slide-spacing);
+
+    &.streetCat {
+      gap: 0;
+    }
+  }
+
+  .embla__slide {
+    transform: translate3d(0, 0, 0);
+    flex: 0 0 var(--slide-size);
+    min-width: 0;
+    padding-left: var(--slide-spacing);
+  }
+
+  .embla__slide__number {
+    display: flex;
+    height: var(--slide-height);
+    user-select: none;
+  }
+
+  .carousel-button {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30rem;
+    height: 30rem;
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    z-index: 10;
+    top: 50%;
+    cursor: pointer;
+    transform: translateY(-50%);
+
+    svg {
+      position: static;
+      width: 24rem;
+      height: 24rem;
+    }
+
+    &.prev-button {
+      left: 10rem;
+    }
+
+    &.next-button {
+      right: 10rem;
+    }
+
+    &:hover {
+      background-color: rgba(136, 139, 144, 0.4);
+    }
+  }
+}

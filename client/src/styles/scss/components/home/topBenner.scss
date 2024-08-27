@@ -1,0 +1,110 @@
+@import "../../base/common.scss";
+
+.top-benner-embla {
+  position: relative;
+  max-width: 430rem;
+  margin: auto;
+  --slide-height: 228rem;
+  --slide-spacing: 0;
+  --slide-size: 100%;
+
+  .embla__viewport {
+    overflow: hidden;
+  }
+  .embla__container {
+    display: flex;
+    touch-action: pan-y pinch-zoom;
+    margin-left: calc(var(--slide-spacing) * -1);
+  }
+  .embla__slide {
+    transform: translate3d(0, 0, 0);
+    flex: 0 0 var(--slide-size);
+    min-width: 0;
+    padding-left: var(--slide-spacing);
+  }
+  .embla__slide__img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--slide-height);
+    user-select: none;
+    overflow: hidden; /* 이미지가 컨테이너를 넘지 않도록 */
+
+    img {
+      width: 100%; /* 이미지 크기를 부모 컨테이너에 맞춤 */
+      height: 100%; /* 이미지 높이를 부모 컨테이너에 맞춤 */
+      object-fit: cover;
+    }
+  }
+
+  .carousel-button {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30rem;
+    height: 30rem;
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    z-index: 10;
+    top: 50%;
+    cursor: pointer;
+    transform: translateY(-50%);
+    color: $white;
+
+    svg {
+      position: static;
+      width: 24rem;
+      height: 24rem;
+    }
+
+    &.prev-button {
+      left: 10rem;
+    }
+
+    &.next-button {
+      right: 10rem;
+    }
+
+    &:hover {
+      background-color: rgba(136, 139, 144, 0.4);
+    }
+  }
+}
+
+.embla__controls {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-top: 1.8rem;
+
+  .embla__dots {
+    width: 100%;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16rem;
+    position: absolute;
+    bottom: 12rem;
+  }
+  .embla__dot {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    background-color: $gray;
+    margin: 0 4rem;
+    cursor: pointer;
+    border: 1px solid $gray;
+
+    &:hover {
+      background-color: $dimgray;
+    }
+
+    &.active {
+      background-color: $dimgray;
+    }
+  }
+}
