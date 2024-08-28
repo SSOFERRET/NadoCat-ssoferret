@@ -36,8 +36,9 @@ const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps
     const handleAvatarClick = async() => {
       if(userInfo.uuid === uuid){
         navigate("/users/my");
-      }
+      }else{
         navigate(`/users/user/${userInfo.uuid}`); //사용자 페이지 이동
+      }
     }
 
   return (
