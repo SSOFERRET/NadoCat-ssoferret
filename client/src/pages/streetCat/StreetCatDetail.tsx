@@ -9,7 +9,7 @@ import DiscoveryLocation from "../../components/streetCat/DiscoveryLocation";
 import Author from "../../components/streetCat/Author";
 import StreetCatComments from "../../components/streetCat/StreetCatComments";
 import LoadingCat from "../../components/loading/LoadingCat";
-import LoginModal from "../../components/common/LoginModal";
+// import LoginModal from "../../components/common/LoginModal";
 
 const StreetCatDetail: React.FC = () => {
   const { id } = useParams();
@@ -18,16 +18,14 @@ const StreetCatDetail: React.FC = () => {
 
   const [commentsCount, setCommentsCount] = useState<number>(0);
 
-  if (!isLoading) {
-    return (
-      <LoadingCat />
-    )
+  if (isLoading) {
+    return <LoadingCat />;
   }
 
   return (
     <>
       <section className="street-cat-detail-section">
-        <LoginModal />
+        {/* <LoginModal /> */}
         <div className="detial-section">
           <div className="page-guide-box">
             <span className="page-guide">동네 고양이 도감</span>
@@ -46,11 +44,16 @@ const StreetCatDetail: React.FC = () => {
 
       <section className="street-cat-comment-section">
         <div className="counts">
-          <PiChatCircleBold /><span className="comment-count">{commentsCount}</span>
-          <span>조회수</span><span className="view-count">0</span>
+          <PiChatCircleBold />
+          <span className="comment-count">{commentsCount}</span>
+          <span>조회수</span>
+          <span className="view-count">0</span>
         </div>
 
-        <StreetCatComments postId={postId} commentsCountUpdate={setCommentsCount}/>
+        <StreetCatComments
+          postId={postId}
+          commentsCountUpdate={setCommentsCount}
+        />
       </section>
     </>
   );

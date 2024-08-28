@@ -1,6 +1,5 @@
 import { IMissing } from "../../models/missing.model";
 import PostAbstract from "./missingPost/PostAbstract";
-import PostInfo from "./missingPost/PostInfo";
 import "./../../styles/scss/components/missing/missingPost.scss";
 // import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";

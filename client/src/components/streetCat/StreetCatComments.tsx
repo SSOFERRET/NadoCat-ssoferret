@@ -8,7 +8,7 @@ import CommentForm from "./CommentForm";
 import PostMenu from "../communityAndEvent/PostMenu";
 import CommentList from "../comment/CommentList";
 import { ICommentPage } from "../../models/comment.model";
-import { ICommentPutRequest } from "../../models/streetCat.model";
+// import { ICommentPutRequest } from "../../models/streetCat.model";
 
 interface IProps {
   postId: number;
@@ -69,7 +69,7 @@ const StreetCatComments = ({ postId, commentsCountUpdate }: IProps) => {
     );
   }
 
-  console.log(data?.pages[0]?.commentsCount)
+  console.log(data?.pages[0]?.commentsCount);
 
   return (
     <>
