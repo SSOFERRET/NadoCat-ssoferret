@@ -41,7 +41,7 @@
 import React from "react";
 import { GoHome, GoHomeFill } from "react-icons/go";
 import { PiCat, PiChatCircleBold, PiChatCircleFill } from "react-icons/pi";
-import { RiSearchFill, RiSearchLine } from "react-icons/ri";
+import { RiSearchLine } from "react-icons/ri";
 import "../../styles/css/base/reset.css";
 import "../../styles/scss/components/common/footer.scss";
 import { Link, useLocation } from "react-router-dom";
@@ -51,7 +51,7 @@ const links = [
   { to: "/", label: "홈", noMatchIcon: <GoHome />, matchIcon: <GoHomeFill /> },
   { to: "/boards", label: "카테고리", noMatchIcon: <PiCat />, matchIcon: <PiCat /> },
   { to: "/chats/list", label: "채팅", noMatchIcon: <PiChatCircleBold />, matchIcon: <PiChatCircleFill /> },
-  { to: "/search", label: "검색", noMatchIcon: <RiSearchLine />, matchIcon: <RiSearchFill /> },
+  { to: "/search", label: "검색", noMatchIcon: <RiSearchLine />, matchIcon: <RiSearchLine /> },
   { to: "/users/my" , label: "My", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
   // { to: `/users/my/${localStorage.getItem('uuid')}` , label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
 //   { to: `/users/my/:uuid` , label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
