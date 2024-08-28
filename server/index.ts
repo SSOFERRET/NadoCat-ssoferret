@@ -5,7 +5,6 @@ import MissingRouter from "./routes/missings";
 import CommunitiesRouter from "./routes/communities";
 import StreetCatsRouter from "./routes/streetCats";
 import UserRouter from "./routes/users";
-import InterestsRouter from "./routes/interest";
 import http, { METHODS } from "http";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
@@ -54,7 +53,6 @@ app.use(morgan("tiny"));
 
 app.use("/boards/communities", CommunitiesRouter);
 app.use("/boards/street-cats", StreetCatsRouter);
-app.use("/boards/Interests", InterestsRouter);
 app.use("/boards/missings", MissingRouter);
 app.use("/users", UserRouter);
 app.use("/boards/events", EventsRouter);

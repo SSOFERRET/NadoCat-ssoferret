@@ -1,11 +1,11 @@
-import express from "express";
-import { ensureAutorization } from "../middleware/auth";
+// import express from "express";
+// import { ensureAutorization } from "../middleware/auth";
+// import { getInterests } from "../controller/interest/Interests";
 
-const router = express.Router();
-router.use(express.json());
+// const router = express.Router();
+// router.use(express.json());
 
-import { getInterests } from "../controller/interest/Interests";
+// console.log("라우터 지나간다");
+// router.post('/', ensureAutorization , getInterests);
 
-router.post('/', ensureAutorization , getInterests);
-
-export default router;
+// export default router;

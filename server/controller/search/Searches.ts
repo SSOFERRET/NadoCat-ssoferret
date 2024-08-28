@@ -9,7 +9,7 @@ import { getCommunityById } from "../../model/community.model";
 import { getEventById } from "../../model/event.model";
 import { getMissingById, getPostByPostId } from "../../model/missing.model";
 import { getStreetCat } from "../streetCat/StreetCats";
-import { getStreetCatById, readPost } from "../../model/streetCat.model";
+import { getStreetCatById, getStreetCatForOpenSearchData, readPost } from "../../model/streetCat.model";
 
 const getId = (categoryId: TCategoryId, postId: number) => `${categoryId}_${postId}`;
 
@@ -21,7 +21,7 @@ const getDataForSearch = (categoryId: TCategoryId, postId: number) => {
 }
 
 export const searchDocuments = async (req: Request, res: Response) => {
-  console.log("searchDocuments function called");
+  // console.log("searchDocuments function called");
   const { query } = req.query;
   try {
     const searchCategoryList = [1, 2, 3, 5].map((id) => getCategoryUrlStringById(id as TCategoryId))
@@ -41,7 +41,14 @@ export const searchDocuments = async (req: Request, res: Response) => {
                     { match: { content: query } },
                     { match: { title: query } },
                     { match: { detail: query } },
-                    { match: { name: query } }
+                    { match: { name: query } },
+                    { match: { "missingCats.name": query } },
+                    { match: { "locations.detail": query } },
+                    { match: { "location.detail": query } },
+                    { match: { "tags.tag": query } },
+                    { match: { tags: query } },
+
+
                     // { match: { nickname: query } }
                   ]
                 }
@@ -60,7 +67,7 @@ export const searchDocuments = async (req: Request, res: Response) => {
         }
       })
     );
-
+    console.log(results)
     res.status(200).json(results);
   } catch (error) {
     console.error('OpenSearch search error:', error);
@@ -179,16 +186,16 @@ export const indexResultToOpensearch = async (categoryId: TCategoryId, postId: n
     switch (categoryId) {
       case 1:
         postDataForOpensearch = await getCommunityById(tx, postId);
+        console.log(postDataForOpensearch)
         break;
       case 2:
         postDataForOpensearch = await getEventById(tx, postId);
         break;
       case 3:
-        postDataForOpensearch = await getMissingById(tx, postId);
+        postDataForOpensearch = await getPostByPostId(tx, { categoryId, postId });
         break;
       case 5:
-        postDataForOpensearch = await getStreetCatById(tx, postId);
-        console.log(postDataForOpensearch);
+        postDataForOpensearch = await getStreetCatForOpenSearchData(postId);
         break;
       default:
         throw new Error("유효하지 않은 카테고리 ID");

@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./api/queryClient";
-import MyPage from "./pages/mypage/MyPage";
 import StreetCats from "./pages/streetCat/StreetCat";
 import { My } from "./pages/user/My";
 import Login from "./pages/user/Login";
@@ -37,6 +36,7 @@ import SettingPassword from "./components/user/my/SettingPassword";
 import MissingPostEdit from "./pages/missing/MissingPostEdit";
 import MissingReportPostWrite from "./pages/missing/MissingReportPostWrite";
 import MissingReportPostEdit from "./pages/missing/MissingReportPostEdit";
+import Posts from "./components/mypage/Posts";
 
 const router = createBrowserRouter([
   {
@@ -48,14 +48,6 @@ const router = createBrowserRouter([
       {
         path: "users",
         children: [
-          {
-            path: "interest",
-            element: (
-              <ProtectedPath>
-                <MyPage />
-              </ProtectedPath>
-            ),
-          },
           {
             path: "user/:uuid",
             element: (
@@ -74,6 +66,8 @@ const router = createBrowserRouter([
               </ProtectedPath>
             ),
           },
+          //[ ]추가
+          { path: "my/interests", element: <Posts /> },
           { path: "my/setting", element: <Setting /> },
           { path: "my/setting/nickname", element: <SettingNickname /> },
           {

@@ -93,8 +93,8 @@ export const getEvent = async (req: Request, res: Response) => {
         liked: !!liked,
       };
 
-      // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
-      //   post.views += viewIncrementResult || 0;
+      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
+      post.views += viewIncrementResult || 0;
     });
 
     res.status(StatusCodes.OK).json(result);
@@ -185,7 +185,7 @@ export const updateEvent = async (req: Request, res: Response) => {
     const { title, content, tags, deleteTagIds, deleteImageIds, isClosed } = req.body;
     console.log(req.body)
 
-    if (!title || !content || !tags || !deleteTagIds || !deleteImageIds ) {
+    if (!title || !content || !tags || !deleteTagIds || !deleteImageIds) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
 

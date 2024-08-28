@@ -1,9 +1,9 @@
 import "../../styles/scss/pages/home/home.scss";
-import MiddleBenner from "../../components/home/MiddleBenner";
 import HomeStreetCats from "../../components/home/HomeStreetCats";
 import HomeMissings from "../../components/home/HomeMissings";
 import HomeCommunitiesAndEvents from "../../components/home/HomeCommunitiesAndEvents";
 import TopBenner from "../../components/home/TopBenner";
+import MiddleBanner from "../../components/home/MiddleBanner";
 
 // CHECKLIST
 // [x] 최상단 베너 만들기
@@ -22,7 +22,7 @@ const Home = () => {
 
       <HomeStreetCats />
 
-      <MiddleBenner />
+      <MiddleBanner />
 
       <HomeMissings />
 

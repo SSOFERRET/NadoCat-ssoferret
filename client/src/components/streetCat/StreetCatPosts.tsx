@@ -15,7 +15,7 @@ const StreetCatPosts: React.FC = () => {
   const shouldFetchData = tabFromQuery === "1" || tabFromQuery === null;
 
   const {
-    data,
+    // data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -25,32 +25,32 @@ const StreetCatPosts: React.FC = () => {
     isEmpty,
   } = useStreetCatPosts(shouldFetchData);
 
-    const moreRef = useIntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        loadMore();
-      }
-    });
-  
-    const loadMore = () => {
-      if (!hasNextPage) return;
-      fetchNextPage();
-    };
-  
-    if (!shouldFetchData) {
-      return null;
+  const moreRef = useIntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      loadMore();
     }
-  
-    if (isLoading) {
-      return <LoadingCat />;
-    }
-  
-    if (isEmpty) {
-      return (
+  });
+
+  const loadMore = () => {
+    if (!hasNextPage) return;
+    fetchNextPage();
+  };
+
+  if (!shouldFetchData) {
+    return null;
+  }
+
+  if (isLoading) {
+    return <LoadingCat />;
+  }
+
+  if (isEmpty) {
+    return (
       <div className="empty-box">
         <PostEmpty />
       </div>
-      );
-    }
+    );
+  }
 
   return (
     <div className="street-cat-posts">

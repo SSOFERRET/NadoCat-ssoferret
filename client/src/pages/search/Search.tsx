@@ -12,13 +12,15 @@ import {
 } from "../../utils/localStorage/localStorage";
 import RecentKeywords from "./RecentKeywords";
 import { IoMdCloseCircle } from "react-icons/io";
-import useSearch, { /*ISearch,*/ ISearchInfo /*TIndex*/ } from "../../hooks/useSearch";
+import useSearch, {
+  /*ISearch,*/ ISearchInfo /*TIndex*/,
+} from "../../hooks/useSearch";
 import { ICommunity } from "../../models/community.model";
 import { IEvent } from "../../models/event.model";
-import MissingPost from "../../components/missing/MissingPost";
-import { IMissing } from "../../models/missing.model";
 // import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
 import LoadingCat from "../../components/loading/LoadingCat";
+import CatSearchList from "../../components/search/CatSearchList";
+import SearchContainer from "./SearchContainer";
 
 // NOTE 이건 지우면 아래 카테고리가 동작 안해용..
 const categories = [
@@ -30,7 +32,7 @@ const categories = [
 ];
 
 //opensearch 목록별 명칭
-const categoryNames = {
+export const categoryNames = {
   communities: "커뮤니티",
   events: "이벤트",
   missings: "실종 고양이",
@@ -50,14 +52,13 @@ const categoryNames = {
 const Search = () => {
   const keywords = getLocalStorage();
   const [keyword, setKeyword] = useState(""); // 검색어
-  const [recentKeywords, setRecentKeywords] = useState<SearchKeyword[]>(keywords); // 최근 검색 키워드 들어갈 자리
+  const [recentKeywords, setRecentKeywords] =
+    useState<SearchKeyword[]>(keywords); // 최근 검색 키워드 들어갈 자리
   const [selected, setSelected] = useState(0);
   const [enteredKeyword, setEnteredKeyword] = useState("");
   const [isRecentKeywords, setIsRecentKeywords] = useState(true); // 최근 검색어 보여줄지 결정하는 요소
 
   const { data, isLoading /*, error*/ } = useSearch(enteredKeyword);
-
-  console.log("page", data);
 
   const handleCategory = (id: number) => {
     setSelected(id);
@@ -76,7 +77,9 @@ const Search = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const foundKeyword = recentKeywords.find((item) => keyword === item.keyword);
+    const foundKeyword = recentKeywords.find(
+      (item) => keyword === item.keyword
+    );
 
     if (keyword.trim() === "") {
       return;
@@ -84,7 +87,8 @@ const Search = () => {
 
     setIsRecentKeywords(false);
 
-    !foundKeyword && setRecentKeywords([...recentKeywords, { id: Date.now(), keyword }]);
+    !foundKeyword &&
+      setRecentKeywords([...recentKeywords, { id: Date.now(), keyword }]);
 
     setEnteredKeyword(keyword);
   };
@@ -97,7 +101,10 @@ const Search = () => {
   };
 
   const getTotalCount = () => {
-    return data?.reduce((acc: number, current: ISearchInfo) => acc + current.totalcount.value, 0);
+    return data?.reduce(
+      (acc: number, current: ISearchInfo) => acc + current.totalcount.value,
+      0
+    );
   };
 
   const deleteAllRecentKeyword = () => {
@@ -171,39 +178,21 @@ const Search = () => {
               </li>
             ))}
           </ul>
-
-          <div className="search-result-list">
-            <span className="search-result-count">총 검색 결과 수 - {getTotalCount()} 건</span>
-            <ul className="total-results">
-              {data.map((category) => (
-                <li key={category.category} className="category-container">
-                  <span className="search-result-count">
-                    {`${categoryNames[category.category as keyof typeof categoryNames]} ${
-                      category.totalcount.value
-                    } 건`}
-                  </span>
-                  <div className="results-container">
-                    {category.search.map((result) => (
-                      <div key={result._source.postId} className="result">
-                        {(category.category === "communities" || category.category === "events") && (
-                          <Post post={result._source as ICommunity | IEvent} />
-                        )}
-                        {category.category === "missings" && (
-                          <MissingPost key={result._source.postId} post={result._source as IMissing} />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {selected === 0 && (
+            <SearchContainer data={data} getTotalCount={getTotalCount} />
+          )}
         </section>
       ) : (
-        <section className="search-no-results">
-          <img className="unfindable-cat" src={UnfindableCat} alt="UnfindableCat" />
-          <span>검색 결과가 없습니다.</span>
-        </section>
+        !isLoading && (
+          <section className="search-no-results">
+            <img
+              className="unfindable-cat"
+              src={UnfindableCat}
+              alt="UnfindableCat"
+            />
+            <span>검색 결과가 없습니다.</span>
+          </section>
+        )
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import exclamationMarkCat2 from "../../assets/img/exclamationMarkCat2.png";
 
-const MiddleBenner = () => {
+const MiddleBanner = () => {
   return (
     <section className="middelBenner-container">
       <div className="text-container">
@@ -12,4 +12,4 @@ const MiddleBenner = () => {
   );
 };
 
-export default MiddleBenner;
+export default MiddleBanner;

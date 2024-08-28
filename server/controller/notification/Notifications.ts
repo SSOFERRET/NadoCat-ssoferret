@@ -10,6 +10,7 @@ import { getPostAuthorUuid } from "../../model/common/uuid.model";
 import { IListData } from "../../types/post";
 import prisma from "../../client";
 import { getPostsCount } from "../../model/missing.model";
+import dotenv from "dotenv";
 
 /* CHECKLIST
 * [x] 알람글 isRead update API
@@ -56,7 +57,7 @@ export const serveNotifications = (req: Request, res: Response) => {
     });
 
     const sendNotifications = async () => {
-      console.log(notifications)
+      // console.log(notifications)
       if (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {
@@ -76,7 +77,7 @@ export const serveNotifications = (req: Request, res: Response) => {
       }
     };
 
-    const intervalid = setInterval(sendNotifications, 5000);
+    const intervalid = setInterval(sendNotifications, Number(process.env.NOTIFICATION_INTERVAL) || 5000);
 
     req.on('close', () => clearInterval(intervalid));
 

@@ -71,19 +71,19 @@
 
 .image-modal {
   position: fixed;
-  width: 100%;
+  width: 430rem;
   height: 100vh;
   top: 0;
-  left: 0;
   bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
 
-  .overlay {
+  .image-modal-overlay {
     position: relative;
     max-width: 430rem;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

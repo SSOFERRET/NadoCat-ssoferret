@@ -1,19 +1,45 @@
 @import "../../base/common.scss";
 
-main {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: 0 auto;
-  max-width: 430rem;
-  // margin-top: 58rem;
-  padding-bottom: 60rem;
-  background-color: $white;
-  min-height: calc(100vh - 61rem);
+.main-layout {
+  // justify-content: center;
+
+  .main-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    max-width: 430rem;
+    background-color: white;
+    box-shadow: 0 2rem 10rem rgba(0, 0, 0, 0.1);
+
+    main {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin: 0 auto;
+      // max-width: 430rem;
+      // margin-top: 58rem;
+      padding-bottom: 60rem;
+      background-color: $white;
+      min-height: calc(100vh - 61rem);
+    }
+
+    .no-headerfooter {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
 }
 
-.no-headerfooter {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-bottom: 0;
+@media (min-width: 1024px) {
+  .main-container {
+    left: 50vw;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main-container {
+    left: 0;
+    margin: 0 auto;
+  }
 }

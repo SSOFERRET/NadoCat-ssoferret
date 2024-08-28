@@ -78,6 +78,18 @@ export const myPage = async () => {
   }
 };
 
+
+export const myInterests = async () => {
+  try {
+    const response = await httpClient.get(`/users/my/interests`);
+    return response.data;
+  }catch (error) {
+    console.error("관심글 정보를 가져오는 데 실패했습니다:", error);
+    throw error;
+  }
+}
+
+
 //이미지
 export const uploadProfile = async (file: File) => {
   const formData = new FormData();
@@ -149,3 +161,14 @@ export const updateDetail = async (data: SettingDetailProps) => {
     throw error;
   }
 };
+
+
+export const deleteUser = async (uuid: string) => {
+  try {
+    const response = await httpClient.put("/users/my/setting/delete-user", {uuid});
+    return response.data;
+  } catch (error) {
+    console.error("회원탈퇴에 실패했습니다:", error);
+    throw error;
+  }
+}; 
