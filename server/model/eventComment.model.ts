@@ -19,7 +19,7 @@ export const getEventComments = async (postId: number, limit: number, cursor: nu
     cursor: cursor ? { eventCommentId: cursor } : undefined,
     orderBy: [
       {
-        eventCommentId: "asc",
+        createdAt: "desc",
       },
     ],
     select: {
