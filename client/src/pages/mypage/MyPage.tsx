@@ -1,3 +1,4 @@
+
 // // import React, { /*useEffect,*/ useState } from "react";
 // import BackButton from "../../components/common/BackButton";
 // import "../../styles/scss/pages/mypage/MyPage.scss";
@@ -5,7 +6,7 @@
 // import Posts from "../../components/mypage/Posts";
 // import { useState } from "react";
 // import axios from "axios";
-// // import axios from "axios";
+
 
 // export interface Post {
 //   title: string;
@@ -46,5 +47,20 @@
 //     </div>
 //   );
 // };
+
+        /*
+const MyPage = () => {
+  return (
+    <div className="myPage">
+      <div className="header">
+        <BackButton userName="" />
+        <div id="title">관심글</div>
+      </div>
+      <Posts />
+    </div>
+  );
+};
+        */
+
 
 // export default MyPage;

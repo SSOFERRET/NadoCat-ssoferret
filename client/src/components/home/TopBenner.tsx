@@ -4,23 +4,23 @@ import useEmblaCarousel from "embla-carousel-react";
 import { DotButton, useDotButton } from "../common/embla/EmblaCarouselDotButton";
 import { usePrevNextButtons } from "../common/embla/EmblaCarouselArrowButtons";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import banner1 from "../../assets/banner/banner1.png";
+import banner2 from "../../assets/banner/banner2.png";
+import banner3 from "../../assets/banner/banner3.png";
+import Autoplay from "embla-carousel-autoplay";
 
 const bannersData = [
   {
     id: 1,
-    url: "https://picsum.photos/id/111/1200/400",
+    url: banner1,
   },
   {
     id: 2,
-    url: "https://picsum.photos/id/222/1200/400",
+    url: banner2,
   },
   {
     id: 3,
-    url: "https://picsum.photos/id/121/1200/400",
-  },
-  {
-    id: 4,
-    url: "https://picsum.photos/id/23/1200/400",
+    url: banner3,
   },
 ];
 
@@ -33,7 +33,7 @@ const OPTIONS: EmblaOptionsType = {
 };
 
 const TopBenner = () => {
-  const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS);
+  const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS, [Autoplay({ playOnInit: true, delay: 4000 })]);
 
   const { selectedIndex, onDotButtonClick } = useDotButton(emblaApi);
 

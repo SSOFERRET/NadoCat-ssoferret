@@ -20,7 +20,6 @@ const useCommunities = ({ sort = "latest", enabled }: IProps) => {
       return undefined;
     },
     initialPageParam: 0,
-    staleTime: 1000 * 60 * 5,
     enabled,
   });
 
@@ -29,9 +28,8 @@ const useCommunities = ({ sort = "latest", enabled }: IProps) => {
 
   const { mutateAsync: addCommunityPost } = useMutation({
     mutationFn: (formData: FormData) => createCommunityPost(formData),
-    onSuccess: (post) => {
-      const postId = post.postId;
-      queryClient.invalidateQueries({ queryKey: ["communityDetail", postId] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["community", sort] });
     },
     onError: (error) => {
       console.error("Error creating community post:", error);

@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { /* useEffect,*/ useState } from "react";
 import "../../styles/scss/components/streetCat/streetCatsMap.scss";
-import { CustomOverlayMap, Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
+import {
+  /* CustomOverlayMap,*/ Map,
+  MapMarker,
+  useKakaoLoader,
+} from "react-kakao-maps-sdk";
 import deleteBtn from "../../assets/img/deleteBtn.png";
 import { useReadStreetMap } from "../../hooks/useStreetCat";
 
@@ -26,14 +30,20 @@ interface ILocationData {
 }
 
 interface IStreetCatModalProps {
-  onClose: () => void;
+  onClose: (e: React.MouseEvent<HTMLElement>) => void;
   postId: number;
   name: string;
   discoveryDate: string;
   url: string;
 }
 
-const StreetCatModal: React.FC<IStreetCatModalProps> = ({ onClose, postId, name, discoveryDate, url }) => (
+const StreetCatModal: React.FC<IStreetCatModalProps> = ({
+  onClose,
+  postId,
+  name,
+  discoveryDate,
+  url,
+}) => (
   <div className="street-cat-modal">
     <a href={`/boards/street-cats/${postId}`}>
       <div className="modal-box">
@@ -45,7 +55,9 @@ const StreetCatModal: React.FC<IStreetCatModalProps> = ({ onClose, postId, name,
         </div>
         <div className="cat-info">
           <span className="name">{name}</span>
-          <span className="discovery-date">{new Date(discoveryDate).toLocaleDateString()}</span>
+          <span className="discovery-date">
+            {new Date(discoveryDate).toLocaleDateString()}
+          </span>
         </div>
       </div>
     </a>
@@ -139,7 +151,7 @@ const CustomOverlayStyle = () => (
 );
 
 const StreetCatsMap: React.FC = () => {
-  useKakaoLoader();
+  useKakaoLoader({ appkey: import.meta.env.VITE_KAKAO_MAP_ADMIN_KEY });
   const [mapData, setMapData] = useState<{
     level: number;
     position: {
@@ -156,7 +168,11 @@ const StreetCatsMap: React.FC = () => {
   const [selectedCat, setSelectedCat] = useState<IStreetCat | null>(null);
 
   // mapData가 변경될 때마다 근처 데이터 통신
-  const { data: nearLocations, isLoading, error } = useReadStreetMap(
+  const {
+    data: nearLocations,
+    // isLoading,
+    // error,
+  } = useReadStreetMap(
     mapData.position.lat,
     mapData.position.lng,
     mapData.level
@@ -186,11 +202,11 @@ const StreetCatsMap: React.FC = () => {
     setMapData(newMapData);
   };
 
-  useEffect(() => {
-    if (!isLoading && !error && nearLocations) {
-      console.log("Fetched nearby data:", nearLocations);
-    }
-  }, [nearLocations, isLoading, error]);
+  // useEffect(() => {
+  //   if (!isLoading && !error && nearLocations) {
+  //     console.log("Fetched nearby data:", nearLocations);
+  //   }
+  // }, [nearLocations, isLoading, error]);
 
   return (
     <>
@@ -204,28 +220,29 @@ const StreetCatsMap: React.FC = () => {
         level={mapData.level}
         onDragEnd={handleDragEnd}
       >
-        {nearLocations && nearLocations.map((location: ILocationData) =>
-          location.streetCats.map((cat: IStreetCat) => (
-            <MapMarker
-              key={cat.postId}
-              position={{ lat: location.latitude, lng: location.longitude }}
-              onClick={() => handleMarkerClick(cat)}
-              image={{
-                src: "https://nadocat.s3.ap-northeast-2.amazonaws.com/static/HiLocationMarker.png",
-                size: {
-                  width: 42,
-                  height: 42,
-                },
-                options: {
-                  offset: {
-                    x: 27,
-                    y: 69,
+        {nearLocations &&
+          nearLocations.map((location: ILocationData) =>
+            location.streetCats.map((cat: IStreetCat) => (
+              <MapMarker
+                key={cat.postId}
+                position={{ lat: location.latitude, lng: location.longitude }}
+                onClick={() => handleMarkerClick(cat)}
+                image={{
+                  src: "https://nadocat.s3.ap-northeast-2.amazonaws.com/static/HiLocationMarker.png",
+                  size: {
+                    width: 42,
+                    height: 42,
                   },
-                },
-              }}
-            />
-          ))
-        )}
+                  options: {
+                    offset: {
+                      x: 27,
+                      y: 69,
+                    },
+                  },
+                }}
+              />
+            ))
+          )}
       </Map>
 
       {selectedCat && (

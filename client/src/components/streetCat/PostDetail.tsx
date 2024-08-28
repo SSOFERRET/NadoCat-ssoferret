@@ -22,7 +22,6 @@ interface IProps {
 
 const PostDetail = (props: IProps) => {
   const { uuid } = useAuthStore();
-  console.log("uuid ", uuid)
   const images: IImage[] = props.streetCatImages || [];
   const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
 
@@ -61,13 +60,11 @@ const PostDetail = (props: IProps) => {
             ) : (
               ""
             )}
-            {
-              uuid &&
-              uuid === props.uuid &&
+            {uuid && uuid === props.uuid && (
               <span className="more-btn" onClick={toggleMenu}>
                 <HiOutlineDotsVertical />
               </span>
-            }
+            )}
           </div>
         </div>
 

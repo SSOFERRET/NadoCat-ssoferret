@@ -10,6 +10,7 @@ import { getPostAuthorUuid } from "../../model/common/uuid.model";
 import { IListData } from "../../types/post";
 import prisma from "../../client";
 import { getPostsCount } from "../../model/missing.model";
+import dotenv from "dotenv";
 
 /* CHECKLIST
 * [x] 알람글 isRead update API
@@ -40,46 +41,50 @@ export const notifications: INotification[] = [];
 let lastNotification: INoticiationData | null = null;  // 마지막 알림을 추적하기 위한 변수
 
 export const serveNotifications = (req: Request, res: Response) => {
-  // try {
-  //   const userId = req.query.userId;
-  //   let userIdBuffer: Buffer;
-  //   if (typeof userId === "string")
-  //     userIdBuffer = Buffer.from(userId, "hex");
+  try {
+    const userId = req.query.userId;
+    console.log("userId", userId)
+    let userIdBuffer: Buffer;
+    if (typeof userId === "string") {
+      userIdBuffer = Buffer.from(userId, "hex");
+      console.log("userIdBuffer", userIdBuffer)
+    }
 
-  //   res.writeHead(200, {
-  //     'Content-Type': 'text/event-stream',
-  //     'Cache-Control': 'no-cache',
-  //     'Connection': 'keep-alive',
-  //   });
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    });
 
-  //   const sendNotifications = async () => {
-  //     // console.log(notifications)
-  //     if (notifications.length) {
-  //       await createNotification(notifications);
-  //       notifications.forEach((notification) => {
-  //         if (notification && userId && userIdBuffer.equals(notification.receiver)) {
-  //           const notificationData = JSON.stringify({
-  //             type: notification.type,
-  //             sender: notification.sender,
-  //             url: notification.url,
-  //             timestamp: notification.timestamp
-  //           })
-  //           res.write(`data: ${notificationData}\n\n`);
-  //         }
-  //       });
-  //       notifications.length = 0;
-  //     } else {
-  //       res.write('\n\n');
-  //     }
-  //   };
+    const sendNotifications = async () => {
+      console.log(notifications)
+      if (notifications.length) {
+        await createNotification(notifications);
+        notifications.forEach((notification) => {
+          if (notification && userId && userIdBuffer.equals(notification.receiver)) {
+            const notificationData = JSON.stringify({
+              type: notification.type,
+              sender: notification.sender,
+              url: notification.url,
+              timestamp: notification.timestamp
+            })
+            res.write(`data: ${notificationData}\n\n`);
+          }
+        });
+        notifications.length = 0;
+      } else {
+        res.write('\n\n');
+      }
+    };
 
-  //   const intervalid = setInterval(sendNotifications, 10000);
+    const intervalid = setInterval(sendNotifications, Number(process.env.NOTIFICATION_INTERVAL) || 5000);
 
-  //   req.on('close', () => clearInterval(intervalid));
+    req.on('close', () => clearInterval(intervalid));
 
-  // } catch (error) {
-  //   handleControllerError(error, res);
-  // }
+  } catch (error) {
+    console.error(error);
+    handleControllerError(error, res);
+  }
 };
 
 type TNotify = "newPost" | "comment" | "update" | "match" | "follow" | "found" | "like";
@@ -96,8 +101,8 @@ export const notify = (data: INoticiationData) => {
   // 동일한 알림이 아닌지 확인하는 로직
   if (lastNotification &&
     lastNotification.type === data.type &&
-    // lastNotification.receiver.equals(data.receiver) &&
-    // lastNotification.sender.equals(data.sender) &&
+    lastNotification.receiver.equals(data.receiver) &&
+    lastNotification.sender.equals(data.sender) &&
     lastNotification.url === data.url &&
     lastNotification.commentId === data.commentId &&
     lastNotification.result === data.result) {

@@ -5,6 +5,8 @@ import { getTimestamp } from "../../util/time/timestamp";
 import { updateView } from "../../model/common/view.model";
 import { Prisma } from "@prisma/client";
 import { TCategoryId } from "../../types/category";
+import dotenv from "dotenv";
+dotenv.config();
 
 const VIEW_LIMIT_SEC = 21600; // 6시간
 
@@ -14,6 +16,7 @@ export const incrementViewCountAsAllowed = async (req: Request, tx: Prisma.Trans
   const field: string = getFieldName(userIp);
   const redis: RedisClientType = await connectRedis();
 
+  if (!Number(process.env.REDIS_VIEW)) return;
   try {
     const isIncrementAllowed: boolean = await isViewIncrementAllowed(redis, key, field);
     if (isIncrementAllowed) {
@@ -39,7 +42,6 @@ const isViewIncrementAllowed = async (redis: RedisClientType, key: string, field
 
     return timestamp - await getLastViewTime(redis, key, field) > VIEW_LIMIT_SEC;
   } catch (error) {
-    console.log("isViewIncrementAllowed:", error);
     throw new Error("isViewIncrementAllowed Error");
   }
 }

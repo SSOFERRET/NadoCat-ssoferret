@@ -19,7 +19,7 @@ export const getCommunityComments = async (postId: number, limit: number, cursor
     cursor: cursor ? { communityCommentId: cursor } : undefined,
     orderBy: [
       {
-        communityCommentId: "asc",
+        createdAt: "desc",
       },
     ],
     select: {

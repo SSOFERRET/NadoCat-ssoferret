@@ -1,5 +1,4 @@
 import { Prisma } from "@prisma/client";
-import { getCategory } from "../../constants/category";
 import { TCategoryId } from "../../types/category";
 
 export const updateView = async (
@@ -7,17 +6,51 @@ export const updateView = async (
   categoryId: TCategoryId,
   postId: number
 ) => {
-  const model = getCategory(categoryId);
-  if (!model) throw new Error("부적절한 카테고리");
-
-  return await (tx as any)[model].update({
-    where: {
-      postId
-    },
-    data: {
-      views: {
-        increment: 1
-      }
+  try {
+    switch (categoryId) {
+      case 1: return await tx.communities.update({
+        where: {
+          postId
+        },
+        data: {
+          views: {
+            increment: 1
+          }
+        }
+      });
+      case 2: return await tx.events.update({
+        where: {
+          postId
+        },
+        data: {
+          views: {
+            increment: 1
+          }
+        }
+      });
+      case 3: return await tx.missings.update({
+        where: {
+          postId
+        },
+        data: {
+          views: {
+            increment: 1
+          }
+        }
+      });
+      case 5: return await tx.streetCats.update({
+        where: {
+          postId
+        },
+        data: {
+          views: {
+            increment: 1
+          }
+        }
+      })
     }
-  })
+
+  } catch (error) {
+    console.error(error);
+  }
 }

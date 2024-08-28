@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { /* React,*/ useEffect, useState } from "react";
 import "../../../styles/scss/components/user/my/myInfo.scss";
 // import { IoIosSettings } from "react-icons/io";
 import Avatar from "../../common/Avatar";
@@ -86,6 +86,7 @@ const MyInfo = ({
             
           </div>
 
+
           {!isMyPage && (
             <div className="btn-set">
               <button className="chat-btn" onClick={handleSendToChat}>
@@ -95,6 +96,7 @@ const MyInfo = ({
             </div>
           )}
         </div>
+        
           {isMyPage && (
             <button
               className="settings-button"

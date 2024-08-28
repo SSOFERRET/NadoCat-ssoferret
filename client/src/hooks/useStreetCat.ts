@@ -15,12 +15,12 @@ interface IStreetCatEdit {
   postId: number;
 }
 
-interface IMapData {
-  lat: number;
-  lng: number;
-  latRange: number;
-  lngRange: number;
-}
+// interface IMapData {
+//   lat: number;
+//   lng: number;
+//   latRange: number;
+//   lngRange: number;
+// }
 
 export const useReadStreetCatPost = (postId: number) => {
   const { data, isLoading } = useQuery({

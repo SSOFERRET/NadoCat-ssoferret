@@ -7,10 +7,10 @@ import { useNavigate } from "react-router-dom";
 import DefaultImg from "../../assets/img/DefaultImg.png";
 import { Buffer } from "buffer";
 
-interface IList {
-  img: string;
+export interface IList {
   users: {
     nickname: string;
+    profileImage: string;
   };
   messages: {
     content: string;
@@ -23,6 +23,7 @@ interface IList {
     data: number[];
   };
   chatId: string;
+  unreadCount: number;
 }
 
 interface ChatProps {
@@ -32,7 +33,7 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const navigate = useNavigate();
-
+  console.log(lists)
   const handleClose = () => {
     setModalOpen(false);
   };
@@ -55,7 +56,7 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
   };
 
   const now: Date = new Date();
-
+  console.log(lists)
   const getTimeDifference = (sentAt?: string) => {
     if (sentAt) {
       const messageTime = new Date(sentAt);
@@ -84,7 +85,7 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
           onClick={() => handleChatClick(list)}
         >
           <div className="imgbox">
-            {list.img ? <img src={list.img} /> : <img src={DefaultImg} />}
+            {list.users.profileImage ? <img src={list.users.profileImage} /> : <img src={DefaultImg} />}
           </div>
           <div className="contentsbox">
             <div className="nametimebox">
@@ -95,6 +96,7 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
             </div>
             <div className="contents">{list.messages.at(-1)?.content}</div>
           </div>
+          {list.unreadCount > 0 ? <div className="unread">{list.unreadCount}</div>: ""}
           <div className="iconbox">
             <BsThreeDotsVertical
               className="icon"

@@ -19,7 +19,6 @@ import {
 export const getFavoriteCats = async (req: Request, res: Response) => {
   const uuidString = req.headers["x-uuid"] as string;
   const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
-  console.log("uuid 내 도감 목록: ", uuid)
   const limit = Number(req.query.limit);
   const cursor = Number(req.query.cursor);
 

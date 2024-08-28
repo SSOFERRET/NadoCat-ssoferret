@@ -3,8 +3,8 @@
 .new-post-button {
   position: sticky;
   bottom: 73rem;
-  right: 20rem;
   float: right;
+  right: 20rem;
   width: 107rem;
   height: 54rem;
   display: flex;
@@ -16,6 +16,7 @@
   border: none;
   font-family: "bold";
   font-size: $size-18;
+  margin-right: 20rem;
   z-index: 50;
   box-shadow: 0 5px 10px -7px rgb(87, 87, 87);
   cursor: pointer;

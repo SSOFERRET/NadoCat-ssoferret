@@ -5,10 +5,10 @@ import axios from "axios";
 import NoList from "../../assets/img/StartChat.png";
 import { Buffer } from "buffer";
 
-interface IList {
-  img: string;
+interface IList{
   users: {
     nickname: string;
+    profileImage: string;
   };
   messages: {
     content: string;
@@ -21,6 +21,7 @@ interface IList {
     data: number[];
   };
   chatId: string;
+  unreadCount: number;
 }
 const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 

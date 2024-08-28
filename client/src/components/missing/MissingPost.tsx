@@ -1,6 +1,5 @@
 import { IMissing } from "../../models/missing.model";
 import PostAbstract from "./missingPost/PostAbstract";
-import PostInfo from "./missingPost/PostInfo";
 import "./../../styles/scss/components/missing/missingPost.scss";
 // import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -25,12 +24,11 @@ const MissingPost = ({ post }: IProps) => {
 
   const { removeMissingPost } = useMissing(post.postId);
 
-  console.log(post);
-
   return (
-    <section className="post-box">
-      <PostAbstract post={post} showMenu={showMenu} />
-      <PostInfo reports={10} views={post.views} />
+    <>
+      <section className="missing-post-box">
+        <PostAbstract post={post} showMenu={showMenu} />
+      </section>
       <PostMenu
         boardType="missing"
         menuType="post"
@@ -40,7 +38,7 @@ const MissingPost = ({ post }: IProps) => {
         deletePost={removeMissingPost}
         found={post.found}
       />
-    </section>
+    </>
   );
   // 좋아요 리포트 수 (-)
 };

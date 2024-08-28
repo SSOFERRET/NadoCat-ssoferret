@@ -10,6 +10,7 @@ interface IProps {
   images: IImage[];
   round?: "round-5" | "round-10" | "round-0";
   size?: "sm" | "md";
+  isDots?: boolean;
 }
 
 const OPTIONS: EmblaOptionsType = {
@@ -20,7 +21,7 @@ const OPTIONS: EmblaOptionsType = {
   loop: true,
 };
 
-const ImageCarousel = ({ images, round = "round-5", size = "md" }: IProps) => {
+const ImageCarousel = ({ images, round = "round-5", size = "md", isDots = true }: IProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS);
 
   const { selectedIndex, onDotButtonClick } = useDotButton(emblaApi);
@@ -34,7 +35,7 @@ const ImageCarousel = ({ images, round = "round-5", size = "md" }: IProps) => {
           <div className="image-embla__container">
             {images.map((item) => (
               <div className="image-embla__slide" key={item.imageId}>
-                <div className="image-embla__slide__img">
+                <div className={`image-embla__slide__img ${round}`}>
                   <img src={item.url} alt={item.imageId.toString()} />
                 </div>
               </div>
@@ -49,17 +50,19 @@ const ImageCarousel = ({ images, round = "round-5", size = "md" }: IProps) => {
           <IoIosArrowForward />
         </button>
 
-        <div className="image-embla__controls">
-          <div className="image-embla__dots">
-            {images.map((item) => (
-              <DotButton
-                key={item.imageId}
-                onClick={() => onDotButtonClick(item.imageId)}
-                className={"image-embla__dot".concat(item.imageId - 1 === selectedIndex ? " active" : "")}
-              />
-            ))}
+        {isDots && (
+          <div className="image-embla__controls">
+            <div className="image-embla__dots">
+              {images.map((item, index) => (
+                <DotButton
+                  key={item.imageId}
+                  onClick={() => onDotButtonClick(index)}
+                  className={"image-embla__dot".concat(index === selectedIndex ? " active" : "")}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

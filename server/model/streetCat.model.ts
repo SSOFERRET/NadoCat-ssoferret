@@ -454,6 +454,10 @@ export const readComments = async (
     }
   });
 
+  const commentsCount = await prisma.streetCatComments.count({
+    where: { streetCatId },
+  });
+
   const transformedComments = streetCatComments.map(comment => ({
     commentId: comment.streetCatCommentId,
     comment: comment.comment,
@@ -467,6 +471,7 @@ export const readComments = async (
 
   return {
     streetCatComments: transformedComments,
+    commentsCount
   };
 };
 

@@ -17,7 +17,7 @@ router.patch("/:postId", ensureAutorization, updateFoundState);
 
 router.get("/:missingId/reports/:postId", getMissingReport);
 router.post("/:postId/reports", ensureAutorization, uploadImages.array("images"), createMissingReport);
-router.get("/:missingId/reports", ensureAutorization, getMissingReports);
+router.get("/:missingId/reports", getMissingReports);
 router.delete("/:missingId/reports/:postId", ensureAutorization, deleteMissingReportHandler);
 router.put("/:missingId/reports/:postId", ensureAutorization, uploadImages.array("images"), updateMissingReport);
 router.patch("/:missingId/reports/:postId", ensureAutorization, updateMissingReportCheck);

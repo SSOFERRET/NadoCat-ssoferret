@@ -16,6 +16,7 @@ import MissingReportPostList from "../../components/missing/MissingReportPostLis
 import PostMenu from "../../components/communityAndEvent/PostMenu";
 import { useState } from "react";
 import NewPostButton from "../../components/common/NewPostButton";
+import { Footer } from "../../components/common/Footer";
 
 const MissingDetail = () => {
   const params = useParams();
@@ -55,13 +56,9 @@ const MissingDetail = () => {
     <section className="missing-detail">
       <HeaderWithBackButton />
       {(isLoading || isReportsLoading) && <LoadingCat />}
-      {!isLoading && (
-        <MissingPostDetail post={post as IMissing} showMenu={showMenu} />
-      )}
+      {!isLoading && <MissingPostDetail post={post as IMissing} showMenu={showMenu} />}
 
-      {reportsData && (
-        <MissingReportPostList posts={reportsData} missing={post as IMissing} />
-      )}
+      {reportsData && <MissingReportPostList posts={reportsData} missing={post as IMissing} />}
 
       <div className="more" ref={moreRef}>
         {isFetchingNextPage && <div>loading...</div>}
@@ -76,10 +73,8 @@ const MissingDetail = () => {
         deletePost={removeMissingPost}
       />
 
-      <NewPostButton
-        path={`/boards/missings/${postId}/report/write`}
-        text="제보하기"
-      />
+      <NewPostButton path={`/boards/missings/${postId}/report/write`} text="제보하기" />
+      <Footer />
     </section>
   );
 };

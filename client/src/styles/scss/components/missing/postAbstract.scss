@@ -6,10 +6,14 @@
   //   width: 374rem;
   //   margin: 8rem 0 16rem;
   // }
+  position: relative;
+
   .thumbnail {
     height: 300rem;
-    width: 374rem;
+    width: 100%;
     margin: 8rem 0 16rem;
+    border-radius: $round-5;
+    overflow: hidden;
 
     img {
       width: 100%;
