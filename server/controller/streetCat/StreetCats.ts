@@ -265,18 +265,35 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
 
 
 // 동네 고양이 지도
-export const getStreetCatMap = async (req: Request, res: Response) => {
-  console.log("ts - getStreetCatMap()")
-  try {
-    await prisma.$transaction(async () => {
-      const streetCatMap = await readStreetCatMap();
-      console.log("streetCatMap")
-      console.log(streetCatMap)
+// export const getStreetCatMap = async (req: Request, res: Response) => {
+//   try {
+//     await prisma.$transaction(async () => {
+//       const streetCatMap = await readStreetCatMap();
 
-      res.status(200).json(streetCatMap);
-    })
+//       res.status(200).json(streetCatMap);
+//     })
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "동네 고양이 지도 error" });
+//   }
+// }
+
+export const getStreetCatMap = async (req: Request, res: Response) => {
+  try {
+    const lat = parseFloat(req.query.lat as string);
+    const lng = parseFloat(req.query.lng as string);
+    const latRange = parseFloat(req.query.latRange as string);
+    const lngRange = parseFloat(req.query.lngRange as string);
+
+    if (isNaN(lat) || isNaN(lng) || isNaN(latRange) || isNaN(lngRange)) {
+      return res.status(400).json({ message: '파라미터값 부족' });
+    }
+
+    const streetCatMap = await readStreetCatMap(lat, lng, latRange, lngRange);
+
+    res.status(200).json(streetCatMap);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "동네 고양이 지도 error" });
+    console.error('동네 고양이 지도:', error);
+    res.status(500).json({ message: '동네 고양이 지도 서버에러' });
   }
 }

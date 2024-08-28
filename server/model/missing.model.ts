@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { IMissingCat, IMissingCreate, IMissingReport } from "../types/missing";
+import { IMissingCat, IMissingCreate, IMissingGet, IMissingReport } from "../types/missing";
 import { IImageBridge } from "../types/image";
 import { TCategoryId } from "../types/category";
 import { IListData, IPostData } from "../types/post";
@@ -88,19 +88,22 @@ export const addMissingCat = async (
   tx: Prisma.TransactionClient,
   cat: IMissingCat
 ) => {
-  console.log("고양이 정보:", cat);
   return await tx.missingCats.create({
-    data: cat,
+    data: {
+      ...cat,
+      birth: new Date(cat.birth as string)
+    },
   })
 }
 
 export const getPostList = async (
-  listData: IListData
+  listData: IListData,
+  missingId?: number
 ): Promise<any> => {
   const { categoryId } = listData;
   switch (categoryId) {
     case 3: return await getMissingsList(listData);
-    case 4: return await getMissingReportsList(listData);
+    case 4: return await getMissingReportsList(listData, missingId as number);
   }
 };
 
@@ -123,7 +126,7 @@ const getMissingsList = async (
       cursor: cursor ? { postId: cursor } : undefined,
       orderBy: [
         {
-          [orderBy.sortBy]: orderBy.sortOrder,
+          createdAt: "desc",
         },
         {
           postId: "desc",
@@ -142,17 +145,20 @@ const getMissingsList = async (
 }
 
 const getMissingReportsList = async (
-  listData: IListData
+  listData: IListData,
+  missingId: number,
 ) => {
   const { limit, cursor, orderBy } = listData;
 
   const fetchMissingReportsByFoundStatus = async (
     matchStatus: string,
+    missingId: number,
     limit: number,
-    cursor?: number
+    cursor?: number | undefined
   ) => {
     return await prisma.missingReports.findMany({
       where: {
+        missingId,
         match: matchStatus
       },
       select: missingReportDataSelect,
@@ -169,15 +175,15 @@ const getMissingReportsList = async (
       ],
     });
   };
-  const matchList = await fetchMissingReportsByFoundStatus("Y", limit, cursor);
+  const matchList = await fetchMissingReportsByFoundStatus("Y", missingId, limit, cursor);
   let remainingLimit = limit - matchList.length;
-  const checkingList = remainingLimit > 0 ? await fetchMissingReportsByFoundStatus("-", remainingLimit, cursor) : [];
+  const checkingList = remainingLimit > 0 ? await fetchMissingReportsByFoundStatus("-", missingId, remainingLimit, cursor) : [];
 
   let posts = [...matchList, ...checkingList];
 
   remainingLimit = limit - posts.length;
 
-  const unmatchList = await fetchMissingReportsByFoundStatus("N", limit, cursor);
+  const unmatchList = await fetchMissingReportsByFoundStatus("N", missingId, limit, cursor);
 
   posts = [...posts, ...unmatchList];
 
@@ -199,6 +205,7 @@ export const removePost = async (
   postData: IPostData
 ) => {
   const model = getCategoryModel(postData.categoryId)
+  console.log("여기는 remove", model)
 
   if (model) {
     return await (tx as any)[model].delete({
@@ -262,6 +269,16 @@ export const deleteImageFormats = async (
         },
       });
   }
+};
+
+export const removeImagesByIds = async (tx: Prisma.TransactionClient, imageIds: number[]) => {
+  return await tx.missingImages.deleteMany({
+    where: {
+      imageId: {
+        in: imageIds,
+      },
+    },
+  });
 };
 
 export const deleteLocationFormats = async (
@@ -341,6 +358,16 @@ export const getLocationFormatsByPostId = async (
   }
 };
 
+export const getReportCount = async (
+  postId: number
+) => {
+  return await prisma.missingReports.count({
+    where: {
+      missingId: postId
+    }
+  })
+}
+
 export const getImageFormatsByPostId = async (
   tx: Prisma.TransactionClient,
   postData: {
@@ -388,9 +415,10 @@ export const updateMissingByPostId = async (
   tx: Prisma.TransactionClient,
   postId: number,
   uuid: Buffer,
-  catId: number,
-  detail: string,
-  time: Date
+  missing: {
+    time: string,
+    detail: string
+  }
 ) => {
   return await tx.missings.update({
     where: {
@@ -398,9 +426,29 @@ export const updateMissingByPostId = async (
       uuid,
     },
     data: {
-      catId,
-      time,
-      detail,
+      time: new Date(missing.time),
+      detail: missing.detail
+    },
+  });
+};
+
+export const updateMissingCatByCat = async (
+  tx: Prisma.TransactionClient,
+  catId: number,
+  cat: {
+    name: string,
+    birth: string,
+    detail: string,
+    gender: string
+  }
+) => {
+  return await tx.missingCats.update({
+    where: {
+      missingCatId: catId
+    },
+    data: {
+      ...cat,
+      birth: new Date(cat.birth as string)
     },
   });
 };
@@ -445,9 +493,10 @@ export const updateMissingReportCheckByPostId = async (
   postData: IPostData,
   match: string
 ) => {
+  console.log(match)
   return await tx.missingReports.update({
     where: {
-      uuid: postData.userId,
+      // uuid: postData.userId,
       postId: postData.postId,
     },
     data: {
@@ -455,21 +504,6 @@ export const updateMissingReportCheckByPostId = async (
     },
   });
 };
-
-export const createMissingCat = async (
-  tx: Prisma.TransactionClient,
-  data: {
-    name: string,
-    age?: number,
-    gender?: string,
-    uuid: Buffer,
-    detail?: string
-  }
-) => {
-  await tx.missingCats.create({
-    data
-  });
-}
 
 export const deleteMissingCat = async (
   tx: Prisma.TransactionClient,

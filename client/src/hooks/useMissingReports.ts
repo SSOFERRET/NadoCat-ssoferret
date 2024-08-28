@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { /*getMissingPosts,*/ getMissingReportPosts/*, Sort*/ } from "../api/missing.api";
 
-const useMissingReports = () => {
+const useMissingReports = (missingId: number) => {
   const {
     data,
     isLoading,
@@ -11,15 +11,15 @@ const useMissingReports = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["missing"],
-    queryFn: ({ pageParam = 0 }) => getMissingReportPosts({ pageParam }),
+    queryKey: ["missingReport", missingId],
+    queryFn: ({ pageParam = 0, queryKey }) => {
+      const missingId = Number(queryKey[1]);
+      return getMissingReportPosts({ pageParam, missingId });
+    },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const nextCursor = lastPage.pagination.nextCursor;
-      if (nextCursor) {
-        return nextCursor;
-      }
-      return undefined;
+      return nextCursor ? nextCursor : undefined;
     },
   });
 

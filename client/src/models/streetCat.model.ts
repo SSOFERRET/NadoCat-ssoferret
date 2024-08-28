@@ -79,7 +79,7 @@ export interface IStreetCatDetail extends IStreetCat {
 }
 
 export interface IStreetCatComment {
-  streetCatCommentId: number;
+  commentId: number;
   comment: string;
   createdAt: Date;
   users: IUsers;

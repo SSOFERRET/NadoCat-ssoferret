@@ -1,12 +1,12 @@
-import { /*React,*/ /*useCallback, useRef, */ useState } from "react";
+import { useState } from "react";
 import "../../styles/scss/components/streetCat/postDetail.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-// import { IStreetCatDetail } from "../../models/streetCat.model";
 import ImageCarousel from "../common/ImageCarousel";
 import { IImage } from "../../models/image.model";
 import FavoriteButton from "../common/FavoriteButton";
 import PostMenu from "../communityAndEvent/PostMenu";
 import { useDeleteStreetCatPost } from "../../hooks/useStreetCat";
+import { useAuthStore } from "../../store/userStore";
 
 interface IProps {
   postId?: number;
@@ -16,10 +16,13 @@ interface IProps {
   neutered?: string;
   content?: string;
   streetCatImages?: IImage[];
+  uuid?: string;
   streetCatFavorites?: [postId: number];
 }
 
 const PostDetail = (props: IProps) => {
+  const { uuid } = useAuthStore();
+  console.log("uuid ", uuid)
   const images: IImage[] = props.streetCatImages || [];
   const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
 
@@ -58,9 +61,13 @@ const PostDetail = (props: IProps) => {
             ) : (
               ""
             )}
-            <span className="more-btn" onClick={toggleMenu}>
-              <HiOutlineDotsVertical />
-            </span>
+            {
+              uuid &&
+              uuid === props.uuid &&
+              <span className="more-btn" onClick={toggleMenu}>
+                <HiOutlineDotsVertical />
+              </span>
+            }
           </div>
         </div>
 

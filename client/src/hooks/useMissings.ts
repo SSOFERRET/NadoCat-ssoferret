@@ -1,7 +1,5 @@
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { createMissingPost, getMissingPosts, Sort } from "../api/missing.api";
-import { queryClient } from "../api/queryClient";
-import { ISubmitData } from "../components/missing/MissingEventWriteForm";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getMissingPosts, Sort } from "../api/missing.api";
 
 const useMissings = (sort?: Sort) => {
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -17,16 +15,6 @@ const useMissings = (sort?: Sort) => {
     },
   });
 
-  const { mutateAsync: addMissingPost } = useMutation({
-    mutationFn: (submitData: ISubmitData) => createMissingPost(submitData),
-    onSuccess: (post) => {
-      const postId = post.postId;
-      queryClient.invalidateQueries({ queryKey: ["missingDetail", postId] });
-    },
-    onError: (error) => {
-      console.error("Error creating missing post:", error);
-    },
-  });
 
   const posts = data ? data.pages.flatMap((page) => page.posts) : [];
   const isEmpty = posts.length === 0;
@@ -40,7 +28,7 @@ const useMissings = (sort?: Sort) => {
     isFetchingNextPage,
     isFetching,
     isEmpty,
-    addMissingPost,
+    // addMissingPost,
     missings: posts,
   };
 };
