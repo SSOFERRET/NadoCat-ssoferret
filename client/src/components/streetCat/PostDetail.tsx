@@ -16,7 +16,7 @@ interface IProps {
   neutered?: string;
   content?: string;
   streetCatImages?: IImage[];
-  uuid?: string;
+  uuid?: string | Buffer;
   streetCatFavorites?: [postId: number];
 }
 
