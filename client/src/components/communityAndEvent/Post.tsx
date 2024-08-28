@@ -48,7 +48,6 @@ const Post = <T extends PostType>({ post }: IProps<T>) => {
         const dataSrc = target.dataset.src;
         if (dataSrc) {
           target.src = dataSrc;
-          console.log(`Image src updated to: ${target.src}`);
         }
       }
     }

@@ -31,7 +31,7 @@ const Missings = () => {
       {isLoading ? (
         <div>loading...</div>
       ) : (
-        <>
+        <div className="missing-contents">
           <div className="category">
             <span>실종 고양이</span>
           </div>
@@ -44,8 +44,10 @@ const Missings = () => {
             {isFetchingNextPage && <div>loading...</div>}
           </div>
 
-          <NewPostButton path="/boards/missings/write" text="실종 신고" />
-        </>
+          <div>
+            <NewPostButton path="/boards/missings/write" text="실종 신고" />
+          </div>
+        </div>
       )}
     </section>
   );

@@ -9,7 +9,7 @@ interface IProps {
   options?: EmblaOptionsType;
   children: React.ReactNode;
   isShowButon?: boolean;
-  category: "streetCat" | "missings";
+  category: "streetCat" | "missings" | "missing-reports";
 }
 
 const EmblaCarousel = ({ options, children, isShowButon = true, category }: IProps) => {
@@ -19,7 +19,7 @@ const EmblaCarousel = ({ options, children, isShowButon = true, category }: IPro
 
   return (
     <section className={`embla ${category}`}>
-      <div className="embla__viewport" ref={emblaRef}>
+      <div className={`embla__viewport ${category}`} ref={emblaRef}>
         <div className={`embla__container ${category}`}>{children}</div>
       </div>
 

@@ -1,7 +1,4 @@
-import {
-  /*IMissing,*/ IMissing,
-  IMissingReport,
-} from "../../models/missing.model";
+import { /*IMissing,*/ IMissing, IMissingReport } from "../../models/missing.model";
 import "./../../styles/scss/components/missing/missingReportPost.scss";
 import PostHead from "./missingPost/PostHead";
 import PostSummary from "./common/PostSummary";
@@ -10,6 +7,10 @@ import { useState } from "react";
 import MissingReportPostMenu from "./MissingReportPostMenu";
 import { useParams } from "react-router-dom";
 import { useDeleteMissingReport } from "../../hooks/useMissingReport";
+import defaultImage from "../../assets/img/heartCat.png";
+import ModalPotal from "../modal/ModalPotal";
+import ImageCarousel from "../common/ImageCarousel";
+import { RxCross1 } from "react-icons/rx";
 
 interface IProps {
   post: IMissingReport;
@@ -18,6 +19,8 @@ interface IProps {
 
 const MissingReportPost = ({ post, missing }: IProps) => {
   const [isShowMenu, setIsShowMenu] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);
     console.log("show?", isShowMenu);
@@ -26,17 +29,61 @@ const MissingReportPost = ({ post, missing }: IProps) => {
   const postId = Number(useParams().id);
   const { mutateAsync: deletePost } = useDeleteMissingReport();
 
+  const openImageModal = () => {
+    setIsOpenModal(true);
+  };
+
+  const closeImageModal = () => {
+    setIsOpenModal(false);
+  };
+
+  const handleImageModal = (e: React.MouseEvent<HTMLDivElement>) => {
+    console.log(e.target === e.currentTarget);
+    if (e.target === e.currentTarget) {
+      setIsOpenModal((prev) => !prev);
+    }
+  };
+
+  console.log(isOpenModal);
   return (
-    <section className={`report-post-box ${post.match}`}>
-      <PostHead data={post} showMenu={showMenu} />
-      <div className="image-map">
-        <div className="image-container">
-          <img src="/src/assets/img/heartCat.png" />
+    <>
+      <section className={`report-post-box ${post.match}`}>
+        <PostHead data={post} showMenu={showMenu} />
+        <div className="image-map">
+          {/* <div className="image-container">
+            {post.images.length > 0 ? (
+              <EmblaCarousel category="missing-reports" isShowButon={false}>
+                {post.images.map((item) => (
+                  <div className="embla__slide" key={item.imageId}>
+                    <div className="embla__slide__number">
+                      <div className="missing-cat-image-container">
+                        <img src={item.url} loading="lazy" alt={item.imageId.toString()} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </EmblaCarousel>
+            ) : (
+              <img src={defaultImage} />
+            )}
+          </div> */}
+
+          <div className="image-container" onClick={openImageModal}>
+            {post.images.length > 0 ? (
+              <img src={post.images[0].url} alt={post.images[0].imageId.toString()} />
+            ) : (
+              <img src={defaultImage} />
+            )}
+          </div>
+
+          <div className="map-container">
+            <MapBox locations={post.locations} />
+          </div>
         </div>
-        <div className="map-container">
-          <MapBox locations={post.locations} />
-        </div>
-      </div>
+
+        <PostSummary data={post} />
+      </section>
+
       <MissingReportPostMenu
         postUser={post.users.uuid}
         loginUser={loginUser}
@@ -48,8 +95,24 @@ const MissingReportPost = ({ post, missing }: IProps) => {
         showMenu={showMenu}
         isShowMenu={isShowMenu}
       />
-      <PostSummary data={post} />
-    </section>
+
+      {post.images.length > 0 && isOpenModal && (
+        <ModalPotal>
+          <div className="image-modal">
+            <div className="overlay" onClick={handleImageModal}>
+              <div className={`button-container`}>
+                <button className="close-button" onClick={closeImageModal}>
+                  <RxCross1 />
+                </button>
+              </div>
+              <div className="image-box">
+                <ImageCarousel isDots={false} images={post.images} round="round-0" />
+              </div>
+            </div>
+          </div>
+        </ModalPotal>
+      )}
+    </>
   );
   // 좋아요 리포트 수 (-)
 };

@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const OPTIONS: EmblaOptionsType = {
   containScroll: "trimSnaps",
   align: "start",
-  // slidesToScroll: 1,
   dragFree: true,
   loop: false,
 };
@@ -41,7 +40,7 @@ const HomeStreetCats = () => {
                 )}
                 <a href={`/boards/street-cats/${cat?.postId}`}>
                   <div className="home-street-cat-image-container">
-                    <img src={cat?.streetCatImages[0]?.images.url} loading="lazy" />
+                    <img src={cat?.streetCatImages[0]?.images.url} loading="lazy" alt="Street cat" />
                   </div>
                   <div className="street-cat-info">
                     <span className="name">{cat?.name}</span>
@@ -58,17 +57,3 @@ const HomeStreetCats = () => {
 };
 
 export default HomeStreetCats;
-
-{
-  /* {slides.map((index) => (
-            <div className="embla__slide" key={index}>
-              <div className="embla__slide__number">
-                <img
-                  className="embla__slide__img"
-                  src={`https://picsum.photos/600/350?v=${index}`}
-                  alt="Your alt text"
-                />
-              </div>
-            </div>
-          ))} */
-}
