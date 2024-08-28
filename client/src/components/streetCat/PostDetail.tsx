@@ -22,7 +22,6 @@ interface IProps {
 
 const PostDetail = (props: IProps) => {
   const { uuid } = useAuthStore();
-  console.log("uuid ", uuid)
   const images: IImage[] = props.streetCatImages || [];
   const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
 

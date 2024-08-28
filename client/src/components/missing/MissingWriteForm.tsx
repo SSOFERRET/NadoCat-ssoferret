@@ -1,9 +1,10 @@
 import { BiCheck } from "react-icons/bi";
-import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
+import "../../styles/scss/pages/missing/missingWriteForm.scss";
 import ImageUploader from "../communityAndEvent/ImageUploader";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Calendar from "../streetCat/Calendar";
 import LocationForm from "../streetCat/LocationForm";
+import CustomSelect from "./reportPost/CustomSelect";
 
 interface IMissingWriteFormProps {
   onSubmit: (formData: FormData) => void;
@@ -41,7 +42,6 @@ export const formatDateTime = (
 
 const MissingWriteForm: React.FC<IMissingWriteFormProps> = ({ onSubmit }) => {
   const [newImages, setNewImages] = useState<(string | File)[]>([]);
-
   const [name, setName] = useState<string>("");
   const [catDetail, setCatDetail] = useState<string>("");
   const [selectedGender, setSelectedGender] = useState<string>("암컷");
@@ -149,13 +149,20 @@ const MissingWriteForm: React.FC<IMissingWriteFormProps> = ({ onSubmit }) => {
     onSubmit(formData);
   };
 
+  const years = new Array(25).fill(0).map((_, index) => (2024 - index).toString());
+  const months = new Array(12).fill(0).map((_, index) => (index + 1).toString());
+
+  const ampmOptions = ["오전", "오후"];
+  const hourOptions = new Array(12).fill(0).map((_, index) => `${index + 1}`);
+  const minuteOptions = new Array(6).fill(0).map((_, index) => `${index}0`);
+
   return (
     <>
       <ImageUploader
         newImages={newImages}
         setNewImageFiles={setNewImageFiles}
       />
-      <section className="street-cat-write-section">
+      <section className="missing-cat-write-section">
         <form className="write-form-container" onSubmit={handleSubmit}>
           <div className="write-form name">
             <span className="input-title">고양이 이름</span>
@@ -211,26 +218,18 @@ const MissingWriteForm: React.FC<IMissingWriteFormProps> = ({ onSubmit }) => {
 
           <div className="write-form birth">
             <span className="input-title">출생 연월</span>
-            <select
-              value={selectedBirthYear}
-              onChange={(e) => setSelectedBirthYear(e.target.value)}
-            >
-              {new Array(25).fill(0).map((_, index) => (
-                <option key={`year-${2024 - index}`} value={`${2024 - index}`}>
-                  {2024 - index}
-                </option>
-              ))}
-            </select>
-            <select
-              value={selectedBirthMonth}
-              onChange={(e) => setSelectedBirthMonth(e.target.value)}
-            >
-              {new Array(12).fill(0).map((_, index) => (
-                <option key={`${index + 1}`} value={`${index + 1}`}>
-                  {`${index + 1}`}
-                </option>
-              ))}
-            </select>
+            <CustomSelect
+              options={years}
+              selectedValue={selectedBirthYear}
+              onSelect={setSelectedBirthYear}
+              placeholder="출생 연도를 선택하세요"
+            />
+            <CustomSelect
+              options={months}
+              selectedValue={selectedBirthMonth}
+              onSelect={setSelectedBirthMonth}
+              placeholder="출생 월을 선택하세요"
+            />
           </div>
 
           <div className="write-form name">
@@ -256,50 +255,26 @@ const MissingWriteForm: React.FC<IMissingWriteFormProps> = ({ onSubmit }) => {
           </div>
 
           <div className="write-form time">
-            <input
-              id="gender_female"
-              type="radio"
-              name="ampm"
-              value="오전"
-              checked={selectedAmPm === "오전"}
-              onChange={(e) => setSelectedAmPm(e.target.value)}
+            <CustomSelect
+              options={ampmOptions}
+              selectedValue={selectedAmPm}
+              onSelect={setSelectedAmPm}
+              placeholder="Select AM/PM"
             />
-            <label htmlFor="gender_female">
-              <BiCheck />
-              오전
-            </label>
-            <input
-              id="gender_female"
-              type="radio"
-              name="ampm"
-              value="오후"
-              checked={selectedAmPm === "오후"}
-              onChange={(e) => setSelectedAmPm(e.target.value)}
+
+            <CustomSelect
+              options={hourOptions}
+              selectedValue={selectedHour}
+              onSelect={setSelectedHour}
+              placeholder="Select Hour"
             />
-            <label htmlFor="gender_female">
-              <BiCheck />
-              오후
-            </label>
-            <select
-              value={selectedHour}
-              onChange={(e) => setSelectedHour(e.target.value)}
-            >
-              {new Array(12).fill(0).map((_, index) => (
-                <option key={`hour-${index + 1}`} value={`${index + 1}`}>
-                  {index + 1}
-                </option>
-              ))}
-            </select>
-            <select
-              value={selectedMinute}
-              onChange={(e) => setSelectedMinute(e.target.value)}
-            >
-              {new Array(6).fill(0).map((_, index) => (
-                <option key={`minute-${index}0`} value={`${index}0`}>
-                  {`${index}0`}
-                </option>
-              ))}
-            </select>
+
+            <CustomSelect
+              options={minuteOptions}
+              selectedValue={selectedMinute}
+              onSelect={setSelectedMinute}
+              placeholder="Select Minute"
+            />
           </div>
 
           <div className="write-form location">
