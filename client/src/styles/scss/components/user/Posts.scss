@@ -15,14 +15,15 @@
   }
   .postsBox{
     border-bottom: .5px solid $silver;
-    height: 11vh;
+    height: 7em;
     display: flex;
-    width: 100%;
+    width: 90%;
     
     .postsContents{
       display: flex;
       flex-direction: column;
       height: auto;
+      justify-content: center;
       &.withImg{
         width:75%;
       }
@@ -30,22 +31,22 @@
         width:100%;
       }
       .title{
-        @include font(16px, black);
+        @include font(15px, black);
         font-family: "bold";
-        line-height: 1.2em;
+        // line-height: 1;
         margin: 0;
         width: 100%;
         text-overflow: ellipsis;
         white-space: nowrap;
         max-height: 20em;
         overflow: hidden;
-        height: 30%;
-        padding: .5em 0;
+        height: 25%;
+        position: relative;
       }
       .contents{
         @include font(14px, $black);
         font-family: "medium";
-        line-height: 1.2em;
+        // line-height: 1.2em;
         width: 90%;
         margin: 0;
         display: -webkit-box;
@@ -54,17 +55,16 @@
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
         overflow: hidden;
-        height: 35%;
+        max-height: 3em;
         
       }
       #time{
         @include font(12px, $silver);
         font-size: "medium";
-        max-height: 1.7em;
         margin: 0;
         height: 20%;
         position: relative;
-        bottom: -1.2vh;
+        bottom: -.8em;
       }
     }
     .postsImg{
@@ -76,7 +76,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 1vh;
+      margin-top: 1.2em;
       img{
         height: 100%;
         width: 100%;
