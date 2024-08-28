@@ -24,10 +24,7 @@ const MissingReportPost = ({ post, missing }: IProps) => {
   };
   const loginUser = sessionStorage.getItem("uuid") || "";
   const postId = Number(useParams().id);
-  const { mutate: deletePost } = useDeleteMissingReport();
-  const handleDelete = () => {
-    deletePost({ postId: missing.postId, reportId: post.postId });
-  };
+  const { mutateAsync: deletePost } = useDeleteMissingReport();
 
   return (
     <section className={`report-post-box ${post.match}`}>
@@ -45,7 +42,7 @@ const MissingReportPost = ({ post, missing }: IProps) => {
         loginUser={loginUser}
         ownerUser={missing.users.uuid}
         reportId={post.postId}
-        deletePost={handleDelete}
+        deletePost={deletePost}
         matchState={post.match}
         postId={postId}
         showMenu={showMenu}

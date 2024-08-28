@@ -57,7 +57,8 @@ export const getMissingReports = async (req: Request, res: Response) => {
     orderBy: { sortBy: "createdAt", sortOrder: "asc" },
     categoryId: CATEGORY.MISSING_REPORTS
   };
-  return await getPosts(req, res, listData);
+  const missingId = Number(req.params.missingId);
+  return await getPosts(req, res, listData, missingId);
 }
 
 export const getMissingReport = async (req: Request, res: Response) => {
@@ -205,7 +206,7 @@ export const deleteMissingReportHandler = async (
   res: Response
 ) => {
   try {
-    deleteMissingReport(req, res);
+    await deleteMissingReport(req, res);
   } catch (error) {
     if (error instanceof Error) return validateError(res, error);
   }
