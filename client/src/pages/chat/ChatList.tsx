@@ -32,6 +32,9 @@ const ChatList = () => {
     const fetchChatLists = async () => {
       try {
         const response = await axios.get(ENDPOINT + "/chats/chatlist", {
+          headers: {
+            "x-user-uuid": sessionStorage.getItem("uuid"),
+          },
         });
         const chatLists = response.data;
 
