@@ -123,7 +123,6 @@ export const My = () => {
             isMyPage={currentUuid === loggedUser} //본인 페이지 여부
           />
           {/* <Logout /> */}
-          <div style={{fontSize:"2vh"}} onClick={handleSendToChat}>채팅하기</div>
           <p>{userData.detail}</p>
           <MyTab></MyTab>
         </div>

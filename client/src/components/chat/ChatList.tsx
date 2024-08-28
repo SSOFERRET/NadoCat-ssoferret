@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import "../../styles/scss/components/chat/ChatList.scss";
 import "../../styles/css/base/reset.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
 import DefaultImg from "../../assets/img/DefaultImg.png";
-import { Buffer } from 'buffer';
+import { Buffer } from "buffer";
 
 export interface IList {
   users: {

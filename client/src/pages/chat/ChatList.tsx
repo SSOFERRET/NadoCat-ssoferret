@@ -31,7 +31,7 @@ const ChatList = () => {
   useEffect(() => {
     const fetchChatLists = async () => {
       try {
-        const response = await axios.get(ENDPOINT + '/chats/chatlist', {
+        const response = await axios.get(ENDPOINT + "/chats/chatlist", {
           headers: {
             "x-user-uuid": localStorage.getItem("uuid")
           },
@@ -60,7 +60,7 @@ const ChatList = () => {
 
         setList(updatedLists);
       } catch (error) {
-        console.error('Error fetching chat lists:', error);
+        console.error("Error fetching chat lists:", error);
       }
     };
 
@@ -70,7 +70,7 @@ const ChatList = () => {
   return (
     <div className="chatList">
       <div className="header">
-        <div id='title'>채팅</div>
+        <div id="title">채팅</div>
         {
         list.length ? 
         <ChatListC lists={list}/>:
