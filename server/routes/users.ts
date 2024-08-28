@@ -21,6 +21,7 @@ import {
 import { follow, followings, getFollowing, unfollow } from "../controller/friend/Friends";
 import { ensureAutorization } from "../middleware/auth";
 import uploadImages from "../multer";
+import { getInterests } from "../controller/interest/Interests";
 
 const router = express.Router();
 
@@ -34,7 +35,8 @@ router.get("/auth/google", google);
 
 router.get("/user/:uuid", ensureAutorization, userPage); //사용자 프로필
 router.get("/my", ensureAutorization, myPage); //마이페이지
-// router.get("/my//setting", ensureAutorization, setting); //필요X
+router.get("/my/interests", ensureAutorization , getInterests);
+
 router.put("/my/setting/nickname", ensureAutorization, updateNickname);
 router.put("/my/setting/detail", ensureAutorization, updateDetail);
 router.post("/my/setting/auth-password", ensureAutorization, authPassword);

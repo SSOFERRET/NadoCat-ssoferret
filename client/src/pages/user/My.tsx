@@ -102,7 +102,7 @@ export const My = () => {
           />
           {/* <Logout /> */}
           <p>{userData.detail}</p>
-          <MyTab></MyTab>
+          <MyTab />
         </div>
       )}
     </>
