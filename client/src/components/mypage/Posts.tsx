@@ -4,7 +4,8 @@ import "../../styles/css/base/reset.css";
 import NoLike from "../../assets/img/NoLike.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { useAuthStore } from "../../store/userStore";
+import { myInterests } from "../../api/user.api";
 
 export interface Post {
   title: string;
@@ -15,23 +16,44 @@ export interface Post {
   thumbnail?: string;
 }
 
-const ENDPOINT = "http://localhost:8080";
+// const ENDPOINT = "http://localhost:8080";
 
 const Posts: React.FC = () => {
   const navigate = useNavigate();
-
   const [lists, setLists] = useState<Post[]>([]);
 
-  useEffect(() => {
-    const uuid = localStorage.getItem("uuid")
-    axios.post(ENDPOINT + "/boards/Interests", {uuid})
-    .then(response => {
-      setLists(response.data);
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  }, [])
+
+  //[ ]추가 코드
+  const { uuid } = useAuthStore(); // 현재 로그인한 사용자의 UUID
+  useEffect(() => { //처음 렌더링시 storedUuid설정
+    const fetchInterests = async () => {
+      try {
+        const interestPosts = await myInterests(uuid);
+        console.log("클라이언트interestPosts:", interestPosts);
+        setLists(interestPosts);
+      } catch (error) {
+        console.error("관심글 불러오기 에러: ", error);
+      }
+    };
+
+    if(uuid) {
+      fetchInterests();
+    }
+}, [uuid]);  // loggedUser가 업데이트될 때마다 실행
+
+
+// useEffect(() => {
+//   const uuid = localStorage.getItem("uuid")
+//   axios.post(ENDPOINT + "/boards/Interests", {uuid})
+//   .then(response => {
+//     setLists(response.data);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   })
+// }, []);
+
+
 
   const dateChanger = (isoString: string) => {
     const date = new Date(isoString);

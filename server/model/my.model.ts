@@ -102,7 +102,7 @@ export const getAuthPassword = async (uuid: string) => {
   }
 };
 
-// [ ]사용자 비밀번호 변경
+// [x]사용자 비밀번호 변경
 export const updateNewPassword = async (uuid: string, newPassword: string) => {
   const hashing = async (password: string) => {
     const saltRound = 10;
@@ -142,6 +142,30 @@ export const updateNewPassword = async (uuid: string, newPassword: string) => {
     throw new Error("마이페이지 사용자 정보 업데이트에서 오류 발생");
   }
 };
+
+
+//[ ]회원탈퇴
+export const deleteUserInactive = async (uuid: string) => {
+  const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
+  try {
+        // 사용자 정보 업데이트
+    const updateUser = await prisma.users.update({
+      where: {
+        uuid: uuidBuffer,
+      },
+      data: {
+        status: "inactive",
+      },
+    });
+    
+    return { updateUser };
+    
+  } catch (error) {
+    console.log("회원탈퇴 error:", error);
+    throw new Error("회원탈퇴에서 오류 발생");
+  }
+}
+
 
 //[x]프로필 이미지 저장 로직 추가
 export const addProfileImageFormats = async (

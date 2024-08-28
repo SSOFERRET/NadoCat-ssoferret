@@ -13,61 +13,83 @@
     flex: 1;
     margin: 0 55rem;
 
+    
+    &.my-page .nickname-text {
+      margin-bottom: 34rem; 
+    }
+    
+
+
+
+
     .nickname-text {
       display: flex;
       align-items: center;
-      gap: 3rem;
-      margin-bottom: 8rem;
+      gap: 10rem;
 
       span {
-        font-size: $size-19;
-        word-break: break-all;
-      }
+            font-size: $size-19;
+            word-break: break-all;
+          }
+    
+          span:first-of-type {
+            font-family: "bold";
+          }
+    
+          span:last-of-type {
+            color: $dimgray;
+            font-family: "medium";
+            font-size: 17rem;
+          }
+    
+          p {
+            font-size: $size-16;
+            font-weight: bold;
+            word-break: break-all;
+          }
+    }
 
-      span:first-of-type {
-        font-family: "bold";
-      }
 
-      span:last-of-type {
-        color: $dimgray;
-        font-family: "medium";
-        font-size: 17rem;
-      }
+    .btn-set{
+      display: flex;
+      gap: 10rem;
+      margin-top: 10rem; // 닉네임 아래쪽으로 여유 공간 추가
 
-      p {
-        font-size: $size-16;
-        font-weight: bold;
-        word-break: break-all;
+         .chat-btn {
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: $size-12;
+          background-color: #eeeeee;
+          border: none;
+          padding: 5rem 9rem;
+          border-radius: $round-5;
+          font-family: "medium";
+  
+          // 원하시면 hover 할때 애니메이션 넣으셔도 됩니다.
+          &:hover {
+            background-color: #f79a72;
+            color: $white;
+          }
       }
     }
 
-    .change-profile-btn {
-      button {
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: $size-12;
-        background-color: $whitesmoke;
-        border: none;
-        padding: 5rem 9rem;
-        border-radius: $round-5;
-        font-family: "medium";
+}
 
-        // 원하시면 hover 할때 애니메이션 넣으셔도 됩니다.
-        &:hover {
-          background-color: $primary;
-          color: $white;
-        }
-      }
+    .settings-button {
+      margin-left: auto; //세팅버튼 오른쪽으로
+      margin-bottom: 34rem;
+      font-size: 22rem;
+      background-color: transparent;
+      border: none;
+      color: $dimgray;
+      cursor: pointer;
     }
-  }
 
-  .settings-button {
-    font-size: 22rem;
-    background-color: transparent;
-    border: none;
-    color: $dimgray;
-    cursor: pointer;
-  }
+    .hidden-button {
+      visibility: hidden;
+      pointer-events: none;
+    }
+  
 }
