@@ -30,7 +30,7 @@ export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cur
   }
 }
 
-  export const readPostsWithFavorites = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number) => {
+export const readPostsWithFavorites = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number) => {
   const streetCatPosts = await prisma.streetCats.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
@@ -319,7 +319,7 @@ export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: B
     take: limit,
     skip: cursor ? 1 : 0,
 
-    ...(cursor && { cursor: { postId: cursor} }),
+    ...(cursor && { cursor: { postId: cursor } }),
     orderBy: {
       createdAt: "desc"
     },
@@ -613,3 +613,24 @@ export const readStreetCatMap = async (lat: number, lng: number, latRange: numbe
     throw new Error("Failed to fetch street cat map");
   }
 };
+
+export const getStreetCatForOpenSearchData = async (postId: number) => {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const getPost = await readPost(postId);
+      const name = getPost?.name;
+      const content = getPost?.content;
+      const users = getPost?.users;
+      const createdAt = getPost?.createdAt;
+      const image = getPost?.streetCatImages[0].url;
+      const locationId = Number(getPost?.locationId);
+      const getLocation = await readLocation(tx, locationId);
+      const postData = { name, content, users, image, createdAt, location: getLocation };
+      console.log(image)
+      return postData
+
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}

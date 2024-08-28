@@ -25,7 +25,7 @@ const PostList = ({ posts }: IProps) => {
             return isMissing(post) ? (
               <>
                 {(post as IMissing).found && (
-                  <div className="found-overlay">
+                  <div className="found-overlay" key={`${post.postId}-overlay`}>
                     <span>수색종료</span>
                   </div>
                 )}

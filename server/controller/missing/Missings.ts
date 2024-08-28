@@ -90,7 +90,7 @@ export const getMissing = async (req: Request, res: Response) => {
 
 
       return res
-        .status(StatusCodes.CREATED)
+        .status(StatusCodes.OK)
         .json({ ...post, images });
     });
   } catch (error) {
