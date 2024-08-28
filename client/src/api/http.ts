@@ -83,7 +83,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
           } catch (error) {
             if(uuid){
               console.error("토큰 재발급 실패:", error);
-              alert("세션이 만료되었습니다. 로그인 화면으로 이동합니다!");
+              alert("세션이 만료되었거나 사용자가 아닙니다. 로그인 화면으로 이동합니다!");
               await storeLogout(uuid);
               window.location.href = "/users/login";
               return Promise.reject(error);
@@ -93,7 +93,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
          // 위에서 이미 한번 요청해서 originalRequest._retry = true인데 또 요청(무한루프 막기위한 에러처리)
         }else {
             if(uuid){
-              alert("세션이 만료되었습니다. 로그인 화면으로 이동합니다!");
+              alert("세션이 만료되었거나 사용자가 아닙니다. 로그인 화면으로 이동합니다!");
               await storeLogout(uuid);
               window.location.href = "/users/login";
               return Promise.reject(error);
