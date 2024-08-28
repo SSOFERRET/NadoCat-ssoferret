@@ -1,6 +1,5 @@
 import { formatViews } from "../../../utils/format/format";
 import "./../../../styles/scss/components/missing/postInfo.scss";
-import { TbViewfinder } from "react-icons/tb";
 import { GrView } from "react-icons/gr";
 
 interface IProps {

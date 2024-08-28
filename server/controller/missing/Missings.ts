@@ -84,9 +84,8 @@ export const getMissing = async (req: Request, res: Response) => {
 
       // const reportCount = await getReportCount(postId);
 
-      //NOTE view
-      // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
-      // post.views += viewIncrementResult || 0;
+      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
+      post.views += viewIncrementResult || 0;
 
 
       return res
