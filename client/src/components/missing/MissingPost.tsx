@@ -25,13 +25,10 @@ const MissingPost = ({ post }: IProps) => {
 
   const { removeMissingPost } = useMissing(post.postId);
 
-  console.log(post);
-
   return (
     <>
-      <section className="post-box">
+      <section className="missing-post-box">
         <PostAbstract post={post} showMenu={showMenu} />
-        <PostInfo reports={10} views={post.views} />
       </section>
       <PostMenu
         boardType="missing"

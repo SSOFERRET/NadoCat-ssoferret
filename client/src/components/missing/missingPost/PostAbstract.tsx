@@ -6,6 +6,7 @@ import PostSummary from "../common/PostSummary";
 import { /*IMenuList, */ IMissing } from "../../../models/missing.model";
 // import { formatDate } from "../../../utils/format/format";
 import { useLocation, useNavigate } from "react-router-dom";
+import PostInfo from "./PostInfo";
 
 interface IProps {
   post: IMissing;
@@ -21,12 +22,16 @@ const PostAbstract = ({ post, navigateUser, showMenu }: IProps) => {
 
   return (
     <section className="post-abstract">
-      <PostHead data={post} navigateUser={navigateUser} showMenu={showMenu} />
-      <div className="navigate-detail" onClick={navigateToPostDetail}>
-        <div className="thumbnail">
-          <img src={post.images[0].url} alt="missing-cat-thumbnail" />
+      <div className="poster">
+        <PostHead data={post} navigateUser={navigateUser} showMenu={showMenu} />
+
+        <div className="navigate-detail" onClick={navigateToPostDetail}>
+          <div className="thumbnail">
+            <img src={post.images[0].url} alt="missing-cat-thumbnail" />
+          </div>
+          <PostSummary data={post} />
+          <PostInfo reports={10} views={post.views} />
         </div>
-        <PostSummary data={post} />
       </div>
     </section>
   );

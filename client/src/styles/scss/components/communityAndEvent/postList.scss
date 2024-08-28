@@ -1,4 +1,19 @@
 @import "../../base/common.scss";
 
 .list {
+  position: relative;
+  .found-overlay {
+    font-size: 52rem;
+    z-index: 50;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    position: absolute;
+    width: 100%;
+    height: 33.314%;
+    display: flex;
+    justify-content: center;
+    span {
+      margin-top: 120rem;
+    }
+  }
 }

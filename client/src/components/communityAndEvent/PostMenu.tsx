@@ -8,6 +8,7 @@ import { SortMenu } from "../../utils/sort/sortMenu";
 import { useAuthStore } from "../../store/userStore";
 import CustomModal from "../user/CustomModal";
 import { useState } from "react";
+import { useUpdateFound } from "../../hooks/useMissing";
 
 export type DeletePost = { postId: number };
 
@@ -56,6 +57,7 @@ const PostMenu = ({
     useCommentStore();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { storeLogout, uuid } = useAuthStore();
+  const { mutate: updateFound } = useUpdateFound();
 
   const handleMenu = (
     e: React.MouseEvent<HTMLDivElement | HTMLUListElement>
@@ -190,6 +192,12 @@ const PostMenu = ({
     setIsOpenModal(false);
   };
 
+  const handleUpdateFound = () => {
+    if (typeof postId !== "number") return;
+
+    updateFound({ postId, found: true });
+  };
+
   return (
     <div
       className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
@@ -207,6 +215,11 @@ const PostMenu = ({
       >
         {menuType === "post" && (
           <>
+            {boardType === "missing" && !found && (
+              <li onClick={handleUpdateFound}>
+                <span>수색 종료</span>
+              </li>
+            )}
             {boardType === "missing" && (
               <li onClick={handleAddMissingReport}>
                 <span>제보글 작성하기</span>
