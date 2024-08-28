@@ -128,7 +128,18 @@ export const getChatList = async (req: Request, res: Response) => {
           }
       });
 
-      res.status(200).json(chats);
+      const chatListWithUnreadCounts = chats.map(chat => {
+        const unreadCount = chat.messages.filter(
+          msg => !msg.isRead && msg.uuid !== userUuidBuffer
+        ).length;
+  
+        return {
+          ...chat,
+          unreadCount,  // 읽지 않은 메시지 개수 추가
+        };
+      });
+
+      res.status(200).json(chatListWithUnreadCounts);
   } catch (error) {
       console.error("Error fetching chat list:", error);
       res.status(500).json({ error: "Failed to fetch chat list" });
@@ -205,6 +216,20 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
   socket.on("join", async ({ uuid, roomId }) => {
     try {
       const chatId = parseInt(roomId, 10);
+
+      await prisma.messages.updateMany({
+        where: {
+          chatId: chatId,
+          isRead: 0,  // 읽지 않은 메시지만
+          uuid: {
+            not: Buffer.from(uuid, 'hex'),  // 자기 자신의 메시지는 제외
+          },
+        },
+        data: {
+          isRead: 1,
+        },
+      });
+
       const previousMessages = await prisma.messages.findMany({
         where: {
           chatId: chatId, 
@@ -218,6 +243,7 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
         uuid: msg.uuid,
         message: msg.content,
         time: msg.sentAt.toLocaleTimeString(),
+        isRead: msg.isRead,
       })));
 
       socket.to(roomId).emit('message', {

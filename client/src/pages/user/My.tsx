@@ -120,9 +120,10 @@ export const My = () => {
             profileImageUrl={userData.profileImageUrl}
             uuid={userData.uuid}
             onAvatarClick={handleAvatarClick}
-            // isMyPage={currentUuid === loggedUser} //본인 페이지 여부
+            isMyPage={currentUuid === loggedUser} //본인 페이지 여부
           />
           {/* <Logout /> */}
+          <div style={{fontSize:"2vh"}} onClick={handleSendToChat}>채팅하기</div>
           <p>{userData.detail}</p>
           <MyTab></MyTab>
         </div>

@@ -6,10 +6,10 @@ import NoList from "../../assets/img/StartChat.png";
 import { Buffer } from "buffer";
 
 interface IList{
-  img: string;
   users: {
     nickname: string;
-  }
+    profileImage: string;
+  };
   messages: {
     content: string;
     sentAt: string;
@@ -21,6 +21,7 @@ interface IList{
     data: number[];
   };
   chatId: string;
+  unreadCount: number;
 }
 const ENDPOINT = "http://localhost:8080";
 
