@@ -1,0 +1,66 @@
+@import "../../base/common.scss";
+
+.custom-select {
+  display: inline-block;
+  width: 80rem;
+  height: 30rem;
+  padding: 7rem;
+  font-family: "medium";
+  font-size: $size-12;
+  margin-right: 5rem;
+  columns: $dimgray;
+  border: 1rem solid $lightgray;
+  border-radius: $round-5;
+  position: relative;
+}
+
+.select-box {
+  background-color: transparent;
+  border-radius: 5rem;
+  font-family: "medium";
+  font-size: $size-14;
+  color: $dimgray;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1rem solid #ccc;
+  border-radius: 5rem;
+  margin-top: 5rem;
+  box-shadow: 0 2rem 10rem rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 200rem;
+  overflow-y: auto;
+}
+
+.option {
+  padding: 10rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.option:hover {
+  background-color: $pale;
+}
+
+.options::-webkit-scrollbar {
+  width: 5rem;
+}
+
+.options::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10rem;
+}
+
+.options::-webkit-scrollbar-thumb {
+  background-color: $primary;
+  border-radius: 10rem; 
+}

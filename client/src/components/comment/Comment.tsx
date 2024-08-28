@@ -109,8 +109,6 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
 
   const canShowOptionsIcon = uuid === comment.users.uuid;
   const isEditingCurrentComment = selectedCommentId === comment.commentId;
-  console.log("isEditingCurrentComment ", isEditingCurrentComment)
-  console.log("comment.commentId ", comment.commentId)
   const showOptionsIcon = canShowOptionsIcon && !isEditingCurrentComment && !isCommentEdit;
 
   return (
