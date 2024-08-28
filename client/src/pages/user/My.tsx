@@ -38,15 +38,12 @@ export const My = () => {
   const currentUuid = currentUrl.split("/").pop(); // URL에서 마지막 부분 추출
   console.log("currentUuid::", currentUuid);
 
-  // const [forceRender, setForceRender] = useState(false);
-
    useEffect(() => { //처음 렌더링시 storedUuid설정
       const storedUuid = getUuid();
       console.log("storedUuid::", storedUuid);
 
       if(!loggedUser && storedUuid){
         useAuthStore.setState({ uuid: storedUuid }); // zustand의 상태 업데이트
-        // setForceRender(prev => !prev); //상태변경 강제 렌더링
       }
   }, [loggedUser]);  // loggedUser가 업데이트될 때마다 실행
 
