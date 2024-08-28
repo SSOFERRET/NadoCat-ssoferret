@@ -97,12 +97,13 @@ export const addMissingCat = async (
 }
 
 export const getPostList = async (
-  listData: IListData
+  listData: IListData,
+  missingId?: number
 ): Promise<any> => {
   const { categoryId } = listData;
   switch (categoryId) {
     case 3: return await getMissingsList(listData);
-    case 4: return await getMissingReportsList(listData);
+    case 4: return await getMissingReportsList(listData, missingId as number);
   }
 };
 
@@ -144,17 +145,20 @@ const getMissingsList = async (
 }
 
 const getMissingReportsList = async (
-  listData: IListData
+  listData: IListData,
+  missingId: number,
 ) => {
   const { limit, cursor, orderBy } = listData;
 
   const fetchMissingReportsByFoundStatus = async (
     matchStatus: string,
+    missingId: number,
     limit: number,
-    cursor?: number
+    cursor?: number | undefined
   ) => {
     return await prisma.missingReports.findMany({
       where: {
+        missingId,
         match: matchStatus
       },
       select: missingReportDataSelect,
@@ -171,15 +175,15 @@ const getMissingReportsList = async (
       ],
     });
   };
-  const matchList = await fetchMissingReportsByFoundStatus("Y", limit, cursor);
+  const matchList = await fetchMissingReportsByFoundStatus("Y", missingId, limit, cursor);
   let remainingLimit = limit - matchList.length;
-  const checkingList = remainingLimit > 0 ? await fetchMissingReportsByFoundStatus("-", remainingLimit, cursor) : [];
+  const checkingList = remainingLimit > 0 ? await fetchMissingReportsByFoundStatus("-", missingId, remainingLimit, cursor) : [];
 
   let posts = [...matchList, ...checkingList];
 
   remainingLimit = limit - posts.length;
 
-  const unmatchList = await fetchMissingReportsByFoundStatus("N", limit, cursor);
+  const unmatchList = await fetchMissingReportsByFoundStatus("N", missingId, limit, cursor);
 
   posts = [...posts, ...unmatchList];
 
@@ -201,6 +205,7 @@ export const removePost = async (
   postData: IPostData
 ) => {
   const model = getCategoryModel(postData.categoryId)
+  console.log("여기는 remove", model)
 
   if (model) {
     return await (tx as any)[model].delete({
@@ -352,6 +357,16 @@ export const getLocationFormatsByPostId = async (
       });
   }
 };
+
+export const getReportCount = async (
+  postId: number
+) => {
+  return await prisma.missingReports.count({
+    where: {
+      missingId: postId
+    }
+  })
+}
 
 export const getImageFormatsByPostId = async (
   tx: Prisma.TransactionClient,

@@ -82,9 +82,12 @@ export const getMissing = async (req: Request, res: Response) => {
         imagesFormats?.map(async (format) => await getImageById(tx, format.imageId)) || []
       );
 
+      // const reportCount = await getReportCount(postId);
+
       //NOTE view
       // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
       // post.views += viewIncrementResult || 0;
+
 
       return res
         .status(StatusCodes.CREATED)

@@ -13,7 +13,13 @@ interface IProps {
   postId: number;
   isShowMenu: boolean;
   showMenu: () => void;
-  deletePost: () => void;
+  deletePost: ({
+    postId,
+    reportId,
+  }: {
+    postId: number;
+    reportId: number;
+  }) => Promise<void>;
   matchState: string;
 }
 
@@ -68,6 +74,21 @@ const MissingReportPostMenu = ({
     showMenu();
   };
 
+  const handlePostDelete = () => {
+    if (!deletePost) {
+      return;
+    }
+
+    if (!postId) {
+      return;
+    }
+
+    deletePost({ postId, reportId }).then(() => {
+      showMenu();
+      navigate(`/boards/missings/${postId}`);
+    });
+  };
+
   return (
     <div
       className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
@@ -107,7 +128,7 @@ const MissingReportPostMenu = ({
             <li onClick={handleUpdatePost}>
               <span>게시글 수정</span>
             </li>
-            <li className="delete" onClick={deletePost}>
+            <li className="delete" onClick={handlePostDelete}>
               <span>게시글 삭제</span>
             </li>
           </>
