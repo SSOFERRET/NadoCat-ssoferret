@@ -17,9 +17,19 @@
     --slide-size: 228rem;
   }
 
+  &.missing-reports {
+    --slide-height: 180rem;
+    --slide-spacing: 0;
+    --slide-size: 200rem;
+  }
+
   .embla__viewport {
     overflow: hidden;
     padding: 0 20rem;
+
+    &.missing-reports {
+      padding: 0;
+    }
   }
 
   .embla__container {
