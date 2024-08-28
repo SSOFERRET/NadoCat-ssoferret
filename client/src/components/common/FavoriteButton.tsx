@@ -22,8 +22,8 @@ const FavoriteButton: React.FC<IFavoriteButtonProps> = ({ postId, like, onToggle
 
   const toggleFavorite = () => {
     if (!uuid) {
-      setModalOpen(true)
-      return;
+      setModalOpen(true);
+      
     }
 
     if (isFavorite) {
@@ -62,12 +62,6 @@ const FavoriteButton: React.FC<IFavoriteButtonProps> = ({ postId, like, onToggle
       <Modal
         isOpen={modalOpen}
         onClosed={handleModalClose}
-        actionTitle="로그인 하기"
-        textf="로그인이 필요합니다."
-        textl="로그인 하시겠습니까?"
-        onClickAction={() => {
-          navigate("/users/login")
-        }}
       />
     </>
   );

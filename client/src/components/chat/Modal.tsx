@@ -1,7 +1,6 @@
 import React from "react";
 import "../../styles/scss/components/chat/Modal.scss";
 import axios from "axios";
-// import { useNavigate } from 'react-router-dom';
 
 interface Props {
   isOpen: boolean;
