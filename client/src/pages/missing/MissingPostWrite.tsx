@@ -1,12 +1,7 @@
 import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 import { useNavigate } from "react-router-dom";
-import useMissings from "../../hooks/useMissings";
-import MissingCatWriteForm from "../../components/missing/MissingCatWriteForm";
-import { useState } from "react";
-import { ILocation } from "../../models/location.model";
-import MissingEventWriteForm, {
-  ISubmitData,
-} from "../../components/missing/MissingEventWriteForm";
+import MissingWriteForm from "../../components/missing/MissingWriteForm";
+import { addMissingPost } from "../../hooks/useMissing";
 
 export interface ICatInfo {
   catName: string;
@@ -15,38 +10,20 @@ export interface ICatInfo {
   detail: string;
 }
 
-export interface IMissingEventInfo {
-  time?: string;
-  location?: ILocation;
-  detail?: string;
-}
-
-const MissingPostWrite = () => {
+const MissingPostWrite: React.FC = () => {
+  const { mutate: submitPost } = addMissingPost();
   const navigate = useNavigate();
-  const { addMissingPost } = useMissings();
-  const [catInfo, setCatInfo] = useState<ICatInfo | undefined>();
-  // const [eventInfo, setEventInfo] = useState<IMissingEventInfo | undefined>();
 
-  const addPost = (submitData: ISubmitData) => {
-    addMissingPost(submitData).then((data) => {
-      console.log("작성 완료!");
-      navigate(`/boards/missings/${data.postId}`);
-    });
+  const handleFormSubmit = async (formData: FormData) => {
+    await submitPost(formData);
+    navigate("/boards/missings");
   };
 
   return (
-    <div className="missing-post-edit">
+    <>
       <HeaderWithBackButton />
-      {catInfo?.catName ? (
-        <>
-          <p className="info">고양이 정보 입력 완료</p>
-          <p>{catInfo.catName}</p>
-          <MissingEventWriteForm catInfo={catInfo} addPost={addPost} />
-        </>
-      ) : (
-        <MissingCatWriteForm setCatInfo={setCatInfo} />
-      )}
-    </div>
+      <MissingWriteForm onSubmit={handleFormSubmit} />
+    </>
   );
 };
 

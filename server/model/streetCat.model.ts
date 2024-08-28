@@ -60,17 +60,6 @@ export const readPosts = async (tx: Prisma.TransactionClient, limit: number, cur
     }
   })
 
-  // return streetCatPosts.map((post) => {
-  //   return {
-  //     postId: post.postId,
-  //     categoryId: post.categoryId,
-  //     createdAt: post.createdAt,
-  //     gender: post.gender,
-  //     name: post.name,
-  //     thumbnail: post.streetCatImages.length > 0 ? post.streetCatImages[0].images.url : null,
-  //     isFavorite: post.streetCatFavorites.length > 0,
-  //   }
-  // });
   return {
     streetCatPosts
   }
@@ -91,7 +80,7 @@ export const readPost = async (postId: number) => {
       locationId: true,
       content: true,
       views: true,
-      // uuid: true,
+      uuid: true,
       createdAt: true,
       streetCatImages: {
         select: {
@@ -123,6 +112,8 @@ export const readPost = async (postId: number) => {
 
   if (!streetCatPost) { return null };
 
+  const streetCatPostUuid = streetCatPost.uuid.toString('hex');
+  const userUuid = streetCatPost.users.uuid.toString('hex');
   const steetCatImages = streetCatPost.streetCatImages.map((image) => ({
     imageId: image.images.imageId,
     url: image.images.url
@@ -130,8 +121,13 @@ export const readPost = async (postId: number) => {
 
   return {
     ...streetCatPost,
-    streetCatImages: steetCatImages
-  }
+    uuid: streetCatPostUuid,
+    users: {
+      ...streetCatPost.users,
+      uuid: userUuid,
+    },
+    streetCatImages: steetCatImages,
+  };
 }
 
 export const getStreetCatById = async (
@@ -294,6 +290,30 @@ export const deleteImages = async (
   });
 };
 
+// export const readFavoriteCatPosts = async (
+//   tx: Prisma.TransactionClient,
+//   uuid: Buffer,
+//   limit: number,
+//   cursor?: number,
+//   postIds?: number[]
+// ) => {
+//   const favoriteCatPosts = await tx.$queryRaw<Prisma.streetCats[]>`
+//     SELECT sc.*
+//     FROM StreetCats sc
+//     INNER JOIN (
+//       SELECT postId, MAX(createdAt) as maxCreatedAt
+//       FROM StreetCatFavorites
+//       GROUP BY postId
+//     ) scf ON sc.postId = scf.postId
+//     WHERE sc.postId IN (${Prisma.join(postIds)})
+//     ORDER BY scf.maxCreatedAt DESC
+//     LIMIT ${limit}
+//     OFFSET ${cursor ? cursor : 0}
+//   `;
+
+//   return favoriteCatPosts;
+// };
+
 export const readFavoriteCatPosts = async (tx: Prisma.TransactionClient, uuid: Buffer, limit: number, cursor?: number, postIds?: number[]) => {
   const favoriteCatPosts = await prisma.streetCats.findMany({
     take: limit,
@@ -406,17 +426,18 @@ export const removeAllFavoriteCat = async (postId: number) => {
   })
 }
 
-export const readComments = async (tx: Prisma.TransactionClient, streetCatId: number, limit: number, cursor?: number) => {
+export const readComments = async (
+  tx: Prisma.TransactionClient,
+  streetCatId: number,
+  limit: number,
+  cursor?: number
+) => {
   const streetCatComments = await prisma.streetCatComments.findMany({
     take: limit,
     skip: cursor ? 1 : 0,
     ...(cursor && { cursor: { streetCatCommentId: cursor } }),
-    where: {
-      streetCatId,
-    },
-    orderBy: {
-      createdAt: "asc"
-    },
+    where: { streetCatId },
+    orderBy: { createdAt: "asc" },
     select: {
       streetCatCommentId: true,
       comment: true,
@@ -431,12 +452,24 @@ export const readComments = async (tx: Prisma.TransactionClient, streetCatId: nu
         }
       },
     }
-  })
+  });
+
+  const transformedComments = streetCatComments.map(comment => ({
+    commentId: comment.streetCatCommentId,
+    comment: comment.comment,
+    createdAt: comment.createdAt,
+    updatedAt: comment.updatedAt,
+    users: {
+      ...comment.users,
+      uuid: comment.users.uuid.toString('hex'),
+    },
+  }));
 
   return {
-    streetCatComments
-  }
-}
+    streetCatComments: transformedComments,
+  };
+};
+
 
 export const addComment = async (uuid: Buffer, postId: number, comment: string) => {
   return await prisma.streetCatComments.create({
@@ -479,9 +512,65 @@ export const removeAllComment = async (streetCatId: number) => {
   })
 }
 
-export const readStreetCatMap = async () => {
+// export const readStreetCatMap = async () => {
+//   try {
+//     const locations = await prisma.locations.findMany({
+//       select: {
+//         locationId: true,
+//         latitude: true,
+//         longitude: true,
+//         detail: true,
+//         streetCats: {
+//           select: {
+//             postId: true,
+//             name: true,
+//             discoveryDate: true,
+//             streetCatImages: {
+//               select: {
+//                 imageId: true,
+//                 images: {
+//                   select: {
+//                     url: true,
+//                   },
+//                 },
+//               },
+//             },
+//           },
+//         },
+//       },
+//     });
+
+//     const streetCatMap = locations.map(location => ({
+//       ...location,
+//       streetCats: location.streetCats.map(cat => ({
+//         ...cat,
+//         streetCatImages: cat.streetCatImages.map(catImage => ({
+//           ...catImage,
+//           images: catImage.images.url || null,
+//         })),
+//       })),
+//     }));
+
+//     return streetCatMap;
+//   } catch (error) {
+//     console.error("Error in readStreetCatMap:", error);
+//     throw new Error("Failed to fetch street cat map");
+//   }
+// };
+
+export const readStreetCatMap = async (lat: number, lng: number, latRange: number, lngRange: number) => {
   try {
     const locations = await prisma.locations.findMany({
+      where: {
+        latitude: {
+          gte: lat - latRange,
+          lte: lat + latRange,
+        },
+        longitude: {
+          gte: lng - lngRange,
+          lte: lng + lngRange,
+        },
+      },
       select: {
         locationId: true,
         latitude: true,

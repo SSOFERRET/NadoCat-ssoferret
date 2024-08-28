@@ -122,9 +122,15 @@ const PostMenu = ({
     showMenu();
   };
 
+  const handleAddMissingReport = () => {
+    if (!boardType) return;
+
+    navigate(`${getPostPath(boardType)}/${postId}/report/write`);
+    showMenu();
+  };
+
   const isPostSortMenu = menuType === "sort" && sortMenu && sort;
 
-  //이미지
   const handleUploadClick = () => {
     if (uploadImage) {
       const fileInput = document.createElement("input");
@@ -179,7 +185,7 @@ const PostMenu = ({
   };
 
   const handleLogoutCancel = () => {
-    setIsOpenModal(false); 
+    setIsOpenModal(false);
   };
 
   return (
@@ -199,6 +205,11 @@ const PostMenu = ({
       >
         {menuType === "post" && (
           <>
+            {boardType === "missing" && (
+              <li onClick={handleAddMissingReport}>
+                <span>제보글 작성하기</span>
+              </li>
+            )}
             <li onClick={handleUpdatePost}>
               <span>게시글 수정</span>
             </li>
@@ -262,8 +273,8 @@ const PostMenu = ({
         isOpen={isOpenModal}
         message={["정말 로그아웃 하시겠습니까?"]}
         buttons={[
-          {label: "예", onClick: handleLogout},
-          {label: "아니오", onClick: handleLogoutCancel}
+          { label: "예", onClick: handleLogout },
+          { label: "아니오", onClick: handleLogoutCancel },
         ]}
       />
     </div>

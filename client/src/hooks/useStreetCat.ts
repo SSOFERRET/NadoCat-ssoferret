@@ -15,14 +15,22 @@ interface IStreetCatEdit {
   postId: number;
 }
 
+interface IMapData {
+  lat: number;
+  lng: number;
+  latRange: number;
+  lngRange: number;
+}
+
 export const useReadStreetCatPost = (postId: number) => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["streetCatDetail", postId],
     queryFn: () => getStreetCatPost({ postId })
   });
 
   return {
-    data
+    data,
+    isLoading
   }
 }
 
@@ -104,16 +112,37 @@ export const useDeleteComment = () => {
   });
 };
 
-export const useReadStreetMap = () => {
-  console.log("use - useReadStreetMap()")
-  const {data} = useQuery({
-    queryKey: ["streetCatMap"],
-    queryFn: () => getStreetCatMap()
+// export const useReadStreetMap = () => {
+//   console.log("use - useReadStreetMap()")
+//   const {data} = useQuery({
+//     queryKey: ["streetCatMap"],
+//     queryFn: () => getStreetCatMap()
+//   });
+
+//   console.log("use", data)
+
+//   return {
+//     data
+//   }
+// }
+
+export const useReadStreetMap = (lat: number, lng: number, level: number) => {
+  const latRange = 0.009;
+  const lngRange = 0.011;
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['streetCatMap', lat, lng, level],
+    queryFn: () => {
+      if (lat === undefined || lng === undefined) {
+        return [];
+      }
+      return getStreetCatMap({ lat, lng, latRange, lngRange });
+    },
   });
 
-  console.log("use", data)
-
   return {
-    data
-  }
-}
+    data,
+    error,
+    isLoading,
+  };
+};

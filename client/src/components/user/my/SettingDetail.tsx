@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { /*React,*/ useEffect } from "react";
 import HeaderWithBackButton from "../../../components/common/HeaderWithBackButton";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/scss/components/user/my/settingDetail.scss";
