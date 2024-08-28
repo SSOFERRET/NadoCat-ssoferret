@@ -1,8 +1,7 @@
 import React /*,{ useCallback, useRef }*/ from "react";
 import "../../styles/scss/components/streetCat/streetCatPosts.scss";
-import { ISearch, ISearchInfo } from "../../hooks/useSearch";
+import { ISearch } from "../../hooks/useSearch";
 import { IMissing } from "../../models/missing.model";
-import { IImage } from "../../models/image.model";
 
 export interface ICat {
   postId: number;

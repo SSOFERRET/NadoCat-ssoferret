@@ -2,7 +2,6 @@ import "../../styles/scss/pages/search/search.scss";
 import { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import UnfindableCat from "../../assets/img/unfindableCat.png";
-import Post from "../../components/communityAndEvent/Post";
 // import useDebounce from "../../hooks/useDebounce";
 import {
   deleteAllLocalStorage,
@@ -15,11 +14,8 @@ import { IoMdCloseCircle } from "react-icons/io";
 import useSearch, {
   /*ISearch,*/ ISearchInfo /*TIndex*/,
 } from "../../hooks/useSearch";
-import { ICommunity } from "../../models/community.model";
-import { IEvent } from "../../models/event.model";
 // import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
 import LoadingCat from "../../components/loading/LoadingCat";
-import CatSearchList from "../../components/search/CatSearchList";
 import SearchContainer from "./SearchContainer";
 
 // NOTE 이건 지우면 아래 카테고리가 동작 안해용..
@@ -101,10 +97,12 @@ const Search = () => {
   };
 
   const getTotalCount = () => {
-    return data?.reduce(
+    const total = data?.reduce(
       (acc: number, current: ISearchInfo) => acc + current.totalcount.value,
       0
     );
+
+    return total;
   };
 
   const deleteAllRecentKeyword = () => {

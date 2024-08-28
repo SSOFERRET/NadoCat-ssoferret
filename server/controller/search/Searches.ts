@@ -10,6 +10,7 @@ import { getEventById } from "../../model/event.model";
 import { getMissingById, getPostByPostId } from "../../model/missing.model";
 import { getStreetCat } from "../streetCat/StreetCats";
 import { getStreetCatById, getStreetCatForOpenSearchData, readPost } from "../../model/streetCat.model";
+import { StatusCodes } from "http-status-codes";
 
 const getId = (categoryId: TCategoryId, postId: number) => `${categoryId}_${postId}`;
 
@@ -205,3 +206,50 @@ export const indexResultToOpensearch = async (categoryId: TCategoryId, postId: n
     await indexOpensearchDocument(categoryId, postId, postDataForOpensearch);
   });
 };
+
+export const searchDocumentsPagination = async (req: Request, res: Response) => {
+  const { query, page = 1, pageSize = 10, category } = req.query;
+
+  const pageNumber = parseInt(page as string, 10) || 1;
+  const size = parseInt(pageSize as string, 10) || 10;
+  const from = (pageNumber - 1) * size;
+
+  try {
+    const result = await opensearch.search({
+      index: category as string,
+      body: {
+        track_total_hits: true,
+        query: {
+          bool: {
+            should: [
+              { match: { content: query } },
+              { match: { title: query } },
+              { match: { detail: query } },
+              { match: { name: query } },
+              { match: { "missingCats.name": query } },
+              { match: { "locations.detail": query } },
+              { match: { "location.detail": query } },
+              { match: { "tags.tag": query } },
+              { match: { tags: query } },
+            ],
+          },
+        },
+      },
+      from,
+      size,
+    });
+
+    res.status(StatusCodes.OK).json({
+      category: category,
+      search: result.body.hits.hits,
+      totalcount: result.body.hits.total,
+    });
+  } catch (error) {
+    console.log(`No ${category}`, error);
+    res.status(StatusCodes.BAD_REQUEST).json({
+      category: category,
+      search: [],
+      totalcount: { value: 0 },
+    });
+  }
+}
