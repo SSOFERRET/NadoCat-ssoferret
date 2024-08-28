@@ -3,7 +3,6 @@ import { useAddFavoriteCat, useDeleteFavoriteCat } from '../../hooks/useStreetCa
 import { GoHeartFill } from "react-icons/go";
 import { useAuthStore } from "../../store/userStore";
 import Modal from "./Modal";
-import { useNavigate } from "react-router-dom";
 
 interface IFavoriteButtonProps {
   postId: number;
@@ -14,7 +13,6 @@ interface IFavoriteButtonProps {
 const FavoriteButton: React.FC<IFavoriteButtonProps> = ({ postId, like, onToggle }) => {
   const [isFavorite, setIsFavorite] = useState<number>(like);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const navigate = useNavigate();
   const { uuid } = useAuthStore();
 
   const addFavoriteMutation = useAddFavoriteCat();
