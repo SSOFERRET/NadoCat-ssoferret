@@ -6,8 +6,9 @@ import { login } from "../../api/user.api";
 import "../../styles/scss/pages/user/login.scss";
 import { IoIosArrowBack } from "react-icons/io";
 import { RiKakaoTalkFill } from "react-icons/ri";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { useAuthStore } from "../../store/userStore";
+import { AxiosError } from "axios";
 
 const KAKAO_AUTH_URL = `${
   import.meta.env.VITE_KAKAO_AUTH_URL
@@ -28,6 +29,7 @@ export interface LoginProps {
 const Login = () => {
   const navigate = useNavigate();
   const [autoLogin, setAutoLogin] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
   const {register, setFocus, handleSubmit, formState: { errors },
   } = useForm<LoginProps>();
   const {storeLogin} = useAuthStore(); //로컬에 UUID저장
@@ -45,9 +47,13 @@ const Login = () => {
       navigate("/");
 
     } catch (error) {
-      console.error("로그인 오류:", error);
+      if (error instanceof AxiosError && error.response && error.response.status === 401) {
+        setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
+      } else {
+        console.error("로그인 중 오류 발생:", error);
+        setLoginError("로그인 중 문제가 발생했습니다. 다시 시도해주세요.")
+      }
     }
-    //   sessionStorage.setItem("uuid", user.uuid);
   };
 
   const handleBack = () => {
@@ -107,6 +113,8 @@ const Login = () => {
             )}
           </fieldset>
 
+            {loginError && <p className="login-error-message">{loginError}</p>}
+
           <fieldset className="check-field">
             <label className="auto-login">
               <input
@@ -129,10 +137,10 @@ const Login = () => {
             <RiKakaoTalkFill />
             <a href={KAKAO_AUTH_URL}>Kakao로 시작하기</a>
           </button>
-          <button className="login-btn google">
+          {/* <button className="login-btn google">
             <FcGoogle />
             <a href="/auth/google">Google로 시작하기</a>
-          </button>
+          </button> */}
         </form>
       </div>
     </div>
