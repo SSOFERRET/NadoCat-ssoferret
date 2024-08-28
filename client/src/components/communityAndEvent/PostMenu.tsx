@@ -155,8 +155,13 @@ const PostMenu = ({
     }
   };
 
-  const handleSetting = () => {
-    navigate("/users/my/setting");
+  const handleSetting = async() => {
+    if (!uuid) {
+      console.error("uuid가 없습니다!");
+      return;
+    }
+
+    navigate("/users/my/setting", { state: { uuid } });
   };
 
   //로그아웃
@@ -181,7 +186,7 @@ const PostMenu = ({
   };
 
   const handleModalOpen = () => {
-    setIsOpenModal(true); //회원가입 끝나면 modal open
+    setIsOpenModal(true); 
   };
 
   const handleLogoutCancel = () => {

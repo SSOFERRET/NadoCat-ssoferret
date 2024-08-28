@@ -149,3 +149,14 @@ export const updateDetail = async (data: SettingDetailProps) => {
     throw error;
   }
 };
+
+
+export const deleteUser = async (uuid: string) => {
+  try {
+    const response = await httpClient.put("/users/my/setting/delete-user", {uuid});
+    return response.data;
+  } catch (error) {
+    console.error("회원탈퇴에 실패했습니다:", error);
+    throw error;
+  }
+}; 

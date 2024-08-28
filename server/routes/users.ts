@@ -10,6 +10,7 @@ import {
   updateDetail,
   userPage,
   myPage,
+  deleteUser,
 } from "../controller/user/MyPage";
 import {
   getFavoriteCats,
@@ -38,6 +39,7 @@ router.put("/my/setting/nickname", ensureAutorization, updateNickname);
 router.put("/my/setting/detail", ensureAutorization, updateDetail);
 router.post("/my/setting/auth-password", ensureAutorization, authPassword);
 router.put("/my/setting/password", ensureAutorization, updatePassword);
+router.put("/my/setting/delete-user", ensureAutorization, deleteUser);
 
 router.post("/update-profile", ensureAutorization, uploadImages.single("profileImage"), updateProfile);
 router.put("/delete-profile", ensureAutorization, deleteProfile);

@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { ensureAutorization } from "../../middleware/auth";
-import { getAuthPassword, getUser, updateNewDetail, updateNewNickname, updateNewPassword } from "../../model/my.model";
+import { deleteUserInactive, getAuthPassword, getUser, updateNewDetail, updateNewNickname, updateNewPassword } from "../../model/my.model";
 import multer from "multer";
 import {
   uploadSingleImageToS3,
@@ -230,6 +230,32 @@ export const updatePassword = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "서버 오류가 발생했습니다." });
   }
 };
+
+//[ ]회원탈퇴
+export const deleteUser = async (req: Request, res: Response) => {
+  const loginUuid = req.body.uuid; // 로그인한 사용자의 UUID
+  console.log("로그인 유저:", loginUuid);
+  try {
+    const user = await getUser(loginUuid);
+    console.log("사용자 정보: ", user);
+    if (!user) {
+      return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ message: "사용자를 찾을 수 없습니다." });
+    }
+    
+    const userInactive = await deleteUserInactive(loginUuid);
+    return res.status(StatusCodes.OK).json({
+      message: "비밀번호가 변경되었습니다.",
+      status: userInactive,
+    });
+  } catch (error) {
+    console.log("회원탈퇴 에러:", error);
+    return res.status(500).json({ message: "회원탈퇴 중 오류 발생" });
+  }
+}
+
+
 
 
 export const updateProfile = async (req: Request, res: Response) => {
