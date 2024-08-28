@@ -5,6 +5,7 @@ import { InfiniteData } from "@tanstack/react-query";
 import { IEvent } from "../../models/event.model";
 import { IMissing, IMissingPosts } from "../../models/missing.model";
 import MissingPost from "../missing/MissingPost";
+import "./../../styles/scss/components/communityAndEvent/postList.scss";
 
 interface IProps {
   posts: InfiniteData<TCategory> | undefined;
@@ -22,7 +23,14 @@ const PostList = ({ posts }: IProps) => {
         <React.Fragment key={i}>
           {group.posts.map((post: IMissing | ICommunity | IEvent) => {
             return isMissing(post) ? (
-              <MissingPost key={post.postId} post={post as IMissing} />
+              <>
+                {(post as IMissing).found && (
+                  <div className="found-overlay">
+                    <span>수색종료</span>
+                  </div>
+                )}
+                <MissingPost key={post.postId} post={post as IMissing} />
+              </>
             ) : (
               <Post key={post.postId} post={post as ICommunity | IEvent} />
             );
