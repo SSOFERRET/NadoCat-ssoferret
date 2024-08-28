@@ -100,14 +100,16 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
 
   const canShowOptionsIcon = uuid === comment.users.uuid;
   const isEditingCurrentComment = selectedCommentId === comment.commentId;
-  console.log("isEditingCurrentComment ", isEditingCurrentComment)
-  console.log("comment.commentId ", comment.commentId)
   const showOptionsIcon = canShowOptionsIcon && !isEditingCurrentComment && !isCommentEdit;
 
   return (
     <li className="comment-card">
       <div className="comment">
-        <Avatar profileImage={comment.users.profileImage} nickname={comment.users.nickname} onClick={() => navigate(`/users/${comment.users.uuid}`)} />
+        <Avatar
+          profileImage={comment.users.profileImage}
+          nickname={comment.users.nickname}
+          onClick={() => navigate(`/users/${comment.users.uuid}`)}
+        />
 
         <div className="detail">
           <div className="comment-info">

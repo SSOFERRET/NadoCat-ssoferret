@@ -15,7 +15,6 @@ const Avatar = ({ profileImage, nickname, onClick, size = "sm" }: IProps) => {
       const target = entry.target;
       if (target instanceof HTMLImageElement) {
         const dataSrc = target.dataset.src;
-        console.log(dataSrc);
         if (dataSrc) {
           target.src = dataSrc;
         }
