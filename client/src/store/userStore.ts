@@ -45,6 +45,8 @@ export const useAuthStore = create<StoreState>((set) => ({
   uuid: getUuid() || "",
 
   storeLogin: (uuid: string, isAutoLogin: boolean)  => {
+    console.log(sessionStorage.getItem("uuid"));
+
     set({isLoggedIn: true, isAutoLogin});
     setUuid(uuid);
 

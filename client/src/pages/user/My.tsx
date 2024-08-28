@@ -21,9 +21,7 @@ export interface MyProps {
 }
 
 export const My = () => {
-
   const { uuid } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
-
   const UserUuid = uuid || "";
   // 소영추가코드
 
@@ -40,7 +38,7 @@ export const My = () => {
   const currentUuid = currentUrl.split("/").pop(); // URL에서 마지막 부분 추출
   console.log("currentUuid::", currentUuid);
 
-  const [forceRender, setForceRender] = useState(false);
+  // const [forceRender, setForceRender] = useState(false);
 
    useEffect(() => { //처음 렌더링시 storedUuid설정
       const storedUuid = getUuid();
@@ -48,7 +46,7 @@ export const My = () => {
 
       if(!loggedUser && storedUuid){
         useAuthStore.setState({ uuid: storedUuid }); // zustand의 상태 업데이트
-        setForceRender(prev => !prev); //상태변경 강제 렌더링
+        // setForceRender(prev => !prev); //상태변경 강제 렌더링
       }
   }, [loggedUser]);  // loggedUser가 업데이트될 때마다 실행
 
@@ -84,16 +82,7 @@ export const My = () => {
       fetchUserData();
     }
     
-  }, [loggedUser, currentUuid, navigate, forceRender]); // isLoggedIn 상태와 UserUuid를 의존성 배열에 추가
-
-
-
-
-
- 
-
-
-
+  }, [loggedUser, currentUuid, navigate]); // isLoggedIn 상태와 UserUuid를 의존성 배열에 추가
 
   
   if (isLoading) {
