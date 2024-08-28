@@ -10,7 +10,7 @@
     font-family: "semiBold";
     font-size: $size-14; // 여기 폰트 사이즈 고민됨.. 원래 12인데 너무 작아서 저는 14로 했었습니다.
     color: silver;
-    border-bottom: 0.5rem solid $lightgray;
+    border-bottom: 0.5rem solid $white;
     padding-bottom: 10rem;
   }
 
@@ -111,15 +111,32 @@
       }
     }
   }
+  .search-result-count {
+    display: block;
+    font-family: "bold";
+    color: $primary;
+    font-size: $size-14;
+    margin-top: 17rem;
+  }
 
   .search-result-list {
-    .search-result-count {
-      display: block;
-      font-family: "bold";
-      color: $primary;
-      font-size: $size-14;
-      margin-top: 17rem;
+    .category-title {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 280rem;
     }
+  }
+  .more {
+    display: flex;
+    justify-content: center;
+    font-family: "semibold";
+    color: $primary;
+    font-size: $size-12;
+  }
+
+  .no-search {
+    font-size: $size-14;
   }
 
   // 여긴 최근 검색어
