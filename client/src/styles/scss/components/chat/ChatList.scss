@@ -67,12 +67,12 @@
       .contents{
         @include font(14em, 400, #4C4C4C);
         white-space: nowrap;
-        line-height: 1.8em;
+        line-height: 1.5em;
         margin: 0;
         width: 90%;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-height: 2vh;
+        max-height: 2em;
         overflow: hidden;
       }
       

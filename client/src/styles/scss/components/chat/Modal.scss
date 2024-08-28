@@ -33,10 +33,12 @@
     align-items: center;
     border-radius: 1.5vh;
     .alarm{
-      @include font(20em, 600, black);
+      @include font(18em, 600, black);
+      margin-top: 2vh;
     }
     .question{
-      @include font(14em, 400, #4C4C4C);
+      @include font(14em, 500, #4C4C4C);
+      margin-top: 1vh;
     }
     .buttonbox{
       display: flex;

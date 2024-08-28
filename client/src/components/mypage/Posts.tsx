@@ -16,20 +16,15 @@ export interface Post {
   thumbnail?: string;
 }
 
-// const ENDPOINT = "http://localhost:8080";
-
 const Posts: React.FC = () => {
   const navigate = useNavigate();
   const [lists, setLists] = useState<Post[]>([]);
 
-  //[ ]추가 코드
-  const { uuid } = useAuthStore(); // 현재 로그인한 사용자의 UUID
-  useEffect(() => {
-    //처음 렌더링시 storedUuid설정
+  const { uuid } = useAuthStore(); 
+  useEffect(() => { 
     const fetchInterests = async () => {
       try {
         const interestPosts = await myInterests();
-        console.log("클라이언트interestPosts:", interestPosts);
         setLists(interestPosts);
       } catch (error) {
         console.error("관심글 불러오기 에러: ", error);
@@ -39,18 +34,9 @@ const Posts: React.FC = () => {
     if (uuid) {
       fetchInterests();
     }
-  }, [uuid]); // loggedUser가 업데이트될 때마다 실행
+}, [uuid]);  
 
-  // useEffect(() => {
-  //   const uuid = localStorage.getItem("uuid")
-  //   axios.post(ENDPOINT + "/boards/Interests", {uuid})
-  //   .then(response => {
-  //     setLists(response.data);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   })
-  // }, []);
+
 
   const dateChanger = (isoString: string) => {
     const date = new Date(isoString);
