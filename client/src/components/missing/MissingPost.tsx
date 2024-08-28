@@ -25,12 +25,11 @@ const MissingPost = ({ post }: IProps) => {
 
   const { removeMissingPost } = useMissing(post.postId);
 
-  console.log(post);
-
   return (
-    <section className="post-box">
-      <PostAbstract post={post} showMenu={showMenu} />
-      <PostInfo reports={10} views={post.views} />
+    <>
+      <section className="missing-post-box">
+        <PostAbstract post={post} showMenu={showMenu} />
+      </section>
       <PostMenu
         boardType="missing"
         menuType="post"
@@ -40,7 +39,7 @@ const MissingPost = ({ post }: IProps) => {
         deletePost={removeMissingPost}
         found={post.found}
       />
-    </section>
+    </>
   );
   // 좋아요 리포트 수 (-)
 };
