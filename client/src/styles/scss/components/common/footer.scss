@@ -4,14 +4,16 @@ footer {
   display: flex;
   align-items: center;
   padding: 10rem 20rem;
-  margin: 0 auto;
+  // margin: 0 auto;
   max-width: 430rem;
   background-color: $white;
-  position: sticky;
+  position: fixed;
   bottom: 0;
   left: 0;
-  right: 0;
+  // right: 0;
   z-index: 1000;
+
+  // left: 460rem;
 }
 
 .navbar {
@@ -48,5 +50,17 @@ footer {
     display: block;
     text-align: center;
     margin-top: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  footer {
+    left: calc(50vw - 0rem);
+  }
+}
+
+@media (max-width: 1023px) {
+  footer {
+    left: calc(50vw - 222.5rem);
   }
 }

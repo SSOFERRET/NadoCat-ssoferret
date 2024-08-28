@@ -8,7 +8,6 @@ import MissingReportPostMenu from "./MissingReportPostMenu";
 import { useParams } from "react-router-dom";
 import { useDeleteMissingReport } from "../../hooks/useMissingReport";
 import defaultImage from "../../assets/img/heartCat.png";
-import ModalPotal from "../modal/ModalPotal";
 import ImageCarousel from "../common/ImageCarousel";
 import { RxCross1 } from "react-icons/rx";
 
@@ -44,30 +43,11 @@ const MissingReportPost = ({ post, missing }: IProps) => {
     }
   };
 
-  console.log(isOpenModal);
   return (
     <>
       <section className={`report-post-box ${post.match}`}>
         <PostHead data={post} showMenu={showMenu} />
         <div className="image-map">
-          {/* <div className="image-container">
-            {post.images.length > 0 ? (
-              <EmblaCarousel category="missing-reports" isShowButon={false}>
-                {post.images.map((item) => (
-                  <div className="embla__slide" key={item.imageId}>
-                    <div className="embla__slide__number">
-                      <div className="missing-cat-image-container">
-                        <img src={item.url} loading="lazy" alt={item.imageId.toString()} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </EmblaCarousel>
-            ) : (
-              <img src={defaultImage} />
-            )}
-          </div> */}
-
           <div className="image-container" onClick={openImageModal}>
             {post.images.length > 0 ? (
               <img src={post.images[0].url} alt={post.images[0].imageId.toString()} />
@@ -97,20 +77,18 @@ const MissingReportPost = ({ post, missing }: IProps) => {
       />
 
       {post.images.length > 0 && isOpenModal && (
-        <ModalPotal>
-          <div className="image-modal">
-            <div className="overlay" onClick={handleImageModal}>
-              <div className={`button-container`}>
-                <button className="close-button" onClick={closeImageModal}>
-                  <RxCross1 />
-                </button>
-              </div>
-              <div className="image-box">
-                <ImageCarousel isDots={false} images={post.images} round="round-0" />
-              </div>
+        <div className="image-modal">
+          <div className="image-modal-overlay" onClick={handleImageModal}>
+            <div className={`button-container`}>
+              <button className="close-button" onClick={closeImageModal}>
+                <RxCross1 />
+              </button>
+            </div>
+            <div className="image-box">
+              <ImageCarousel isDots={false} images={post.images} round="round-0" />
             </div>
           </div>
-        </ModalPotal>
+        </div>
       )}
     </>
   );

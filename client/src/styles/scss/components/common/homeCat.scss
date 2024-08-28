@@ -2,8 +2,10 @@
 
 .welcome-container {
   display: none;
+  position: fixed;
   width: 460rem;
   margin-top: 54rem;
+  left: calc(-460rem + 50vw);
 
   .logo {
     width: 190rem;

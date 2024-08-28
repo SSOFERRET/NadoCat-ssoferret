@@ -24,7 +24,7 @@ const Layout: React.FC = () => {
   return (
     <div className="main-layout">
       <HomeCat />
-      <section>
+      <section className="main-container">
         {!hideHeaderFooter && <Header />}
         <main className={hideHeaderFooter ? "no-headerfooter" : ""}>
           <Outlet />

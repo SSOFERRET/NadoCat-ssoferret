@@ -6,86 +6,7 @@ import { formatDate } from "../../utils/format/format";
 import { MdDateRange } from "react-icons/md";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-
-const missings = [
-  {
-    postId: 1,
-    time: "2024-08-12T00:00:00.000Z",
-    found: 0,
-    createdAt: "2024-08-25T19:27:23.000Z",
-    users: {
-      nickname: "test1",
-      profileImage: null,
-    },
-    missingCats: {
-      name: "ㅁㄴㅇㄹ",
-      detail: "ㅁㄴㅇㄹ",
-    },
-    locations: {
-      detail: "주소 주소",
-    },
-    images: [],
-  },
-  {
-    postId: 2,
-    found: 0,
-    time: "2024-08-12T00:00:00.000Z",
-    createdAt: "2024-08-25T19:27:23.000Z",
-    users: {
-      nickname: "test2",
-      profileImage: null,
-    },
-    missingCats: {
-      name: "ㅁㄴㅇㄹ",
-      detail: "ㅁㄴㅇㄹ",
-    },
-    locations: {
-      detail: "응 주소야",
-    },
-    images: [],
-  },
-  {
-    postId: 3,
-    found: 1,
-    time: "2024-08-12T00:00:00.000Z",
-    createdAt: "2024-08-25T19:27:23.000Z",
-    users: {
-      nickname: "test3",
-      profileImage: null,
-    },
-    missingCats: {
-      name: "ㅁㄴㅇㄹ",
-      detail: "ㅁㄴㅇㄹ",
-    },
-    locations: {
-      detail: "여기 주소임",
-    },
-    images: [],
-  },
-  {
-    postId: 4,
-    found: 0,
-    time: "2024-08-12T00:00:00.000Z",
-    createdAt: "2024-08-25T10:16:12.000Z",
-    users: {
-      nickname: "test4",
-      profileImage: null,
-    },
-    missingCats: {
-      name: "ㅁㄴㅇㄹ",
-      detail: "ㅁㄴㅇㄹ",
-    },
-    locations: {
-      detail: "주소다",
-    },
-    images: [
-      {
-        imageId: 1,
-        url: "https://images.unsplash.com/photo-1472491235688-bdc81a63246e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2F0fGVufDB8fDB8fHww",
-      },
-    ],
-  },
-];
+import useMissings from "../../hooks/useMissings";
 
 const OPTIONS: EmblaOptionsType = {
   containScroll: "trimSnaps",
@@ -97,7 +18,7 @@ const OPTIONS: EmblaOptionsType = {
 
 const HomeMissings = () => {
   const navigate = useNavigate();
-  // const { missings } = useMissings(); // NOTE 이걸로 변경하기
+  const { missings } = useMissings(); // NOTE 이걸로 변경하기
 
   return (
     <section className="home-missings">
