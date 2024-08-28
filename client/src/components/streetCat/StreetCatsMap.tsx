@@ -151,7 +151,7 @@ const CustomOverlayStyle = () => (
 );
 
 const StreetCatsMap: React.FC = () => {
-  useKakaoLoader({ appkey: import.meta.env.VITE_KAKAO_MAP_ADMIN_KEY });
+  useKakaoLoader({ appkey: import.meta.env.VITE_KAKAO_MAP_JAVASCRIPT_KEY });
   const [mapData, setMapData] = useState<{
     level: number;
     position: {
