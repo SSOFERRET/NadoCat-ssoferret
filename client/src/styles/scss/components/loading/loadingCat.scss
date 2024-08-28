@@ -48,3 +48,15 @@
     }
   }
 }
+
+@media (min-width: 1024px) {
+  .overlay {
+    left: calc(50vw - 0rem);
+  }
+}
+
+@media (max-width: 1023px) {
+  .overlay {
+    left: calc(50vw - 222.5rem);
+  }
+}
