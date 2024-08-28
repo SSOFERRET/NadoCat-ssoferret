@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Post from "../../components/communityAndEvent/Post";
 import CatSearchList from "../../components/search/CatSearchList";
 import { ISearchInfo } from "../../hooks/useSearch";
@@ -7,11 +8,15 @@ import { categoryNames } from "./Search";
 
 interface IProps {
   data: ISearchInfo[];
-  getTotalCount: () => void;
+  getTotalCount: () => number | undefined;
 }
 
 const SearchContainer = ({ data, getTotalCount }: IProps) => {
-  const total = getTotalCount();
+  const [total, setTotal] = useState<number>(0);
+  useEffect(() => {
+    const totalCount = getTotalCount();
+    setTotal(totalCount as number);
+  }, [getTotalCount]);
   return (
     <div className="search-result-list">
       <span className="search-result-count">총 검색 결과 수 - {total} 건</span>
