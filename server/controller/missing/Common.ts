@@ -6,8 +6,9 @@ import { getImageById } from "../../model/image.model";
 import prisma from "../../client";
 import { Prisma } from "@prisma/client";
 import { getLocationById } from "../../model/location.model";
+import { CATEGORY } from "../../constants/category";
 
-export const getPosts = async (req: Request, res: Response, postData: IListData) => {
+export const getPosts = async (req: Request, res: Response, postData: IListData, missingId?: number) => {
   try {
     const { limit, cursor, orderBy, categoryId } = postData;
     const listData = { limit, cursor, orderBy, categoryId };
@@ -15,7 +16,12 @@ export const getPosts = async (req: Request, res: Response, postData: IListData)
     const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const count = await getPostsCount(categoryId);
 
-      let posts = await getPostList(listData);
+      let posts;
+      if (categoryId === CATEGORY.MISSINGS)
+        posts = await getPostList(listData);
+      else if (categoryId === CATEGORY.MISSING_REPORTS)
+        posts = await getPostList(listData, missingId);
+
       const postIds = posts.map((post: any) => post.postId);
       const imageIds = await Promise.all(postIds.map(async (postId: number) => {
         const eachImageFormats = await getImageFormatsByPostId(tx, { categoryId, postId });
@@ -26,7 +32,7 @@ export const getPosts = async (req: Request, res: Response, postData: IListData)
       posts = posts.map((post: any, idx: number) => {
         return {
           ...post,
-          images: [thumbnails[idx]]
+          images: [thumbnails[idx]],
         }
       })
 

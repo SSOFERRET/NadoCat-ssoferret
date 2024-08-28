@@ -176,6 +176,24 @@ export const updateMatch = async (postId: number, reportId: number, match: strin
   }
 };
 
+export const updateFound = async (postId: number, found: boolean) => {
+  try {
+    const response = await httpClient.patch(
+      `/boards/missings/${postId}`,
+      { found },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating missing report post:", error);
+    throw error;
+  }
+};
+
 
 export const deleteMissingReport = async ({
   postId, reportId

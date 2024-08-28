@@ -69,14 +69,16 @@ export const useDeleteMissingReport = () => {
 
   return useMutation({
     mutationFn: ({ postId, reportId }: { postId: number, reportId: number }) => deleteMissingReport({ postId, reportId }),
-    onSuccess: () => {
-      queryClient.invalidateQueries();
+    onSuccess: (_, { reportId }) => {
+      queryClient.removeQueries({ queryKey: ["missingDetail", reportId] });
     },
     onError: (error) => {
-      console.error("Error deleting missing report post:", error);
+      console.error("Error deleting Missing post:", error);
     },
   });
 };
+
+
 
 export const useCompareUsers = (loginUser: string, ownerUser: any, postUser: any) => {
   // ownerUser와 postUser를 Buffer로 변환

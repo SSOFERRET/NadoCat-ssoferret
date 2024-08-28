@@ -13,7 +13,7 @@ export const getCategory = (categoryId: TCategoryId) => {
     case CATEGORY.COMMUNITIES: return "communities";
     case CATEGORY.EVENTS: return "events";
     case CATEGORY.MISSINGS: return "missings";
-    case CATEGORY.MISSING_REPORTS: return "missingsReports";
+    case CATEGORY.MISSING_REPORTS: return "missingReports";
     case CATEGORY.STREET_CATS: return "streetCats"
   }
 };
