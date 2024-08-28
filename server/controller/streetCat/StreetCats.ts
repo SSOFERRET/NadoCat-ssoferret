@@ -23,12 +23,6 @@ import {
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
-import {
-  deleteOpensearchDocument,
-  indexOpensearchDocument,
-  indexResultToOpensearch,
-  updateOpensearchDocument,
-} from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
@@ -158,7 +152,6 @@ export const createStreetCat = async (req: Request, res: Response) => {
     });
     res.status(201).json({ message: "동네 고양이 도감 생성" });
 
-    await indexResultToOpensearch(CATEGORY.STREET_CATS, post.postId);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -214,7 +207,6 @@ export const updateStreetCat = async (req: Request, res: Response) => {
         await deleteStreetCatImages(tx, imageIds);
         await deleteImages(tx, imageIds);
       }
-      await updateOpensearchDocument(categoryId, postId, { content });
 
       res.status(201).json({ message: "동네 고양이 도감 수정" });
     });
@@ -250,7 +242,6 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
       await removeAllFavoriteCat(postId);
       await removeAllComment(postId);
       await deletePost(tx, postId, uuid);
-      await deleteOpensearchDocument(CATEGORY.STREET_CATS, postId);
 
       // status 204는 message가 보내지지 않아 임시로 200
       res.status(200).json({ message: "동네 고양이 도감 삭제" });

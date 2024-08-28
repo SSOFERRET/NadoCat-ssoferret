@@ -14,9 +14,6 @@ import { PAGINATION } from "../../constants/pagination";
 import { getPosts } from "./Common";
 import { getMissingFavoriteAdders, getMissingReporters } from "../../model/notification.model";
 import { notify, notifyNewPostToFriends } from "../notification/Notifications";
-import jwt from "jsonwebtoken";
-import ensureAuthorization from "../../util/auth/auth";
-import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { ILocation } from "../../types/location";
@@ -158,7 +155,6 @@ export const createMissing = async (req: Request, res: Response) => {
       .status(StatusCodes.CREATED)
       .send({ postId: newPost.postId as number });
 
-    await indexResultToOpensearch(CATEGORY.MISSINGS, newPost.postId);
   } catch (error) {
     console.log(error)
     if (error instanceof Error)
@@ -205,7 +201,6 @@ export const deleteMissing = async (req: Request, res: Response) => {
       if (images)
         await deleteImagesByImageIds(tx, images);
 
-      await deleteOpensearchDocument(CATEGORY.MISSINGS, postId);
     });
 
     return res
@@ -295,7 +290,6 @@ export const updateMissing = async (req: Request, res: Response) => {
         );
       }
 
-      await updateOpensearchDocument(CATEGORY.MISSINGS, postId, { missing, cat, location });
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });

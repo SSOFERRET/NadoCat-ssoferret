@@ -25,7 +25,6 @@ import { ITag } from "../../types/tag";
 import { IImage } from "../../types/image";
 import { getLiked, removeLikesByIds } from "../../model/like.model";
 import { notifyNewPostToFriends } from "../notification/Notifications";
-import { deleteOpensearchDocument, indexOpensearchDocument, indexResultToOpensearch, updateOpensearchDocument } from "../search/Searches";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
@@ -159,7 +158,6 @@ export const createEvent = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
 
-    await indexResultToOpensearch(CATEGORY.EVENTS, newPost.postId);
   } catch (error) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientValidationError) {
@@ -234,7 +232,6 @@ export const updateEvent = async (req: Request, res: Response) => {
 
       await deleteImages(tx, imageIds);
 
-      await updateOpensearchDocument(CATEGORY.EVENTS, postId, { title, content });
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
@@ -286,7 +283,6 @@ export const deleteEvent = async (req: Request, res: Response) => {
 
       await removeEventById(tx, postId, userId);
 
-      await deleteOpensearchDocument(CATEGORY.EVENTS, postId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
