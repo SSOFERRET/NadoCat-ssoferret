@@ -14,16 +14,16 @@
     background-color: $primary;
 
     &.default {
-      background-color: $primary;
-      color: $white;
+      background-color: #eeeeee;
     }
 
     &.active {
-      background-color: $whitesmoke;
+      background-color: #f79a72;
+      color: $white;
     }
 
     &:hover {
-      background-color: $secondary;
+      background-color: #f79a72;
       color: $white;
     }
   }

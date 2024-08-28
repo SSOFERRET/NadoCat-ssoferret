@@ -3,9 +3,7 @@ import "../../styles/scss/pages/user/my.scss";
 import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
 import { myPage, userPage } from "../../api/user.api";
-// import { useParams } from "react-router-dom";
-
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { getUuid, useAuthStore } from "../../store/userStore";
 import LoadingCat from "../../components/loading/LoadingCat";
 
@@ -20,10 +18,6 @@ export interface MyProps {
 }
 
 export const My = () => {
-  const { uuid } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
-  const UserUuid = uuid || "";
-  // 소영추가코드
-
   const navigate = useNavigate();
 
   const { uuid: loggedUser } = useAuthStore(); // 현재 로그인한 사용자의 UUID
@@ -35,6 +29,8 @@ export const My = () => {
   const currentUrl = window.location.pathname;
   const currentUuid = currentUrl.split("/").pop(); // URL에서 마지막 부분 추출
   console.log("currentUuid::", currentUuid);
+
+  const [isMypage, setIsMypage] = useState(false);
 
    useEffect(() => { //처음 렌더링시 storedUuid설정
       const storedUuid = getUuid();
@@ -60,7 +56,9 @@ export const My = () => {
         if (currentUuid) {
           const response =
             currentUuid === "my" ? await myPage() : await userPage(currentUuid);
-          setUserData(response.user);
+            setUserData(response.user);
+            
+            setIsMypage(currentUuid === "my" || currentUuid === loggedUser ? true : false);
         }
       } catch (error) {
         console.error("마이페이지 정보를 가져오는 데 실패했습니다: ", error);
@@ -86,11 +84,6 @@ export const My = () => {
     }
   };
 
-  //소영 추가 코드
-  // const handleSendToChat = () => {
-  //   navigate("/chats/chat", { state: { userData: userData } });
-  // };
-
   return (
     <>
       {userData && (
@@ -104,7 +97,8 @@ export const My = () => {
             profileImageUrl={userData.profileImageUrl}
             uuid={userData.uuid}
             onAvatarClick={handleAvatarClick}
-            // isMyPage={currentUuid === loggedUser} //본인 페이지 여부
+            isMyPage={isMypage} //본인 페이지 여부
+            userData={userData}
           />
           {/* <Logout /> */}
           <p>{userData.detail}</p>

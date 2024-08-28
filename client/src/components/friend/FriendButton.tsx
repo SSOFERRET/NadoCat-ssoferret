@@ -15,7 +15,7 @@ const FriendButton = ({ followingId }: IProps) => {
   return (
     <section className="friend-button-container">
       <button className={`friend-button ${!friend ? "default" : "active"}`} onClick={toggleFriend}>
-        {friend ? "친구 삭제" : "친구 맺기"}
+        {friend ? "친구삭제" : "친구맺기"}
       </button>
     </section>
   );
