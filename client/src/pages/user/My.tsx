@@ -102,7 +102,7 @@ export const My = () => {
             profileImageUrl={userData.profileImageUrl}
             uuid={userData.uuid}
             onAvatarClick={handleAvatarClick}
-            // isMyPage={currentUuid === loggedUser} //본인 페이지 여부
+            isMyPage={currentUuid === loggedUser} //본인 페이지 여부
           />
           {/* <Logout /> */}
           <p>{userData.detail}</p>

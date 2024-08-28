@@ -230,6 +230,7 @@ model Messages {
   chatId    Int      @map("chat_id")
   content   String   @db.LongText
   sentAt    DateTime @map("sent_at") @db.Timestamp(0)
+  isRead    Int?     @default(0) @map("is_read") @db.TinyInt
   chats     Chats    @relation(fields: [chatId], references: [chatId], onDelete: NoAction, onUpdate: NoAction, map: "messages_chat_id_fk")
   users     Users    @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "messages_uuid_fk")
 
