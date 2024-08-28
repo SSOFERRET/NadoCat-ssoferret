@@ -11,6 +11,6 @@ export default (io: SocketIOServer) => {
   router.post("/sendmessage", (req, res) => sendMessage(req, res, io))
   router.get("/chatlist", getChatList);
   router.post("/delete", (req, res) => deleteChat(req, res, io));
-  router.post("/", (req, res) => testUuid(req, res))
+  router.post("/", ensureAutorization, (req, res) => testUuid(req, res))
   return router;
 };

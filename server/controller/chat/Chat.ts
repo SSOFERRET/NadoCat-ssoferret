@@ -103,7 +103,6 @@ export const sendMessage = async (req: Request, res: Response, io: SocketIOServe
 
 export const getChatList = async (req: Request, res: Response) => {
   const userUuid = req.headers["x-user-uuid"] as string;
-
   try {
       const userUuidBuffer = Buffer.from(userUuid, "hex");
       const chats = await prisma.chats.findMany({
