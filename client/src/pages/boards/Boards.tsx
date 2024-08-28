@@ -5,7 +5,11 @@ import NoBackgroundCat from "../../assets/img/noBackgroundCat2.png";
 import SpeechBubble from "../../assets/img/speechBubble.png";
 
 const boards = [
-  { to: "/boards/communities", title: "커뮤니티", description: "여러분들의 다양한 이야기를 나누는 공간입니다." },
+  {
+    to: "/boards/communities",
+    title: "커뮤니티",
+    description: "여러분들의 다양한 이야기를 나누는 공간입니다.",
+  },
   {
     to: "/boards/events",
     title: `이벤트 · 모임`,
@@ -16,11 +20,11 @@ const boards = [
     title: "실종 고양이 수색",
     description: "잃어버린 고양이 정보를 공유하는 공간입니다.",
   },
-  {
-    to: "/boards/missing-report",
-    title: "실종 고양이 제보",
-    description: "잃어버린 고양이 발견 정보를 공유하는 공간입니다.",
-  },
+  // {
+  //   to: "/boards/missing-report",
+  //   title: "실종 고양이 제보",
+  //   description: "잃어버린 고양이 발견 정보를 공유하는 공간입니다.",
+  // },
   {
     to: "/boards/street-cats",
     title: "동네 고양이 도감",
@@ -44,7 +48,11 @@ const Boards = () => {
 
       <ul className="boards">
         {boards.map((item) => (
-          <li key={item.title} className="board" onClick={() => navigate(item.to)}>
+          <li
+            key={item.title}
+            className="board"
+            onClick={() => navigate(item.to)}
+          >
             <div className="board-info">
               <span className="title">{item.title}</span>
               <span className="description">{item.description}</span>
