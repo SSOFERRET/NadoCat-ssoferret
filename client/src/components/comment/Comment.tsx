@@ -98,14 +98,25 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
     };
   }, [commentText, showMenu]);
 
+    //Avatar클릭 시 동작 정의
+    const handleAvatarClick = async() => {
+      if(comment.users.uuid === uuid){
+        navigate("/users/my");
+      }else{
+        navigate(`/users/user/${comment.users.uuid}`); //사용자 페이지 이동
+      }
+    }
+
   const canShowOptionsIcon = uuid === comment.users.uuid;
   const isEditingCurrentComment = selectedCommentId === comment.commentId;
+  console.log("isEditingCurrentComment ", isEditingCurrentComment)
+  console.log("comment.commentId ", comment.commentId)
   const showOptionsIcon = canShowOptionsIcon && !isEditingCurrentComment && !isCommentEdit;
 
   return (
     <li className="comment-card">
       <div className="comment">
-        <Avatar profileImage={comment.users.profileImage} nickname={comment.users.nickname} onClick={() => navigate(`/users/${comment.users.uuid}`)} />
+        <Avatar profileImage={comment.users.profileImage} nickname={comment.users.nickname} onClick={handleAvatarClick} />
 
         <div className="detail">
           <div className="comment-info">

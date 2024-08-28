@@ -12,7 +12,6 @@ export interface Post {
 }
 
 const MyPage = () => {
-  
   return (
     <div className="myPage">
       <div className="header">
@@ -20,7 +19,7 @@ const MyPage = () => {
         <div id="title">관심글</div>
       </div>
       <Posts />
-      </div>
+    </div>
   );
 };
 

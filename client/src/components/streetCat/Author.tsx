@@ -22,7 +22,7 @@ const Author = (props: IUsers) => {
   return (
     <>
       <span className="user-guide-title">{props.name} 등록한 동네집사</span>
-      <div className="user-container">
+      <div className="street-cat-user-container">
         <div className="user-img">
           <img src={props.users?.profileImage} alt="profileImage" />
         </div>

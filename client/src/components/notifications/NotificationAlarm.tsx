@@ -2,6 +2,7 @@ import React, { /*useEffect,*/ useEffect, useState } from "react";
 import { BiBell } from "react-icons/bi";
 import { GoDotFill } from "react-icons/go";
 import "./../../styles/scss/components/notification/notificationAlarm.scss";
+import { useAuthStore } from "../../store/userStore";
 // import useNotifications from "../../hooks/useNotifications";
 
 // interface INotificationData {
@@ -13,14 +14,15 @@ import "./../../styles/scss/components/notification/notificationAlarm.scss";
 
 const NotificationAlarm: React.FC = () => {
   const [alarmExists, setAlarmExists] = useState<boolean>(false);
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8080";
+  const { uuid: loggedUser } = useAuthStore();
+  console.log("notification uuid", loggedUser);
 
   // const { isAllRead, isAllReadLoading } = useNotifications();
 
   const createEventSource = () => {
-    const userId: string = "74657374320000000000000000000000";
     const eventSource = new EventSource(
-      `${BASE_URL}/notifications?userId=${userId}`
+      `${BASE_URL}/notifications?userId=${loggedUser}`
     );
 
     eventSource.addEventListener("message", (event) => {

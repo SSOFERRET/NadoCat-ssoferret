@@ -23,26 +23,33 @@ interface IList{
   chatId: string;
   unreadCount: number;
 }
-const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 
 const ChatList = () => {
   const [list, setList] = useState<IList[]>([]);
-  
+
   useEffect(() => {
     const fetchChatLists = async () => {
       try {
         const response = await axios.get(ENDPOINT + "/chats/chatlist", {
           headers: {
-            "x-user-uuid": localStorage.getItem("uuid")
+            "x-user-uuid": sessionStorage.getItem("uuid"),
           },
         });
         const chatLists = response.data;
 
         const updatedLists = await Promise.all(
           chatLists.map(async (list: IList) => {
-            console.log("otherUuid :", Buffer.from(list.otherUuid.data).toString("hex"), localStorage.getItem("uuid"));
-            const otherUuid = (Buffer.from(list.otherUuid.data).toString("hex") === localStorage.getItem("uuid") ?
-              list.uuid.data : list.otherUuid.data);
+            console.log(
+              "otherUuid :",
+              Buffer.from(list.otherUuid.data).toString("hex"),
+              sessionStorage.getItem("uuid")
+            );
+            const otherUuid =
+              Buffer.from(list.otherUuid.data).toString("hex") ===
+              sessionStorage.getItem("uuid")
+                ? list.uuid.data
+                : list.otherUuid.data;
             const userResponse = await axios.post(`${ENDPOINT}/chats`, {
               uuid: otherUuid,
             });
@@ -57,7 +64,6 @@ const ChatList = () => {
           })
         );
 
-
         setList(updatedLists);
       } catch (error) {
         console.error("Error fetching chat lists:", error);
@@ -71,13 +77,12 @@ const ChatList = () => {
     <div className="chatList">
       <div className="header">
         <div id="title">채팅</div>
-        {
-        list.length ? 
-        <ChatListC lists={list}/>:
-        <img src={NoList} className="nolist"/>
-        }
+        {list.length ? (
+          <ChatListC lists={list} />
+        ) : (
+          <img src={NoList} className="nolist" />
+        )}
       </div>
-      
     </div>
   );
 };

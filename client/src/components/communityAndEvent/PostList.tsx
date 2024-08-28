@@ -1,14 +1,11 @@
 import React from "react";
 import Post from "./Post";
-import "../../styles/scss/components/communityAndEvent/postList.scss";
 import { ICommunity, ICommunityPage } from "../../models/community.model";
 import { InfiniteData } from "@tanstack/react-query";
 import { IEvent } from "../../models/event.model";
 import { IMissing, IMissingPosts } from "../../models/missing.model";
 import MissingPost from "../missing/MissingPost";
-// import { Sort } from "../../api/community.api";
-
-// PostList 실종고양이 게시판에서도 공유하면 좋겠다는 생각에 조건부 렌더링으로 수정했습니다. 혹시 문제 생길 때를 대비에 원래 코드를 아래 주석으로 남겼습니다.
+import "./../../styles/scss/components/communityAndEvent/postList.scss";
 
 interface IProps {
   posts: InfiniteData<TCategory> | undefined;
@@ -26,7 +23,14 @@ const PostList = ({ posts }: IProps) => {
         <React.Fragment key={i}>
           {group.posts.map((post: IMissing | ICommunity | IEvent) => {
             return isMissing(post) ? (
-              <MissingPost key={post.postId} post={post as IMissing} />
+              <>
+                {(post as IMissing).found && (
+                  <div className="found-overlay">
+                    <span>수색종료</span>
+                  </div>
+                )}
+                <MissingPost key={post.postId} post={post as IMissing} />
+              </>
             ) : (
               <Post key={post.postId} post={post as ICommunity | IEvent} />
             );

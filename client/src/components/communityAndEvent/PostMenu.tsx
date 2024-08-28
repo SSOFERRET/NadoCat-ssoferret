@@ -5,6 +5,10 @@ import useCommentStore from "../../store/comment";
 import { BoardType, getPostPath } from "../../utils/boards/boards";
 import { RxCross1 } from "react-icons/rx";
 import { SortMenu } from "../../utils/sort/sortMenu";
+import { useAuthStore } from "../../store/userStore";
+import CustomModal from "../user/CustomModal";
+import { useState } from "react";
+import { useUpdateFound } from "../../hooks/useMissing";
 
 export type DeletePost = { postId: number };
 
@@ -29,6 +33,7 @@ interface IProps {
   sort?: SortMenu;
   uploadImage?: (file: File) => void;
   setDefaultImage?: () => void;
+  found?: boolean;
 }
 
 const PostMenu = ({
@@ -45,11 +50,14 @@ const PostMenu = ({
   sort,
   uploadImage,
   setDefaultImage,
-
+  found,
 }: IProps) => {
   const navigate = useNavigate();
   const { selectedCommentId: commentId, clearSelectedCommentId } =
     useCommentStore();
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { storeLogout, uuid } = useAuthStore();
+  const { mutate: updateFound } = useUpdateFound();
 
   const handleMenu = (
     e: React.MouseEvent<HTMLDivElement | HTMLUListElement>
@@ -118,9 +126,15 @@ const PostMenu = ({
     showMenu();
   };
 
+  const handleAddMissingReport = () => {
+    if (!boardType) return;
+
+    navigate(`${getPostPath(boardType)}/${postId}/report/write`);
+    showMenu();
+  };
 
   const isPostSortMenu = menuType === "sort" && sortMenu && sort;
-        
+
   const handleUploadClick = () => {
     if (uploadImage) {
       const fileInput = document.createElement("input");
@@ -149,6 +163,40 @@ const PostMenu = ({
     navigate("/users/my/setting");
   };
 
+  //로그아웃
+  const handleLogout = async () => {
+    //예 버튼
+    if (!uuid) {
+      console.error("uuid가 없습니다!");
+      return;
+    }
+
+    try {
+      await storeLogout(uuid); //클라이언트 삭제
+      // const response = await logout(userUuid);//서버삭제
+      console.log("로그아웃 되었습니다.");
+
+      navigate("/users/login");
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
+    } finally {
+      setIsOpenModal(false);
+    }
+  };
+
+  const handleModalOpen = () => {
+    setIsOpenModal(true); //회원가입 끝나면 modal open
+  };
+
+  const handleLogoutCancel = () => {
+    setIsOpenModal(false);
+  };
+
+  const handleUpdateFound = () => {
+    if (typeof postId !== "number") return;
+
+    updateFound({ postId, found: true });
+  };
 
   return (
     <div
@@ -167,6 +215,16 @@ const PostMenu = ({
       >
         {menuType === "post" && (
           <>
+            {boardType === "missing" && !found && (
+              <li onClick={handleUpdateFound}>
+                <span>수색 종료</span>
+              </li>
+            )}
+            {boardType === "missing" && (
+              <li onClick={handleAddMissingReport}>
+                <span>제보글 작성하기</span>
+              </li>
+            )}
             <li onClick={handleUpdatePost}>
               <span>게시글 수정</span>
             </li>
@@ -220,17 +278,20 @@ const PostMenu = ({
               <span>회원정보 수정</span>
             </li>
             <li className="logout">
-              <span
-                onClick={() => {
-                  `로그아웃 처리 할거 넣으시면 됩니다. 근데 바로 로그아웃 되는 것 보다는 모달창 하나 띄우는게 좋을 것 같습니다.`;
-                }}
-              >
-                로그아웃
-              </span>
+              <span onClick={handleModalOpen}>로그아웃</span>
             </li>
           </>
         )}
       </ul>
+      <CustomModal
+        size="sm"
+        isOpen={isOpenModal}
+        message={["정말 로그아웃 하시겠습니까?"]}
+        buttons={[
+          { label: "예", onClick: handleLogout },
+          { label: "아니오", onClick: handleLogoutCancel },
+        ]}
+      />
     </div>
   );
 };

@@ -14,7 +14,8 @@ export const ensureAutorization = (
     console.log("미들웨어 시작!!!!");
 
     //쿠키에서 jwt가져오기
-    const token = req.cookies.generalToken || req.headers["authorization"]?.split(' ')[1];
+    // const token = req.cookies.generalToken || req.headers["authorization"]?.split(' ')[1];
+    const token =  req.headers["authorization"]?.split(" ")[1] || req.cookies.generalToken;
     console.log("cookie token: ", token);
     
     if (!token) {

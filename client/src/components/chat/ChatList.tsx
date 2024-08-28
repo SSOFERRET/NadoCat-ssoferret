@@ -29,7 +29,6 @@ export interface IList {
 interface ChatProps {
   lists: IList[];
 }
-
 const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -45,7 +44,7 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
     setModalOpen(true);
   };
   const handleChatClick = (list: IList) => {
-    const uuid = localStorage.getItem("uuid");
+    const uuid = sessionStorage.getItem("uuid");
     const otherUuid = Buffer.from(list.otherUuid.data).toString("hex");
     let realOtherUuid;
     if (uuid === otherUuid) {
