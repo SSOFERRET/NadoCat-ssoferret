@@ -32,6 +32,7 @@ interface IProps {
   sort?: SortMenu;
   uploadImage?: (file: File) => void;
   setDefaultImage?: () => void;
+  found?: boolean;
 }
 
 const PostMenu = ({
@@ -48,6 +49,7 @@ const PostMenu = ({
   sort,
   uploadImage,
   setDefaultImage,
+  found,
 }: IProps) => {
   const navigate = useNavigate();
   const { selectedCommentId: commentId, clearSelectedCommentId } =

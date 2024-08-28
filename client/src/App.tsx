@@ -200,7 +200,16 @@ const router = createBrowserRouter([
       },
       {
         path: "/notification",
-        children: [{ path: "", element: <Notification /> }],
+        children: [
+          {
+            path: "",
+            element: (
+              <ProtectedPath>
+                <Notification />
+              </ProtectedPath>
+            ),
+          },
+        ],
       },
     ],
   },
