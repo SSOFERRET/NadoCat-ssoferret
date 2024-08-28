@@ -89,12 +89,10 @@ export const getStreetCat = async (req: Request, res: Response) => {
       const getLocation = await readLocation(tx, locationId);
       const postData = { ...getPost, location: getLocation };
 
-      // if (!getPost) throw new Error("No Post"); // 타입 가드 필요해서 추가
-
-      // redis 서버 연결 필요하여 주석 처리함.
-      // 공동의 서버에는 나중에 설치할 예정
-      // const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
-      // getPost.views += viewIncrementResult || 0;
+      if (getPost) {
+        const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
+        getPost.views += viewIncrementResult || 0;
+      }
 
       res.status(200).json(postData);
     });
