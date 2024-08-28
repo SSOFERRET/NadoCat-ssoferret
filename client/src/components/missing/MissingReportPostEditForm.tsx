@@ -7,34 +7,25 @@ import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import LocationForm from "../streetCat/LocationForm";
 import Calendar from "../streetCat/Calendar";
 import { formatDateTime } from "./MissingWriteForm";
-import { extractDateTimeComponents } from "./MissingPostEditForm";
+import { extractDateTimeComponents } from "../../utils/format/format";
 
 interface IEditFormProps {
   onSubmit: (formData: FormData) => void;
   initialData: IMissingReport;
 }
 
-const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
-  initialData,
-  onSubmit,
-}) => {
+const MissingReportPostEditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
   const oldImages = initialData.images.map((image) => image.url);
   const [newImages, setNewImages] = useState<(string | File)[]>(oldImages);
 
-  const [formattedDate, amPm, hours, minutes] = extractDateTimeComponents(
-    initialData.time
-  );
+  const [formattedDate, amPm, hours, minutes] = extractDateTimeComponents(initialData.time);
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    new Date(formattedDate)
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date(formattedDate));
   const [selectedAmPm, setSelectedAmPm] = useState<string>(amPm);
   const [selectedHour, setSelectedHour] = useState<string>(hours);
   const [selectedMinute, setSelectedMinute] = useState<string>(minutes);
   const [detail, setDetail] = useState<string>(initialData.detail);
-  const [selectedLocation, setSelectedLocation] = useState<string>(
-    initialData.locations.detail as string
-  );
+  const [selectedLocation, setSelectedLocation] = useState<string>(initialData.locations.detail as string);
   const [coordinates, setCoordinates] = useState<{ lat: string; lng: string }>({
     lat: initialData.locations.latitude.toString(),
     lng: initialData.locations.longitude.toString(),
@@ -54,9 +45,7 @@ const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
     }
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { name, value } = e.target;
 
     if (name === "detail") {
@@ -66,12 +55,7 @@ const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
   };
 
   const checkFormValidity = () => {
-    if (
-      selectedDate &&
-      selectedLocation &&
-      coordinates &&
-      newImages.length > 0
-    ) {
+    if (selectedDate && selectedLocation && coordinates && newImages.length > 0) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
@@ -95,18 +79,11 @@ const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
     const filteredImageIds = initialData.images
       .filter((image) => !newImages.includes(image.url))
       .map((item) => item.imageId);
-    const filteredImages = newImages.filter(
-      (image): image is File => image instanceof File
-    );
+    const filteredImages = newImages.filter((image): image is File => image instanceof File);
 
     const submit = {
       report: {
-        time: formatDateTime(
-          selectedDate as Date,
-          selectedAmPm,
-          Number(selectedHour),
-          Number(selectedMinute)
-        ),
+        time: formatDateTime(selectedDate as Date, selectedAmPm, Number(selectedHour), Number(selectedMinute)),
         detail,
       },
       location: locationData,
@@ -119,7 +96,7 @@ const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
     formData.append("location", JSON.stringify(locationData));
     formData.append("deleteImageIds", JSON.stringify(filteredImageIds));
 
-    for (let [key, value] of formData.entries()) {
+    for (const [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
 
@@ -128,19 +105,13 @@ const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
 
   return (
     <>
-      <ImageUploader
-        newImages={newImages}
-        setNewImageFiles={setNewImageFiles}
-      />
+      <ImageUploader newImages={newImages} setNewImageFiles={setNewImageFiles} />
       <section className="street-cat-write-section">
         <form className="write-form-container" onSubmit={handleSubmit}>
           <div className="write-form ">
             <span className="input-title">발견 날짜</span>
             <div className="missing-datetime">
-              <Calendar
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-              />
+              <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             </div>
           </div>
 
@@ -169,20 +140,14 @@ const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
               <BiCheck />
               오후
             </label>
-            <select
-              value={selectedHour}
-              onChange={(e) => setSelectedHour(e.target.value)}
-            >
+            <select value={selectedHour} onChange={(e) => setSelectedHour(e.target.value)}>
               {new Array(12).fill(0).map((_, index) => (
                 <option key={`hour-${index + 1}`} value={`${index + 1}`}>
                   {index + 1}
                 </option>
               ))}
             </select>
-            <select
-              value={selectedMinute}
-              onChange={(e) => setSelectedMinute(e.target.value)}
-            >
+            <select value={selectedMinute} onChange={(e) => setSelectedMinute(e.target.value)}>
               {new Array(6).fill(0).map((_, index) => (
                 <option key={`minute-${index}0`} value={`${index}0`}>
                   {`${index}0`}
@@ -193,10 +158,7 @@ const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
 
           <div className="write-form location">
             <span className="input-title">발견 장소</span>
-            <LocationForm
-              setLocation={setSelectedLocation}
-              setCoordinates={setCoordinates}
-            />
+            <LocationForm setLocation={setSelectedLocation} setCoordinates={setCoordinates} />
           </div>
 
           <div className="write-form description">
@@ -211,11 +173,7 @@ const MissingReportPostEditForm: React.FC<IEditFormProps> = ({
             ></textarea>
           </div>
 
-          <button
-            type="submit"
-            className={`submit-btn ${isFormValid ? "active" : ""}`}
-            disabled={!isFormValid}
-          >
+          <button type="submit" className={`submit-btn ${isFormValid ? "active" : ""}`} disabled={!isFormValid}>
             작성완료
           </button>
         </form>

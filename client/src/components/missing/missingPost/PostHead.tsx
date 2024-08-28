@@ -1,14 +1,11 @@
 // import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import {
-  IMenuList,
-  IMissing,
-  IMissingReport,
-} from "../../../models/missing.model";
+import { IMenuList, IMissing, IMissingReport } from "../../../models/missing.model";
 import { formatAgo, formatDate } from "../../../utils/format/format";
 import Avatar from "../../common/Avatar";
 import "./../../../styles/scss/components/missing/postHead.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import { isMissing } from "../../../utils/type/isMissing";
 // import { useState } from "react";
 // import PostMenu from "../../communityAndEvent/PostMenu";
 
@@ -18,9 +15,6 @@ export interface IMissingComponentProps {
   menuList?: IMenuList;
   showMenu?: () => void;
 }
-
-export const isMissing = (data: IMissing | IMissingReport): data is IMissing =>
-  (data as IMissing).missingCats ? true : false;
 
 const PostHead = ({
   data,
@@ -47,11 +41,7 @@ const PostHead = ({
 
   return (
     <section className="missing-post-head" key={data.postId}>
-      <Avatar
-        profileImage={data.users.profileImage}
-        nickname={data.users.nickname}
-        onClick={navigateToUser}
-      />
+      <Avatar profileImage={data.users.profileImage} nickname={data.users.nickname} onClick={navigateToUser} />
 
       <div className="post-title" onClick={navigateToUser}>
         <div className="user-cat-name">
@@ -70,11 +60,7 @@ const PostHead = ({
       {!isMissing(data) && (
         <div className="match-check">
           <p className={`match-is-${data.match}`}>
-            {data.match === "Y"
-              ? "일치"
-              : data.match === "N"
-              ? "불일치"
-              : "확인중"}
+            {data.match === "Y" ? "일치" : data.match === "N" ? "불일치" : "확인중"}
           </p>
         </div>
       )}

@@ -1,7 +1,7 @@
 @import "../../base/common.scss";
 
 .report-post-box {
-  padding: 24rem 8rem;
+  padding: 24rem 20rem;
   border-bottom: 1px solid $lightgray;
   position: relative; /* 오버레이를 위한 상대 위치 설정 */
 
@@ -36,6 +36,18 @@
       justify-content: center;
       border: 1px solid $whitesmoke;
       z-index: 2;
+
+      .missing-cat-image-container {
+        width: 180rem;
+        height: 180rem;
+
+        img {
+          border-radius: $round-5;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
     }
 
     img {
@@ -53,6 +65,53 @@
       // .map {
       //   height: 100%;
       // }
+    }
+  }
+}
+
+.image-modal {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+
+  .overlay {
+    position: relative;
+    max-width: 430rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20rem;
+
+    .button-container {
+      width: 100%;
+      padding: 20rem;
+      position: absolute;
+      top: 0;
+
+      .close-button {
+        display: block;
+        font-size: 20rem;
+        margin-left: auto;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        color: $white;
+        cursor: pointer;
+      }
+    }
+
+    .image-box {
+      // height: 390rem;
+      width: 390rem;
     }
   }
 }

@@ -17,12 +17,15 @@ interface IProps {
 const MissingPostDetail = ({ post, showMenu }: IProps) => {
   return (
     <section className="missing-detail-box">
+      <div className="category">
+        <span>실종 고양이 수색</span>
+      </div>
       <PostHead data={post} navigateUser={true} showMenu={showMenu} />
       <ImageCarousel images={post.images} />
       <PostSummary data={post} />
       <MapBox locations={post.locations} />
       <PostExplanation detail={post.detail} />
-      <PostInfo likes={10} reports={10} views={post.views} />
+      <PostInfo reports={10} views={post.views} />
     </section>
   );
   // 좋아요 리포트 수 (-)
