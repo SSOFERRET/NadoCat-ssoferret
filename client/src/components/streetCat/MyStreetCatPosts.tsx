@@ -6,8 +6,7 @@ import { useIntersectionObserver } from "./IntersectionObserver";
 import { useLocation } from "react-router-dom";
 // import { GoHeartFill } from "react-icons/go";
 import FavoriteButton from "../common/FavoriteButton";
-
-// NOTE 로그인 후 데이터 받아오기 해야함
+import LoadingCat from "../loading/LoadingCat";
 
 const MyStreetCatPosts: React.FC = () => {
   const location = useLocation();
@@ -21,7 +20,7 @@ const MyStreetCatPosts: React.FC = () => {
     hasNextPage,
     isFetchingNextPage,
     // status,
-    // isLoading,
+    isLoading,
     myStreetCatPosts,
     isEmpty,
     nickname,
@@ -39,9 +38,15 @@ const MyStreetCatPosts: React.FC = () => {
     fetchNextPage();
   };
 
+  if (isLoading) {
+    return (
+      <LoadingCat />
+    )
+  }
   if (isEmpty) {
     return <MyStreetCatEmpty />;
   }
+
 
   if (!shouldFetchData) {
     return null;
@@ -57,7 +62,6 @@ const MyStreetCatPosts: React.FC = () => {
         <ul className="street-cat-list">
           {myStreetCatPosts.map((cat) => (
             <li key={cat?.postId} className="street-cat">
-              {/* <GoHeartFill className={cat?.streetCatFavorites ? "active" : ""} onClick={() => alert("click")}/> */}
               <FavoriteButton
                 postId={cat?.postId as number}
                 like={cat?.streetCatFavorites?.length as number}

@@ -1,6 +1,5 @@
-import React /*, { useEffect, useState }*/ from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-// import { HiOutlineDotsVertical } from "react-icons/hi";
 import { PiChatCircleBold } from "react-icons/pi";
 import "../../styles/css/base/reset.css";
 import "../../styles/scss/pages/streetCat/streetCatDetail.scss";
@@ -8,26 +7,27 @@ import { useReadStreetCatPost } from "../../hooks/useStreetCat";
 import PostDetail from "../../components/streetCat/PostDetail";
 import DiscoveryLocation from "../../components/streetCat/DiscoveryLocation";
 import Author from "../../components/streetCat/Author";
-// import CommentsEmpty from "../../components/comment/CommentsEmpty";
 import StreetCatComments from "../../components/streetCat/StreetCatComments";
 import LoadingCat from "../../components/loading/LoadingCat";
 import LoginModal from "../../components/common/LoginModal";
-// import CommentForm from "../../components/comment/CommentForm";
-// import MapBox from "../../components/streetCat/testComp";
 
 const StreetCatDetail: React.FC = () => {
   const { id } = useParams();
   const postId = Number(id);
   const { data, isLoading } = useReadStreetCatPost(postId);
 
-  if (isLoading) {
-    <LoadingCat />
+  const [commentsCount, setCommentsCount] = useState<number>(0);
+
+  if (!isLoading) {
+    return (
+      <LoadingCat />
+    )
   }
 
   return (
     <>
       <section className="street-cat-detail-section">
-        {/* <LoginModal /> */}
+        <LoginModal />
         <div className="detial-section">
           <div className="page-guide-box">
             <span className="page-guide">동네 고양이 도감</span>
@@ -46,11 +46,11 @@ const StreetCatDetail: React.FC = () => {
 
       <section className="street-cat-comment-section">
         <div className="counts">
-          <PiChatCircleBold /><span className="comment-count">0</span>
+          <PiChatCircleBold /><span className="comment-count">{commentsCount}</span>
           <span>조회수</span><span className="view-count">0</span>
         </div>
 
-        <StreetCatComments postId={postId} />
+        <StreetCatComments postId={postId} commentsCountUpdate={setCommentsCount}/>
       </section>
     </>
   );
