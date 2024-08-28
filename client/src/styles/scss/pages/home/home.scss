@@ -25,6 +25,7 @@
 
   // 동네 고양이
   .home-street-cat-container {
+    min-height: 200rem;;
     margin-bottom: 40rem;
     .header {
       display: flex;
@@ -161,10 +162,24 @@
     }
 
     .home-missing {
+      position: relative;
       height: 380rem;
       box-shadow: 0 4px 5px rgba(190, 190, 190, 0.6);
       border-radius: $round-10;
       cursor: pointer;
+
+      .found {
+        display: inline-block;
+        position: absolute;
+        background-color: #f27405;
+        color: $white;
+        font-size: $size-12;
+        font-family: "bold";
+        padding: 4rem 9rem;
+        border-radius: $round-5;
+        top: 8rem;
+        left: 8rem;
+      }
 
       .image-container {
         width: 221rem;

@@ -6,67 +6,38 @@ import { IMissing } from "../../models/missing.model";
 import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import LocationForm from "../streetCat/LocationForm";
 import Calendar from "../streetCat/Calendar";
-import { formatGenderToString } from "./common/PostSummary";
 import { formatDateTime } from "./MissingWriteForm";
+import { extractDateTimeComponents } from "../../utils/format/format";
+import { formatGenderToString } from "../../utils/format/genderToString";
 
 interface IEditFormProps {
   onSubmit: (formData: FormData) => void;
   initialData: IMissing; // 적절한 타입을 설정하세요
 }
 
-export const extractDateTimeComponents = (dateString: string) => {
-  const date = new Date(dateString);
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  let hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  const amPm = hours >= 12 ? "오후" : "오전";
-  hours = hours % 12 || 12;
-
-  const formattedDate = `${year}-${month}-${day}`;
-
-  return [formattedDate, amPm, String(hours).padStart(2, "0"), minutes];
-};
-
-const MissingPostEditForm: React.FC<IEditFormProps> = ({
-  initialData,
-  onSubmit,
-}) => {
+const MissingPostEditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
   const oldImages = initialData.images.map((image) => image.url);
   const [newImages, setNewImages] = useState<(string | File)[]>(oldImages);
 
-  const [formattedDate, amPm, hours, minutes] = extractDateTimeComponents(
-    initialData.time
-  );
+  const [formattedDate, amPm, hours, minutes] = extractDateTimeComponents(initialData.time);
 
   //고양이 정보
   const [name, setName] = useState<string>(initialData.missingCats.name);
-  const [catDetail, setCatDetail] = useState<string>(
-    initialData.missingCats.detail as string
-  );
+  const [catDetail, setCatDetail] = useState<string>(initialData.missingCats.detail as string);
   const [selectedGender, setSelectedGender] = useState<string>(
     formatGenderToString(initialData.missingCats.gender as string)
   );
   const [birthYear, birthMonth] = initialData.missingCats.birth.split("-");
   const [selectedBirthYear, setSelectedBirthYear] = useState<string>(birthYear);
-  const [selectedBirthMonth, setSelectedBirthMonth] =
-    useState<string>(birthMonth);
+  const [selectedBirthMonth, setSelectedBirthMonth] = useState<string>(birthMonth);
 
   //실종사건 정보
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    new Date(formattedDate)
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date(formattedDate));
   const [selectedAmPm, setSelectedAmPm] = useState<string>(amPm);
   const [selectedHour, setSelectedHour] = useState<string>(hours);
   const [selectedMinute, setSelectedMinute] = useState<string>(minutes);
   const [eventDetail, setEventDetail] = useState<string>(initialData.detail);
-  const [selectedLocation, setSelectedLocation] = useState<string>(
-    initialData.locations.detail as string
-  );
+  const [selectedLocation, setSelectedLocation] = useState<string>(initialData.locations.detail as string);
   const [coordinates, setCoordinates] = useState<{ lat: string; lng: string }>({
     lat: initialData.locations.latitude.toString(),
     lng: initialData.locations.longitude.toString(),
@@ -86,9 +57,7 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
     }
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { name, value } = e.target;
 
     if (name === "event-detail") {
@@ -102,13 +71,7 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
   };
 
   const checkFormValidity = () => {
-    if (
-      name &&
-      selectedDate &&
-      selectedLocation &&
-      coordinates &&
-      newImages.length > 0
-    ) {
+    if (name && selectedDate && selectedLocation && coordinates && newImages.length > 0) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
@@ -132,14 +95,11 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
     const filteredImageIds = initialData.images
       .filter((image) => !newImages.includes(image.url))
       .map((item) => item.imageId);
-    const filteredImages = newImages.filter(
-      (image): image is File => image instanceof File
-    );
+    const filteredImages = newImages.filter((image): image is File => image instanceof File);
 
     const birthMonth = selectedBirthMonth.padStart(2, "0");
 
-    const formattedGender =
-      selectedGender === "수컷" ? "M" : selectedGender === "암컷" ? "F" : "-";
+    const formattedGender = selectedGender === "수컷" ? "M" : selectedGender === "암컷" ? "F" : "-";
 
     const missing = {
       cat: {
@@ -150,12 +110,7 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
       },
       location: locationData,
       missing: {
-        time: formatDateTime(
-          selectedDate as Date,
-          selectedAmPm,
-          Number(selectedHour),
-          Number(selectedMinute)
-        ),
+        time: formatDateTime(selectedDate as Date, selectedAmPm, Number(selectedHour), Number(selectedMinute)),
         detail: eventDetail,
       },
     };
@@ -168,7 +123,7 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
     formData.append("location", JSON.stringify(locationData));
     formData.append("deleteImageIds", JSON.stringify(filteredImageIds));
 
-    for (let [key, value] of formData.entries()) {
+    for (const [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
 
@@ -177,10 +132,7 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
 
   return (
     <>
-      <ImageUploader
-        newImages={newImages}
-        setNewImageFiles={setNewImageFiles}
-      />
+      <ImageUploader newImages={newImages} setNewImageFiles={setNewImageFiles} />
       <section className="street-cat-write-section">
         <form className="write-form-container" onSubmit={handleSubmit}>
           <div className="write-form name">
@@ -237,20 +189,14 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
 
           <div className="write-form birth">
             <span className="input-title">출생 연월</span>
-            <select
-              value={selectedBirthYear}
-              onChange={(e) => setSelectedBirthYear(e.target.value)}
-            >
+            <select value={selectedBirthYear} onChange={(e) => setSelectedBirthYear(e.target.value)}>
               {new Array(25).fill(0).map((_, index) => (
                 <option key={`year-${2024 - index}`} value={`${2024 - index}`}>
                   {2024 - index}
                 </option>
               ))}
             </select>
-            <select
-              value={selectedBirthMonth}
-              onChange={(e) => setSelectedBirthMonth(e.target.value)}
-            >
+            <select value={selectedBirthMonth} onChange={(e) => setSelectedBirthMonth(e.target.value)}>
               {new Array(12).fill(0).map((_, index) => (
                 <option key={`${index + 1}`} value={`${index + 1}`}>
                   {`${index + 1}`}
@@ -274,10 +220,7 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
           <div className="write-form ">
             <span className="input-title">실종 날짜</span>
             <div className="missing-datetime">
-              <Calendar
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-              />
+              <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             </div>
           </div>
 
@@ -306,20 +249,14 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
               <BiCheck />
               오후
             </label>
-            <select
-              value={selectedHour}
-              onChange={(e) => setSelectedHour(e.target.value)}
-            >
+            <select value={selectedHour} onChange={(e) => setSelectedHour(e.target.value)}>
               {new Array(12).fill(0).map((_, index) => (
                 <option key={`hour-${index + 1}`} value={`${index + 1}`}>
                   {index + 1}
                 </option>
               ))}
             </select>
-            <select
-              value={selectedMinute}
-              onChange={(e) => setSelectedMinute(e.target.value)}
-            >
+            <select value={selectedMinute} onChange={(e) => setSelectedMinute(e.target.value)}>
               {new Array(6).fill(0).map((_, index) => (
                 <option key={`minute-${index}0`} value={`${index}0`}>
                   {`${index}0`}
@@ -330,10 +267,7 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
 
           <div className="write-form location">
             <span className="input-title">실종 장소</span>
-            <LocationForm
-              setLocation={setSelectedLocation}
-              setCoordinates={setCoordinates}
-            />
+            <LocationForm setLocation={setSelectedLocation} setCoordinates={setCoordinates} />
           </div>
 
           <div className="write-form description">
@@ -348,11 +282,7 @@ const MissingPostEditForm: React.FC<IEditFormProps> = ({
             ></textarea>
           </div>
 
-          <button
-            type="submit"
-            className={`submit-btn ${isFormValid ? "active" : ""}`}
-            disabled={!isFormValid}
-          >
+          <button type="submit" className={`submit-btn ${isFormValid ? "active" : ""}`} disabled={!isFormValid}>
             작성완료
           </button>
         </form>

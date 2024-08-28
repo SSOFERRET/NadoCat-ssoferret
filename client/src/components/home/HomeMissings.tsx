@@ -66,7 +66,7 @@ const missings = [
     postId: 4,
     found: 0,
     time: "2024-08-12T00:00:00.000Z",
-    createdAt: "2024-08-25T19:27:23.000Z",
+    createdAt: "2024-08-25T10:16:12.000Z",
     users: {
       nickname: "test4",
       profileImage: null,
@@ -116,6 +116,7 @@ const HomeMissings = () => {
           <div className="embla__slide" key={item.postId}>
             <div className="embla__slide__number">
               <div className="home-missing" onClick={() => navigate(`/boards/missings/${item.postId}`)}>
+                {!item.found && <span className="found">수색중</span>}
                 <div className="image-container">
                   {item.images.length > 0 ? (
                     <img src={item.images[0].url} alt={item.users.nickname} />
@@ -136,7 +137,7 @@ const HomeMissings = () => {
                   <div className="missing-detail">
                     <div>
                       <MdDateRange />
-                      <span>{item.time}</span>
+                      <span>{formatDate(item.time)}</span>
                     </div>
                     <div>
                       <AiOutlineExclamationCircle />

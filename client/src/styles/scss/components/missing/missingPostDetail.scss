@@ -1,5 +1,18 @@
 @import "../../base/common.scss";
 
+.missing-detail-box {
+  padding: 0 20rem;
+
+  .category {
+    font-family: "semiBold";
+    font-size: $size-14;
+    color: silver;
+    border-bottom: 0.5rem solid $lightgray;
+    padding-bottom: 10rem;
+    margin: 8rem 0 15rem 0;
+  }
+}
+
 .post-box {
   padding: 24rem 8rem;
   border-bottom: 1px solid $lightgray;

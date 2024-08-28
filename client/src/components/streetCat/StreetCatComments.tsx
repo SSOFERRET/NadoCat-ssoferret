@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStreetCatComments } from "../../hooks/useStreetCatComments";
 import "../../styles/scss/pages/streetCat/streetCatDetail.scss";
 import CommentsEmpty from "../comment/CommentsEmpty";
@@ -12,9 +12,10 @@ import { ICommentPutRequest } from "../../models/streetCat.model";
 
 interface IProps {
   postId: number;
+  commentsCountUpdate: (count: number) => void;
 }
 
-const StreetCatComments = ({ postId }: IProps) => {
+const StreetCatComments = ({ postId, commentsCountUpdate }: IProps) => {
   const {
     data,
     fetchNextPage,
@@ -51,7 +52,10 @@ const StreetCatComments = ({ postId }: IProps) => {
     comments: page.streetCatComments,
   }));
 
-  console.log("transformedComments ", transformedComments)
+  useEffect(() => {
+    const commentsCount = data?.pages[0]?.commentsCount ?? 0;
+    commentsCountUpdate(commentsCount);
+  }, [data, commentsCountUpdate]);
 
   const areAllCommentsEmpty = transformedComments?.every(
     (page) => page.comments.length === 0
@@ -64,6 +68,8 @@ const StreetCatComments = ({ postId }: IProps) => {
       </>
     );
   }
+
+  console.log(data?.pages[0]?.commentsCount)
 
   return (
     <>
