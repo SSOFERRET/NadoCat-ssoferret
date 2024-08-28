@@ -20,15 +20,13 @@ const useEvents = ({ sort = "latest", enabled }: IProps) => {
       return undefined;
     },
     initialPageParam: 0,
-    staleTime: 1000 * 60 * 5,
     enabled,
   });
 
   const { mutateAsync: addEventPost } = useMutation({
     mutationFn: (formData: FormData) => createEventPost(formData),
-    onSuccess: (post) => {
-      const postId = post.postId;
-      queryClient.invalidateQueries({ queryKey: ["EventDetail", postId] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["event", sort] });
     },
     onError: (error) => {
       console.error("Error creating event post:", error);
