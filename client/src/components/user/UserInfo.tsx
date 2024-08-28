@@ -36,7 +36,7 @@
 //           <IoIosAdd />
 //         </div>
 //         <div className="change-profile-btn">
-//           <button onClick={StartChat}>채팅하기</button>
+//           <button onClick={StartChat} >채팅하기</button>
 //         </div>
 //       </div>
 
