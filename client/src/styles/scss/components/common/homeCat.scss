@@ -1,0 +1,68 @@
+@import "../../base/common.scss";
+
+.welcome-container {
+  display: none;
+  width: 460rem;
+  margin-top: 54rem;
+
+  .logo {
+    width: 190rem;
+    margin-bottom: 155rem;
+  }
+
+  .title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10rem;
+    font-size: 40rem;
+    margin-bottom: 124rem;
+
+    span:first-of-type {
+      font-family: "medium";
+    }
+
+    span:last-of-type {
+      font-family: "bold";
+      color: $secondary;
+    }
+  }
+
+  .rectangle {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    background-color: #ffddd3;
+    width: 306rem;
+    height: 201rem;
+    border-radius: $round-10;
+
+    img {
+      position: absolute;
+      transform: translateY(-100rem);
+    }
+
+    .welcome-message {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 236rem;
+      height: 64rem;
+      background-color: $white;
+      font-size: $size-18;
+      transform: translateY(120rem);
+      border-radius: $round-10;
+      font-family: "medium";
+
+      span {
+        text-align: center;
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .welcome-container {
+    display: block;
+  }
+}

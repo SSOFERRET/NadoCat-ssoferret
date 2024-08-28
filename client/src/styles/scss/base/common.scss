@@ -80,9 +80,13 @@ body {
   box-sizing: border-box;
   height: 100vh;
   width: 100%;
-  background-color: $pale;
   letter-spacing: -0.7px;
   color: $black;
+  background-image: url("../../../../public/bg.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 button {
