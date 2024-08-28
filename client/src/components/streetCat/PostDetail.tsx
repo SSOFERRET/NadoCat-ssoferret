@@ -60,13 +60,11 @@ const PostDetail = (props: IProps) => {
             ) : (
               ""
             )}
-            {
-              uuid &&
-              uuid === props.uuid &&
+            {uuid && uuid === props.uuid && (
               <span className="more-btn" onClick={toggleMenu}>
                 <HiOutlineDotsVertical />
               </span>
-            }
+            )}
           </div>
         </div>
 

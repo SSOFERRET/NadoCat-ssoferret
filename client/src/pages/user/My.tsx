@@ -3,7 +3,7 @@ import "../../styles/scss/pages/user/my.scss";
 import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
 import { myPage, userPage } from "../../api/user.api";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate /*, useParams*/ } from "react-router-dom";
 import { getUuid, useAuthStore } from "../../store/userStore";
 import LoadingCat from "../../components/loading/LoadingCat";
 
@@ -18,8 +18,8 @@ export interface MyProps {
 }
 
 export const My = () => {
-  const { uuid } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
-  const UserUuid = uuid || "";
+  // const { uuid } = useParams<{ uuid: string }>(); // URL에서 UUID를 가져옴
+  // const UserUuid = uuid || "";
   // 소영추가코드
 
   const navigate = useNavigate();
@@ -34,14 +34,15 @@ export const My = () => {
   const currentUuid = currentUrl.split("/").pop(); // URL에서 마지막 부분 추출
   console.log("currentUuid::", currentUuid);
 
-   useEffect(() => { //처음 렌더링시 storedUuid설정
-      const storedUuid = getUuid();
-      console.log("storedUuid::", storedUuid);
+  useEffect(() => {
+    //처음 렌더링시 storedUuid설정
+    const storedUuid = getUuid();
+    console.log("storedUuid::", storedUuid);
 
-      if(!loggedUser && storedUuid){
-        useAuthStore.setState({ uuid: storedUuid }); // zustand의 상태 업데이트
-      }
-  }, [loggedUser]);  // loggedUser가 업데이트될 때마다 실행
+    if (!loggedUser && storedUuid) {
+      useAuthStore.setState({ uuid: storedUuid }); // zustand의 상태 업데이트
+    }
+  }, [loggedUser]); // loggedUser가 업데이트될 때마다 실행
 
   //loggedUser가 업데이트될 때마다 로드
   useEffect(() => {
@@ -71,7 +72,6 @@ export const My = () => {
       fetchUserData();
     }
   }, [loggedUser, currentUuid, navigate]); // isLoggedIn 상태와 UserUuid를 의존성 배열에 추가
-
 
   if (isLoading) {
     return <LoadingCat />;
