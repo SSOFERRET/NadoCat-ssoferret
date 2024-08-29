@@ -3,7 +3,7 @@ import "../../styles/scss/pages/user/my.scss";
 import MyInfo from "../../components/user/my/MyInfo";
 import MyTab from "../../components/user/my/MyTab";
 import { myPage, userPage } from "../../api/user.api";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 //import { useNavigate /*, useParams*/ } from "react-router-dom";
 import { getUuid, useAuthStore } from "../../store/userStore";
 import LoadingCat from "../../components/loading/LoadingCat";
@@ -22,7 +22,6 @@ export const My = () => {
   const navigate = useNavigate();
 
   const { uuid: loggedUser } = useAuthStore(); // 현재 로그인한 사용자의 UUID
-  console.log("loggedUser:", loggedUser);
 
   const [userData, setUserData] = useState<MyProps | null>(null);
   const [isLoading, setIsLoading] = useState(true); //로딩 상태관리
@@ -30,11 +29,10 @@ export const My = () => {
 
   const currentUrl = window.location.pathname;
   const currentUuid = currentUrl.split("/").pop(); // URL에서 마지막 부분 추출
-  console.log("currentUuid::", currentUuid);
 
-   useEffect(() => { //처음 렌더링시 storedUuid설정
-      const storedUuid = getUuid();
-      console.log("storedUuid::", storedUuid);
+  useEffect(() => {
+    //처음 렌더링시 storedUuid설정
+    const storedUuid = getUuid();
 
     if (!loggedUser && storedUuid) {
       useAuthStore.setState({ uuid: storedUuid }); // zustand의 상태 업데이트
@@ -56,9 +54,11 @@ export const My = () => {
         if (currentUuid) {
           const response =
             currentUuid === "my" ? await myPage() : await userPage(currentUuid);
-            setUserData(response.user);
-            
-            setIsMypage(currentUuid === "my" || currentUuid === loggedUser ? true : false);
+          setUserData(response.user);
+
+          setIsMypage(
+            currentUuid === "my" || currentUuid === loggedUser ? true : false
+          );
         }
       } catch (error) {
         console.error("마이페이지 정보를 가져오는 데 실패했습니다: ", error);
@@ -96,7 +96,6 @@ export const My = () => {
             profileImageUrl={userData.profileImageUrl}
             uuid={userData.uuid}
             onAvatarClick={handleAvatarClick}
-
             isMyPage={isMypage} //본인 페이지 여부
             userData={userData}
           />

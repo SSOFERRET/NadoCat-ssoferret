@@ -31,9 +31,9 @@ export const getAutoLogin = () => {
 }
 
 export const setAutoLogin = (isAutoLogin: boolean) => {
-  if(isAutoLogin){
+  if (isAutoLogin) {
     localStorage.setItem("isAutoLogin", "true");
-  }else{
+  } else {
     localStorage.removeItem("isAutoLogin");
   }
 }
@@ -44,16 +44,15 @@ export const useAuthStore = create<StoreState>((set) => ({
   authType: null,
   uuid: getUuid() || "",
 
-  storeLogin: (uuid: string, isAutoLogin: boolean)  => {
-    console.log(sessionStorage.getItem("uuid"));
+  storeLogin: (uuid: string, isAutoLogin: boolean) => {
 
-    set({isLoggedIn: true, isAutoLogin});
+    set({ isLoggedIn: true, isAutoLogin });
     setUuid(uuid);
 
-     // 자동로그인 상태 저장
+    // 자동로그인 상태 저장
     setAutoLogin(isAutoLogin);
   },
-  
+
   storeAuthType: (authType: string) => {
     set({ authType });
   },
@@ -69,7 +68,6 @@ export const useAuthStore = create<StoreState>((set) => ({
       await logout(uuid); //비동기적 처리
       set({ isLoggedIn: false, isAutoLogin: false, authType: null, uuid: "" });
 
-      console.log("uuid제거 성공!");
     } catch (error) {
       console.error("uuid제거 중 오류 발생:", error);
     }

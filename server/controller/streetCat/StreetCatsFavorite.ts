@@ -88,8 +88,6 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
   // const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
   const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
 
-  console.log("uuidString: ", uuidString);
-  console.log("uuid: ", uuid);
   const postId = Number(req.params.street_cat_id);
 
   try {

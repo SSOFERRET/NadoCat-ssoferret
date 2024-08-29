@@ -60,7 +60,9 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
     io.to(chatRoomId).emit("chat_created", { chatId: chatRoomId });
     CHATID = chatRoomId;
   } catch (error) {
-    console.log(error);
+
+    console.error(error)
+
     return res.status(500).json({ error: "Failed to start chat" });
   } finally {
     await prisma.$disconnect();
@@ -79,6 +81,7 @@ export const sendMessage = async (req: Request, res: Response, io: SocketIOServe
         content,
         sentAt: sentAt,
         chats: {
+
           connect: { chatId },
         },
         users: {
@@ -110,18 +113,17 @@ export const getChatList = async (req: Request, res: Response) => {
     const userUuidBuffer = Buffer.from(userUuid, "hex");
     const chats = await prisma.chats.findMany({
       where: {
-        OR: [
-          {
-            uuid: userUuidBuffer,
-          },
-          {
-            otherUuid: userUuidBuffer,
-          },
-        ],
+        OR: [{
+          uuid: userUuidBuffer
+        }, {
+          otherUuid: userUuidBuffer
+        }],
+
       },
       include: {
         messages: {
           orderBy: {
+
             sentAt: "asc",
           },
           include: {
@@ -147,6 +149,7 @@ export const getChatList = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch chat list" });
   } finally {
     await prisma.$disconnect();
+
   }
 };
 
@@ -166,7 +169,7 @@ export const testUuid = async (req: Request, res: Response) => {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   } finally {
     await prisma.$disconnect();
   }

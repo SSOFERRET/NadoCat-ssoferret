@@ -36,15 +36,11 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginProps>();
   const { storeLogin } = useAuthStore(); //로컬에 UUID저장
-  console.log("storeLogin:::", storeLogin);
 
   const handleLogin = async (data: LoginProps) => {
     try {
       const response = await login({ ...data, autoLogin });
-      const { user, tokens } = response;
-      console.log("전체 response:", response);
-      console.log("response.generalToken:", tokens.accessToken);
-      console.log("response.uuid:", user.uuid);
+      const { user /*, tokens*/ } = response;
 
       await storeLogin(user.uuid, autoLogin); // 상태 업데이트 후
       navigate("/");
@@ -69,7 +65,6 @@ const Login = () => {
   useEffect(() => {
     setFocus("email");
   }, [setFocus]);
-
 
   return (
     <div className="login-container">

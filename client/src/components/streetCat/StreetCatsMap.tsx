@@ -202,12 +202,6 @@ const StreetCatsMap: React.FC = () => {
     setMapData(newMapData);
   };
 
-  // useEffect(() => {
-  //   if (!isLoading && !error && nearLocations) {
-  //     console.log("Fetched nearby data:", nearLocations);
-  //   }
-  // }, [nearLocations, isLoading, error]);
-
   return (
     <>
       <CustomOverlayStyle />

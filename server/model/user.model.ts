@@ -19,8 +19,6 @@ export const createUser = async (email: string, nickname: string, password: stri
 
   const { salt, hashPassword } = await hashing(password);
   const uuid = uuidv4();
-  console.log("uuid원형: ", uuid);
-  console.log("uuid하이픈제거: ", uuid.replace(/-/g, ""));
 
   const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
 
@@ -33,7 +31,6 @@ export const createUser = async (email: string, nickname: string, password: stri
     });
 
     if (selectUser && selectUser.status === "active") {
-      console.log("사용중인 이메일입니다.");
       return null;
     }
 
@@ -65,7 +62,7 @@ export const createUser = async (email: string, nickname: string, password: stri
     return result;
 
   } catch (error) {
-    console.log("회원가입 error:", error);
+    console.error("회원가입 error:", error);
     throw new Error("회원가입 중 오류 발생");
   }
 };
@@ -82,7 +79,6 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
       });
 
       if (!selectUser || selectUser.status === "inactive") {
-        console.log("사용자를 찾을 수 없습니다.");
         throw { status: StatusCodes.UNAUTHORIZED, message: "사용자를 찾을 수 없습니다." };
       }
 
@@ -100,7 +96,6 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
       });
 
       if (!selectUserSecret) {
-        console.log("사용자를 찾을 수 없습니다.");
         throw { status: StatusCodes.UNAUTHORIZED, message: "사용자를 찾을 수 없습니다." };
       }
 
@@ -123,8 +118,6 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
         throw new Error("사용자 정보가 일치하지 않습니다.");
       }
 
-    }else {
-      console.log("카카오 로그인 사용자");
     }
 
 
@@ -146,14 +139,14 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
         }, process.env.PRIVATE_KEY_REF as string, {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN,
         issuer: "fefive"
-        }
+      }
       )
     }
 
     return { generalToken, refreshToken, result, userUuidString };
 
   } catch (error) {
-    console.log("로그인 error:", error);
+    console.error("로그인 error:", error);
     throw new Error("로그인 중 오류 발생");
   }
 };
@@ -180,7 +173,7 @@ export const saveRefreshToken = async (uuid: string, refreshToken: string) => {
 
     return { selectUserSecrets, updateSecretUser };
   } catch (error) {
-    console.log("자동로그인 error:", error);
+    console.error("자동로그인 error:", error);
     throw new Error("자동로그인 중 오류 발생");
   }
 };
@@ -227,7 +220,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
     return newAccessToken;
 
   } catch (error) {
-    console.log("access token refresh error:", error);
+    console.error("access token refresh error:", error);
     throw new Error("access token refresh 중 오류 발생");
   }
 }
@@ -256,10 +249,8 @@ export const logoutUser = async (uuid: string) => {
       },
     });
 
-    return console.log("로그아웃 성공");
 
   } catch (error) {
-    console.log("로그아웃:", error);
     throw new Error("로그아웃 중 오류 발생");
   }
 }
@@ -311,7 +302,7 @@ export const kakaoUser = async (email: string, nickname: string) => {
         expiresIn: process.env.GENERAL_TOKEN_EXPIRE_IN,
         issuer: "fefive"
       });
-  
+
       let refreshToken: string | null = null;
       const selectUserSecrets = await prisma.userSecrets.findFirst({
         where: {
@@ -320,7 +311,7 @@ export const kakaoUser = async (email: string, nickname: string) => {
       });
 
 
-      if(selectUserSecrets){
+      if (selectUserSecrets) {
         refreshToken = jwt.sign(
           {
             uuid: userUuidString,
@@ -328,7 +319,7 @@ export const kakaoUser = async (email: string, nickname: string) => {
           expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN,
           issuer: "fefive"
         }
-      );
+        );
 
         await prisma.userSecrets.update({
           data: {
@@ -340,13 +331,13 @@ export const kakaoUser = async (email: string, nickname: string) => {
         });
       }
 
-      return {generalToken, refreshToken, nickname: selectUser.nickname, uuid: selectUser.uuid};
+      return { generalToken, refreshToken, nickname: selectUser.nickname, uuid: selectUser.uuid };
     });
 
     return result;
 
   } catch (error) {
-    console.log("카카오로그인 error:", error);
+    console.error("카카오로그인 error:", error);
     throw new Error("카카오로그인 중 오류 발생");
   }
 }

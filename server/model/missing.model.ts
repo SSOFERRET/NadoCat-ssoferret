@@ -207,7 +207,6 @@ export const removePost = async (
   postData: IPostData
 ) => {
   const model = getCategoryModel(postData.categoryId)
-  console.log("여기는 remove", model)
 
   if (model) {
     return await (tx as any)[model].delete({
@@ -495,7 +494,6 @@ export const updateMissingReportCheckByPostId = async (
   postData: IPostData,
   match: string
 ) => {
-  console.log(match)
   return await tx.missingReports.update({
     where: {
       // uuid: postData.userId,

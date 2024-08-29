@@ -59,13 +59,11 @@ export const getUser = async (uuid: string) => {
 
     if (!selectUser) {
       //사실 자기정보라 이러면 안되긴 함
-      console.log("사용자를 찾을 수 없습니다.");
       return null;
     }
 
     return { selectUser };
   } catch (error) {
-    console.log("마이페이지 사용자 조회 error:", error);
     throw new Error("마이페이지 사용자 조회에서 오류 발생");
   }
 };
@@ -87,7 +85,6 @@ export const updateNewNickname = async (uuid: string, newNickname: string) => {
 
     return { updateUser };
   } catch (error) {
-    console.log("마이페이지 사용자 닉네임 업데이트 error:", error);
     throw new Error("마이페이지 사용자 닉네임 업데이트에서 오류 발생");
   }
 };
@@ -109,7 +106,6 @@ export const updateNewDetail = async (uuid: string, newDetail: string) => {
 
     return { updateUser };
   } catch (error) {
-    console.log("마이페이지 사용자 자기소개 업데이트 error:", error);
     throw new Error("마이페이지 사용자 자기소개 업데이트에서 오류 발생");
   } finally {
     await prisma.$disconnect();
@@ -130,13 +126,11 @@ export const getAuthPassword = async (uuid: string) => {
 
     if (!selectUserSecrets) {
       //사실 자기정보라 이러면 안되긴 함
-      console.log("사용자를 찾을 수 없습니다.");
       return null;
     }
 
     return { selectUserSecrets };
   } catch (error) {
-    console.log("마이페이지 사용자 조회 error:", error);
     throw new Error("마이페이지 사용자 조회에서 오류 발생");
   } finally {
     await prisma.$disconnect();
@@ -179,7 +173,6 @@ export const updateNewPassword = async (uuid: string, newPassword: string) => {
 
     return { updateUser };
   } catch (error) {
-    console.log("마이페이지 사용자 정보 업데이트 error:", error);
     throw new Error("마이페이지 사용자 정보 업데이트에서 오류 발생");
   } finally {
     await prisma.$disconnect();
@@ -201,8 +194,8 @@ export const deleteUserInactive = async (uuid: string) => {
     });
 
     return { updateUser };
+
   } catch (error) {
-    console.log("회원탈퇴 error:", error);
     throw new Error("회원탈퇴에서 오류 발생");
   } finally {
     await prisma.$disconnect();
@@ -215,6 +208,7 @@ export const getMyAllPosts = async (uuid: string, page: number, pageSize: number
 
   try {
     //여러 게시판에서 가져오기
+
     const communities = await prisma.communities.findMany({
       where: {
         uuid: uuidBuffer,
@@ -226,6 +220,11 @@ export const getMyAllPosts = async (uuid: string, page: number, pageSize: number
         createdAt: "desc",
       },
       include: selectCommunities,
+
+    //});  //충돌 헷갈림
+
+    //if (!posts || posts.length === 0) {
+
     });
 
     const posts = communities.map((community: ICommunity) => {
@@ -255,7 +254,6 @@ export const getMyAllPosts = async (uuid: string, page: number, pageSize: number
 
     return posts;
   } catch (error) {
-    console.log("작성글 조회에서 error:", error);
     throw new Error("작성글 조회에서 오류 발생");
   } finally {
     await prisma.$disconnect();
@@ -268,6 +266,7 @@ export const addProfileImageFormats = async (uuid: string, imageUrl: string) => 
 };
 
 //[x]프로필 이미지 삭제 로직 추가(기본이미지 변경)
+
 export const deleteProfileImageFormats = async (uuid: string, imageUrl: string) => {
   await deleteProfileImages(imageUrl, uuid);
 };

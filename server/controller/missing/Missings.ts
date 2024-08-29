@@ -99,10 +99,9 @@ export const getMissing = async (req: Request, res: Response) => {
       return res.status(StatusCodes.OK).json({ ...post, images });
     });
   } catch (error) {
-    console.log(error);
-    if (error instanceof Error) validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
+    console.error(error);
+    if (error instanceof Error)
+      validateError(res, error);
   }
 };
 
@@ -145,17 +144,13 @@ export const createMissing = async (req: Request, res: Response) => {
       });
 
       if (req.files) {
-        const imageUrls = (await uploadImagesToS3(req)) as string[];
-        console.log("결과 출력", imageUrls);
-        await addNewImages(
-          tx,
-          {
-            userId,
-            postId: post.postId,
-            categoryId: CATEGORY.MISSINGS,
-          },
-          imageUrls
-        );
+
+        const imageUrls = await uploadImagesToS3(req) as string[];
+        await addNewImages(tx, {
+          userId,
+          postId: post.postId,
+          categoryId: CATEGORY.MISSINGS,
+        }, imageUrls);
       }
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
       return post;
@@ -163,10 +158,9 @@ export const createMissing = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.CREATED).send({ postId: newPost.postId as number });
   } catch (error) {
-    console.log(error);
-    if (error instanceof Error) validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
+    console.error(error)
+    if (error instanceof Error)
+      validateError(res, error);
   }
 };
 
@@ -191,8 +185,6 @@ export const deleteMissing = async (req: Request, res: Response) => {
       postId,
       categoryId: CATEGORY.MISSINGS,
     };
-
-    console.log("삭제할 아이디", postId);
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const missingReports = await getMissingReportsByMissingId(tx, postId);
@@ -245,7 +237,6 @@ export const updateMissing = async (req: Request, res: Response) => {
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const oldPost = await getPostByPostId(tx, { categoryId: CATEGORY.MISSINGS, postId });
-      console.log(oldPost);
       await updateMissingByPostId(tx, postId, userId, missing);
 
       await updateMissingCatByCat(tx, oldPost.missingCats.missingCatId, cat);
@@ -312,16 +303,14 @@ export const updateFoundState = async (req: Request, res: Response) => {
 
       const receivers = [...(await getMissingReporters(tx, postId)), ...(await getMissingFavoriteAdders(tx, postId))];
 
-      receivers.forEach((receiver) =>
-        notify({
-          type: "found",
-          receiver: receiver.uuid.toString("hex"),
-          sender: userId.toString("hex"),
-          url: `/boards/missings/${postId}`,
-          result: found ? "Y" : "N",
-        })
-      );
-    });
+
+      receivers.forEach((receiver) => notify({
+        type: "found",
+        receiver: receiver.uuid.toString("hex"),
+        sender: userId.toString("hex"),
+        url: `/boards/missings/${postId}`,
+      }))
+    })
 
     return res.status(StatusCodes.OK).json({ message: "게시글이 상태가 변경 되었습니다." });
   } catch (error) {

@@ -5,7 +5,7 @@ import axios from "axios";
 import NoList from "../../assets/img/StartChat.png";
 import { Buffer } from "buffer";
 
-interface IList{
+interface IList {
   users: {
     nickname: string;
     profileImage: string;
@@ -40,11 +40,6 @@ const ChatList = () => {
 
         const updatedLists = await Promise.all(
           chatLists.map(async (list: IList) => {
-            console.log(
-              "otherUuid :",
-              Buffer.from(list.otherUuid.data).toString("hex"),
-              sessionStorage.getItem("uuid")
-            );
             const otherUuid =
               Buffer.from(list.otherUuid.data).toString("hex") ===
               sessionStorage.getItem("uuid")

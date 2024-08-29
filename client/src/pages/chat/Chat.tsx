@@ -52,7 +52,6 @@ const Chat = () => {
       } catch {}
     };
     const initiateChat = async () => {
-      console.log("initiateChat");
       try {
         const response = await axios.post(ENDPOINT + "/chats/startchat", {
           userUuid: sessionStorage.getItem("uuid"),

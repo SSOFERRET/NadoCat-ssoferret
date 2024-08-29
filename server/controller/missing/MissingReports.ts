@@ -108,10 +108,9 @@ export const createMissingReport = async (req: Request, res: Response) => {
     // const userId = await getUserId();
     const userId = Buffer.from(uuid, "hex");
     const missingId = Number(req.params.postId);
-    console.log(req.body);
+
     const report = JSON.parse(req.body.report);
     const location = JSON.parse(req.body.location);
-    console.log("받은 데이터", report, location);
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newLocation = await addLocation(tx, location);
@@ -148,12 +147,11 @@ export const createMissingReport = async (req: Request, res: Response) => {
       //   sender: userId,
       //   url: `/boards/missings/${missingId}/reports/${post.postId}`
       // });
-      console.log(post);
     });
 
     return res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error) validateError(res, error);
   } finally {
     await prisma.$disconnect();
@@ -257,7 +255,7 @@ export const updateMissingReport = async (req: Request, res: Response) => {
 
     return res.status(StatusCodes.OK).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error) return validateError(res, error);
   } finally {
     await prisma.$disconnect();
@@ -298,7 +296,7 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
       return res.status(StatusCodes.OK).json("게시글 상태가 업데이트 되었습니다.");
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error) return validateError(res, error);
   } finally {
     await prisma.$disconnect();

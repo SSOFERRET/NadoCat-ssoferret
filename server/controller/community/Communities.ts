@@ -71,7 +71,7 @@ export const getCommunity = async (req: Request, res: Response) => {
 
       if (!community) throw new Error("No Post"); //타입가드
 
-      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
+      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.COMMUNITIES, postId);
       community.views += viewIncrementResult || 0;
 
       let liked;

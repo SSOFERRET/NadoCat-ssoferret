@@ -34,7 +34,6 @@ export const getNotifications = async ({
   limit
 }: INotificationsParams): Promise<INotificationPage> => {
   try {
-    console.log("fetch start")
     const data: INotificationPage = await httpClient.get(
       `/notifications/list?limit=${limit ?? LIMIT}&cursor=${pageParam}}`
     ).then((res) => res.data);

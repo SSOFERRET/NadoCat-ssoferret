@@ -631,7 +631,6 @@ export const getStreetCatForOpenSearchData = async (postId: number) => {
       const locationId = Number(getPost?.locationId);
       const getLocation = await readLocation(tx, locationId);
       const postData = { name, content, users, image, createdAt, location: getLocation };
-      console.log(image)
       return postData
 
     });

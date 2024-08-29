@@ -45,17 +45,7 @@ const CommentForm = ({ postId, addComment }: IProps) => {
       return;
     }
 
-    addComment({ postId, uuid: uuidBuffer, comment })
-      .then(() => {
-        console.log("댓글이 성공적으로 등록되었습니다!");
-        setComment("");
-      })
-      .catch(() => {
-        console.log("댓글 등록에 실패했습니다.");
-      })
-      .finally(() => {
-        setComment("");
-      });
+    addComment({ postId, uuid: uuidBuffer, comment });
   };
 
   useEffect(() => {

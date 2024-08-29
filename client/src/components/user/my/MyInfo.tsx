@@ -27,8 +27,6 @@ const MyInfo = ({
   isMyPage,
   userData,
 }: MyInfoProps) => {
-  console.log("MyInfo의 uuid:", uuid);
-  console.log("My의 userData:", userData);
   const [isOpenModal, setIsOpenModal] = useState(false); //모달 여닫는거 저장
   const [avatarUrl, setAvatarUrl] = useState(profileImageUrl);
   const navigate = useNavigate();
@@ -67,8 +65,6 @@ const MyInfo = ({
     navigate("/chats/chat", { state: { userData: userData } });
   };
 
-
-
   return (
     <>
       <div className="info-container">
@@ -79,13 +75,13 @@ const MyInfo = ({
           onClick={onAvatarClick}
         />
 
-        <div className={`nickname-container ${isMyPage ? "my-page" : "user-page"}`}>
+        <div
+          className={`nickname-container ${isMyPage ? "my-page" : "user-page"}`}
+        >
           <div className="nickname-text">
             <span>{nickname}</span>
             <span>님</span>
-            
           </div>
-
 
           {!isMyPage && (
             <div className="btn-set">
@@ -96,18 +92,18 @@ const MyInfo = ({
             </div>
           )}
         </div>
-        
-          {isMyPage && (
-            <button
-              className="settings-button"
-              onClick={() => {
-                handelMenu();
-                ("프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.");
-              }}
-            >
-              <AiOutlineSetting />
-            </button>
-          )}
+
+        {isMyPage && (
+          <button
+            className="settings-button"
+            onClick={() => {
+              handelMenu();
+              ("프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.");
+            }}
+          >
+            <AiOutlineSetting />
+          </button>
+        )}
       </div>
 
       <PostMenu

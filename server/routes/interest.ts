@@ -5,7 +5,6 @@
 // const router = express.Router();
 // router.use(express.json());
 
-// console.log("라우터 지나간다");
 // router.post('/', ensureAutorization , getInterests);
 
 // export default router;

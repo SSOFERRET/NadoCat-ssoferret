@@ -55,8 +55,27 @@ export const serveNotifications = async (req: Request, res: Response) => {
       Connection: "keep-alive",
     });
 
+    // const sendNotifications = async () => {
+    //   if (notifications.length) {
+    //     await createNotification(notifications);
+    //     notifications.forEach((notification) => {
+    //       if (notification && userId && userId === notification.receiver) {
+    //         const notificationData = JSON.stringify({
+    //           type: notification.type,
+    //           sender: notification.sender,
+    //           url: notification.url,
+    //           timestamp: notification.timestamp
+    //         })
+    //         res.write(`data: ${notificationData}\n\n`);
+    //       }
+    //     });
+    //     notifications.length = 0;
+    //   } else {
+    //     res.write('\n\n');
+    //   }
+    // };
+
     const sendNotifications = async () => {
-      // console.log(notifications)
       if (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {
@@ -76,7 +95,7 @@ export const serveNotifications = async (req: Request, res: Response) => {
       }
     };
 
-    const intervalid = setInterval(sendNotifications, Number(process.env.NOTIFICATION_INTERVAL) || 5000);
+    const intervalid = setInterval(sendNotifications, 2000);
 
     req.on("close", () => clearInterval(intervalid));
   } catch (error) {
@@ -108,7 +127,6 @@ export const notify = (data: INoticiationData) => {
     lastNotification.commentId === data.commentId &&
     lastNotification.result === data.result
   ) {
-    console.log("중복된 알림이므로 생성하지 않습니다.");
     return;
   }
   const timestamp = timestampObject();

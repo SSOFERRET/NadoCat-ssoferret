@@ -23,8 +23,7 @@ const SettingPassword = () => {
   } = useForm<SettingPasswordProps>();
 
   const handlePassword = (data: SettingPasswordProps) => {
-    const result = updatePassword(data);
-    console.log("비밀번호 인증 성공:", result);
+    updatePassword(data);
 
     navigate("/users/my");
   };

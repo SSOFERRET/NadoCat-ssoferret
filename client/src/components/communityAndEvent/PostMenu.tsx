@@ -22,7 +22,10 @@ interface IProps {
   isShowMenu: boolean;
   showMenu: () => void;
   deletePost?: ({ postId }: DeletePost) => Promise<void>;
-  deleteComment?: ({ postId, commentId }: ICommentDeleteRequest) => Promise<void>;
+  deleteComment?: ({
+    postId,
+    commentId,
+  }: ICommentDeleteRequest) => Promise<void>;
   updatePost?: () => Promise<void>;
   handelCommentFormOpen?: () => void;
   sortMenu?: SortMenu[];
@@ -50,12 +53,15 @@ const PostMenu = ({
   found,
 }: IProps) => {
   const navigate = useNavigate();
-  const { selectedCommentId: commentId, clearSelectedCommentId } = useCommentStore();
+  const { selectedCommentId: commentId, clearSelectedCommentId } =
+    useCommentStore();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { storeLogout, uuid } = useAuthStore();
   const { mutate: updateFound } = useUpdateFound();
 
-  const handleMenu = (e: React.MouseEvent<HTMLDivElement | HTMLUListElement>) => {
+  const handleMenu = (
+    e: React.MouseEvent<HTMLDivElement | HTMLUListElement>
+  ) => {
     if (e.target === e.currentTarget) {
       showMenu();
 
@@ -166,7 +172,6 @@ const PostMenu = ({
 
     try {
       await storeLogout(uuid);
-      console.log("로그아웃 되었습니다.");
 
       navigate("/users/login");
     } catch (error) {
@@ -188,17 +193,24 @@ const PostMenu = ({
     if (typeof postId !== "number") return;
 
     updateFound({ postId, found: true });
+    navigate("/boards/missings");
   };
 
   return (
-    <div className={`overlay ${isShowMenu ? "visible" : "hidden"}`} onClick={handleMenu}>
+    <div
+      className={`overlay ${isShowMenu ? "visible" : "hidden"}`}
+      onClick={handleMenu}
+    >
       <div className={`button-container ${isShowMenu ? "visible" : "hidden"}`}>
         <button className="close-button" onClick={onClickCloseButton}>
           <RxCross1 />
         </button>
       </div>
 
-      <ul className={`menu ${isShowMenu ? "show" : "hide"}`} onClick={handleMenu}>
+      <ul
+        className={`menu ${isShowMenu ? "show" : "hide"}`}
+        onClick={handleMenu}
+      >
         {menuType === "post" && (
           <>
             {boardType === "missing" && !found && (
@@ -225,7 +237,12 @@ const PostMenu = ({
             <li onClick={handelUpdateComment}>
               <span>댓글 수정</span>
             </li>
-            <li className="delete" onClick={() => commentId && postId && handleCommentDelete(postId, commentId)}>
+            <li
+              className="delete"
+              onClick={() =>
+                commentId && postId && handleCommentDelete(postId, commentId)
+              }
+            >
               <span>댓글 삭제</span>
             </li>
           </>

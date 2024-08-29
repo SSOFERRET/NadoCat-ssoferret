@@ -78,7 +78,7 @@ export const deleteMissingFavorites = async (req: Request, res: Response) => {
     });
     res.json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(StatusCodes.BAD_REQUEST);
   } finally {
     await prisma.$disconnect();

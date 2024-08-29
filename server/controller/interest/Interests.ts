@@ -5,6 +5,7 @@ import prisma from "../../client";
 
 export const getInterests = async (req: Request, res: Response) => {
   const userId = req.user?.uuid;
+
   try {
     if (!userId) {
       return res
