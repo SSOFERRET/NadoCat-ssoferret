@@ -9,42 +9,31 @@ on:
       - develop
 
 jobs:
-  server-build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js for Server
+      - name: Setup Node.js for both server and client
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      - name: Install server dependencies
-        working-directory: ./server
-        run: npm install
+      - name: Install dependencies
+        run: |
+          cd server && npm install
+          cd ../client && npm install
+
+      - name: Build client
+        run: |
+          cd client && npm run build
 
       - name: Run server tests
-        working-directory: ./server
-        run: npm test
-
-  client-build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js for Client
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      - name: Install client dependencies
-        working-directory: ./client
-        run: npm install
+        run: |
+          cd server && npm test
 
       - name: Run client tests
-        working-directory: ./client
-        run: npm test
+        run: |
+          cd client && npm test
