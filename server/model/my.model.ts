@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { deleteProfileImages } from "../util/images/deleteImages";
 import { addProfileImages } from "../util/images/addNewImages";
+import { ICommunity, ICommunityImage } from "../types/community";
 
 const prisma = new PrismaClient();
 
@@ -210,7 +211,7 @@ export const getMyAllPosts = async(uuid: string, page: number, pageSize: number,
 
   try {
     //여러 게시판에서 가져오기
-       const posts = await prisma.communities.findMany({
+       const communities = await prisma.communities.findMany({
        where: {
         uuid: uuidBuffer,
          },
@@ -222,6 +223,26 @@ export const getMyAllPosts = async(uuid: string, page: number, pageSize: number,
         },
          include: selectCommunities,
     });
+
+    const posts = communities.map((community: ICommunity) => {
+    return {
+      postId: community.postId,
+      categoryId: community.categoryId,
+      title: community.title,
+      content: community.content,
+      views: community.views,
+      createdAt: community.createdAt,
+      updatedAt: community.updatedAt,
+      users: {
+        id: community?.users.id,
+        uuid: (community?.users.uuid as Buffer).toString("hex"),
+        nickname: community?.users.nickname,
+        profileImage: community?.users.profileImage,
+      },
+      thumbnail: community.communityImages.map((item: ICommunityImage) => item.images.url).join("") ?? null,
+      likes: community._count.communityLikes,
+    };
+  });
 
     if(!posts || posts.length === 0) {
       console.log("작성한 글을 찾을 수 없습니다.");
