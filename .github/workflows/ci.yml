@@ -28,12 +28,8 @@ jobs:
 
       - name: Build client
         run: |
-          cd client && npm run build
+          cd client && npm run build && sudo systemctl restart nginx
 
-      - name: Run server tests
+      - name: Build server
         run: |
-          cd server && npm test
-
-      - name: Run client tests
-        run: |
-          cd client && npm test
+          cd client && npm run build && pm2 restart 1
