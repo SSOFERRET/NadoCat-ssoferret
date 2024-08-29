@@ -26,7 +26,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
         config.headers["X-UUID"] = uuid;
       }
 
-      console.log("HTTP 요청:", config); 
+      console.log("HTTP 요청:", config);
       return config;
     },
 
@@ -46,7 +46,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
 
     async (error) => {
       console.error("응답 에러:", error); // 에러 로그 추가
-      const {storeLogout} = useAuthStore.getState();
+      const { storeLogout } = useAuthStore.getState();
       const uuid = sessionStorage.getItem("uuid");
 
       //access token 만료
@@ -71,7 +71,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
 
             //Refresh token이 없어서 재발급에 실패한 경우
           } catch (error) {
-            if(uuid){
+            if (uuid) {
               console.error("토큰 재발급 실패:", error);
               alert("세션이 만료되었거나 사용자가 아닙니다. 로그인 화면으로 이동합니다!");
               await storeLogout(uuid);
@@ -80,14 +80,14 @@ export const createClient = (config?: AxiosRequestConfig) => {
             }
           }
 
-         // 위에서 이미 한번 요청해서 originalRequest._retry = true인데 또 요청(무한루프 막기위한 에러처리)
-        }else {
-            if(uuid){
-              alert("세션이 만료되었거나 사용자가 아닙니다. 로그인 화면으로 이동합니다!");
-              await storeLogout(uuid);
-              window.location.href = "/users/login";
-              return Promise.reject(error);
-            }
+          // 위에서 이미 한번 요청해서 originalRequest._retry = true인데 또 요청(무한루프 막기위한 에러처리)
+        } else {
+          if (uuid) {
+            alert("세션이 만료되었거나 사용자가 아닙니다. 로그인 화면으로 이동합니다!");
+            await storeLogout(uuid);
+            window.location.href = "/users/login";
+            return Promise.reject(error);
+          }
         }
       }
       return Promise.reject(error);
