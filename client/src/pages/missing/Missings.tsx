@@ -44,7 +44,7 @@ const Missings = () => {
             {isFetchingNextPage && <div>loading...</div>}
           </div>
 
-          <div>
+          <div className="post-button">
             <NewPostButton path="/boards/missings/write" text="실종 신고" />
           </div>
         </div>

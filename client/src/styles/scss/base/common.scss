@@ -89,7 +89,15 @@ body {
   background-attachment: fixed;
 
   overflow-y: scroll;
+
+  scrollbar-width: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
+
+
 
 button {
   outline: none;
