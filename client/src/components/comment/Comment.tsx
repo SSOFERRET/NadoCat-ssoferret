@@ -9,12 +9,6 @@ import { ICommentPutRequest } from "../../api/community.api";
 import { useAuthStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
 
-//CHECKLIST
-// [x] 회원 정보가 동일할때만 옵션 아이콘 출력
-// [x] 댓글 수정 구현
-// [x] 삭제 구현
-// [ ] 수정, 삭제 알림 UI 구현
-
 interface IProps {
   postId: number;
   comment: IComment;
@@ -72,12 +66,8 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
       comment: commentText,
       commentId: comment.commentId,
     })
-      .then(() => {
-        console.log("수정 완료!");
-      })
-      .catch(() => {
-        console.error("에러닷..!!");
-      })
+      .then(() => {})
+      .catch(() => {})
       .finally(() => {
         setIsCommentEdit(false);
         clearSelectedCommentId();
@@ -98,14 +88,14 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
     };
   }, [commentText, showMenu]);
 
-    //Avatar클릭 시 동작 정의
-    const handleAvatarClick = async() => {
-      if(comment.users.uuid === uuid){
-        navigate("/users/my");
-      }else{
-        navigate(`/users/user/${comment.users.uuid}`); //사용자 페이지 이동
-      }
+  //Avatar클릭 시 동작 정의
+  const handleAvatarClick = async () => {
+    if (comment.users.uuid === uuid) {
+      navigate("/users/my");
+    } else {
+      navigate(`/users/user/${comment.users.uuid}`); //사용자 페이지 이동
     }
+  };
 
   const canShowOptionsIcon = uuid === comment.users.uuid;
   const isEditingCurrentComment = selectedCommentId === comment.commentId;
@@ -114,7 +104,11 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
   return (
     <li className="comment-card">
       <div className="comment">
-        <Avatar profileImage={comment.users.profileImage} nickname={comment.users.nickname} onClick={handleAvatarClick} />
+        <Avatar
+          profileImage={comment.users.profileImage}
+          nickname={comment.users.nickname}
+          onClick={handleAvatarClick}
+        />
 
         <div className="detail">
           <div className="comment-info">

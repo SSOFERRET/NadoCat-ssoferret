@@ -13,7 +13,6 @@ const EventPostEdit = () => {
 
   const editPost = (formData: FormData) => {
     editEventPost({ formData, postId }).then(() => {
-      console.log("수정 완료!");
       navigate(`/boards/events/${postId}`);
     });
   };

@@ -69,7 +69,6 @@ const router = createBrowserRouter([
               </ProtectedPath>
             ),
           },
-          //[ ]추가
           { path: "my/interests", element: <Posts /> },
           { path: "my/myPosts", element: <MyPosts /> },
           { path: "my/setting", element: <Setting /> },

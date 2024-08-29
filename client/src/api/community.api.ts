@@ -24,13 +24,13 @@ interface ICommunityCommentsParams {
 
 export interface ICommentPostRequest {
   postId: number;
-  userId: string; // 버퍼일지도..?
+  userId: string;
   comment: string;
 }
 
 export interface ICommentPutRequest {
   postId: number;
-  userId: string; // 버퍼일지도..?
+  userId: string;
   commentId: number;
   comment: string;
 }
@@ -39,10 +39,6 @@ export interface ICommentDeleteRequest {
   postId: number;
   commentId: number;
 }
-
-// CHECKLIST
-// [x] 게시글 수정
-// [x] 게시글 작성
 
 export const getCommunityPosts = async ({ pageParam, limit, sort }: ICommunityPostsParams): Promise<ICommunityPage> => {
   try {
@@ -130,7 +126,6 @@ export const createCommunityComment = async ({ postId, userId, comment }: IComme
 
 export const updateCommunityComment = async ({ postId, commentId, comment }: ICommentPutRequest) => {
   try {
-    // NOTE userId 확인?
     const response = await httpClient.put(`/boards/communities/${postId}/comments/${commentId}`, {
       postId,
       commentId,

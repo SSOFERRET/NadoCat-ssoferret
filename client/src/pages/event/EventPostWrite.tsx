@@ -10,7 +10,6 @@ const EventPostWrite = () => {
 
   const addPost = (formData: FormData) => {
     addEventPost(formData).then((data) => {
-      console.log("작성 완료!");
       navigate(`/boards/events/${data.postId}`);
     });
   };

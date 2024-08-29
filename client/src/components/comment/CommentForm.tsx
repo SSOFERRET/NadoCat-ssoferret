@@ -4,9 +4,6 @@ import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 import { useAuthStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
 
-// CHECKLIST
-// [x] 댓글 달기 기능
-
 interface IProps {
   postId: number;
   addComment: ({ postId, userId, comment }: ICreateCommentParams) => Promise<void>;
@@ -33,8 +30,6 @@ const CommentForm = ({ postId, addComment }: IProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // NOTE isLoggedIn를 여기서 불러야 하나..?
-
     if (!isLoggedIn) {
       navigate("/users/login");
       return;
@@ -47,14 +42,10 @@ const CommentForm = ({ postId, addComment }: IProps) => {
     // 여기 UI로 보여주기
     addComment({ postId, userId: uuid, comment })
       .then(() => {
-        console.log("댓글이 성공적으로 등록되었습니다!");
         setComment("");
       })
-      .catch(() => {
-        console.log("댓글 등록에 실패했습니다.");
-      })
+      .catch(() => {})
       .finally(() => {
-        console.log("마무리!");
         setComment("");
       });
   };

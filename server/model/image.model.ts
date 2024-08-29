@@ -1,10 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../client";
 
-export const deleteImages = async (
-  tx: Prisma.TransactionClient,
-  imageIds: number[]
-) => {
+export const deleteImages = async (tx: Prisma.TransactionClient, imageIds: number[]) => {
   return await tx.images.deleteMany({
     where: {
       imageId: {
@@ -22,10 +19,7 @@ export const addImage = async (tx: Prisma.TransactionClient, url: string) => {
   });
 };
 
-export const getImageById = async (
-  tx: Prisma.TransactionClient,
-  imageId: number
-) => {
+export const getImageById = async (tx: Prisma.TransactionClient, imageId: number) => {
   return await tx.images.findUnique({
     where: {
       imageId,
@@ -33,7 +27,6 @@ export const getImageById = async (
   });
 };
 
-//프로필 이미지 변경
 export const addProfileImage = async (url: string, uuid: string) => {
   const uuidBuffer = Buffer.from(uuid, "hex");
   const user = await prisma.users.findFirst({
@@ -60,7 +53,6 @@ export const addProfileImage = async (url: string, uuid: string) => {
   }
 };
 
-//프로필 이미지 기본으로 변경
 export const deleteProfileImage = async (url: string, uuid: string) => {
   return await prisma.users.update({
     where: {
@@ -72,11 +64,10 @@ export const deleteProfileImage = async (url: string, uuid: string) => {
   });
 };
 
-//프로필 이미지 조회
 export const getProfileImage = async (uuid: string) => {
-    return await prisma.users.findFirst({
-        where: {
-            uuid: Buffer.from(uuid, "hex")
-        }
-    });
+  return await prisma.users.findFirst({
+    where: {
+      uuid: Buffer.from(uuid, "hex"),
+    },
+  });
 };
