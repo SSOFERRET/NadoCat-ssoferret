@@ -5,6 +5,7 @@ import {SettingNicknameProps} from "../components/user/my/SettingNickname";
 import { SettingAuthPasswordProps } from "../components/user/my/SettingAuthPassword";
 import { SettingPasswordProps } from "../components/user/my/SettingPassword";
 import { SettingDetailProps } from "../components/user/my/SettingDetail";
+import { MyPostsProps } from "../components/user/my/MyPosts";
 // import  {Post}  from "../pages/MyPage";
 
 export const signup = async (userData: SignupProps) => {
@@ -85,6 +86,17 @@ export const myInterests = async () => {
     return response.data;
   }catch (error) {
     console.error("관심글 정보를 가져오는 데 실패했습니다:", error);
+    throw error;
+  }
+}
+
+
+export const getMyPosts = async (data: MyPostsProps) => {
+  try {
+    const response = await httpClient.post(`/users/my/myPosts`, data);
+    return response.data;
+  } catch (error) {
+    console.error("작성한글 정보를 가져오는 데 실패했습니다:", error);
     throw error;
   }
 }

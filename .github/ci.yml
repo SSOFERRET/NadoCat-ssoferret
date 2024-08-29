@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  server-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js for Server
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install server dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Run server tests
+        working-directory: ./server
+        run: npm test
+
+  client-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js for Client
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install client dependencies
+        working-directory: ./client
+        run: npm install
+
+      - name: Run client tests
+        working-directory: ./client
+        run: npm test

@@ -3,6 +3,7 @@ import "../../../styles/scss/components/user/my/myTab.scss";
 import Posts from "../../mypage/Posts";
 import Friends from "../../../pages/user/Friends";
 import useFriends from "../../../hooks/useFriends";
+import MyPosts from "./MyPosts";
 
 const MyTab = () => {
   const [activeTab, setActiveTab] = useState("tab-likepost");
@@ -39,7 +40,7 @@ const MyTab = () => {
 
       <div className="tab-content">
         {activeTab === "tab-likepost" && <div className="interest-posts"><Posts /></div>}
-        {activeTab === "tab-mypost" && <div>작성한글 내용입니다.</div>}
+        {activeTab === "tab-mypost" && <MyPosts />}
         {activeTab === "tab-myfriends" && <Friends />}
       </div>
     </div>

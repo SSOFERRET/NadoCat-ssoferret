@@ -75,7 +75,6 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
     }
   };
 
-  console.log(lists);
   return (
     <div className="chatlist">
       {lists.map((list, index) => (

@@ -37,6 +37,8 @@ import MissingPostEdit from "./pages/missing/MissingPostEdit";
 import MissingReportPostWrite from "./pages/missing/MissingReportPostWrite";
 import MissingReportPostEdit from "./pages/missing/MissingReportPostEdit";
 import Posts from "./components/mypage/Posts";
+import KakaoRedirect from "./pages/user/KakaoRedirect";
+import MyPosts from "./components/user/my/MyPosts";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +60,7 @@ const router = createBrowserRouter([
           },
           { path: "login", element: <Login /> },
           { path: "signup", element: <Signup /> },
+          { path: "auth/kakao-redirect", element: <KakaoRedirect /> },
           {
             path: "my",
             element: (
@@ -68,6 +71,7 @@ const router = createBrowserRouter([
           },
           //[ ]추가
           { path: "my/interests", element: <Posts /> },
+          { path: "my/myPosts", element: <MyPosts /> },
           { path: "my/setting", element: <Setting /> },
           { path: "my/setting/nickname", element: <SettingNickname /> },
           {
