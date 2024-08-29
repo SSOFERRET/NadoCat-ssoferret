@@ -23,6 +23,7 @@ dotenv.config();
 //chat 관련
 const app = express();
 const server = http.createServer(app);
+app.set('trust proxy', 1);  // 프록시 서버 뒤에서의 신뢰 설정
 
 const io = new Server(server, {
   cors: {
