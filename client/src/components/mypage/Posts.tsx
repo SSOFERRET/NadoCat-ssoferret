@@ -36,8 +36,6 @@ const Posts: React.FC = () => {
     }
 }, [uuid]);  
 
-
-
   const dateChanger = (isoString: string) => {
     const date = new Date(isoString);
     return date.toLocaleDateString("ko-KR", {

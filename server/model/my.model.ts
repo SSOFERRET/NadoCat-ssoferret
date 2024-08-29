@@ -166,6 +166,34 @@ export const deleteUserInactive = async (uuid: string) => {
 }
 
 
+//[ ]작성글
+export const getMyAllPosts = async(uuid: string, page: number, pageSize: number) => {
+  const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
+
+  try {
+    //여러 게시판에서 가져오기
+    const posts = await prisma.$queryRaw`
+        SELECT * FROM (
+        SELECT postId, title, content, createdAt FROM communities WHERE uuid = ${uuidBuffer}
+        UNION ALL
+        SELECT postId, title, content, createdAt FROM events WHERE uuid = ${uuidBuffer}
+        UNION ALL
+        SELECT postId, name as title, detail as content, createdAt FROM missing_cats WHERE uuid = ${uuidBuffer}
+        UNION ALL
+        SELECT postId, name as title, content, createdAt FROM street_cats WHERE uuid = ${uuidBuffer}
+      ) AS all_posts
+      ORDER BY createdAt DESC
+      LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize};
+    `;
+
+    return posts;
+
+  } catch (error) {
+    console.log("작성글 조회에서 error:", error);
+    throw new Error("작성글 조회에서 오류 발생");
+  }
+};
+
 //[x]프로필 이미지 저장 로직 추가
 export const addProfileImageFormats = async (
   uuid: string,
@@ -176,11 +204,10 @@ export const addProfileImageFormats = async (
 
 //[x]프로필 이미지 삭제 로직 추가(기본이미지 변경)
 export const deleteProfileImageFormats = async (
-
-  uuid: string,
-  imageUrl: string
-) => {
-  await deleteProfileImages(imageUrl, uuid);
-};
-
+    uuid: string,
+    imageUrl: string
+  ) => {
+    await deleteProfileImages(imageUrl, uuid);
+  };
+ 
 

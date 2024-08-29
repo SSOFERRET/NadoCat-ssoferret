@@ -1,5 +1,5 @@
 import express from "express";
-import { signup, login, kakao, google, getNewAccessToken, logout } from "../controller/user/Users";
+import { signup, login, kakao, getNewAccessToken, logout } from "../controller/user/Users";
 import { signupValidator, loginValidator } from "../middleware/validator";
 import {
   updateNickname,
@@ -11,6 +11,7 @@ import {
   userPage,
   myPage,
   deleteUser,
+  getMyPosts,
 } from "../controller/user/MyPage";
 import {
   getFavoriteCats,
@@ -30,12 +31,15 @@ router.post("/signup", signupValidator, signup);
 router.post("/login", loginValidator, login);
 router.post("/logout", ensureAutorization, logout);
 router.post("/refresh-token", getNewAccessToken);
+
 router.get("/auth/kakao/callback", kakao);
-router.get("/auth/google", google);
+// router.post("/auth/kakao-redirect", kakao);
+// router.get("/auth/google", google);
 
 router.get("/user/:uuid", ensureAutorization, userPage); //사용자 프로필
 router.get("/my", ensureAutorization, myPage); //마이페이지
 router.get("/my/interests", ensureAutorization , getInterests);
+router.post("/my/myPosts", ensureAutorization , getMyPosts); //[ ]작성글
 
 router.put("/my/setting/nickname", ensureAutorization, updateNickname);
 router.put("/my/setting/detail", ensureAutorization, updateDetail);

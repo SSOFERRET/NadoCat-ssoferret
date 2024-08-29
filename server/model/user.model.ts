@@ -86,6 +86,12 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
         throw { status: StatusCodes.UNAUTHORIZED, message: "사용자를 찾을 수 없습니다." };
       }
 
+      // 카카오 사용자인지 일반 사용자인지 구분
+      if (selectUser.authType === "kakao") {
+        // 카카오 사용자는 비밀번호 검증을 건너뜀
+        return { selectUser, selectUserSecret: null };
+      }
+
       const userUuid = selectUser.uuid;
       const selectUserSecret = await prisma.userSecrets.findFirst({
         where: {
@@ -106,11 +112,21 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
     }
 
     const { selectUser, selectUserSecret } = result;
-    const isPasswordValid = await bcrypt.compare(password, selectUserSecret.hashPassword);
 
-    if (!isPasswordValid) {
-      throw new Error("사용자 정보가 일치하지 않습니다.");
+    if (selectUser.authType === "general") {
+      if (!selectUserSecret || !selectUserSecret.hashPassword) {
+        throw new Error("비밀번호가 설정되지 않은 사용자입니다.");
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, selectUserSecret.hashPassword);
+      if (!isPasswordValid) {
+        throw new Error("사용자 정보가 일치하지 않습니다.");
+      }
+
+    }else {
+      console.log("카카오 로그인 사용자");
     }
+
 
     const userUuidString = selectUser.uuid.toString("hex");
     const generalToken = jwt.sign(
@@ -130,11 +146,8 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
         }, process.env.PRIVATE_KEY_REF as string, {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN,
         issuer: "fefive"
-      }
-      );
-
-      console.log("refreshToken왜 안나오냐:", refreshToken);
-
+        }
+      )
     }
 
     return { generalToken, refreshToken, result, userUuidString };
@@ -253,7 +266,7 @@ export const logoutUser = async (uuid: string) => {
 
 
 //[ ] 카카오 로그인
-export const kakaoUser = async (email: string, nickname: string, accessToken: string, refreshToken: string, tokenExpiry: string) => {
+export const kakaoUser = async (email: string, nickname: string) => {
   try {
     const result = await prisma.$transaction(async (prisma) => {
       const selectUser = await prisma.users.findFirst({
@@ -276,19 +289,58 @@ export const kakaoUser = async (email: string, nickname: string, accessToken: st
           },
         });
 
-        const createUserOauthSecret = await prisma.userOauthSecrets.create({
+        const createUserSecret = await prisma.userSecrets.create({
           data: {
             uuid: uuidBuffer,
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            tokenExpiry: tokenExpiry,
+            hashPassword: null, // 비밀번호는 없으므로 null
+            salt: null // salt도 null
           },
         });
 
-        return { createUser, createUserOauthSecret };
+        //새 사용자
+        return { createUser, createUserSecret };
       }
 
-      return selectUser;
+      //jwt 토큰
+      const userUuidString = selectUser.uuid.toString("hex");
+      const generalToken = jwt.sign(
+        {
+          uuid: userUuidString,
+          email: selectUser.email
+        }, process.env.PRIVATE_KEY_GEN as string, {
+        expiresIn: process.env.GENERAL_TOKEN_EXPIRE_IN,
+        issuer: "fefive"
+      });
+  
+      let refreshToken: string | null = null;
+      const selectUserSecrets = await prisma.userSecrets.findFirst({
+        where: {
+          uuid: selectUser.uuid
+        }
+      });
+
+
+      if(selectUserSecrets){
+        refreshToken = jwt.sign(
+          {
+            uuid: userUuidString,
+          }, process.env.PRIVATE_KEY_REF as string, {
+          expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN,
+          issuer: "fefive"
+        }
+      );
+
+        await prisma.userSecrets.update({
+          data: {
+            refreshToken: refreshToken // Refresh Token 업데이트
+          },
+          where: {
+            userSecretId: selectUserSecrets.userSecretId,
+          },
+        });
+      }
+
+      return {generalToken, refreshToken, nickname: selectUser.nickname, uuid: selectUser.uuid};
     });
 
     return result;
@@ -297,6 +349,4 @@ export const kakaoUser = async (email: string, nickname: string, accessToken: st
     console.log("카카오로그인 error:", error);
     throw new Error("카카오로그인 중 오류 발생");
   }
-
-
 }
