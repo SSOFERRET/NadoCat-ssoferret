@@ -15,8 +15,8 @@ import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import MissingReportPostList from "../../components/missing/MissingReportPostList";
 import PostMenu from "../../components/communityAndEvent/PostMenu";
 import { useState } from "react";
-import NewPostButton from "../../components/common/NewPostButton";
 import { Footer } from "../../components/common/Footer";
+import PostButton from "../../components/missing/missingPost/PostButton";
 
 const MissingDetail = () => {
   const params = useParams();
@@ -73,7 +73,7 @@ const MissingDetail = () => {
         deletePost={removeMissingPost}
       />
 
-      <NewPostButton path={`/boards/missings/${postId}/report/write`} text="제보하기" />
+      <PostButton path={`/boards/missings/${postId}/report/write`} text="제보하기" />
       <Footer />
     </section>
   );
