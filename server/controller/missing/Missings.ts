@@ -66,11 +66,9 @@ export const getMissing = async (req: Request, res: Response) => {
     const postId = Number(req.params.postId);
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const userId = await getUserId(); // NOTE
       const postData = {
         postId,
         categoryId: CATEGORY.MISSINGS,
-        userId
       }
 
       let post = await getPostByPostId(tx, postData);
@@ -171,9 +169,13 @@ export const createMissing = async (req: Request, res: Response) => {
  * */
 
 export const deleteMissing = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const postId = Number(req.params.postId);
-    const userId = await getUserId(); // NOTE
     const postData = {
       userId,
       postId,
@@ -211,32 +213,6 @@ export const deleteMissing = async (req: Request, res: Response) => {
     if (error instanceof Error)
       return validateError(res, error);
   }
-};
-
-export const getUserId = async () => { // 임시
-  const result = await prisma.users.findUnique({
-    where: {
-      id: 1
-    }
-  });
-  if (!result) {
-    throw new Error("사용자 정보 없음");
-  }
-  console.log(result.uuid);
-  return result.uuid;
-};
-
-export const getUserId2 = async () => { // 임시
-  const result = await prisma.users.findUnique({
-    where: {
-      id: 2
-    }
-  });
-  if (!result) {
-    throw new Error("사용자 정보 없음");
-  }
-  console.log(result.uuid);
-  return result.uuid;
 };
 
 /**
@@ -318,9 +294,13 @@ export const validateError = (res: Response, error: Error) => {
 }
 
 export const updateFoundState = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const postId = Number(req.params.postId);
-    const userId = await getUserId(); // NOTE
     const { found } = req.body;
     const postData = {
       postId,

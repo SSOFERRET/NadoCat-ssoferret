@@ -241,11 +241,11 @@ model Messages {
 
 model MissingCats {
   missingCatId Int        @id @unique(map: "missing_cat_id_UNIQUE") @default(autoincrement()) @map("missing_cat_id")
-  name         String     @db.VarChar(10)
+  name         String     @db.VarChar(100)
   birth        DateTime?  @db.Date
   gender       String?    @default("-") @db.Char(1)
   uuid         Bytes      @db.Binary(16)
-  detail       String?    @db.MediumText
+  detail       String?    @db.LongText
   users        Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "home_cats_uuid_fk")
   missings     Missings[]
 
