@@ -13,7 +13,7 @@ import {
   updateMissingReportByPostId,
   updateMissingReportCheckByPostId,
 } from "../../model/missing.model";
-import { getUserId, validateError } from "./Missings";
+import { validateError } from "./Missings";
 import { CATEGORY } from "../../constants/category";
 import {
   deleteLocationsByLocationIds,
@@ -62,10 +62,15 @@ export const getMissingReports = async (req: Request, res: Response) => {
 }
 
 export const getMissingReport = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const postId = Number(req.params.postId);
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const userId = await getUserId(); // NOTE
+
       const postData = {
         postId,
         categoryId: CATEGORY.MISSING_REPORTS,
@@ -174,10 +179,14 @@ export const deleteMissingReport = async (
   res: Response,
   postIdInput?: number
 ) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const missingId = Number(req.params.missingId);
     const postId = postIdInput ? postIdInput : Number(req.params.postId);
-    const userId = await getUserId(); // NOTE
     const postData = {
       userId,
       categoryId: CATEGORY.MISSING_REPORTS,
@@ -214,10 +223,14 @@ export const deleteMissingReportHandler = async (
 
 export const updateMissingReport = async (req: Request, res: Response) => {
   // NOTE Full Update?인지 확인
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const missingId = Number(req.params.missingId);
     const postId = Number(req.params.postId);
-    const userId = await getUserId(); // NOTE
     const { report, location, images } = req.body;
     const postData = {
       postId,
@@ -269,8 +282,12 @@ export const updateMissingReport = async (req: Request, res: Response) => {
 };
 
 export const updateMissingReportCheck = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = await getUserId(); // NOTE
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const postData = {
       postId: Number(req.params.postId),
       categoryId: CATEGORY.MISSING_REPORTS,

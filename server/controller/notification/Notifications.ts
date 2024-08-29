@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { createNotification, getLatestNotificationByReceiver, getNotificationListByReceiver, getNotificationsCount, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
-import { getUserId, getUserId2 } from "../missing/Missings";
 import { StatusCodes } from "http-status-codes";
 import { handleControllerError } from "../../util/errors/errors";
 import { TCategoryId } from "../../types/category";
@@ -115,8 +114,12 @@ export const notify = (data: INoticiationData) => {
 };
 
 export const updateNotifications = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = await getUserId();
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     updateNotificationsIsReadByReceiver(userId);
 
     return res.status(StatusCodes.OK);
@@ -183,9 +186,13 @@ export const notifyNewLike = async (
 // };
 
 export const getNotificationList = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const limit = 10;
-    const userId = await getUserId2(); //NOTE
     let notifications = await getNotificationListByReceiver(userId, limit);
     const count = await getNotificationsCount();
 
@@ -211,8 +218,12 @@ export const getNotificationList = async (req: Request, res: Response) => {
 }
 
 export const getIsAllNotificationRead = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = await getUserId2();
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const latest = await getLatestNotificationByReceiver(userId);
     const isAllRead = latest?.isRead;
 
