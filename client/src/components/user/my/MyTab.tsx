@@ -5,7 +5,11 @@ import Friends from "../../../pages/user/Friends";
 import useFriends from "../../../hooks/useFriends";
 import MyPosts from "./MyPosts";
 
-const MyTab = () => {
+interface IProps {
+  isMyPage: boolean;
+}
+
+const MyTab = ({ isMyPage }: IProps) => {
   const [activeTab, setActiveTab] = useState("tab-likepost");
   const { setEnabled } = useFriends(); // ⬅️ 여기 추가
 
@@ -20,28 +24,31 @@ const MyTab = () => {
           >
             관심글
           </button>
-          <button
-            onClick={() => setActiveTab("tab-mypost")}
-            className={activeTab === "tab-mypost" ? "active-btn" : ""}
-          >
+          <button onClick={() => setActiveTab("tab-mypost")} className={activeTab === "tab-mypost" ? "active-btn" : ""}>
             작성한글
           </button>
-          <button
-            onClick={() => {
-              setActiveTab("tab-myfriends");
-              setEnabled(true);
-            }}
-            className={activeTab === "tab-myfriends" ? "active-btn" : ""}
-          >
-            친구 목록
-          </button>
+          {isMyPage && (
+            <button
+              onClick={() => {
+                setActiveTab("tab-myfriends");
+                setEnabled(true);
+              }}
+              className={activeTab === "tab-myfriends" ? "active-btn" : ""}
+            >
+              친구 목록
+            </button>
+          )}
         </div>
       </div>
 
       <div className="tab-content">
-        {activeTab === "tab-likepost" && <div className="interest-posts"><Posts /></div>}
+        {activeTab === "tab-likepost" && (
+          <div className="interest-posts">
+            <Posts />
+          </div>
+        )}
         {activeTab === "tab-mypost" && <MyPosts />}
-        {activeTab === "tab-myfriends" && <Friends />}
+        {activeTab === "tab-myfriends" && isMyPage && <Friends />}
       </div>
     </div>
   );

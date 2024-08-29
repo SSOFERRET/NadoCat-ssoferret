@@ -60,12 +60,9 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
     io.to(chatRoomId).emit("chat_created", { chatId: chatRoomId });
     CHATID = chatRoomId;
   } catch (error) {
-
-    console.error(error)
+    console.error(error);
 
     return res.status(500).json({ error: "Failed to start chat" });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -81,7 +78,6 @@ export const sendMessage = async (req: Request, res: Response, io: SocketIOServe
         content,
         sentAt: sentAt,
         chats: {
-
           connect: { chatId },
         },
         users: {
@@ -102,8 +98,6 @@ export const sendMessage = async (req: Request, res: Response, io: SocketIOServe
   } catch (error) {
     console.error("Error sending message:", error);
     res.status(500).json({ error: "Failed to send message" });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -113,17 +107,18 @@ export const getChatList = async (req: Request, res: Response) => {
     const userUuidBuffer = Buffer.from(userUuid, "hex");
     const chats = await prisma.chats.findMany({
       where: {
-        OR: [{
-          uuid: userUuidBuffer
-        }, {
-          otherUuid: userUuidBuffer
-        }],
-
+        OR: [
+          {
+            uuid: userUuidBuffer,
+          },
+          {
+            otherUuid: userUuidBuffer,
+          },
+        ],
       },
       include: {
         messages: {
           orderBy: {
-
             sentAt: "asc",
           },
           include: {
@@ -147,9 +142,6 @@ export const getChatList = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching chat list:", error);
     res.status(500).json({ error: "Failed to fetch chat list" });
-  } finally {
-    await prisma.$disconnect();
-
   }
 };
 
@@ -170,8 +162,6 @@ export const testUuid = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.error(error);
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -194,8 +184,6 @@ export const deleteChat = async (req: Request, res: Response, io: SocketIOServer
   } catch (error) {
     console.error("Error deleting chat:", error);
     res.status(500).json({ error: "채팅방 나가기에 실패했습니다." });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -218,8 +206,6 @@ export const handleMessage = async (socket: Socket, io: SocketIOServer) => {
       });
     } catch (error) {
       console.error("Error saving message to database:", error);
-    } finally {
-      await prisma.$disconnect();
     }
   });
 };
@@ -267,8 +253,6 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
       });
     } catch (error) {
       console.error("Error fetching previous messages:", error);
-    } finally {
-      await prisma.$disconnect();
     }
   });
 };

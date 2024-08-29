@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import prisma from "../../client";
-import { Prisma } from "@prisma/client";
-// import { getUuid } from "./StreetCats";
 import {
   createFavoriteCat,
   readFavoriteCat,
@@ -52,7 +50,7 @@ export const getFavoriteCats = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } 
+  }
 };
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 조회
@@ -74,7 +72,7 @@ export const getFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } 
+  }
 };
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 추가
@@ -97,17 +95,16 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } 
+  }
 };
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 삭제
 export const deleteFavoriteCat = async (req: Request, res: Response) => {
-  // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
   const postId = Number(req.params.street_cat_id);
-
   try {
+    const uuid = uuidString && Buffer.from(uuidString.replace(/-/g, ""), "hex");
+
     if (!uuid) {
       throw new Error("User UUID is missing.");
     }
@@ -118,5 +115,5 @@ export const deleteFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } 
+  }
 };

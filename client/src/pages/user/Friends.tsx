@@ -8,6 +8,7 @@ import ServerError from "../../components/comment/CommentError";
 
 const Friends = () => {
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } = useFriends();
+  console.log(data);
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
