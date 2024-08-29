@@ -4,9 +4,8 @@ import Avatar from "./Avatar";
 import { formatDate } from "../../utils/format/format";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { GoHeartFill } from "react-icons/go";
-import {useNavigate} from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/userStore";
-import { useEffect } from "react";
 
 interface IProps {
   userInfo: IPostUserInfo;
@@ -16,27 +15,34 @@ interface IProps {
   liked: boolean;
 }
 
-
-const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
-  const {uuid} = useAuthStore(); 
-  const navigate = useNavigate(); 
+const ActionBar = ({
+  userInfo,
+  createdAt,
+  showMenu,
+  toggleLike,
+  liked,
+}: IProps) => {
+  const { uuid } = useAuthStore();
+  const navigate = useNavigate();
 
   console.log("액션바의 uuid: ", uuid);
   console.log("userInfo는 어디서?: ", userInfo);
 
-    const handleAvatarClick = async() => {
-      if(userInfo.uuid === uuid){
-        navigate("/users/my");
-      }else{
-        navigate(`/users/user/${userInfo.uuid}`); 
-      }
-
+  const handleAvatarClick = async () => {
+    if (userInfo.uuid === uuid) {
+      navigate("/users/my");
+    } else {
+      navigate(`/users/user/${userInfo.uuid}`);
     }
   };
 
   return (
     <div className="action-bar">
-      <Avatar profileImage={userInfo.profileImage} nickname={userInfo.nickname} onClick={handleAvatarClick} />
+      <Avatar
+        profileImage={userInfo.profileImage}
+        nickname={userInfo.nickname}
+        onClick={handleAvatarClick}
+      />
       <div className="user-info">
         <div className="user-details">
           <span className="nickname">{userInfo.nickname}</span>
@@ -52,7 +58,12 @@ const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps
             <GoHeartFill />
           </button>
 
-          {uuid === userInfo.uuid && <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />}
+          {uuid === userInfo.uuid && (
+            <HiOutlineDotsVertical
+              className="options-icon"
+              onClick={showMenu}
+            />
+          )}
         </div>
       </div>
     </div>

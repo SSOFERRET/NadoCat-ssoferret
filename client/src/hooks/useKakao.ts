@@ -19,7 +19,7 @@ export const useKakao = () => {
                     .then((response) => {
 
                         const { accessToken/*, refreshToken*/ } = response.data.tokens;
-                        storeLogin(accessToken, false); // <= 인수 필요하다고 해서 일단 false 입력했습니다.
+                        storeLogin(accessToken, false, true); // <= 인수 필요하다고 해서 일단 false 입력했습니다.
 
                         // if (refreshToken) {
                         //     storeAutoLogin(refreshToken); <= 일단 주석처리 합니다.
