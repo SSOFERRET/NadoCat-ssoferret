@@ -23,7 +23,7 @@ export const signup = async (req: Request, res: Response) => {
 
   //DB저장
   try {
-    const result: { user: IUsers; secretUser: IUserSecrets } | null = await createUser(email, nickname, password);
+    const result = await createUser(email, nickname, password);
 
     if (result === null) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "이미 사용 중인 이메일입니다." });
@@ -49,10 +49,10 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
   const isAutoLogin = (autoLogin === 'true' || autoLogin === true); 
-  const generalTokenMaxAge = parseInt(process.env.GENERAL_TOKEN_MAX_AGE || '300000'); // 5분
-  const refreshTokenMaxAge = parseInt(process.env.REFRESH_TOKEN_MAX_AGE || "604800000");// 7일
-  // const generalTokenMaxAge = 10 * 60 * 1000; // 1분
-  // const refreshTokenMaxAge = 60 * 60 * 1000;// 5분
+  // const generalTokenMaxAge = parseInt(process.env.GENERAL_TOKEN_MAX_AGE || '300000'); // 5분
+  // const refreshTokenMaxAge = parseInt(process.env.REFRESH_TOKEN_MAX_AGE || "604800000");// 7일
+  const generalTokenMaxAge = 10 * 60 * 1000; // 1분
+  const refreshTokenMaxAge = 60 * 60 * 1000;// 5분
   // const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000;// 7일
 
   try {
@@ -142,8 +142,13 @@ export const logout = async (req: Request, res: Response) => {
 
 //[ ]카카오
 export const kakao = async (req: Request, res: Response) => {
+  const generalTokenMaxAge = 30 * 60 * 1000; // 30분
+  const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000;// 7일
   const { code } = req.query;
   try {
+    //카카오 토큰 받기
+    console.log("카카오 로그인 시작, code:", code);
+
     const tokenResponse = await axios.post(
       process.env.KAKAO_TOKEN_URL as string,
       {},
@@ -159,33 +164,58 @@ export const kakao = async (req: Request, res: Response) => {
         },
       }
     );
+    console.log("토큰 응답:", tokenResponse.data);
+    const { access_token } = tokenResponse.data;
 
-    console.log("tokenResponse.data 카카오 데이터: ", tokenResponse.data);
-    const { access_token, refresh_token, expires_in } = tokenResponse.data;
-
-    const userResponse = await axios.get(process.env.KAKAO_USERINFO_URL as string, {
+    //사용자 정보 받기
+    const userResponse = await axios.get(process.env.KAKAO_USERINFO_URL as string, 
+      {
       headers: {
         Authorization: `Bearer ${access_token}`,
-      },
+       },
+      });
+
+  console.log("사용자 정보 응답:", userResponse.data);
+    const { properties, kakao_account } = userResponse.data;
+    const kakaoEmail = kakao_account.email;
+    const kakaoNickname = properties.nickname;
+
+    const result = await kakaoUser(kakaoEmail, kakaoNickname);
+    
+    // UUID가 undefined인지 확인
+    if (!result || !result.uuid) {
+      throw new Error("유효하지 않은 사용자입니다.");
+    }
+
+    const userUuidString = result.uuid.toString("hex");
+    console.log("사용자 UUID:", userUuidString);
+    
+    res.cookie("generalToken", result.generalToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: generalTokenMaxAge,
+    });
+  
+    //자동로그인시
+    res.cookie("refreshToken", result.refreshToken, {
+      httpOnly: true,
+      secure: true,
+        maxAge: refreshTokenMaxAge,
     });
 
-    const { id, properties, kakao_account } = userResponse.data;
-    const email = kakao_account.email;
-    const nickname = properties.nickname;
+    console.log("nickname:",result.nickname);
+    console.log("userUuidString:",userUuidString);
 
-    await kakaoUser(email, nickname, access_token, refresh_token, expires_in.toString());
+    // res.redirect(`http://localhost:5173/users/auth/kakao-redirect?code=${code}&uuid=${userUuidString}`);
+    res.redirect(`http://3.37.238.147/users/auth/kakao-redirect?code=${code}&uuid=${userUuidString}`);
 
-    res.redirect("/signup"); //홈으로 수정
+   
   } catch (error) {
-    console.log("카카오 로그인 오류: ", error);
+    console.log("카카오 로그인 오류: ");
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: "카카오 로그인 실패",
+      error: error
     });
   }
 };
 
-//::구글
-export const google = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  return res.json({ email: email, password: password });
-};
