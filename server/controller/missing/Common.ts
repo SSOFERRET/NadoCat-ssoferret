@@ -57,7 +57,5 @@ export const getPosts = async (req: Request, res: Response, postData: IListData,
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };

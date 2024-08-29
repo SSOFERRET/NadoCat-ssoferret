@@ -38,9 +38,7 @@ export const addLike = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "좋아요가 등록 되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const deleteLike = async (req: Request, res: Response) => {
@@ -73,7 +71,5 @@ export const deleteLike = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "좋아요가 삭제 되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };

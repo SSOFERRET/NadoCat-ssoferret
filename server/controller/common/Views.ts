@@ -31,9 +31,7 @@ export const incrementViewCountAsAllowed = async (
     }
   } catch (error) {
     throw new Error("incrementViewCountAsAllowed Error");
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 const getKeyName = (categoryId: number, postId: number) => `views_${categoryId}_${postId}`;
@@ -51,9 +49,7 @@ const isViewIncrementAllowed = async (redis: RedisClientType, key: string, field
     return timestamp - (await getLastViewTime(redis, key, field)) > VIEW_LIMIT_SEC;
   } catch (error) {
     throw new Error("isViewIncrementAllowed Error");
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 const checkView = async (redis: RedisClientType, key: string, field: string) => {

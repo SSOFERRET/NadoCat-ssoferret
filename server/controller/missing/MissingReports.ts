@@ -93,9 +93,7 @@ export const getMissingReport = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const createMissingReport = async (req: Request, res: Response) => {
@@ -153,9 +151,7 @@ export const createMissingReport = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     if (error instanceof Error) validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 /**
@@ -195,9 +191,7 @@ export const deleteMissingReport = async (req: Request, res: Response, postIdInp
     return res.status(StatusCodes.OK).json("제보글 삭제");
   } catch (error) {
     return handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const deleteMissingReportHandler = async (req: Request, res: Response) => {
@@ -205,9 +199,7 @@ export const deleteMissingReportHandler = async (req: Request, res: Response) =>
     await deleteMissingReport(req, res);
   } catch (error) {
     if (error instanceof Error) return validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const updateMissingReport = async (req: Request, res: Response) => {
@@ -257,9 +249,7 @@ export const updateMissingReport = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     if (error instanceof Error) return validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const updateMissingReportCheck = async (req: Request, res: Response) => {
@@ -298,7 +288,5 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     if (error instanceof Error) return validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };

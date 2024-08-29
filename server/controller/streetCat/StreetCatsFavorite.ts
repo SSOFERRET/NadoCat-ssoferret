@@ -52,9 +52,7 @@ export const getFavoriteCats = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 조회
@@ -76,9 +74,7 @@ export const getFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 추가
@@ -101,9 +97,7 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 삭제
@@ -124,7 +118,5 @@ export const deleteFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
