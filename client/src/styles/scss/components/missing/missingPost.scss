@@ -1,7 +1,47 @@
+// @import "../../base/common.scss";
+
+// .missing-post-box {
+//   padding: 24rem 20rem;
+//   margin: 0 0rem;
+//   border-bottom: 1px solid $lightgray;
+
+//   .found-overlay {
+//     font-size: 52rem;
+//     z-index: 50;
+//     background-color: rgba(0, 0, 0, 0.5);
+//     color: white;
+//     position: absolute;
+//     display: flex;
+//     justify-content: center;
+//     span {
+//       margin-top: 180rem;
+//     }
+//   }
+// }
+
 @import "../../base/common.scss";
 
 .missing-post-box {
   padding: 24rem 20rem;
   margin: 0 0rem;
   border-bottom: 1px solid $lightgray;
+  position: relative; /* 부모 요소에 relative를 설정 */
+
+  .found-overlay {
+    position: absolute; /* 절대 위치 */
+    top: 0; /* 상단을 부모의 상단에 맞춤 */
+    left: 0; /* 좌측을 부모의 좌측에 맞춤 */
+    right: 0; /* 우측을 부모의 우측에 맞춤 */
+    bottom: 0; /* 하단을 부모의 하단에 맞춤 */
+    font-size: 52rem;
+    z-index: 50;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    justify-content: center;
+
+    span {
+      margin-top: 180rem; /* 필요에 따라 조정 가능 */
+    }
+  }
 }

@@ -16,11 +16,16 @@ export const getPosts = async (req: Request, res: Response, postData: IListData,
     const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const count = await getPostsCount(categoryId);
 
-      let posts;
+      let posts: any[] = [];
+      let userIds: string[] = [];
       if (categoryId === CATEGORY.MISSINGS)
-        posts = await getPostList(listData);
+        [posts, userIds] = await getPostList(listData);
       else if (categoryId === CATEGORY.MISSING_REPORTS)
-        posts = await getPostList(listData, missingId);
+        [posts, userIds] = await getPostList(listData, missingId);
+
+      userIds.forEach((userId: string, idx: number) => {
+        posts[idx].users = { ...posts[idx].users, userId };
+      })
 
       const postIds = posts.map((post: any) => post.postId);
       const imageIds = await Promise.all(postIds.map(async (postId: number) => {
@@ -28,7 +33,7 @@ export const getPosts = async (req: Request, res: Response, postData: IListData,
         return eachImageFormats?.sort((a, b) => a.imageId - b.imageId)[0].imageId;
       }));
 
-      const thumbnails = await Promise.all(imageIds.map(async (imageId) => await getImageById(tx, imageId)))
+      const thumbnails = await Promise.all(imageIds.map(async (imageId) => await getImageById(tx, imageId as number)))
       posts = posts.map((post: any, idx: number) => {
         return {
           ...post,

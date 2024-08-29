@@ -8,6 +8,7 @@ import { formatGenderToString } from "../../../utils/format/genderToString";
 import { isMissing } from "../../../utils/type/isMissing";
 
 const PostSummary = ({ data }: IMissingComponentProps) => {
+  console.log(data);
   return (
     <section className="post-summary">
       {isMissing(data) && (
@@ -20,7 +21,9 @@ const PostSummary = ({ data }: IMissingComponentProps) => {
           <div className="summary-column">
             <MdOutlineLabel />
             <p className="column-key">성별</p>
-            <p className="data">{formatGenderToString(data.missingCats.gender as string)}</p>
+            <p className="data">
+              {formatGenderToString(data.missingCats.gender as string)}
+            </p>
           </div>
           <div className="summary-column">
             <MdOutlineLabel />
@@ -61,6 +64,11 @@ const PostSummary = ({ data }: IMissingComponentProps) => {
             <HiOutlineLocationMarker />
             <p className="column-key">발견 위치</p>
             <p className="data">{data.locations.detail}</p>
+          </div>
+          <div className="summary-column">
+            <HiOutlineLocationMarker />
+            <p className="column-key">설명 </p>
+            <p className="data">{data.detail}</p>
           </div>
         </>
       )}

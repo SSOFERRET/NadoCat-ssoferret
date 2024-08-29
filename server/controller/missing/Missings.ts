@@ -72,6 +72,8 @@ export const getMissing = async (req: Request, res: Response) => {
       }
 
       let post = await getPostByPostId(tx, postData);
+      const userId = post.users.uuid.toString("hex");
+      post.users = { ...post.users, userId };
       const imagesFormats = await getImageFormatsByPostId(tx, postData);
       const images = await Promise.all(
         imagesFormats?.map(async (format) => await getImageById(tx, format.imageId)) || []
@@ -315,8 +317,8 @@ export const updateFoundState = async (req: Request, res: Response) => {
 
       receivers.forEach((receiver) => notify({
         type: "found",
-        receiver: receiver.uuid,
-        sender: userId,
+        receiver: receiver.uuid.toString("hex"),
+        sender: userId.toString("hex"),
         url: `/boards/missings/${postId}`,
         result: found ? "Y" : "N"
       }))

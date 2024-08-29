@@ -84,6 +84,7 @@ export const getStreetCat = async (req: Request, res: Response) => {
       const postData = { ...getPost, location: getLocation };
 
       if (getPost) {
+        console.log("여기다 여기");
         const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
         getPost.views += viewIncrementResult || 0;
       }
