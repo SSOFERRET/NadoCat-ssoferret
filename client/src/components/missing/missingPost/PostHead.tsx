@@ -32,7 +32,7 @@ const PostHead = ({
   // const navigate = useNavigate();
   // const navigateToUser = () =>
   //   navigateUser ? navigate(`/users/users/${data.users.userId}`) : null; // 내비게이트값 변경 (-)
-  const uuid = useAuthStore();
+  const { uuid } = useAuthStore();
   const [isAuthor, setIsAuthor] = useState(false);
 
   const formatDateOrAgo = (date: string) => {
@@ -48,9 +48,9 @@ const PostHead = ({
   };
 
   useEffect(() => {
-    setIsAuthor(true); // 타입 오류나 일단 보류
+    // setIsAuthor(true); // 타입 오류나 일단 보류
 
-    // setIsAuthor(uuid === data.users.userId);
+    setIsAuthor(uuid === data.users.userId);
   }, [uuid, data.users.userId]);
 
   return (
