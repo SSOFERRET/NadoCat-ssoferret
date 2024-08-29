@@ -51,12 +51,13 @@
 
 @media (min-width: 1024px) {
   .overlay {
-    left: calc(50vw - 0rem);
+    left: 50vw;
   }
 }
 
 @media (max-width: 1023px) {
   .overlay {
-    left: calc(50vw - 222.5rem);
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
