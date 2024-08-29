@@ -81,7 +81,7 @@ export const getEvent = async (req: Request, res: Response) => {
         liked: !!liked,
       };
 
-      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
+      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.EVENTS, postId);
       post.views += viewIncrementResult || 0;
     });
 

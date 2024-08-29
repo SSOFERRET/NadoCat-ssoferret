@@ -56,7 +56,7 @@ const NotificationAlarm: React.FC = () => {
       console.log("SSE 연결이 닫혔습니다.");
       // setAlarmExists(!isAllRead);
     };
-  }, []);
+  }, [loggedUser]);
 
   return (
     <div className="notification-icon">

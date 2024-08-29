@@ -47,7 +47,7 @@ const StreetCatDetail: React.FC = () => {
           <PiChatCircleBold />
           <span className="comment-count">{commentsCount}</span>
           <span>조회수</span>
-          <span className="view-count">0</span>
+          <span className="view-count">{data?.views}</span>
         </div>
 
         <StreetCatComments

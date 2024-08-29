@@ -94,7 +94,7 @@ export const serveNotifications = (req: Request, res: Response) => {
       }
     };
 
-    const intervalid = setInterval(sendNotifications, 5000);
+    const intervalid = setInterval(sendNotifications, 2000);
 
     req.on('close', () => clearInterval(intervalid));
 
