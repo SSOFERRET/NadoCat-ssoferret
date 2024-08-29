@@ -13,6 +13,7 @@ import {
   logoutUser,
 } from "../../model/user.model";
 import { IUsers, IUserSecrets } from "../../types/user";
+import prisma from "../../client";
 // import { Request, Response } from "aws-sdk";
 
 dotenv.config();
@@ -42,17 +43,19 @@ export const signup = async (req: Request, res: Response) => {
   } catch (error) {
     console.log("회원가입 error:", error);
     return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 처리 중 오류가 발생했습니다." });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 //[x]로그인
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
-  const isAutoLogin = (autoLogin === 'true' || autoLogin === true); 
+  const isAutoLogin = autoLogin === "true" || autoLogin === true;
   // const generalTokenMaxAge = parseInt(process.env.GENERAL_TOKEN_MAX_AGE || '300000'); // 5분
   // const refreshTokenMaxAge = parseInt(process.env.REFRESH_TOKEN_MAX_AGE || "604800000");// 7일
   const generalTokenMaxAge = 10 * 60 * 1000; // 1분
-  const refreshTokenMaxAge = 60 * 60 * 1000;// 5분
+  const refreshTokenMaxAge = 60 * 60 * 1000; // 5분
   // const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000;// 7일
 
   try {
@@ -97,6 +100,8 @@ export const login = async (req: Request, res: Response) => {
   } catch (error) {
     console.log("로그인 error:", error);
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인 처리 중 오류가 발생했습니다." });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -115,6 +120,8 @@ export const getNewAccessToken = async (req: Request, res: Response) => {
     console.log("로그인 error:", error);
     res.clearCookie("refreshToken", { httpOnly: true, secure: true });
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "유효하지 않은 Refresh token입니다." });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -137,13 +144,15 @@ export const logout = async (req: Request, res: Response) => {
   } catch (error) {
     console.log("로그아웃 에러:", error);
     return res.status(500).json({ message: "로그아웃 중 오류 발생" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 //[ ]카카오
 export const kakao = async (req: Request, res: Response) => {
   const generalTokenMaxAge = 30 * 60 * 1000; // 30분
-  const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000;// 7일
+  const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 7일
   const { code } = req.query;
   try {
     //카카오 토큰 받기
@@ -168,20 +177,19 @@ export const kakao = async (req: Request, res: Response) => {
     const { access_token } = tokenResponse.data;
 
     //사용자 정보 받기
-    const userResponse = await axios.get(process.env.KAKAO_USERINFO_URL as string, 
-      {
+    const userResponse = await axios.get(process.env.KAKAO_USERINFO_URL as string, {
       headers: {
         Authorization: `Bearer ${access_token}`,
-       },
-      });
+      },
+    });
 
-  console.log("사용자 정보 응답:", userResponse.data);
+    console.log("사용자 정보 응답:", userResponse.data);
     const { properties, kakao_account } = userResponse.data;
     const kakaoEmail = kakao_account.email;
     const kakaoNickname = properties.nickname;
 
     const result = await kakaoUser(kakaoEmail, kakaoNickname);
-    
+
     // UUID가 undefined인지 확인
     if (!result || !result.uuid) {
       throw new Error("유효하지 않은 사용자입니다.");
@@ -189,33 +197,32 @@ export const kakao = async (req: Request, res: Response) => {
 
     const userUuidString = result.uuid.toString("hex");
     console.log("사용자 UUID:", userUuidString);
-    
+
     res.cookie("generalToken", result.generalToken, {
       httpOnly: true,
       secure: true,
       maxAge: generalTokenMaxAge,
     });
-  
+
     //자동로그인시
     res.cookie("refreshToken", result.refreshToken, {
       httpOnly: true,
       secure: true,
-        maxAge: refreshTokenMaxAge,
+      maxAge: refreshTokenMaxAge,
     });
 
-    console.log("nickname:",result.nickname);
-    console.log("userUuidString:",userUuidString);
+    console.log("nickname:", result.nickname);
+    console.log("userUuidString:", userUuidString);
 
     // res.redirect(`http://localhost:5173/users/auth/kakao-redirect?code=${code}&uuid=${userUuidString}`);
     res.redirect(`http://3.37.238.147/users/auth/kakao-redirect?code=${code}&uuid=${userUuidString}`);
-
-   
   } catch (error) {
     console.log("카카오 로그인 오류: ");
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: "카카오 로그인 실패",
-      error: error
+      error: error,
     });
+  } finally {
+    await prisma.$disconnect();
   }
 };
-
