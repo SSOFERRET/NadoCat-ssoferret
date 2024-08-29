@@ -12,10 +12,6 @@ import Spinner from "../../components/loading/Spinner";
 import PostMenu from "../../components/communityAndEvent/PostMenu";
 import { getLocalStorageSortType, setLocalStorageSortType } from "../../utils/localStorage/localStorage";
 
-// CHECKLIST
-// [x] 정렬 기준 동적으로 받아오게 수정
-// [x] 무한 스크롤 로딩 스피너 만들기
-
 const Community = () => {
   const sortType = getLocalStorageSortType("communities");
   const foundSortType = sortMenu.find((item) => item.sortType === sortType);

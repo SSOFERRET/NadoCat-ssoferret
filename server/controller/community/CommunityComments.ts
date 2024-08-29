@@ -11,10 +11,6 @@ import { handleControllerError } from "../../util/errors/errors";
 import { notifyNewComment } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
 
-//  CHECKLIST
-// [x] model 코드 분리
-// [] 에러처리 자세하게 구현하기
-// [] 사용자 정보 받아오는 부분 구현 필요
 export const getComments = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.community_id);

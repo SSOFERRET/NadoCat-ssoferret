@@ -5,16 +5,6 @@ import HomeCommunitiesAndEvents from "../../components/home/HomeCommunitiesAndEv
 import TopBenner from "../../components/home/TopBenner";
 import MiddleBanner from "../../components/home/MiddleBanner";
 
-// CHECKLIST
-// [x] 최상단 베너 만들기
-// [x] 중간 베너 만들기
-// [x] 게시글용 캐러셀 슬라이드 만들기
-// [x] 우리 동네 고양이
-// [x] 실종 고양이
-// [x] 커뮤니티, 이벤트 필터링
-// [x] 커뮤니티
-// [x] 이벤트 모임
-
 const Home = () => {
   return (
     <div className="home-container">

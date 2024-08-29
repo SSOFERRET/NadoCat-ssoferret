@@ -8,10 +8,7 @@ interface ObserverOptions {
   threshold?: number | number[];
 }
 
-export const useIntersectionObserver = (
-  callback: Callback,
-  options?: ObserverOptions
-) => {
+export const useIntersectionObserver = (callback: Callback, options?: ObserverOptions) => {
   const targetRef = useRef(null);
 
   useEffect(() => {

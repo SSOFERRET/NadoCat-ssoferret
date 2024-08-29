@@ -13,7 +13,6 @@ const CommunityPostEdit = () => {
 
   const editPost = (formData: FormData) => {
     editCommunityPost({ formData, postId }).then(() => {
-      console.log("수정 완료!");
       navigate(`/boards/communities/${postId}`);
     });
   };

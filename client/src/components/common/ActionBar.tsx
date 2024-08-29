@@ -5,7 +5,7 @@ import { formatDate } from "../../utils/format/format";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { GoHeartFill } from "react-icons/go";
 import { getUuid, useAuthStore } from "../../store/userStore";
-import {useNavigate} from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 interface IProps {
@@ -16,30 +16,25 @@ interface IProps {
   liked: boolean;
 }
 
-const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
-  const {uuid} = useAuthStore();  // 현재 로그인된 사용자의 uuid
-  const navigate = useNavigate(); //이동을 위해 추가
+const ActionBar = ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
+  const { uuid } = useAuthStore();
+  const navigate = useNavigate();
 
-  console.log("액션바의 uuid: ", uuid);
-  console.log("userInfo는 어디서?: ", userInfo);
-
-  useEffect(() => { //처음 렌더링시 storedUuid설정
+  useEffect(() => {
     const storedUuid = getUuid();
-    console.log("storedUuid::", storedUuid);
 
-    if(!uuid && storedUuid){
-      useAuthStore.setState({ uuid: storedUuid }); 
+    if (!uuid && storedUuid) {
+      useAuthStore.setState({ uuid: storedUuid });
     }
-}, [uuid]);  // uuid 업데이트될 때마다 실행
+  }, [uuid]);
 
-    //Avatar클릭 시 동작 정의
-    const handleAvatarClick = async() => {
-      if(userInfo.uuid === uuid){
-        navigate("/users/my");
-      }else{
-        navigate(`/users/user/${userInfo.uuid}`); //사용자 페이지 이동
-      }
+  const handleAvatarClick = async () => {
+    if (userInfo.uuid === uuid) {
+      navigate("/users/my");
+    } else {
+      navigate(`/users/user/${userInfo.uuid}`);
     }
+  };
 
   return (
     <div className="action-bar">
@@ -50,9 +45,12 @@ const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps
           <span className="date">{formatDate(createdAt)}</span>
         </div>
         <div className="post-buttons">
-          <button className={`post-like ${liked ? "like" : "dislike"}`} onClick={() =>{
-            uuid ? toggleLike() : navigate('/users/login')
-          }}>
+          <button
+            className={`post-like ${liked ? "like" : "dislike"}`}
+            onClick={() => {
+              uuid ? toggleLike() : navigate("/users/login");
+            }}
+          >
             <GoHeartFill />
           </button>
 

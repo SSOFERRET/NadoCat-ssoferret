@@ -23,10 +23,6 @@ interface IEventCommentsParams {
   limit?: number;
 }
 
-// CHECKLIST
-// [ ] 게시글 수정
-// [ ] 게시글 작성
-
 export const getEventPosts = async ({ pageParam, limit, sort }: IEventPostsParams): Promise<IEventPage> => {
   try {
     const response = await httpClient.get(
@@ -60,7 +56,6 @@ export const deleteEventPost = async ({ postId }: IEventDetailParams) => {
 };
 
 export const createEventPost = async (formData: FormData) => {
-  console.log(formData);
   try {
     const response = await httpClient.post(`/boards/events`, formData, {
       headers: {
@@ -114,7 +109,6 @@ export const createEventComment = async ({ postId, userId, comment }: ICommentPo
 
 export const updateEventComment = async ({ postId, commentId, comment }: ICommentPutRequest) => {
   try {
-    // NOTE userId 확인?
     const response = await httpClient.put(`/boards/events/${postId}/comments/${commentId}`, {
       postId,
       commentId,

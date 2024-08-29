@@ -13,13 +13,6 @@ import HeaderWithBackButton from "../../components/common/HeaderWithBackButton";
 import { Footer } from "../../components/common/Footer";
 import useLike from "../../hooks/useLike";
 
-// CHECKLIST
-// [x] 댓글 컴포넌트 분리
-// [x] 댓글 수 동적으로.. -> 아마도 될듯..?
-// [x] 이미지 캐러셀로
-// [x] 로딩처리
-// [x] 백버튼 구현
-
 const CommunityDetail = () => {
   const params = useParams();
   const postId = Number(params.id);

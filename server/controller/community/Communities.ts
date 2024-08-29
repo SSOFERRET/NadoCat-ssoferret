@@ -29,14 +29,6 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 
-// CHECKLIST
-// [x] 이미지 배열로 받아오게 DB 수정
-// [x] 페이지네이션 추가
-// [x] 최신순 정렬
-// [x] 조회순 정렬
-// [x] 인기순 정렬
-// [ ] 에러처리 자세하게 구현하기
-
 export const getCommunities = async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 5;
@@ -58,17 +50,9 @@ export const getCommunities = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    console.log("게시판 목록 에러 발생");
     handleControllerError(error, res);
   }
 };
-
-// CHECKLIST
-// [x] 이미지 배열로 받아오게 DB 수정
-// [x] likes, liked 추가
-// [x] 좋아요 수 구현
-// [x] 좋아요 관련 부분 코드 분리
-// [ ] 에러처리 자세하게 구현하기
 
 export const getCommunity = async (req: Request, res: Response) => {
   const uuid = req.headers["x-uuid"] as string;
@@ -105,12 +89,6 @@ export const getCommunity = async (req: Request, res: Response) => {
     handleControllerError(error, res);
   }
 };
-
-// CHECKLIST
-// [x] 이미지 저장 구현 필요
-// [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
-// [ ] 에러처리 자세하게 구현하기
-// [ ] 사용자 정보 받아오는 부분 구현 필요
 
 export const createCommunity = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
@@ -160,19 +138,11 @@ export const createCommunity = async (req: Request, res: Response) => {
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
-
-
   } catch (error) {
     handleControllerError(error, res);
   }
 };
 
-// CHECKLIST
-// [x] 이미지 저장 구현 필요
-// [x] 태그, 이미지 테이블 수정 필요(N:M 관계이므로 중간에 테이블 하나 필요함)
-// [ ] 에러처리 자세하게 구현하기
-// [ ] 사용자 정보 받아오는 부분 구현 필요
-// [x] 원래 이미지, 태그는 받아오지 않기
 export const updateCommunity = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
   try {
@@ -233,7 +203,6 @@ export const updateCommunity = async (req: Request, res: Response) => {
       await removeImagesByIds(tx, imageIds);
 
       await deleteImages(tx, imageIds);
-
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
@@ -242,11 +211,6 @@ export const updateCommunity = async (req: Request, res: Response) => {
   }
 };
 
-// CHECKLIST
-// [ ] 에러처리 자세하게 구현하기
-// [ ] 사용자 정보 받아오는 부분 구현 필요
-// [x] 테이블 변경에 따른 태그, 이미지 삭제 수정
-// [x] 게시글 삭제 시 댓글 삭제 구현
 export const deleteCommunity = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
   try {
@@ -286,7 +250,6 @@ export const deleteCommunity = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeCommunityById(tx, postId, userId);
-
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
