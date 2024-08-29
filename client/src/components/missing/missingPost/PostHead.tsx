@@ -83,12 +83,12 @@ const PostHead = ({
           </p>
         </div>
       )}
-      {/* {isAuthor ? (
+      {isAuthor ? (
         <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />
       ) : (
         <div className="options-icon" />
-      )} */}
-      <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />
+      )}
+      {/* <HiOutlineDotsVertical className="options-icon" onClick={showMenu} /> */}
     </section>
   );
 };

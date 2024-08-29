@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React /*, { useEffect } */ from "react";
 import BasicScrollToBottom from "react-scroll-to-bottom";
 import Message from "./Message";
 import "../../styles/scss/components/chat/Messages.scss";
