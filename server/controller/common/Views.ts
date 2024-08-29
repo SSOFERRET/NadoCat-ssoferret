@@ -52,6 +52,5 @@ const checkView = async (redis: RedisClientType, key: string, field: string) => 
 
 const getLastViewTime = async (redis: RedisClientType, key: string, field: string): Promise<number> => {
   const stringData = await redis.hGet(key, field);
-  console.log(stringData);
   return Number(stringData);
 }

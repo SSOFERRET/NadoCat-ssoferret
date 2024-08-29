@@ -4,7 +4,6 @@ import { getLikedPostIds, getInterestPosts } from "../../model/interest.model";
 
 export const getInterests = async (req: Request, res: Response) => {
   const userId = req.user?.uuid; //수정된 부분
-  console.log("값 테스트 req.user.uuid: ", userId);
   try {
     if (!userId) {
       return res
@@ -14,7 +13,7 @@ export const getInterests = async (req: Request, res: Response) => {
 
     const userUuidBuffer = Buffer.from(userId, 'hex');
     const postIds = await getLikedPostIds(userUuidBuffer);
-    
+
     if (postIds.length === 0) {
       return res
         .status(StatusCodes.NOT_FOUND)

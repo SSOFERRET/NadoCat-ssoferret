@@ -38,7 +38,6 @@ const categoryId = CATEGORY.STREET_CATS;
 
 // 동네 고양이 도감 목록 조회
 export const getStreetCats = async (req: Request, res: Response) => {
-  console.log("동네 고양이 도감 목록 조회")
   const uuidString = req.headers["x-uuid"] as string;
   const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
 
@@ -68,12 +67,9 @@ export const getStreetCats = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 상세 조회
 export const getStreetCat = async (req: Request, res: Response) => {
-  console.log("동네 고양이 도감 상세 조회")
   const uuidString = req.headers["x-uuid"] as string;
   const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
 
-  console.log("uuidString: ", uuidString);
-  console.log("uuid: ", uuid);
   const postId = Number(req.params.street_cat_id);
 
   try {
@@ -84,7 +80,6 @@ export const getStreetCat = async (req: Request, res: Response) => {
       const postData = { ...getPost, location: getLocation };
 
       if (getPost) {
-        console.log("여기다 여기");
         const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.STREET_CATS, postId);
         getPost.views += viewIncrementResult || 0;
       }
@@ -99,7 +94,6 @@ export const getStreetCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 생성
 export const createStreetCat = async (req: Request, res: Response) => {
-  console.log("동네 고양이 도감 생성")
 
   const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
   const uuid = Buffer.from(uuidString, "hex");
@@ -161,7 +155,6 @@ export const createStreetCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 수정
 export const updateStreetCat = async (req: Request, res: Response) => {
-  console.log("동네 고양이 도감 수정");
 
   const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
   const uuid = Buffer.from(uuidString, "hex");
@@ -219,7 +212,6 @@ export const updateStreetCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 삭제
 export const deleteStreetCat = async (req: Request, res: Response) => {
-  console.log("동네 고양이 도감 삭제")
   const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
   const postId = Number(req.params.street_cat_id);
 
@@ -233,8 +225,6 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const getStreetCatImages = await readStreetCatImages(postId);
       const imageIds = getStreetCatImages.map((image) => image.imageId);
-
-      console.log("imageIds", imageIds);
 
       await deleteImageFromS3ByImageId(tx, imageIds);
       await deleteAllStreetCatImages(tx, postId);

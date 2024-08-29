@@ -14,7 +14,7 @@ const Setting = () => {
   const location = useLocation();
   const uuid = location.state?.uuid;
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const {storeLogout} = useAuthStore();
+  const { storeLogout } = useAuthStore();
 
   const handleNickname = () => {
     navigate("/users/my/setting/nickname");
@@ -29,26 +29,25 @@ const Setting = () => {
   };
 
   const handleDeleteUser = async () => {
-    if(!uuid){
+    if (!uuid) {
       console.error("uuid가 없습니다!");
       return;
     }
-    
+
     try {
       await deleteUser(uuid);
       await storeLogout(uuid);
-      console.log("회원 탈퇴가 완료되었습니다 UUID:", uuid);
 
       navigate("/users/login");
     } catch (error) {
       console.error("회원탈퇴 중 오류 발생:", error);
-    }finally {
+    } finally {
       setIsOpenModal(false);
     }
   };
 
   const handleModalOpen = () => {
-    setIsOpenModal(true); 
+    setIsOpenModal(true);
   };
 
   const handleLogoutCancel = () => {
@@ -71,7 +70,9 @@ const Setting = () => {
           <span>비밀번호 변경</span>
           <IoIosArrowForward />
         </li>
-        <span className="inactive" onClick={handleModalOpen}>회원 탈퇴</span>
+        <span className="inactive" onClick={handleModalOpen}>
+          회원 탈퇴
+        </span>
       </ul>
       <CustomModal
         size="sm"

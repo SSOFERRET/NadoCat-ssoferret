@@ -34,13 +34,11 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket: Socket) => {
-  console.log("새로운 유저가 접속했습니다. ");
 
   handleJoinRoom(socket, io)
   handleMessage(socket, io);
 
   socket.on('disconnect', () => {
-    console.log('유저가 나감.');
   });
 })
 

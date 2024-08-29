@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { Server as  SocketIOServer} from "socket.io";
+import { Server as SocketIOServer } from "socket.io";
 import { Socket } from "socket.io";
 import moment from "moment-timezone";
 const prisma = new PrismaClient();
@@ -32,10 +32,10 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
           },
         ],
       },
-      include: { 
+      include: {
         messages: {
           orderBy: {
-            sentAt: "asc", 
+            sentAt: "asc",
           },
         },
       },
@@ -47,12 +47,12 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
           uuid: userUuidBuffer,
           otherUuid: otherUserUuidBuffer,
         },
-        include: { 
+        include: {
           messages: true,
         },
       });
     }
-    
+
     const chatRoomId = chat.chatId.toString();
     res.status(200).json({
       chatId: chatRoomId,
@@ -61,7 +61,7 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
     io.to(chatRoomId).emit("chat_created", { chatId: chatRoomId });
     CHATID = chatRoomId
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({ error: "Failed to start chat" });
   }
 };
@@ -72,76 +72,76 @@ export const sendMessage = async (req: Request, res: Response, io: SocketIOServe
 
   try {
     const userUuidBuffer = Buffer.from(uuid, "hex");
-  
+
     const message = await prisma.messages.create({
-        data: {
-            content,
-            sentAt: sentAt,
-            chats: {
-                connect: { chatId } 
-            },
-            users: {
-                connect: { uuid: userUuidBuffer } 
-            }
+      data: {
+        content,
+        sentAt: sentAt,
+        chats: {
+          connect: { chatId }
         },
-        include: {
-            chats: true,
-            users: true
+        users: {
+          connect: { uuid: userUuidBuffer }
         }
+      },
+      include: {
+        chats: true,
+        users: true
+      }
     });
     const formattedTime = moment(message.sentAt).tz(sentAt).format("YYYY-MM-DD HH:mm:ss");
-    io.to(CHATID).emit("message", message, {  
+    io.to(CHATID).emit("message", message, {
       user: uuid,
       message: message.content,
       time: formattedTime,
-  })
+    })
   } catch (error) {
-      console.error("Error sending message:", error);
-      res.status(500).json({ error: "Failed to send message" });
+    console.error("Error sending message:", error);
+    res.status(500).json({ error: "Failed to send message" });
   }
 };
 
 export const getChatList = async (req: Request, res: Response) => {
   const userUuid = req.headers["x-user-uuid"] as string;
   try {
-      const userUuidBuffer = Buffer.from(userUuid, "hex");
-      const chats = await prisma.chats.findMany({
-          where: {
-            OR : [{
-              uuid: userUuidBuffer
-            },{
-              otherUuid: userUuidBuffer
-            }],
-            
+    const userUuidBuffer = Buffer.from(userUuid, "hex");
+    const chats = await prisma.chats.findMany({
+      where: {
+        OR: [{
+          uuid: userUuidBuffer
+        }, {
+          otherUuid: userUuidBuffer
+        }],
+
+      },
+      include: {
+        messages: {
+          orderBy: {
+            sentAt: "asc"
           },
           include: {
-              messages: {
-                  orderBy: {
-                      sentAt: "asc"
-                  },
-                  include: {
-                      users: true
-                  }
-              },
-              users: true
+            users: true
           }
-      });
+        },
+        users: true
+      }
+    });
 
-      const chatListWithUnreadCounts = chats.map(chat => {
-        const unreadCount = chat.messages.filter(
-          msg => !msg.isRead && msg.uuid !== userUuidBuffer
-        ).length;
-  
-        return {
-          ...chat,
-          unreadCount, 
-        };
-      });
+    const chatListWithUnreadCounts = chats.map(chat => {
+      const unreadCount = chat.messages.filter(
+        msg => !msg.isRead && msg.uuid !== userUuidBuffer
+      ).length;
 
-      res.status(200).json(chatListWithUnreadCounts);
+      return {
+        ...chat,
+        unreadCount,
+      };
+    });
+
+    res.status(200).json(chatListWithUnreadCounts);
   } catch (error) {
-      console.error("Error fetching chat list:", error);
-      res.status(500).json({ error: "Failed to fetch chat list" });
+    console.error("Error fetching chat list:", error);
+    res.status(500).json({ error: "Failed to fetch chat list" });
   }
 };
 
@@ -149,7 +149,7 @@ export const getChatList = async (req: Request, res: Response) => {
 export const testUuid = async (req: Request, res: Response) => {
   const { uuid } = req.body;
   const userUuidBuffer = Buffer.from(uuid, "hex");
-  try{
+  try {
     const users = await prisma.users.findFirst({
       where: {
         uuid: userUuidBuffer
@@ -160,8 +160,8 @@ export const testUuid = async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ message: "User not found" });
     }
-  }catch (error) {
-    console.log(error)
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -180,7 +180,7 @@ export const deleteChat = async (req: Request, res: Response, io: SocketIOServer
 
     io.to(chatId).emit("chat_deleted", { chatId });
     io.socketsLeave(chatId);
-    res.status(200).json({message : "채팅방에서 나갔습니다."});
+    res.status(200).json({ message: "채팅방에서 나갔습니다." });
   } catch (error) {
     console.error("Error deleting chat:", error);
     res.status(500).json({ error: "채팅방 나가기에 실패했습니다." });
@@ -231,7 +231,7 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
 
       const previousMessages = await prisma.messages.findMany({
         where: {
-          chatId: chatId, 
+          chatId: chatId,
         },
         orderBy: {
           sentAt: "asc",
@@ -253,5 +253,5 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
       console.error("Error fetching previous messages:", error);
     }
   });
-  };
-  
+};
+

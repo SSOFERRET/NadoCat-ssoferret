@@ -90,7 +90,7 @@ export const getMissing = async (req: Request, res: Response) => {
         .json({ ...post, images });
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof Error)
       validateError(res, error);
   }
@@ -140,7 +140,6 @@ export const createMissing = async (req: Request, res: Response) => {
 
       if (req.files) {
         const imageUrls = await uploadImagesToS3(req) as string[];
-        console.log("결과 출력", imageUrls);
         await addNewImages(tx, {
           userId,
           postId: post.postId,
@@ -156,7 +155,7 @@ export const createMissing = async (req: Request, res: Response) => {
       .send({ postId: newPost.postId as number });
 
   } catch (error) {
-    console.log(error)
+    console.error(error)
     if (error instanceof Error)
       validateError(res, error);
   }
@@ -320,7 +319,6 @@ export const updateFoundState = async (req: Request, res: Response) => {
         receiver: receiver.uuid.toString("hex"),
         sender: userId.toString("hex"),
         url: `/boards/missings/${postId}`,
-        result: found ? "Y" : "N"
       }))
     })
 
@@ -332,3 +330,4 @@ export const updateFoundState = async (req: Request, res: Response) => {
       return validateError(res, error);
   }
 }
+

@@ -26,7 +26,6 @@ const SettingAuthPassword = () => {
       const result = await authPassword(data);
 
       if (result.password === "correct") {
-        console.log("비밀번호 인증 성공:", result);
         navigate("/users/my/setting/password");
       }
     } catch (error) {

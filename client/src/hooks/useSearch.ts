@@ -36,8 +36,6 @@ const useSearch = (keyword: string): {
     enabled: !!keyword,
   });
 
-  // console.log(data);
-
   return { data, isLoading, error };
 }
 

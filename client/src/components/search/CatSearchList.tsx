@@ -21,7 +21,6 @@ const CatSearchList: React.FC<{ posts: ISearch[]; category: string }> = ({
   posts,
   category,
 }) => {
-  console.log("데이터", posts[0]._source);
   return (
     <div className="street-cat-posts">
       <ul className="street-cat-list">

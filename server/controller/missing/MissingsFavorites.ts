@@ -62,7 +62,6 @@ export const postMissingFavorites = async (req: Request, res: Response) => {
 
 export const deleteMissingFavorites = async (req: Request, res: Response) => {
   const postId = Number(req.params.postId);
-  console.log(postId);
   try {
     const result = await prisma.missingFavorites.deleteMany({
       where: {
@@ -73,7 +72,7 @@ export const deleteMissingFavorites = async (req: Request, res: Response) => {
     })
     res.json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(StatusCodes.BAD_REQUEST);
   }
 };

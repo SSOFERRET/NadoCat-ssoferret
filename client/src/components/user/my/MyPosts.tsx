@@ -71,15 +71,17 @@ export const MyPosts = () => {
   //   });
   // };
 
-  console.log(posts);
-
   return (
     <>
       <ul className="myPosts-list">
         {posts.length > 0 ? (
           posts.map((post, index) =>
             index === posts.length - 1 ? (
-              <li key={index} className="board-post" onClick={() => navigate(`/boards/communities/${post.postId}`)}>
+              <li
+                key={index}
+                className="board-post"
+                onClick={() => navigate(`/boards/communities/${post.postId}`)}
+              >
                 <div className="board-post-info">
                   <div className="post-title-container">
                     <span className="post-title">{post.title}</span>
@@ -90,13 +92,22 @@ export const MyPosts = () => {
                   <div className="post-meta">
                     <span>{formatAgo(post.updatedAt)}</span>
                     <span>&middot;</span>
-                    <span className="post-views">조회 {formatViews(post.views)}</span>
+                    <span className="post-views">
+                      조회 {formatViews(post.views)}
+                    </span>
                   </div>
                 </div>
-                <div className="post-image">{post.thumbnail && <img data-src={post.thumbnail} alt={post.title} />}</div>
+                <div className="post-image">
+                  {post.thumbnail && (
+                    <img data-src={post.thumbnail} alt={post.title} />
+                  )}
+                </div>
               </li>
             ) : (
-              <li className="board-post" onClick={() => navigate(`/boards/communities/${post.postId}`)}>
+              <li
+                className="board-post"
+                onClick={() => navigate(`/boards/communities/${post.postId}`)}
+              >
                 <div className="board-post-info">
                   <div className="post-title-container">
                     <span className="post-title">{post.title}</span>
@@ -107,10 +118,16 @@ export const MyPosts = () => {
                   <div className="post-meta">
                     <span>{formatAgo(post.updatedAt)}</span>
                     <span>&middot;</span>
-                    <span className="post-views">조회 {formatViews(post.views)}</span>
+                    <span className="post-views">
+                      조회 {formatViews(post.views)}
+                    </span>
                   </div>
                 </div>
-                <div className="post-image">{post.thumbnail && <img data-src={post.thumbnail} alt={post.title} />}</div>
+                <div className="post-image">
+                  {post.thumbnail && (
+                    <img data-src={post.thumbnail} alt={post.title} />
+                  )}
+                </div>
               </li>
             )
           )

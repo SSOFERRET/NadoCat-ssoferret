@@ -4,7 +4,7 @@ import { getIsAllNotificationRead, getNotificationList, serveNotifications, upda
 const router = express.Router();
 router.use(express.json());
 
-router.get("", serveNotifications);
+router.get("/", serveNotifications);
 router.get("/list", getNotificationList);
 router.get("/all-read", getIsAllNotificationRead);
 router.patch("", updateNotifications);

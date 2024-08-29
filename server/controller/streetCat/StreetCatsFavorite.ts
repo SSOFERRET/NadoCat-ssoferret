@@ -25,27 +25,27 @@ export const getFavoriteCats = async (req: Request, res: Response) => {
   try {
     if (!uuid) {
       // throw new Error("User UUID is missing.");
-      res.status(200).json({message: "로그인 안 한 유저"});
+      res.status(200).json({ message: "로그인 안 한 유저" });
     } else {
       await prisma.$transaction(async (tx) => {
         const getFavoritePostIds = await readFavoriteCatPostIds(tx, uuid);
-  
+
         const postIds = getFavoritePostIds.map((post) => {
           return post.postId;
         });
-  
+
         const getFavoriteCatPosts = await (isNaN(cursor)
           ? readFavoriteCatPosts(tx, uuid, limit, cursor as number | 0, postIds)
           : readFavoriteCatPosts(tx, uuid, limit, cursor, postIds));
-  
+
         getFavoriteCatPosts.favoriteCatPostCount;
-  
+
         const result = {
           favoriteCatPosts: getFavoriteCatPosts.favoriteCatPosts,
           nickname: getFavoriteCatPosts.nickname?.nickname,
           myCatCount: getFavoriteCatPosts.favoriteCatPostCount,
         };
-  
+
         res.status(200).json(result);
       });
     }
@@ -85,8 +85,6 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
   // const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
   const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
 
-  console.log("uuidString: ", uuidString);
-  console.log("uuid: ", uuid);
   const postId = Number(req.params.street_cat_id);
 
   try {

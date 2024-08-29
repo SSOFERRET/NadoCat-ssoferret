@@ -49,8 +49,29 @@ export const serveNotifications = (req: Request, res: Response) => {
       'Connection': 'keep-alive',
     });
 
+    // const sendNotifications = async () => {
+    //   console.log(notifications)
+    //   if (notifications.length) {
+    //     await createNotification(notifications);
+    //     notifications.forEach((notification) => {
+    //       if (notification && userId && userId === notification.receiver) {
+    //         const notificationData = JSON.stringify({
+    //           type: notification.type,
+    //           sender: notification.sender,
+    //           url: notification.url,
+    //           timestamp: notification.timestamp
+    //         })
+    //         res.write(`data: ${notificationData}\n\n`);
+    //       }
+    //     });
+    //     notifications.length = 0;
+    //   } else {
+    //     res.write('\n\n');
+    //   }
+    // };
+
     const sendNotifications = async () => {
-      // console.log(notifications)
+      // console.log("Notifications length:", notifications.length);
       if (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {
@@ -60,17 +81,20 @@ export const serveNotifications = (req: Request, res: Response) => {
               sender: notification.sender,
               url: notification.url,
               timestamp: notification.timestamp
-            })
+            });
+            console.log("Sending notification:", notificationData);
             res.write(`data: ${notificationData}\n\n`);
           }
         });
         notifications.length = 0;
+        // console.log("Notifications cleared.");
       } else {
+        // console.log("No notifications to send.");
         res.write('\n\n');
       }
     };
 
-    const intervalid = setInterval(sendNotifications, Number(process.env.NOTIFICATION_INTERVAL) || 5000);
+    const intervalid = setInterval(sendNotifications, 5000);
 
     req.on('close', () => clearInterval(intervalid));
 

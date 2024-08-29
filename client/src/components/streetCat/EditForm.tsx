@@ -107,7 +107,6 @@ const EditForm: React.FC<IEditFormProps> = ({ initialData, onSubmit }) => {
       (image): image is File => image instanceof File
     );
 
-    console.log("filteredImages", filteredImages);
     filteredImages.forEach((image) => {
       formData.append("images", image);
     });
