@@ -49,8 +49,8 @@ const Posts: React.FC = () => {
   return (
     <div className="background">
       {lists.length ? (
-        lists.map((list, index) => (
-          <li key={index} className="board-post" onClick={() => navigate(`/boards/communities/${list.postId}`)}>
+        lists.map((list) => (
+          <li key={list.postId} className="board-post" onClick={() => navigate(`/boards/communities/${list.postId}`)}>
             <div className="board-post-info">
               <div className="post-title-container">
                 <span className="post-title">{list.title}</span>
@@ -64,7 +64,7 @@ const Posts: React.FC = () => {
                 <span className="post-views">조회 {formatViews(list.views)}</span>
               </div>
             </div>
-            <div className="post-image">{list.thumbnail && <img data-src={list.thumbnail} alt={list.title} />}</div>
+            <div className="post-image">{list.thumbnail && <img src={list.thumbnail} alt={list.title} />}</div>
           </li>
         ))
       ) : (
