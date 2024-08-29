@@ -25,8 +25,8 @@ import dotenv from "dotenv";
 
 interface INoticiationData {
   type: TNotify;
-  receiver: Buffer;
-  sender: Buffer;
+  receiver: string;
+  sender: string;
   url: string;
   commentId?: number;
   result?: string;
@@ -37,17 +37,11 @@ export interface INotification extends INoticiationData {
 }
 
 export const notifications: INotification[] = [];
-let lastNotification: INoticiationData | null = null;  // 마지막 알림을 추적하기 위한 변수
+let lastNotification: INoticiationData | null = null;
 
 export const serveNotifications = (req: Request, res: Response) => {
   try {
     const userId = req.query.userId;
-    console.log("userId", userId)
-    let userIdBuffer: Buffer;
-    if (typeof userId === "string") {
-      userIdBuffer = Buffer.from(userId, "hex");
-      console.log("userIdBuffer", userIdBuffer)
-    }
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -60,7 +54,7 @@ export const serveNotifications = (req: Request, res: Response) => {
       if (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {
-          if (notification && userId && userIdBuffer.equals(notification.receiver)) {
+          if (notification && userId && userId === notification.receiver) {
             const notificationData = JSON.stringify({
               type: notification.type,
               sender: notification.sender,
@@ -100,8 +94,8 @@ export const notify = (data: INoticiationData) => {
   // 동일한 알림이 아닌지 확인하는 로직
   if (lastNotification &&
     lastNotification.type === data.type &&
-    lastNotification.receiver.equals(data.receiver) &&
-    lastNotification.sender.equals(data.sender) &&
+    lastNotification.receiver === data.receiver &&
+    lastNotification.sender === data.sender &&
     lastNotification.url === data.url &&
     lastNotification.commentId === data.commentId &&
     lastNotification.result === data.result) {
@@ -137,8 +131,8 @@ export const notifyNewPostToFriends = async (
 
   friends.forEach((friend) => notify({
     type: "newPost",
-    receiver: friend.followingId,
-    sender: userId,
+    receiver: friend.followingId.toString("hex"),
+    sender: userId.toString("hex"),
     url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`
   }));
 };
@@ -152,8 +146,8 @@ export const notifyNewComment = async (
   const postAuthor = await getPostAuthorUuid(categoryId, postId);
   notify({
     type: "comment",
-    receiver: postAuthor,
-    sender: userId,
+    receiver: postAuthor.toString("hex"),
+    sender: userId.toString("hex"),
     url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}/comments?cursor=${cursor}` //프론트 url에 맞출 것
   });
 };
@@ -166,24 +160,11 @@ export const notifyNewLike = async (
   const postAuthor = await getPostAuthorUuid(categoryId, postId);
   notify({
     type: "like",
-    receiver: postAuthor,
-    sender: userId,
+    receiver: postAuthor.toString("hex"),
+    sender: userId.toString("hex"),
     url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}` //프론트 url에 맞출 것
   });
 };
-
-// export const getNotifitionList = async (
-//   req: Request, res: Response
-// ) => {
-//   try {
-//     const userId = await getUserId2();
-//     const notifications = await getNotificationListByReceiver(userId, 10);
-//     res.status(StatusCodes.OK).send(notifications);
-//   } catch (error) {
-//     console.log(error)
-//   }
-
-// };
 
 export const getNotificationList = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;

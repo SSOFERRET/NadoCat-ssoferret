@@ -70,8 +70,8 @@ export const follow = async (req: Request, res: Response) => {
 
       notify({
         type: "follow",
-        receiver: followingId,
-        sender: userId,
+        receiver: followingId.toString("hex"),
+        sender: userId.toString("hex"),
         url: `/users/${followingId}/profile`,
       });
     });

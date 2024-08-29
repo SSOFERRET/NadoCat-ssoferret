@@ -140,8 +140,9 @@ const getMissingsList = async (
   let foundList = remainingLimit > 0 ? await fetchMissingsByFoundStatus(1, remainingLimit, cursor) : [];
 
   const posts = [...unfoundList, ...foundList];
+  const userIds = posts.map((post) => post.users.uuid.toString("hex"))
 
-  return posts;
+  return [posts, userIds];
 }
 
 const getMissingReportsList = async (
@@ -187,7 +188,8 @@ const getMissingReportsList = async (
 
   posts = [...posts, ...unmatchList];
 
-  return posts;
+  const userIds = posts.map((post) => post.users.uuid.toString("hex"))
+  return [posts, userIds];
 }
 
 export const getPostsCount = async (

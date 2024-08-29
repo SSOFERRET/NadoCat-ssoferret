@@ -25,6 +25,7 @@ export interface IMissing {
     profileImage: string | null;
     uuid: Buffer;
     id: number;
+    userId?: string;
   };
   postId: number;
   missingCats: {
@@ -54,6 +55,7 @@ export interface IMissingReport {
     profileImage: string | null;
     uuid: Buffer;
     id: number;
+    userId?: string;
   };
   postId: number;
   missingId: number;
