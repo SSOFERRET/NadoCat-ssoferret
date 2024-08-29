@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { useAuthStore } from "../store/userStore";
-// import { useAuthStore } from "../store/userStore";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8080";
 const DEFAULT_TIMEOUT = import.meta.env.VITE_DEFAULT_TIMEOUT;
@@ -21,16 +20,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
   axiosInstance.interceptors.request.use(
     //request
     (config) => {
-      // const token = document.cookie
-      //   .split("; ")
-      //   .find((row) => row.startsWith("generalToken="))
-      //   ?.split("=")[1];
-
       const uuid = sessionStorage.getItem("uuid");
-
-      // if (token) {
-      //   config.headers["Authorization"] = `Bearer ${token}`;
-      // }
 
       if (uuid) {
         config.headers["X-UUID"] = uuid;

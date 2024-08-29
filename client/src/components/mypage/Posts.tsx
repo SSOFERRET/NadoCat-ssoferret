@@ -28,7 +28,7 @@ const Posts: React.FC = () => {
   useEffect(() => { //처음 렌더링시 storedUuid설정
     const fetchInterests = async () => {
       try {
-        const interestPosts = await myInterests(uuid);
+        const interestPosts = await myInterests();
         console.log("클라이언트interestPosts:", interestPosts);
         setLists(interestPosts);
       } catch (error) {
@@ -40,20 +40,6 @@ const Posts: React.FC = () => {
       fetchInterests();
     }
 }, [uuid]);  // loggedUser가 업데이트될 때마다 실행
-
-
-// useEffect(() => {
-//   const uuid = localStorage.getItem("uuid")
-//   axios.post(ENDPOINT + "/boards/Interests", {uuid})
-//   .then(response => {
-//     setLists(response.data);
-//   })
-//   .catch(error => {
-//     console.log(error);
-//   })
-// }, []);
-
-
 
   const dateChanger = (isoString: string) => {
     const date = new Date(isoString);

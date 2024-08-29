@@ -26,11 +26,11 @@ export const My = () => {
 
   const [userData, setUserData] = useState<MyProps | null>(null);
   const [isLoading, setIsLoading] = useState(true); //로딩 상태관리
+  const [isMypage, setIsMypage] = useState(false);
 
   const currentUrl = window.location.pathname;
   const currentUuid = currentUrl.split("/").pop(); // URL에서 마지막 부분 추출
   console.log("currentUuid::", currentUuid);
-  const [isMypage, setIsMypage] = useState(false);
 
    useEffect(() => { //처음 렌더링시 storedUuid설정
       const storedUuid = getUuid();

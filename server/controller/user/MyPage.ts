@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { ensureAutorization } from "../../middleware/auth";
-import { deleteUserInactive, getAuthPassword, getUser, updateNewDetail, updateNewNickname, updateNewPassword } from "../../model/my.model";
+import { deleteUserInactive, getAuthPassword, getMyAllPosts, getUser, updateNewDetail, updateNewNickname, updateNewPassword } from "../../model/my.model";
 import multer from "multer";
 import {
   uploadSingleImageToS3,
@@ -187,12 +187,13 @@ export const authPassword = async (req: Request, res: Response) => {
 
     const inputPassword = req.body.password; // URL에서 가져온 UUID
     const dbPassword = user.selectUserSecrets.hashPassword;
-
-    const isPasswordValid = await bcrypt.compare(inputPassword, dbPassword);
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        message: "비밀번호가 일치하지 않습니다.",
-      });
+    if(dbPassword){
+      const isPasswordValid = await bcrypt.compare(inputPassword, dbPassword);
+      if (!isPasswordValid) {
+        return res.status(401).json({
+          message: "비밀번호가 일치하지 않습니다.",
+        });
+      }
     }
 
     return res.status(StatusCodes.OK).json({
@@ -254,8 +255,6 @@ export const deleteUser = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "회원탈퇴 중 오류 발생" });
   }
 }
-
-
 
 
 export const updateProfile = async (req: Request, res: Response) => {
@@ -331,3 +330,23 @@ export const deleteProfile = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "서버 오류가 발생했습니다." });
   }
 };
+
+//작성글
+export const getMyPosts = async (req: Request, res: Response) => {
+  const userUuid = req.user?.uuid;
+  const page = parseInt(req.query.page as string) || 1; // 기본값 1 페이지;
+  const pageSize = parseInt(req.query.pageSize as string) || 10; //10개씩
+
+  try {
+    const posts = await getMyAllPosts(userUuid, page, pageSize);
+
+    console.log("getMyPosts:", getMyPosts);
+    return res.status(StatusCodes.OK).json(posts);
+    
+
+  } catch (error) {
+    console.error("작성한글 조회 중 오류 발생:", error);
+    return res.status(500).json({ message: "서버 오류가 발생했습니다." });
+    
+  }
+}
