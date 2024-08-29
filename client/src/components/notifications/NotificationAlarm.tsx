@@ -27,10 +27,8 @@ const NotificationAlarm: React.FC = () => {
       `${BASE_URL}/notifications?userId=${loggedUser}`
     );
 
-    eventSource.addEventListener("message", (event) => {
+    eventSource.addEventListener("message", () => {
       try {
-        const notification = JSON.parse(event.data);
-        console.log("알림", notification);
         setAlarmExists(true);
       } catch (error) {
         console.error("데이터 파싱 중 오류 발생:", error);
@@ -49,12 +47,9 @@ const NotificationAlarm: React.FC = () => {
 
   useEffect(() => {
     const eventSource = createEventSource();
-    console.log("eventSource.readyState", eventSource.readyState);
 
     return () => {
       eventSource.close();
-      console.log("SSE 연결이 닫혔습니다.");
-      // setAlarmExists(!isAllRead);
     };
   }, [loggedUser]);
 

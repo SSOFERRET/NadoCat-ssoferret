@@ -1,4 +1,3 @@
-import { BiCheck } from "react-icons/bi";
 import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import ImageUploader from "../communityAndEvent/ImageUploader";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
