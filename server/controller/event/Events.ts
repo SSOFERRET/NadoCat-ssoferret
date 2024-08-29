@@ -52,6 +52,8 @@ export const getEvents = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -88,6 +90,8 @@ export const getEvent = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -147,6 +151,8 @@ export const createEvent = async (req: Request, res: Response) => {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
     }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -214,6 +220,8 @@ export const updateEvent = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -260,5 +268,7 @@ export const deleteEvent = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };

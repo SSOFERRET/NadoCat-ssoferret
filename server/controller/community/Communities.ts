@@ -51,6 +51,8 @@ export const getCommunities = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -87,6 +89,8 @@ export const getCommunity = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -140,6 +144,8 @@ export const createCommunity = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -208,6 +214,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -255,5 +263,7 @@ export const deleteCommunity = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };

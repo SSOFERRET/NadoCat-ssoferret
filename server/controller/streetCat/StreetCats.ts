@@ -18,7 +18,7 @@ import {
   removeAllComment,
   removeAllFavoriteCat,
   updatePost,
-  readStreetCatMap
+  readStreetCatMap,
 } from "../../model/streetCat.model";
 import { Prisma } from "@prisma/client";
 import { notifyNewPostToFriends } from "../notification/Notifications";
@@ -62,13 +62,16 @@ export const getStreetCats = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 // 동네 고양이 도감 상세 조회
 export const getStreetCat = async (req: Request, res: Response) => {
   const uuidString = req.headers["x-uuid"] as string;
-  const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
+
+  const uuid = uuidString && Buffer.from(uuidString, "hex");
 
   const postId = Number(req.params.street_cat_id);
 
@@ -89,6 +92,8 @@ export const getStreetCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -146,10 +151,11 @@ export const createStreetCat = async (req: Request, res: Response) => {
       return newPost;
     });
     res.status(201).json({ message: "동네 고양이 도감 생성" });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -207,11 +213,14 @@ export const updateStreetCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 // 동네 고양이 도감 삭제
 export const deleteStreetCat = async (req: Request, res: Response) => {
+
   const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
   const postId = Number(req.params.street_cat_id);
 
@@ -240,9 +249,10 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
-
 
 // 동네 고양이 지도
 // export const getStreetCatMap = async (req: Request, res: Response) => {
@@ -266,14 +276,16 @@ export const getStreetCatMap = async (req: Request, res: Response) => {
     const lngRange = parseFloat(req.query.lngRange as string);
 
     if (isNaN(lat) || isNaN(lng) || isNaN(latRange) || isNaN(lngRange)) {
-      return res.status(400).json({ message: '파라미터값 부족' });
+      return res.status(400).json({ message: "파라미터값 부족" });
     }
 
     const streetCatMap = await readStreetCatMap(lat, lng, latRange, lngRange);
 
     res.status(200).json(streetCatMap);
   } catch (error) {
-    console.error('동네 고양이 지도:', error);
-    res.status(500).json({ message: '동네 고양이 지도 서버에러' });
+    console.error("동네 고양이 지도:", error);
+    res.status(500).json({ message: "동네 고양이 지도 서버에러" });
+  } finally {
+    await prisma.$disconnect();
   }
-}
+};

@@ -15,16 +15,17 @@ export const getStreetCatComments = async (req: Request, res: Response) => {
     await prisma.$transaction(async (tx) => {
       const getComments = await (isNaN(cursor)
         ? readComments(tx, postId, limit)
-        : readComments(tx, postId, limit, cursor)
-      );
+        : readComments(tx, postId, limit, cursor));
 
       res.status(200).json(getComments);
-    })
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
-}
+};
 
 // 동네 고양이 도감 댓글 등록
 export const createStreetCatComment = async (req: Request, res: Response) => {
@@ -39,12 +40,14 @@ export const createStreetCatComment = async (req: Request, res: Response) => {
     if (createComment.streetCatCommentId)
       // await notifyNewComment(uuid, CATEGORY.STREET_CATS, postId, createComment.streetCatCommentId)
 
-    res.status(200).json({ message: "동네 고양이 댓글 등록" });
+      res.status(200).json({ message: "동네 고양이 댓글 등록" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
-}
+};
 
 // 동네 고양이 도감 댓글 수정
 export const updateStreetCatComment = async (req: Request, res: Response) => {
@@ -61,8 +64,10 @@ export const updateStreetCatComment = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
-}
+};
 
 // 동네 고양이 도감 댓글 삭제
 export const deleteStreetCatComment = async (req: Request, res: Response) => {
@@ -78,5 +83,7 @@ export const deleteStreetCatComment = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
-}
+};

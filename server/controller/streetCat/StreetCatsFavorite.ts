@@ -49,10 +49,11 @@ export const getFavoriteCats = async (req: Request, res: Response) => {
         res.status(200).json(result);
       });
     }
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -75,6 +76,8 @@ export const getFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -98,6 +101,8 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -119,5 +124,7 @@ export const deleteFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };

@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { deleteProfileImages } from "../util/images/deleteImages";
 import { addProfileImages } from "../util/images/addNewImages";
+import { ICommunity, ICommunityImage } from "../types/community";
 
 const prisma = new PrismaClient();
 
@@ -43,7 +44,6 @@ const selectCommunities = {
     },
   },
 };
-
 
 //[x]사용자 조회
 export const getUser = async (uuid: string) => {
@@ -107,6 +107,8 @@ export const updateNewDetail = async (uuid: string, newDetail: string) => {
     return { updateUser };
   } catch (error) {
     throw new Error("마이페이지 사용자 자기소개 업데이트에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -130,6 +132,8 @@ export const getAuthPassword = async (uuid: string) => {
     return { selectUserSecrets };
   } catch (error) {
     throw new Error("마이페이지 사용자 조회에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -170,9 +174,10 @@ export const updateNewPassword = async (uuid: string, newPassword: string) => {
     return { updateUser };
   } catch (error) {
     throw new Error("마이페이지 사용자 정보 업데이트에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
 };
-
 
 //[x]회원탈퇴
 export const deleteUserInactive = async (uuid: string) => {
@@ -192,9 +197,10 @@ export const deleteUserInactive = async (uuid: string) => {
 
   } catch (error) {
     throw new Error("회원탈퇴에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
-}
-
+};
 
 //[ ]작성글
 export const getMyAllPosts = async (uuid: string, page: number, pageSize: number, cursor?: number) => {
@@ -202,7 +208,8 @@ export const getMyAllPosts = async (uuid: string, page: number, pageSize: number
 
   try {
     //여러 게시판에서 가져오기
-    const posts = await prisma.communities.findMany({
+
+    const communities = await prisma.communities.findMany({
       where: {
         uuid: uuidBuffer,
       },
@@ -213,34 +220,53 @@ export const getMyAllPosts = async (uuid: string, page: number, pageSize: number
         createdAt: "desc",
       },
       include: selectCommunities,
+
+    //});  //충돌 헷갈림
+
+    //if (!posts || posts.length === 0) {
+
+    });
+
+    const posts = communities.map((community: ICommunity) => {
+      return {
+        postId: community.postId,
+        categoryId: community.categoryId,
+        title: community.title,
+        content: community.content,
+        views: community.views,
+        createdAt: community.createdAt,
+        updatedAt: community.updatedAt,
+        users: {
+          id: community?.users.id,
+          uuid: (community?.users.uuid as Buffer).toString("hex"),
+          nickname: community?.users.nickname,
+          profileImage: community?.users.profileImage,
+        },
+        thumbnail: community.communityImages.map((item: ICommunityImage) => item.images.url).join("") ?? null,
+        likes: community._count.communityLikes,
+      };
     });
 
     if (!posts || posts.length === 0) {
+      console.log("작성한 글을 찾을 수 없습니다.");
       return null;
     }
 
     return posts;
-
   } catch (error) {
     throw new Error("작성글 조회에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
-
 //[x]프로필 이미지 저장 로직 추가
-export const addProfileImageFormats = async (
-  uuid: string,
-  imageUrl: string
-) => {
+export const addProfileImageFormats = async (uuid: string, imageUrl: string) => {
   await addProfileImages(imageUrl, uuid);
 };
 
 //[x]프로필 이미지 삭제 로직 추가(기본이미지 변경)
-export const deleteProfileImageFormats = async (
-  uuid: string,
-  imageUrl: string
-) => {
+
+export const deleteProfileImageFormats = async (uuid: string, imageUrl: string) => {
   await deleteProfileImages(imageUrl, uuid);
 };
-
-

@@ -71,17 +71,16 @@ export const MyPosts = () => {
   //   });
   // };
 
+
   return (
     <>
       <ul className="myPosts-list">
         {posts.length > 0 ? (
           posts.map((post, index) =>
             index === posts.length - 1 ? (
-              <li
-                key={index}
-                className="board-post"
-                onClick={() => navigate(`/boards/communities/${post.postId}`)}
-              >
+
+              <li key={post.postId} className="board-post" onClick={() => navigate(`/boards/communities/${post.postId}`)}>
+
                 <div className="board-post-info">
                   <div className="post-title-container">
                     <span className="post-title">{post.title}</span>
@@ -97,17 +96,12 @@ export const MyPosts = () => {
                     </span>
                   </div>
                 </div>
-                <div className="post-image">
-                  {post.thumbnail && (
-                    <img data-src={post.thumbnail} alt={post.title} />
-                  )}
-                </div>
+
+                <div className="post-image">{post.thumbnail && <img src={post.thumbnail} alt={post.title} />}</div>
               </li>
             ) : (
-              <li
-                className="board-post"
-                onClick={() => navigate(`/boards/communities/${post.postId}`)}
-              >
+              <li key={post.postId} className="board-post" onClick={() => navigate(`/boards/communities/${post.postId}`)}>
+
                 <div className="board-post-info">
                   <div className="post-title-container">
                     <span className="post-title">{post.title}</span>
@@ -123,11 +117,9 @@ export const MyPosts = () => {
                     </span>
                   </div>
                 </div>
-                <div className="post-image">
-                  {post.thumbnail && (
-                    <img data-src={post.thumbnail} alt={post.title} />
-                  )}
-                </div>
+
+                <div className="post-image">{post.thumbnail && <img src={post.thumbnail} alt={post.title} />}</div>
+
               </li>
             )
           )

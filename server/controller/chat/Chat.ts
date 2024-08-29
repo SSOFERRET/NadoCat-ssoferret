@@ -5,8 +5,7 @@ import { Socket } from "socket.io";
 import moment from "moment-timezone";
 const prisma = new PrismaClient();
 
-let CHATID = ""
-
+let CHATID = "";
 
 export const startChat = async (req: Request, res: Response, io: SocketIOServer) => {
   const { userUuid, otherUserUuid } = req.body;
@@ -59,10 +58,14 @@ export const startChat = async (req: Request, res: Response, io: SocketIOServer)
       messages: chat.messages,
     });
     io.to(chatRoomId).emit("chat_created", { chatId: chatRoomId });
-    CHATID = chatRoomId
+    CHATID = chatRoomId;
   } catch (error) {
+
     console.error(error)
+
     return res.status(500).json({ error: "Failed to start chat" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -78,26 +81,29 @@ export const sendMessage = async (req: Request, res: Response, io: SocketIOServe
         content,
         sentAt: sentAt,
         chats: {
-          connect: { chatId }
+
+          connect: { chatId },
         },
         users: {
-          connect: { uuid: userUuidBuffer }
-        }
+          connect: { uuid: userUuidBuffer },
+        },
       },
       include: {
         chats: true,
-        users: true
-      }
+        users: true,
+      },
     });
     const formattedTime = moment(message.sentAt).tz(sentAt).format("YYYY-MM-DD HH:mm:ss");
     io.to(CHATID).emit("message", message, {
       user: uuid,
       message: message.content,
       time: formattedTime,
-    })
+    });
   } catch (error) {
     console.error("Error sending message:", error);
     res.status(500).json({ error: "Failed to send message" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -117,20 +123,19 @@ export const getChatList = async (req: Request, res: Response) => {
       include: {
         messages: {
           orderBy: {
-            sentAt: "asc"
+
+            sentAt: "asc",
           },
           include: {
-            users: true
-          }
+            users: true,
+          },
         },
-        users: true
-      }
+        users: true,
+      },
     });
 
-    const chatListWithUnreadCounts = chats.map(chat => {
-      const unreadCount = chat.messages.filter(
-        msg => !msg.isRead && msg.uuid !== userUuidBuffer
-      ).length;
+    const chatListWithUnreadCounts = chats.map((chat) => {
+      const unreadCount = chat.messages.filter((msg) => !msg.isRead && msg.uuid !== userUuidBuffer).length;
 
       return {
         ...chat,
@@ -142,6 +147,9 @@ export const getChatList = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching chat list:", error);
     res.status(500).json({ error: "Failed to fetch chat list" });
+  } finally {
+    await prisma.$disconnect();
+
   }
 };
 
@@ -152,18 +160,20 @@ export const testUuid = async (req: Request, res: Response) => {
   try {
     const users = await prisma.users.findFirst({
       where: {
-        uuid: userUuidBuffer
-      }
-    })
+        uuid: userUuidBuffer,
+      },
+    });
     if (users) {
       res.status(200).json(users);
     } else {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    console.error(error)
+    console.error(error);
+  } finally {
+    await prisma.$disconnect();
   }
-}
+};
 
 export const deleteChat = async (req: Request, res: Response, io: SocketIOServer) => {
   const { chatId } = req.body;
@@ -184,6 +194,8 @@ export const deleteChat = async (req: Request, res: Response, io: SocketIOServer
   } catch (error) {
     console.error("Error deleting chat:", error);
     res.status(500).json({ error: "채팅방 나가기에 실패했습니다." });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -196,7 +208,7 @@ export const handleMessage = async (socket: Socket, io: SocketIOServer) => {
           chatId: parseInt(roomId),
           content: message,
           sentAt: new Date(time),
-        }
+        },
       });
 
       io.to(roomId).emit("message", {
@@ -204,9 +216,10 @@ export const handleMessage = async (socket: Socket, io: SocketIOServer) => {
         message: messageRecord.content,
         time: messageRecord.sentAt.toLocaleTimeString(),
       });
-
     } catch (error) {
       console.error("Error saving message to database:", error);
+    } finally {
+      await prisma.$disconnect();
     }
   });
 };
@@ -219,9 +232,9 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
       await prisma.messages.updateMany({
         where: {
           chatId: chatId,
-          isRead: 0,  // 읽지 않은 메시지만
+          isRead: 0, // 읽지 않은 메시지만
           uuid: {
-            not: Buffer.from(uuid, "hex"),  // 자기 자신의 메시지는 제외
+            not: Buffer.from(uuid, "hex"), // 자기 자신의 메시지는 제외
           },
         },
         data: {
@@ -238,12 +251,15 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
         },
       });
 
-      socket.emit("previousMessages", previousMessages.map(msg => ({
-        uuid: msg.uuid,
-        message: msg.content,
-        time: msg.sentAt.toLocaleTimeString(),
-        isRead: msg.isRead,
-      })));
+      socket.emit(
+        "previousMessages",
+        previousMessages.map((msg) => ({
+          uuid: msg.uuid,
+          message: msg.content,
+          time: msg.sentAt.toLocaleTimeString(),
+          isRead: msg.isRead,
+        }))
+      );
 
       socket.to(roomId).emit("message", {
         user: "admin",
@@ -251,7 +267,8 @@ export const handleJoinRoom = (socket: Socket, io: SocketIOServer) => {
       });
     } catch (error) {
       console.error("Error fetching previous messages:", error);
+    } finally {
+      await prisma.$disconnect();
     }
   });
 };
-
