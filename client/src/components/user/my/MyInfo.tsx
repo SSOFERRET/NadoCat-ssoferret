@@ -19,14 +19,7 @@ export interface MyInfoProps {
   userData: MyProps; // userData를 추가
 }
 
-const MyInfo = ({
-  nickname,
-  uuid,
-  profileImageUrl,
-  onAvatarClick,
-  isMyPage,
-  userData,
-}: MyInfoProps) => {
+const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick, isMyPage, userData }: MyInfoProps) => {
   const [isOpenModal, setIsOpenModal] = useState(false); //모달 여닫는거 저장
   const [avatarUrl, setAvatarUrl] = useState(profileImageUrl);
   const navigate = useNavigate();
@@ -49,8 +42,7 @@ const MyInfo = ({
 
   //기본이미지 변경
   const handleDefaultImage = async () => {
-    const defaultImageUrl =
-      "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
+    const defaultImageUrl = "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
     await deleteProfile(defaultImageUrl);
     setAvatarUrl(defaultImageUrl);
     setIsOpenModal(false);
@@ -68,16 +60,9 @@ const MyInfo = ({
   return (
     <>
       <div className="info-container">
-        <Avatar
-          size="lg"
-          nickname={nickname}
-          profileImage={avatarUrl}
-          onClick={onAvatarClick}
-        />
+        <Avatar size="lg" nickname={nickname} profileImage={avatarUrl} onClick={onAvatarClick} />
 
-        <div
-          className={`nickname-container ${isMyPage ? "my-page" : "user-page"}`}
-        >
+        <div className={`nickname-container ${isMyPage ? "my-page" : "user-page"}`}>
           <div className="nickname-text">
             <span>{nickname}</span>
             <span>님</span>

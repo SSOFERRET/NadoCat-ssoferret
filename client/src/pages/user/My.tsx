@@ -52,13 +52,10 @@ export const My = () => {
       try {
         setIsLoading(true); // 로딩 시작
         if (currentUuid) {
-          const response =
-            currentUuid === "my" ? await myPage() : await userPage(currentUuid);
+          const response = currentUuid === "my" ? await myPage() : await userPage(currentUuid);
           setUserData(response.user);
 
-          setIsMypage(
-            currentUuid === "my" || currentUuid === loggedUser ? true : false
-          );
+          setIsMypage(currentUuid === "my" || currentUuid === loggedUser ? true : false);
         }
       } catch (error) {
         console.error("마이페이지 정보를 가져오는 데 실패했습니다: ", error);
@@ -86,11 +83,7 @@ export const My = () => {
   return (
     <>
       {userData && (
-        <div
-          className={
-            currentUuid === loggedUser ? "my-container" : "user-container"
-          }
-        >
+        <div className={currentUuid === loggedUser ? "my-container" : "user-container"}>
           <MyInfo
             nickname={userData.nickname}
             profileImageUrl={userData.profileImageUrl}
@@ -101,7 +94,7 @@ export const My = () => {
           />
 
           <p>{userData.detail}</p>
-          <MyTab />
+          <MyTab isMyPage={isMypage} />
         </div>
       )}
     </>
