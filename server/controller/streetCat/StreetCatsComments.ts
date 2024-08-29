@@ -22,9 +22,7 @@ export const getStreetCatComments = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 // 동네 고양이 도감 댓글 등록
@@ -44,9 +42,7 @@ export const createStreetCatComment = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 // 동네 고양이 도감 댓글 수정
@@ -64,9 +60,7 @@ export const updateStreetCatComment = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 // 동네 고양이 도감 댓글 삭제
@@ -83,7 +77,5 @@ export const deleteStreetCatComment = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };

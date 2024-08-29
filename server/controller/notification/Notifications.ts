@@ -101,8 +101,6 @@ export const serveNotifications = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -146,8 +144,6 @@ export const updateNotifications = async (req: Request, res: Response) => {
     return res.status(StatusCodes.OK);
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -211,9 +207,7 @@ export const getNotificationList = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const getIsAllNotificationRead = async (req: Request, res: Response) => {
@@ -229,7 +223,5 @@ export const getIsAllNotificationRead = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ isAllRead });
   } catch (error) {
     console.error(error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };

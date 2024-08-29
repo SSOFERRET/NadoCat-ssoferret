@@ -62,8 +62,6 @@ export const getStreetCats = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -92,14 +90,11 @@ export const getStreetCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
 // 동네 고양이 도감 생성
 export const createStreetCat = async (req: Request, res: Response) => {
-
   const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
   const uuid = Buffer.from(uuidString, "hex");
 
@@ -154,14 +149,11 @@ export const createStreetCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
 // 동네 고양이 도감 수정
 export const updateStreetCat = async (req: Request, res: Response) => {
-
   const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
   const uuid = Buffer.from(uuidString, "hex");
 
@@ -213,14 +205,11 @@ export const updateStreetCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
 // 동네 고양이 도감 삭제
 export const deleteStreetCat = async (req: Request, res: Response) => {
-
   const uuidString = req.user?.uuid; // ⬅️ 로그인한 사람만 사용 가능하므로 req.user 정보 사용
   const postId = Number(req.params.street_cat_id);
 
@@ -249,8 +238,6 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -285,7 +272,5 @@ export const getStreetCatMap = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("동네 고양이 지도:", error);
     res.status(500).json({ message: "동네 고양이 지도 서버에러" });
-  } finally {
-    await prisma.$disconnect();
   }
 };

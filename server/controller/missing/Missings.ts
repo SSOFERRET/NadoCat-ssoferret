@@ -206,9 +206,7 @@ export const deleteMissing = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     if (error instanceof Error) return validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 /**
@@ -264,9 +262,7 @@ export const updateMissing = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const validateBadRequest = (res: Response, error: Error) => {
@@ -315,7 +311,5 @@ export const updateFoundState = async (req: Request, res: Response) => {
     return res.status(StatusCodes.OK).json({ message: "게시글이 상태가 변경 되었습니다." });
   } catch (error) {
     if (error instanceof Error) return validateError(res, error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };

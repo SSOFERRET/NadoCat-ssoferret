@@ -46,7 +46,5 @@ export const getInterests = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching interests:", error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "서버에 에러가 발생했습니다." });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };

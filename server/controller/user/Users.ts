@@ -42,9 +42,7 @@ export const signup = async (req: Request, res: Response) => {
     });
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 처리 중 오류가 발생했습니다." });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 //[x]로그인
@@ -99,8 +97,6 @@ export const login = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("로그인 error:", error);
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "로그인 처리 중 오류가 발생했습니다." });
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -119,9 +115,7 @@ export const getNewAccessToken = async (req: Request, res: Response) => {
     console.error("로그인 error:", error);
     res.clearCookie("refreshToken", { httpOnly: true, secure: true });
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "유효하지 않은 Refresh token입니다." });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 //[x]로그아웃
@@ -143,9 +137,7 @@ export const logout = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("로그아웃 에러:", error);
     return res.status(500).json({ message: "로그아웃 중 오류 발생" });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 //[ ]카카오
@@ -215,7 +207,5 @@ export const kakao = async (req: Request, res: Response) => {
       message: "카카오 로그인 실패",
       error: error,
     });
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };

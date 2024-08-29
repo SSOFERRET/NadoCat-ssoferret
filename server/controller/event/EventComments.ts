@@ -34,9 +34,7 @@ export const getComments = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const createComment = async (req: Request, res: Response) => {
@@ -61,9 +59,7 @@ export const createComment = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const updateComment = async (req: Request, res: Response) => {
@@ -86,9 +82,7 @@ export const updateComment = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "댓글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const deleteComment = async (req: Request, res: Response) => {
@@ -106,7 +100,5 @@ export const deleteComment = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "댓글이 삭제되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
   }
 };

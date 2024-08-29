@@ -107,9 +107,7 @@ export const updateNewDetail = async (uuid: string, newDetail: string) => {
     return { updateUser };
   } catch (error) {
     throw new Error("마이페이지 사용자 자기소개 업데이트에서 오류 발생");
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 // [x]사용자 비밀번호 검증
@@ -132,9 +130,7 @@ export const getAuthPassword = async (uuid: string) => {
     return { selectUserSecrets };
   } catch (error) {
     throw new Error("마이페이지 사용자 조회에서 오류 발생");
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 // [x]사용자 비밀번호 변경
@@ -174,9 +170,7 @@ export const updateNewPassword = async (uuid: string, newPassword: string) => {
     return { updateUser };
   } catch (error) {
     throw new Error("마이페이지 사용자 정보 업데이트에서 오류 발생");
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 //[x]회원탈퇴
@@ -197,9 +191,7 @@ export const deleteUserInactive = async (uuid: string) => {
 
   } catch (error) {
     throw new Error("회원탈퇴에서 오류 발생");
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 //[ ]작성글
@@ -255,8 +247,6 @@ export const getMyAllPosts = async (uuid: string, page: number, pageSize: number
     return posts;
   } catch (error) {
     throw new Error("작성글 조회에서 오류 발생");
-  } finally {
-    await prisma.$disconnect();
   }
 };
 

@@ -32,9 +32,7 @@ export const getMissingFavorites = async (req: Request, res: Response) => {
     res.json(results);
   } catch (error) {
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 /**
@@ -55,9 +53,7 @@ export const postMissingFavorites = async (req: Request, res: Response) => {
     res.json(result);
   } catch (error) {
     res.sendStatus(StatusCodes.BAD_REQUEST);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 /**
@@ -80,7 +76,5 @@ export const deleteMissingFavorites = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.sendStatus(StatusCodes.BAD_REQUEST);
-  } finally {
-    await prisma.$disconnect();
   }
 };

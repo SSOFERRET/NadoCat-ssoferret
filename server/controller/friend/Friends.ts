@@ -32,9 +32,7 @@ export const followings = async (req: Request, res: Response) => {
     });
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const getFollowing = async (req: Request, res: Response) => {
@@ -53,9 +51,7 @@ export const getFollowing = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json(friend);
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const follow = async (req: Request, res: Response) => {
@@ -83,9 +79,7 @@ export const follow = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "친구 추가가 완료되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
 
 export const unfollow = async (req: Request, res: Response) => {
@@ -112,7 +106,5 @@ export const unfollow = async (req: Request, res: Response) => {
     res.sendStatus(StatusCodes.NO_CONTENT);
   } catch (error) {
     handleControllerError(error, res);
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 };
