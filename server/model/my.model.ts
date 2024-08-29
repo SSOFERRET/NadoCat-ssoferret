@@ -45,7 +45,6 @@ const selectCommunities = {
   },
 };
 
-
 //[x]사용자 조회
 export const getUser = async (uuid: string) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
@@ -112,6 +111,8 @@ export const updateNewDetail = async (uuid: string, newDetail: string) => {
   } catch (error) {
     console.log("마이페이지 사용자 자기소개 업데이트 error:", error);
     throw new Error("마이페이지 사용자 자기소개 업데이트에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -137,6 +138,8 @@ export const getAuthPassword = async (uuid: string) => {
   } catch (error) {
     console.log("마이페이지 사용자 조회 error:", error);
     throw new Error("마이페이지 사용자 조회에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -178,15 +181,16 @@ export const updateNewPassword = async (uuid: string, newPassword: string) => {
   } catch (error) {
     console.log("마이페이지 사용자 정보 업데이트 error:", error);
     throw new Error("마이페이지 사용자 정보 업데이트에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
 };
-
 
 //[x]회원탈퇴
 export const deleteUserInactive = async (uuid: string) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
   try {
-        // 사용자 정보 업데이트
+    // 사용자 정보 업데이트
     const updateUser = await prisma.users.update({
       where: {
         uuid: uuidBuffer,
@@ -195,83 +199,75 @@ export const deleteUserInactive = async (uuid: string) => {
         status: "inactive",
       },
     });
-    
+
     return { updateUser };
-    
   } catch (error) {
     console.log("회원탈퇴 error:", error);
     throw new Error("회원탈퇴에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
-}
-
+};
 
 //[ ]작성글
-export const getMyAllPosts = async(uuid: string, page: number, pageSize: number, cursor?: number) => {
+export const getMyAllPosts = async (uuid: string, page: number, pageSize: number, cursor?: number) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
 
   try {
     //여러 게시판에서 가져오기
-       const communities = await prisma.communities.findMany({
-       where: {
+    const communities = await prisma.communities.findMany({
+      where: {
         uuid: uuidBuffer,
-         },
-         take: pageSize, //10 (한번의 요청으로 몇개?)
-         skip: cursor ? 1 : 0, //cursor가 있다면 1 건너뛰고, 아니면 0 건너뜀
-         cursor: cursor ? { postId: cursor } : undefined,
-         orderBy: {
-           createdAt: "desc",
-        },
-         include: selectCommunities,
+      },
+      take: pageSize, //10 (한번의 요청으로 몇개?)
+      skip: cursor ? 1 : 0, //cursor가 있다면 1 건너뛰고, 아니면 0 건너뜀
+      cursor: cursor ? { postId: cursor } : undefined,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: selectCommunities,
     });
 
     const posts = communities.map((community: ICommunity) => {
-    return {
-      postId: community.postId,
-      categoryId: community.categoryId,
-      title: community.title,
-      content: community.content,
-      views: community.views,
-      createdAt: community.createdAt,
-      updatedAt: community.updatedAt,
-      users: {
-        id: community?.users.id,
-        uuid: (community?.users.uuid as Buffer).toString("hex"),
-        nickname: community?.users.nickname,
-        profileImage: community?.users.profileImage,
-      },
-      thumbnail: community.communityImages.map((item: ICommunityImage) => item.images.url).join("") ?? null,
-      likes: community._count.communityLikes,
-    };
-  });
+      return {
+        postId: community.postId,
+        categoryId: community.categoryId,
+        title: community.title,
+        content: community.content,
+        views: community.views,
+        createdAt: community.createdAt,
+        updatedAt: community.updatedAt,
+        users: {
+          id: community?.users.id,
+          uuid: (community?.users.uuid as Buffer).toString("hex"),
+          nickname: community?.users.nickname,
+          profileImage: community?.users.profileImage,
+        },
+        thumbnail: community.communityImages.map((item: ICommunityImage) => item.images.url).join("") ?? null,
+        likes: community._count.communityLikes,
+      };
+    });
 
-    if(!posts || posts.length === 0) {
+    if (!posts || posts.length === 0) {
       console.log("작성한 글을 찾을 수 없습니다.");
       return null;
     }
 
     return posts;
-
   } catch (error) {
     console.log("작성글 조회에서 error:", error);
     throw new Error("작성글 조회에서 오류 발생");
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
-
 //[x]프로필 이미지 저장 로직 추가
-export const addProfileImageFormats = async (
-  uuid: string,
-  imageUrl: string
-) => {
+export const addProfileImageFormats = async (uuid: string, imageUrl: string) => {
   await addProfileImages(imageUrl, uuid);
 };
 
 //[x]프로필 이미지 삭제 로직 추가(기본이미지 변경)
-export const deleteProfileImageFormats = async (
-    uuid: string,
-    imageUrl: string
-  ) => {
-    await deleteProfileImages(imageUrl, uuid);
-  };
-  
-
+export const deleteProfileImageFormats = async (uuid: string, imageUrl: string) => {
+  await deleteProfileImages(imageUrl, uuid);
+};

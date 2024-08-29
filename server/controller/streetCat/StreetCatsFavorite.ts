@@ -25,34 +25,35 @@ export const getFavoriteCats = async (req: Request, res: Response) => {
   try {
     if (!uuid) {
       // throw new Error("User UUID is missing.");
-      res.status(200).json({message: "로그인 안 한 유저"});
+      res.status(200).json({ message: "로그인 안 한 유저" });
     } else {
       await prisma.$transaction(async (tx) => {
         const getFavoritePostIds = await readFavoriteCatPostIds(tx, uuid);
-  
+
         const postIds = getFavoritePostIds.map((post) => {
           return post.postId;
         });
-  
+
         const getFavoriteCatPosts = await (isNaN(cursor)
           ? readFavoriteCatPosts(tx, uuid, limit, cursor as number | 0, postIds)
           : readFavoriteCatPosts(tx, uuid, limit, cursor, postIds));
-  
+
         getFavoriteCatPosts.favoriteCatPostCount;
-  
+
         const result = {
           favoriteCatPosts: getFavoriteCatPosts.favoriteCatPosts,
           nickname: getFavoriteCatPosts.nickname?.nickname,
           myCatCount: getFavoriteCatPosts.favoriteCatPostCount,
         };
-  
+
         res.status(200).json(result);
       });
     }
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -75,6 +76,8 @@ export const getFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -100,6 +103,8 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -121,5 +126,7 @@ export const deleteFavoriteCat = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    await prisma.$disconnect();
   }
 };

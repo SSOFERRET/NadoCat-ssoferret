@@ -3,7 +3,21 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Prisma } from "@prisma/client";
 import { addLocation, getLocationById, updateLocationById } from "../../model/location.model";
-import { addMissing, addLocationFormats, removePost, updateMissingByPostId, updateFoundByPostId, getMissingReportsByMissingId, getPostByPostId, getLocationFormatsByPostId, getImageFormatsByPostId, addMissingCat, updateMissingCatByCat, addImageFormats, removeImagesByIds } from "../../model/missing.model";
+import {
+  addMissing,
+  addLocationFormats,
+  removePost,
+  updateMissingByPostId,
+  updateFoundByPostId,
+  getMissingReportsByMissingId,
+  getPostByPostId,
+  getLocationFormatsByPostId,
+  getImageFormatsByPostId,
+  addMissingCat,
+  updateMissingCatByCat,
+  addImageFormats,
+  removeImagesByIds,
+} from "../../model/missing.model";
 import { CATEGORY } from "../../constants/category";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteImagesByImageIds, getAndDeleteImageFormats } from "../../util/images/deleteImages";
@@ -19,16 +33,14 @@ import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/
 import { ILocation } from "../../types/location";
 import { handleControllerError } from "../../util/errors/errors";
 
-
-
 /* CHECKLIST
-* [ ] 사용자 정보 가져오기 반영
-* [x] 구현 내용
-*   [x] create
-*   [x] delete
-*   [x] get
-*   [x] put
-*/
+ * [ ] 사용자 정보 가져오기 반영
+ * [x] 구현 내용
+ *   [x] create
+ *   [x] delete
+ *   [x] get
+ *   [x] put
+ */
 
 const getOrderBy = (sort: string) => {
   switch (sort) {
@@ -48,14 +60,14 @@ export const getMissings = async (req: Request, res: Response) => {
     limit: Number(req.query.limit) || PAGINATION.LIMIT,
     cursor: req.query.cursor ? Number(req.query.cursor) : undefined,
     orderBy: getOrderBy(sort),
-    categoryId: CATEGORY.MISSINGS
+    categoryId: CATEGORY.MISSINGS,
   };
 
   return await getPosts(req, res, listData);
-}
+};
 
 /**
- * 
+ *
  * CHECKLIST
  * [x] 이미지 가져오기
  * [x] location 가져오기
@@ -69,7 +81,7 @@ export const getMissing = async (req: Request, res: Response) => {
       const postData = {
         postId,
         categoryId: CATEGORY.MISSINGS,
-      }
+      };
 
       let post = await getPostByPostId(tx, postData);
       const userId = post.users.uuid.toString("hex");
@@ -84,23 +96,19 @@ export const getMissing = async (req: Request, res: Response) => {
       const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
       post.views += viewIncrementResult || 0;
 
-
-      return res
-        .status(StatusCodes.OK)
-        .json({ ...post, images });
+      return res.status(StatusCodes.OK).json({ ...post, images });
     });
   } catch (error) {
     console.log(error);
-    if (error instanceof Error)
-      validateError(res, error);
+    if (error instanceof Error) validateError(res, error);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 /**CHECKLIST
  * [x] missing_locations table에 추가 누락
-*/
-
-
+ */
 
 export const createMissing = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
@@ -119,46 +127,46 @@ export const createMissing = async (req: Request, res: Response) => {
 
       const catData = {
         ...cat,
-        uuid: userId
-      }
+        uuid: userId,
+      };
       const missingCat = await addMissingCat(tx, catData);
 
-      const post = await addMissing(tx,
-        {
-          ...missing,
-          catId: missingCat.missingCatId,
-          uuid: userId,
-          time: new Date(missing.time),
-          locationId: newLocation.locationId,
-        }
-      );
+      const post = await addMissing(tx, {
+        ...missing,
+        catId: missingCat.missingCatId,
+        uuid: userId,
+        time: new Date(missing.time),
+        locationId: newLocation.locationId,
+      });
 
       await addLocationFormats(tx, CATEGORY.MISSINGS, {
         postId: post.postId,
-        locationId: newLocation.locationId
+        locationId: newLocation.locationId,
       });
 
       if (req.files) {
-        const imageUrls = await uploadImagesToS3(req) as string[];
+        const imageUrls = (await uploadImagesToS3(req)) as string[];
         console.log("결과 출력", imageUrls);
-        await addNewImages(tx, {
-          userId,
-          postId: post.postId,
-          categoryId: CATEGORY.MISSINGS,
-        }, imageUrls);
+        await addNewImages(
+          tx,
+          {
+            userId,
+            postId: post.postId,
+            categoryId: CATEGORY.MISSINGS,
+          },
+          imageUrls
+        );
       }
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
       return post;
     });
 
-    res
-      .status(StatusCodes.CREATED)
-      .send({ postId: newPost.postId as number });
-
+    res.status(StatusCodes.CREATED).send({ postId: newPost.postId as number });
   } catch (error) {
-    console.log(error)
-    if (error instanceof Error)
-      validateError(res, error);
+    console.log(error);
+    if (error instanceof Error) validateError(res, error);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -181,8 +189,8 @@ export const deleteMissing = async (req: Request, res: Response) => {
     const postData = {
       userId,
       postId,
-      categoryId: CATEGORY.MISSINGS
-    }
+      categoryId: CATEGORY.MISSINGS,
+    };
 
     console.log("삭제할 아이디", postId);
 
@@ -190,30 +198,24 @@ export const deleteMissing = async (req: Request, res: Response) => {
       const missingReports = await getMissingReportsByMissingId(tx, postId);
 
       if (missingReports)
-        await Promise.all(
-          missingReports.map((report) => deleteMissingReport(req, res, report.postId))
-        );
+        await Promise.all(missingReports.map((report) => deleteMissingReport(req, res, report.postId)));
 
       const locations = await getAndDeleteLocationFormats(tx, postData);
       const images = await getAndDeleteImageFormats(tx, postData);
 
       await removePost(tx, postData);
 
-      if (locations)
-        await deleteLocationsByLocationIds(tx, locations);
+      if (locations) await deleteLocationsByLocationIds(tx, locations);
 
-      if (images)
-        await deleteImagesByImageIds(tx, images);
-
+      if (images) await deleteImagesByImageIds(tx, images);
     });
 
-    return res
-      .status(StatusCodes.OK)
-      .json({ message: "게시글이 삭제되었습니다." });
+    return res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
     console.error(error);
-    if (error instanceof Error)
-      return validateError(res, error);
+    if (error instanceof Error) return validateError(res, error);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
@@ -223,7 +225,7 @@ export const deleteMissing = async (req: Request, res: Response) => {
  * [x] 이미지 수정
  * [x] 위치 수정
  * [x] 내용 수정
- * 
+ *
  * [x] 상태 수정
  * [ ] 조회수 업데이트?
  */
@@ -242,7 +244,7 @@ export const updateMissing = async (req: Request, res: Response) => {
     const imageIds = JSON.parse(req.body.deleteImageIds);
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const oldPost = await getPostByPostId(tx, { categoryId: CATEGORY.MISSINGS, postId })
+      const oldPost = await getPostByPostId(tx, { categoryId: CATEGORY.MISSINGS, postId });
       console.log(oldPost);
       await updateMissingByPostId(tx, postId, userId, missing);
 
@@ -253,7 +255,6 @@ export const updateMissing = async (req: Request, res: Response) => {
       await removeImagesByIds(tx, imageIds);
 
       await deleteImages(tx, imageIds);
-
 
       if (req.files) {
         const imageUrls = (await uploadImagesToS3(req)) as any;
@@ -267,33 +268,29 @@ export const updateMissing = async (req: Request, res: Response) => {
           imageUrls
         );
       }
-
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 export const validateBadRequest = (res: Response, error: Error) => {
   console.error(error);
-  return res
-    .status(StatusCodes.BAD_REQUEST)
-    .json({ message: "입력값을 확인해 주세요." });
-}
+  return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
+};
 
 export const validateInternalServerError = (res: Response) => {
-  res
-    .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ message: "Internal Server Error" });
-}
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+};
 
 export const validateError = (res: Response, error: Error) => {
-  if (error instanceof Prisma.PrismaClientValidationError)
-    return validateBadRequest(res, error);
+  if (error instanceof Prisma.PrismaClientValidationError) return validateBadRequest(res, error);
   return validateInternalServerError(res);
-}
+};
 
 export const updateFoundState = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
@@ -307,28 +304,29 @@ export const updateFoundState = async (req: Request, res: Response) => {
     const postData = {
       postId,
       userId,
-      categoryId: CATEGORY.MISSINGS
-    }
+      categoryId: CATEGORY.MISSINGS,
+    };
 
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await updateFoundByPostId(tx, postData, found);
 
-      const receivers = [...await getMissingReporters(tx, postId), ...await getMissingFavoriteAdders(tx, postId)];
+      const receivers = [...(await getMissingReporters(tx, postId)), ...(await getMissingFavoriteAdders(tx, postId))];
 
-      receivers.forEach((receiver) => notify({
-        type: "found",
-        receiver: receiver.uuid.toString("hex"),
-        sender: userId.toString("hex"),
-        url: `/boards/missings/${postId}`,
-        result: found ? "Y" : "N"
-      }))
-    })
+      receivers.forEach((receiver) =>
+        notify({
+          type: "found",
+          receiver: receiver.uuid.toString("hex"),
+          sender: userId.toString("hex"),
+          url: `/boards/missings/${postId}`,
+          result: found ? "Y" : "N",
+        })
+      );
+    });
 
-    return res
-      .status(StatusCodes.OK)
-      .json({ message: "게시글이 상태가 변경 되었습니다." });
+    return res.status(StatusCodes.OK).json({ message: "게시글이 상태가 변경 되었습니다." });
   } catch (error) {
-    if (error instanceof Error)
-      return validateError(res, error);
+    if (error instanceof Error) return validateError(res, error);
+  } finally {
+    await prisma.$disconnect();
   }
-}
+};
