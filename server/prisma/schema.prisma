@@ -495,8 +495,8 @@ model UserOauthSecrets {
 model UserSecrets {
   userSecretId Int     @id @unique(map: "user_secret_id_UNIQUE") @default(autoincrement()) @map("user_secret_id")
   uuid         Bytes   @db.Binary(16)
-  hashPassword String  @map("hash_password") @db.VarChar(200)
-  salt         String  @db.VarChar(45)
+  hashPassword String? @map("hash_password") @db.VarChar(200)
+  salt         String? @db.VarChar(45)
   refreshToken String? @map("refresh_token") @db.VarChar(1024)
   users        Users   @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "user_secrets_uuid_fk")
 
