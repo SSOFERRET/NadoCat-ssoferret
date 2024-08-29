@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Setup Node.js for Server
         uses: actions/setup-node@v3
         with:
           node-version: "20"
@@ -38,7 +38,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Setup Node.js for Client
         uses: actions/setup-node@v3
         with:
           node-version: "20"
