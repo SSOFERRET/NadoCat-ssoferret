@@ -67,24 +67,27 @@
       .contents{
         @include font(14em, 400, #4C4C4C);
         white-space: nowrap;
-        line-height: 1.8em;
+        line-height: 1.5em;
         margin: 0;
         width: 90%;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-height: 2vh;
+        max-height: 2em;
         overflow: hidden;
       }
       
     }
     .unread{
-      @include font(14em, 500, white);
+      @include font(12px, 500, white);
       background-color: $orange ;
-      width: 2vh;
-      height: 2vh;
-      text-align: center;
-      line-height: 1.5;
+      width: 18px;  
+      height: 18px; 
       border-radius: 50%;
+      display: flex;
+      justify-content: center; 
+      align-items: center; 
+      text-align: center; 
+      overflow: hidden; 
       margin-right: 3vh;
     }
     .iconbox{

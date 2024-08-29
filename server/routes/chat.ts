@@ -1,7 +1,5 @@
-import { Request, Response } from "express";
 import { testUuid, getChatList, startChat, sendMessage, deleteChat } from "../controller/chat/Chat";
 import express from "express";
-import {ensureAutorization} from "../middleware/auth";
 import { Server as SocketIOServer } from "socket.io";
 
 const router = express.Router();

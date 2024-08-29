@@ -2,7 +2,6 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
-import { indexOpensearchUser } from "../controller/search/Searches";
 import { deleteProfileImages } from "../util/images/deleteImages";
 import { addProfileImages } from "../util/images/addNewImages";
 
@@ -148,7 +147,7 @@ export const updateNewPassword = async (uuid: string, newPassword: string) => {
 export const deleteUserInactive = async (uuid: string) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
   try {
-        // 사용자 정보 업데이트
+    // 사용자 정보 업데이트
     const updateUser = await prisma.users.update({
       where: {
         uuid: uuidBuffer,
@@ -157,9 +156,9 @@ export const deleteUserInactive = async (uuid: string) => {
         status: "inactive",
       },
     });
-    
+
     return { updateUser };
-    
+
   } catch (error) {
     console.log("회원탈퇴 error:", error);
     throw new Error("회원탈퇴에서 오류 발생");
@@ -210,5 +209,5 @@ export const deleteProfileImageFormats = async (
   ) => {
     await deleteProfileImages(imageUrl, uuid);
   };
-  
+ 
 

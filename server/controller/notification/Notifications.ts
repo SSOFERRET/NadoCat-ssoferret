@@ -57,7 +57,7 @@ export const serveNotifications = (req: Request, res: Response) => {
     });
 
     const sendNotifications = async () => {
-      console.log(notifications)
+      // console.log(notifications)
       if (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {

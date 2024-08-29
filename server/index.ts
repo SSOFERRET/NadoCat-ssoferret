@@ -16,10 +16,14 @@ import { handleJoinRoom, handleMessage } from "./controller/chat/Chat";
 import LikesRouter from "./routes/likes";
 import cookieParser from "cookie-parser";
 import { FRONTEND_URL, IP, PORT } from "./constants/ip";
+import dotenv from "dotenv";
+dotenv.config();
+
 
 //chat 관련
 const app = express();
 const server = http.createServer(app);
+app.set('trust proxy', 1);  // 프록시 서버 뒤에서의 신뢰 설정
 
 const io = new Server(server, {
   cors: {
@@ -51,19 +55,19 @@ app.use(
 // app.use(helmet()) // NOTE 개발중이라 주석 처리해뒀음
 app.use(morgan("tiny"));
 
-app.use("/boards/communities", CommunitiesRouter);
-app.use("/boards/street-cats", StreetCatsRouter);
-app.use("/boards/missings", MissingRouter);
-app.use("/users", UserRouter);
-app.use("/boards/events", EventsRouter);
-app.use("/notifications", cors({
+app.use(`${process.env.REVERSE_PROXY || ""}/boards/communities`, CommunitiesRouter);
+app.use(`${process.env.REVERSE_PROXY || ""}/boards/street-cats`, StreetCatsRouter);
+app.use(`${process.env.REVERSE_PROXY || ""}/boards/missings`, MissingRouter);
+app.use(`${process.env.REVERSE_PROXY || ""}/users`, UserRouter);
+app.use(`${process.env.REVERSE_PROXY || ""}/boards/events`, EventsRouter);
+app.use(`${process.env.REVERSE_PROXY || ""}/notifications`, cors({
   origin: FRONTEND_URL,
   methods: ['GET', 'PATCH'],
   allowedHeaders: ["Content-Type"],
 }), NotificationsRouter);
-app.use("/searches", SearchesRouter);
-app.use("/chats", ChatRouter(io))
-app.use("/posts", LikesRouter);
+app.use(`${process.env.REVERSE_PROXY || ""}/searches`, SearchesRouter);
+app.use(`${process.env.REVERSE_PROXY || ""}/chats`, ChatRouter(io))
+app.use(`${process.env.REVERSE_PROXY || ""}/posts`, LikesRouter);
 
 app.use((_req: Request, res: Response) => {
   res.sendStatus(404);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAddFavoriteCat, useDeleteFavoriteCat } from '../../hooks/useStreetCat';
 import { GoHeartFill } from "react-icons/go";
 import { useAuthStore } from "../../store/userStore";
+import Modal from "./Modal";
 
 interface IFavoriteButtonProps {
   postId: number;
@@ -11,6 +12,7 @@ interface IFavoriteButtonProps {
 
 const FavoriteButton: React.FC<IFavoriteButtonProps> = ({ postId, like, onToggle }) => {
   const [isFavorite, setIsFavorite] = useState<number>(like);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { uuid } = useAuthStore();
 
   const addFavoriteMutation = useAddFavoriteCat();
@@ -18,8 +20,8 @@ const FavoriteButton: React.FC<IFavoriteButtonProps> = ({ postId, like, onToggle
 
   const toggleFavorite = () => {
     if (!uuid) {
-      alert("로그인이 필요한 서비스입니다.")
-      return;
+      setModalOpen(true);
+      
     }
 
     if (isFavorite) {
@@ -45,11 +47,21 @@ const FavoriteButton: React.FC<IFavoriteButtonProps> = ({ postId, like, onToggle
     }
   };
 
+  const handleModalClose = () => {
+    setModalOpen(false);
+  }
+
   return (
-    <GoHeartFill
-      className={`like ${isFavorite ? "active" : ""}`}
-      onClick={toggleFavorite}
-    />
+    <>
+      <GoHeartFill
+        className={`like ${isFavorite ? "active" : ""}`}
+        onClick={toggleFavorite}
+      />
+      <Modal
+        isOpen={modalOpen}
+        onClosed={handleModalClose}
+      />
+    </>
   );
 };
 
