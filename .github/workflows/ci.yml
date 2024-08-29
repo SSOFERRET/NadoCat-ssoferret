@@ -32,4 +32,4 @@ jobs:
 
       - name: Build server
         run: |
-          cd client && npm run build && pm2 restart 1
+          cd server && npm run build
