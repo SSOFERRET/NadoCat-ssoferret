@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import prisma from "../../client";
-import { Prisma } from "@prisma/client";
-// import { getUuid } from "./StreetCats";
 import {
   createFavoriteCat,
   readFavoriteCat,
@@ -25,31 +23,30 @@ export const getFavoriteCats = async (req: Request, res: Response) => {
   try {
     if (!uuid) {
       // throw new Error("User UUID is missing.");
-      res.status(200).json({message: "로그인 안 한 유저"});
+      res.status(200).json({ message: "로그인 안 한 유저" });
     } else {
       await prisma.$transaction(async (tx) => {
         const getFavoritePostIds = await readFavoriteCatPostIds(tx, uuid);
-  
+
         const postIds = getFavoritePostIds.map((post) => {
           return post.postId;
         });
-  
+
         const getFavoriteCatPosts = await (isNaN(cursor)
           ? readFavoriteCatPosts(tx, uuid, limit, cursor as number | 0, postIds)
           : readFavoriteCatPosts(tx, uuid, limit, cursor, postIds));
-  
+
         getFavoriteCatPosts.favoriteCatPostCount;
-  
+
         const result = {
           favoriteCatPosts: getFavoriteCatPosts.favoriteCatPosts,
           nickname: getFavoriteCatPosts.nickname?.nickname,
           myCatCount: getFavoriteCatPosts.favoriteCatPostCount,
         };
-  
+
         res.status(200).json(result);
       });
     }
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -85,8 +82,6 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
   // const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
   const uuid = uuidString && Buffer.from(uuidString, "hex"); // ⬅️ 이렇게 수정
 
-  console.log("uuidString: ", uuidString);
-  console.log("uuid: ", uuid);
   const postId = Number(req.params.street_cat_id);
 
   try {
@@ -105,12 +100,11 @@ export const addFavoriteCat = async (req: Request, res: Response) => {
 
 // 동네 고양이 도감 즐겨찾기(내 도감) 삭제
 export const deleteFavoriteCat = async (req: Request, res: Response) => {
-  // const uuid = await getUuid();
   const uuidString = req.headers["x-uuid"] as string;
-  const uuid = Buffer.from(uuidString.replace(/-/g, ""), "hex");
   const postId = Number(req.params.street_cat_id);
-
   try {
+    const uuid = uuidString && Buffer.from(uuidString.replace(/-/g, ""), "hex");
+
     if (!uuid) {
       throw new Error("User UUID is missing.");
     }

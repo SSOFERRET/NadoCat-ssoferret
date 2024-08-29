@@ -7,7 +7,7 @@ interface Props {
   onClosed: () => void;
   chatId: string | null;
 }
-const Modal: React.FC<Props> = ({isOpen, onClosed, chatId}) => {
+const Modal: React.FC<Props> = ({ isOpen, onClosed, chatId }) => {
   if (!isOpen) return null;
 
   const handleLeaveChat = () => {
@@ -18,14 +18,12 @@ const Modal: React.FC<Props> = ({isOpen, onClosed, chatId}) => {
         }/chats/delete`,
         { chatId }
       )
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         alert("채팅방에서 나갔습니다.");
         onClosed();
         window.location.reload();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         alert("채팅방 나가기에 실패했습니다.");
         onClosed();
         window.location.reload();

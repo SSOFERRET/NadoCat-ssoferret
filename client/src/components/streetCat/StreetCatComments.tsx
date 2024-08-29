@@ -69,8 +69,6 @@ const StreetCatComments = ({ postId, commentsCountUpdate }: IProps) => {
     );
   }
 
-  console.log(data?.pages[0]?.commentsCount);
-
   return (
     <>
       <div className="street-cat-comment-list">

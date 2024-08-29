@@ -35,14 +35,12 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const { uuid } = useAuthStore(); 
   const navigate = useNavigate();
-  console.log(lists)
   const handleClose = () => {
     setModalOpen(false);
   };
   const handleIconClick = (e: React.MouseEvent, chatId: string) => {
     e.stopPropagation();
     setSelectedChatId(chatId);
-    console.log(chatId);
     setModalOpen(true);
   };
   const handleChatClick = (list: IList) => {
@@ -58,7 +56,6 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
   };
 
   const now: Date = new Date();
-  console.log(lists)
   const getTimeDifference = (sentAt?: string) => {
     if (sentAt) {
       const messageTime = new Date(sentAt);
@@ -86,7 +83,11 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
           onClick={() => handleChatClick(list)}
         >
           <div className="imgbox">
-            {list.users.profileImage ? <img src={list.users.profileImage} /> : <img src={DefaultImg} />}
+            {list.users.profileImage ? (
+              <img src={list.users.profileImage} />
+            ) : (
+              <img src={DefaultImg} />
+            )}
           </div>
           <div className="contentsbox">
             <div className="nametimebox">
@@ -97,7 +98,11 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
             </div>
             <div className="contents">{list.messages.at(-1)?.content}</div>
           </div>
-          {list.unreadCount > 0 ? <div className="unread">{list.unreadCount}</div>: ""}
+          {list.unreadCount > 0 ? (
+            <div className="unread">{list.unreadCount}</div>
+          ) : (
+            ""
+          )}
           <div className="iconbox">
             <BsThreeDotsVertical
               className="icon"

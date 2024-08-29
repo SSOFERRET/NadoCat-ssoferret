@@ -20,7 +20,9 @@ const PostSummary = ({ data }: IMissingComponentProps) => {
           <div className="summary-column">
             <MdOutlineLabel />
             <p className="column-key">성별</p>
-            <p className="data">{formatGenderToString(data.missingCats.gender as string)}</p>
+            <p className="data">
+              {formatGenderToString(data.missingCats.gender as string)}
+            </p>
           </div>
           <div className="summary-column">
             <MdOutlineLabel />

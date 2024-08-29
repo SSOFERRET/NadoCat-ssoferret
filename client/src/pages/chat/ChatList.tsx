@@ -6,7 +6,7 @@ import NoList from "../../assets/img/StartChat.png";
 import { Buffer } from "buffer";
 import { useAuthStore } from "../../store/userStore";
 
-interface IList{
+interface IList {
   users: {
     nickname: string;
     profileImage: string;
@@ -42,11 +42,6 @@ const ChatList = () => {
 
         const updatedLists = await Promise.all(
           chatLists.map(async (list: IList) => {
-            console.log(
-              "otherUuid :",
-              Buffer.from(list.otherUuid.data).toString("hex"),
-              uuid
-            );
             const otherUuid =
               Buffer.from(list.otherUuid.data).toString("hex") ===
               uuid

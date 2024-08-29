@@ -97,14 +97,10 @@ const PostMenu = ({
 
     deleteComment({ postId, commentId })
       ?.then(() => {
-        console.log("댓글 삭제 완료");
         clearSelectedCommentId();
       })
-      .catch(() => {
-        console.log("에러발생");
-      })
+      .catch(() => {})
       .finally(() => {
-        console.log("마무리");
         showMenu();
       });
   };
@@ -159,7 +155,7 @@ const PostMenu = ({
     }
   };
 
-  const handleSetting = async() => {
+  const handleSetting = async () => {
     if (!uuid) {
       console.error("uuid가 없습니다!");
       return;
@@ -168,18 +164,14 @@ const PostMenu = ({
     navigate("/users/my/setting", { state: { uuid } });
   };
 
-  //로그아웃
   const handleLogout = async () => {
-    //예 버튼
     if (!uuid) {
       console.error("uuid가 없습니다!");
       return;
     }
 
     try {
-      await storeLogout(uuid); //클라이언트 삭제
-      // const response = await logout(userUuid);//서버삭제
-      console.log("로그아웃 되었습니다.");
+      await storeLogout(uuid);
 
       navigate("/users/login");
     } catch (error) {
@@ -190,7 +182,7 @@ const PostMenu = ({
   };
 
   const handleModalOpen = () => {
-    setIsOpenModal(true); 
+    setIsOpenModal(true);
   };
 
   const handleLogoutCancel = () => {
@@ -201,6 +193,7 @@ const PostMenu = ({
     if (typeof postId !== "number") return;
 
     updateFound({ postId, found: true });
+    navigate("/boards/missings");
   };
 
   return (

@@ -20,8 +20,7 @@ const SettingDetail = () => {
   } = useForm<SettingDetailProps>();
 
   const handleDetail = async (data: SettingDetailProps) => {
-    const result = await updateDetail(data);
-    console.log("자기소개가 변경되었습니다:", result);
+    await updateDetail(data);
 
     navigate("/users/my");
   };

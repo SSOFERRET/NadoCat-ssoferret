@@ -22,7 +22,6 @@ export const convertToWebpBuffer = async (data: Express.Multer.File, quality: nu
       const reduceQuality: number = quality - QUALITY_DEGREE;
       return await convertToWebpBuffer(data, reduceQuality);
     }
-    console.log(webpBuffer)
     return webpBuffer;
   } catch (error) {
     throw error;

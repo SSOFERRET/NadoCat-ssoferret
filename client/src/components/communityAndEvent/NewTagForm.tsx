@@ -4,10 +4,6 @@ import ModalPotal from "../modal/ModalPotal";
 import { AiOutlineClose } from "react-icons/ai";
 import NewTags from "./NewTags";
 
-// CHECKLIST
-// [x] 해시태그 수 글자수 제한
-// [x] 해시태그 수 제한
-// [x] 삭제될 태그 저장
 interface IProps {
   initialTags: string[];
   addTagsToDelete?: (ids: string[]) => void;

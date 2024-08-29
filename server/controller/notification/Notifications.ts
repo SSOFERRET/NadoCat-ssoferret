@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
-import { createNotification, getLatestNotificationByReceiver, getNotificationListByReceiver, getNotificationsCount, updateNotificationsIsReadByReceiver } from "../../model/notification.model";
-import { getUserId, getUserId2 } from "../missing/Missings";
+import {
+  createNotification,
+  getLatestNotificationByReceiver,
+  getNotificationListByReceiver,
+  getNotificationsCount,
+  updateNotificationsIsReadByReceiver,
+} from "../../model/notification.model";
 import { StatusCodes } from "http-status-codes";
 import { handleControllerError } from "../../util/errors/errors";
 import { TCategoryId } from "../../types/category";
@@ -13,21 +18,21 @@ import { getPostsCount } from "../../model/missing.model";
 import dotenv from "dotenv";
 
 /* CHECKLIST
-* [x] 알람글 isRead update API
-* [x] 실종고양이 제보글 => 게시글 게시자
-* [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
-* [x] 실종고양이 제보글 수정 => 게시글 게시자
-* [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
-* [x] 신규 글 작성 => 친구
-* [-] 좋아요 찍힘 => 게시글 게시자
-* [x] 댓글 => 게시글 게시자
-* [x] 친구 요청 => 요청 받은 사용자
-*/
+ * [x] 알람글 isRead update API
+ * [x] 실종고양이 제보글 => 게시글 게시자
+ * [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
+ * [x] 실종고양이 제보글 수정 => 게시글 게시자
+ * [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
+ * [x] 신규 글 작성 => 친구
+ * [-] 좋아요 찍힘 => 게시글 게시자
+ * [x] 댓글 => 게시글 게시자
+ * [x] 친구 요청 => 요청 받은 사용자
+ */
 
 interface INoticiationData {
   type: TNotify;
-  receiver: Buffer;
-  sender: Buffer;
+  receiver: string;
+  sender: string;
   url: string;
   commentId?: number;
   result?: string;
@@ -38,49 +43,61 @@ export interface INotification extends INoticiationData {
 }
 
 export const notifications: INotification[] = [];
-let lastNotification: INoticiationData | null = null;  // 마지막 알림을 추적하기 위한 변수
+let lastNotification: INoticiationData | null = null;
 
-export const serveNotifications = (req: Request, res: Response) => {
+export const serveNotifications = async (req: Request, res: Response) => {
   try {
     const userId = req.query.userId;
-    console.log("userId", userId)
-    let userIdBuffer: Buffer;
-    if (typeof userId === "string") {
-      userIdBuffer = Buffer.from(userId, "hex");
-      console.log("userIdBuffer", userIdBuffer)
-    }
 
     res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
     });
 
+    // const sendNotifications = async () => {
+    //   if (notifications.length) {
+    //     await createNotification(notifications);
+    //     notifications.forEach((notification) => {
+    //       if (notification && userId && userId === notification.receiver) {
+    //         const notificationData = JSON.stringify({
+    //           type: notification.type,
+    //           sender: notification.sender,
+    //           url: notification.url,
+    //           timestamp: notification.timestamp
+    //         })
+    //         res.write(`data: ${notificationData}\n\n`);
+    //       }
+    //     });
+    //     notifications.length = 0;
+    //   } else {
+    //     res.write('\n\n');
+    //   }
+    // };
+
     const sendNotifications = async () => {
-      // console.log(notifications)
       if (notifications.length) {
         await createNotification(notifications);
         notifications.forEach((notification) => {
-          if (notification && userId && userIdBuffer.equals(notification.receiver)) {
+          if (notification && userId && userId === notification.receiver) {
             const notificationData = JSON.stringify({
               type: notification.type,
               sender: notification.sender,
               url: notification.url,
-              timestamp: notification.timestamp
-            })
+              timestamp: notification.timestamp,
+            });
             res.write(`data: ${notificationData}\n\n`);
           }
         });
         notifications.length = 0;
       } else {
-        res.write('\n\n');
+        res.write("\n\n");
       }
     };
 
-    const intervalid = setInterval(sendNotifications, Number(process.env.NOTIFICATION_INTERVAL) || 5000);
+    const intervalid = setInterval(sendNotifications, 2000);
 
-    req.on('close', () => clearInterval(intervalid));
-
+    req.on("close", () => clearInterval(intervalid));
   } catch (error) {
     console.error(error);
     handleControllerError(error, res);
@@ -93,20 +110,21 @@ const timestampObject = () => {
   const timestamp = new Date();
 
   return {
-    timestamp: timestamp.toISOString()
+    timestamp: timestamp.toISOString(),
   };
 };
 
 export const notify = (data: INoticiationData) => {
   // 동일한 알림이 아닌지 확인하는 로직
-  if (lastNotification &&
+  if (
+    lastNotification &&
     lastNotification.type === data.type &&
-    lastNotification.receiver.equals(data.receiver) &&
-    lastNotification.sender.equals(data.sender) &&
+    lastNotification.receiver === data.receiver &&
+    lastNotification.sender === data.sender &&
     lastNotification.url === data.url &&
     lastNotification.commentId === data.commentId &&
-    lastNotification.result === data.result) {
-    console.log("중복된 알림이므로 생성하지 않습니다.");
+    lastNotification.result === data.result
+  ) {
     return;
   }
   const timestamp = timestampObject();
@@ -115,8 +133,12 @@ export const notify = (data: INoticiationData) => {
 };
 
 export const updateNotifications = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = await getUserId();
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     updateNotificationsIsReadByReceiver(userId);
 
     return res.status(StatusCodes.OK);
@@ -125,67 +147,47 @@ export const updateNotifications = async (req: Request, res: Response) => {
   }
 };
 
-export const notifyNewPostToFriends = async (
-  userId: Buffer,
-  categoryId: TCategoryId,
-  postId: number,
-) => {
+export const notifyNewPostToFriends = async (userId: Buffer, categoryId: TCategoryId, postId: number) => {
   const friends = await getFriendList(userId);
 
-  friends.forEach((friend) => notify({
-    type: "newPost",
-    receiver: friend.followingId,
-    sender: userId,
-    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`
-  }));
+  friends.forEach((friend) =>
+    notify({
+      type: "newPost",
+      receiver: friend.followingId.toString("hex"),
+      sender: userId.toString("hex"),
+      url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`,
+    })
+  );
 };
 
-export const notifyNewComment = async (
-  userId: Buffer,
-  categoryId: TCategoryId,
-  postId: number,
-  cursor: number
-) => {
+export const notifyNewComment = async (userId: Buffer, categoryId: TCategoryId, postId: number, cursor: number) => {
   const postAuthor = await getPostAuthorUuid(categoryId, postId);
   notify({
     type: "comment",
-    receiver: postAuthor,
-    sender: userId,
-    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}/comments?cursor=${cursor}` //프론트 url에 맞출 것
+    receiver: postAuthor.toString("hex"),
+    sender: userId.toString("hex"),
+    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}/comments?cursor=${cursor}`, //프론트 url에 맞출 것
   });
 };
 
-export const notifyNewLike = async (
-  userId: Buffer,
-  categoryId: TCategoryId,
-  postId: number,
-) => {
+export const notifyNewLike = async (userId: Buffer, categoryId: TCategoryId, postId: number) => {
   const postAuthor = await getPostAuthorUuid(categoryId, postId);
   notify({
     type: "like",
-    receiver: postAuthor,
-    sender: userId,
-    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}` //프론트 url에 맞출 것
+    receiver: postAuthor.toString("hex"),
+    sender: userId.toString("hex"),
+    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`, //프론트 url에 맞출 것
   });
 };
 
-// export const getNotifitionList = async (
-//   req: Request, res: Response
-// ) => {
-//   try {
-//     const userId = await getUserId2();
-//     const notifications = await getNotificationListByReceiver(userId, 10);
-//     res.status(StatusCodes.OK).send(notifications);
-//   } catch (error) {
-//     console.log(error)
-//   }
-
-// };
-
 export const getNotificationList = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const limit = 10;
-    const userId = await getUserId2(); //NOTE
     let notifications = await getNotificationListByReceiver(userId, limit);
     const count = await getNotificationsCount();
 
@@ -195,8 +197,8 @@ export const getNotificationList = async (req: Request, res: Response) => {
       notifications,
       pagination: {
         nextCursor,
-        totalCount: count
-      }
+        totalCount: count,
+      },
     };
 
     res.status(StatusCodes.OK).send(result);
@@ -204,20 +206,22 @@ export const getNotificationList = async (req: Request, res: Response) => {
     await updateNotificationsIsReadByReceiver(userId);
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
-  }
-}
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+  } 
+};
 
 export const getIsAllNotificationRead = async (req: Request, res: Response) => {
+  const uuid = req.user?.uuid;
   try {
-    const userId = await getUserId2();
+    if (!uuid) {
+      throw new Error("User UUID is missing.");
+    }
+    const userId = Buffer.from(uuid, "hex");
     const latest = await getLatestNotificationByReceiver(userId);
     const isAllRead = latest?.isRead;
 
-    res.status(StatusCodes.OK).json({ isAllRead })
+    res.status(StatusCodes.OK).json({ isAllRead });
   } catch (error) {
     console.error(error);
-  }
-}
+  } 
+};

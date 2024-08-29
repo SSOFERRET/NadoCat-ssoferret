@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getMyPosts } from "../../../api/user.api";
 import { useAuthStore } from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
 import PostEmpty from "../../communityAndEvent/PostEmpty";
+import { formatAgo, formatViews } from "../../../utils/format/format";
 
 export interface MyPostsProps {
   title: string;
@@ -27,9 +28,11 @@ export const MyPosts = () => {
     const fetchPosts = async () => {
       try {
         const data = await getMyPosts(uuid);
-        setPosts((prevPosts) => [...prevPosts, ...data]);
-        if (data.length < 10) {
-          setAddPage(false);
+        if (data) {
+          setPosts((prevPosts) => [...prevPosts, ...data]);
+          if (data.length < 10) {
+            setAddPage(false);
+          }
         }
       } catch (error) {
         console.error("작성한 글을 가져오는 중 오류 발생:", error);
@@ -59,64 +62,70 @@ export const MyPosts = () => {
     };
   }, [addPage]);
 
-  const dateChanger = (isoString: string) => {
-    const date = new Date(isoString);
-    return date.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-  }
+  // const dateChanger = (isoString: string) => {
+  //   const date = new Date(isoString);
+  //   return date.toLocaleDateString("ko-KR", {
+  //     year: "numeric",
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //   });
+  // };
+
 
   return (
     <>
-  <ul className="list">
-  {posts.length > 0 ? (
-        posts.map((post, index) =>
-          index === posts.length - 1 ? (
-            <li
-              key={index}
-              className="postBox"
-              onClick={() => navigate(`/boards/communities/${post.postId}`)}
-              ref={lastPostElementRef}
-            >
-              <div className="post-item">
-                <h3 className="title">{post.title}</h3>
-                <p className="contents">{post.content}</p>
-                <p className="time">
-                  {dateChanger(post.updatedAt)} • 조회 {post.views}
-                </p>
-              </div>
-              {post.thumbnail && (
-                <div className="postsImg">
-                  <img className="img" src={post.thumbnail} alt="thumbnail" />
+      <ul className="myPosts-list">
+        {posts.length > 0 ? (
+          posts.map((post, index) =>
+            index === posts.length - 1 ? (
+
+              <li key={post.postId} className="board-post" onClick={() => navigate(`/boards/communities/${post.postId}`)}>
+
+                <div className="board-post-info">
+                  <div className="post-title-container">
+                    <span className="post-title">{post.title}</span>
+                  </div>
+
+                  <span className="post-content">{post.content}</span>
+
+                  <div className="post-meta">
+                    <span>{formatAgo(post.updatedAt)}</span>
+                    <span>&middot;</span>
+                    <span className="post-views">
+                      조회 {formatViews(post.views)}
+                    </span>
+                  </div>
                 </div>
-              )}
-            </li>
-          ) : (
-            <li
-              key={index}
-              className="postBox"
-              onClick={() => navigate(`/boards/communities/${post.postId}`)}
-            >
-              <div className="post-item">
-                <h3 className="title">{post.title}</h3>
-                <p className="contents">{post.content}</p>
-                <p className="time">
-                  {dateChanger(post.updatedAt)} • 조회 {post.views}
-                </p>
-              </div>
-              {post.thumbnail && (
-                <div className="postsImg">
-                  <img className="img" src={post.thumbnail} alt="thumbnail" />
+
+                <div className="post-image">{post.thumbnail && <img src={post.thumbnail} alt={post.title} />}</div>
+              </li>
+            ) : (
+              <li key={post.postId} className="board-post" onClick={() => navigate(`/boards/communities/${post.postId}`)}>
+
+                <div className="board-post-info">
+                  <div className="post-title-container">
+                    <span className="post-title">{post.title}</span>
+                  </div>
+
+                  <span className="post-content">{post.content}</span>
+
+                  <div className="post-meta">
+                    <span>{formatAgo(post.updatedAt)}</span>
+                    <span>&middot;</span>
+                    <span className="post-views">
+                      조회 {formatViews(post.views)}
+                    </span>
+                  </div>
                 </div>
-              )}
-            </li>
+
+                <div className="post-image">{post.thumbnail && <img src={post.thumbnail} alt={post.title} />}</div>
+
+              </li>
+            )
           )
-        )
-      ) : (
-        <PostEmpty />
-      )}
+        ) : (
+          <PostEmpty />
+        )}
       </ul>
     </>
   );

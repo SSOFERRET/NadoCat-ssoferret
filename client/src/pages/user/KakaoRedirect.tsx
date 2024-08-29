@@ -22,10 +22,9 @@ const KakaoRedirect = () => {
         } else {
           console.error("uuid를 찾을 수 없습니다.");
         }
-        
       } catch (error) {
         console.error("카카오 로그인 중 오류 발생:", error);
-        navigate("/users/login");  
+        navigate("/users/login");
       }
     };
 
@@ -33,9 +32,8 @@ const KakaoRedirect = () => {
    }, [navigate, uuid]);
 
 
-  return (
-    <div>카카오 로그인 처리 중...</div>
-  )
-}
 
-export default KakaoRedirect
+  return <div>카카오 로그인 처리 중...</div>;
+};
+
+export default KakaoRedirect;

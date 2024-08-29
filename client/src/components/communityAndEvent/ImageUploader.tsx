@@ -4,10 +4,6 @@ import { useThrottle } from "../../hooks/useThrottle";
 import { AiOutlinePlus } from "react-icons/ai";
 import DeleteButton from "../../assets/img/delete_button.svg";
 
-//CHECKLIST
-// [x] 로컬 이미지와 서버에서 받아온 이미지를 둘다 보여주기
-// [x] 로컬 이미지 배열에 저장
-// [x] 로컬 이미지가 삭제 되면 필터링
 interface IProps<T> {
   newImages: T[];
   setNewImageFiles: <T extends string | File>(images: T[]) => void;

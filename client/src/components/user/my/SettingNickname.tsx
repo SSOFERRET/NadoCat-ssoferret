@@ -21,9 +21,7 @@ const SettingNickname = () => {
   } = useForm<SettingNicknameProps>();
 
   const handleNickname = async (data: SettingNicknameProps) => {
-    const result = await updateNickname(data);
-    console.log("닉네임이 변경되었습니다:", result);
-
+    await updateNickname(data);
     navigate("/users/my");
   };
 

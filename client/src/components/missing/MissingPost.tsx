@@ -26,7 +26,12 @@ const MissingPost = ({ post }: IProps) => {
 
   return (
     <>
-      <section className="missing-post-box">
+      <section className="missing-post-box ">
+        {(post as IMissing).found && (
+          <div className="found-overlay">
+            <span>수색종료</span>
+          </div>
+        )}
         <PostAbstract post={post} showMenu={showMenu} />
       </section>
       <PostMenu

@@ -17,7 +17,6 @@ export const useKakao = () => {
             if (code) {
                 axios.get(`/auth/kakao/callback?code=${code}`)
                     .then((response) => {
-                        console.log("로그인 성공: ", response.data);
 
                         const { accessToken/*, refreshToken*/ } = response.data.tokens;
                         storeLogin(accessToken, false); // <= 인수 필요하다고 해서 일단 false 입력했습니다.
@@ -30,7 +29,7 @@ export const useKakao = () => {
                         navigate("/signup");//홈으로 수정
 
                     }).catch((error) => {
-                        console.log("로그인 오류:", error);
+                        console.error("로그인 오류:", error);
                     });
             }
         }

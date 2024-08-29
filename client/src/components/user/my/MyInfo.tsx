@@ -30,6 +30,7 @@ const MyInfo = ({
   console.log("MyInfo의 uuid:", uuid);
   console.log("My의 userData:", userData);
   const [isOpenModal, setIsOpenModal] = useState(false); 
+
   const [avatarUrl, setAvatarUrl] = useState(profileImageUrl);
   const navigate = useNavigate();
 
@@ -48,8 +49,7 @@ const MyInfo = ({
   };
 
   const handleDefaultImage = async () => {
-    const defaultImageUrl =
-      "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
+    const defaultImageUrl = "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
     await deleteProfile(defaultImageUrl);
     setAvatarUrl(defaultImageUrl);
     setIsOpenModal(false);
@@ -66,20 +66,13 @@ const MyInfo = ({
   return (
     <>
       <div className="info-container">
-        <Avatar
-          size="lg"
-          nickname={nickname}
-          profileImage={avatarUrl}
-          onClick={onAvatarClick}
-        />
+        <Avatar size="lg" nickname={nickname} profileImage={avatarUrl} onClick={onAvatarClick} />
 
         <div className={`nickname-container ${isMyPage ? "my-page" : "user-page"}`}>
           <div className="nickname-text">
             <span>{nickname}</span>
             <span>님</span>
-            
           </div>
-
 
           {!isMyPage && (
             <div className="btn-set">
@@ -90,18 +83,18 @@ const MyInfo = ({
             </div>
           )}
         </div>
-        
-          {isMyPage && (
-            <button
-              className="settings-button"
-              onClick={() => {
-                handelMenu();
-                ("프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.");
-              }}
-            >
-              <AiOutlineSetting />
-            </button>
-          )}
+
+        {isMyPage && (
+          <button
+            className="settings-button"
+            onClick={() => {
+              handelMenu();
+              ("프로필 설정 페이지 경로로 이동하게 설정, 함수를 외부에서 받아오면 이 컴포넌트 다양하게 사용 가능합니다.");
+            }}
+          >
+            <AiOutlineSetting />
+          </button>
+        )}
       </div>
 
       <PostMenu

@@ -16,16 +16,13 @@ export const createClient = (config?: AxiosRequestConfig) => {
     ...config,
   });
 
-  //[ ]수정2
   axiosInstance.interceptors.request.use(
     (config) => {
-    
-      console.log("HTTP 요청:", config); 
       return config;
     },
 
     (error: AxiosError) => {
-      console.error("요청 에러:", error);
+      // console.error("요청 에러:", error);
       return Promise.reject(error);
     }
   );
@@ -33,7 +30,6 @@ export const createClient = (config?: AxiosRequestConfig) => {
   //[ ]수정3
   axiosInstance.interceptors.response.use(
     (response) => {
-      console.log("HTTP 응답:", response); 
       return response;
     },
 
@@ -43,7 +39,6 @@ export const createClient = (config?: AxiosRequestConfig) => {
       const {uuid} = useAuthStore();
 
       if (error.response && error.response.status === 401) {
-        console.log("401 Unauthorized - 토큰만료");
 
         const originalRequest = error.config;
         if (!error.config._retry) {
@@ -62,7 +57,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
             }
 
           } catch (error) {
-            if(uuid){
+            if (uuid) {
               console.error("토큰 재발급 실패:", error);
               alert("세션이 만료되었습니다. 로그인 화면으로 이동합니다!");
               await storeLogout(uuid);
@@ -78,6 +73,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
               window.location.href = "/users/login";
               return Promise.reject(error);
             }
+      
         }
       }
       return Promise.reject(error);

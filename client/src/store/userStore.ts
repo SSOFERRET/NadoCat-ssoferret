@@ -12,7 +12,6 @@ export interface StoreState {
 }
 
 
-
 export const useAuthStore = create<StoreState>((set) => ({
   isLoggedIn: false,
   isAutoLogin: false,
@@ -29,6 +28,7 @@ export const useAuthStore = create<StoreState>((set) => ({
       } catch (error) {
       console.error("서버로 데이터 전송 중 오류 발생:::::::", error);
     }
+
   },
 
   storeAutoLogin: (isAutoLogin: boolean) => {
@@ -40,7 +40,6 @@ export const useAuthStore = create<StoreState>((set) => ({
       await logout(uuid); 
       set({ isLoggedIn: false, isAutoLogin: false, uuid: "" });
 
-      console.log("로그아웃 성공!");
     } catch (error) {
       console.error("로그아웃 중 오류 발생:", error);
     }

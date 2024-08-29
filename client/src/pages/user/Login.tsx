@@ -39,13 +39,11 @@ const Login = () => {
   const { storeLogin } = useAuthStore();
   console.log("storeLogin:::", storeLogin);
 
+
   const handleLogin = async (data: LoginProps) => {
     try {
       const response = await login({ ...data, autoLogin });
-      const { user, tokens } = response;
-      console.log("전체 response:", response);
-      console.log("response.generalToken:", tokens.accessToken);
-      console.log("response.uuid:", user.uuid);
+      const { user /*, tokens*/ } = response;
 
       useAuthStore.getState().storeLogin(user.uuid, autoLogin, true);
       navigate("/");
@@ -70,7 +68,6 @@ const Login = () => {
   useEffect(() => {
     setFocus("email");
   }, [setFocus]);
-
 
   return (
     <div className="login-container">

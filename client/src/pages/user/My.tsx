@@ -19,7 +19,6 @@ export interface MyProps {
 
 export const My = () => {
   const navigate = useNavigate();
-
   const { uuid } = useAuthStore();
   const [userData, setUserData] = useState<MyProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,7 +26,6 @@ export const My = () => {
 
   const currentUrl = window.location.pathname;
   const currentUuid = currentUrl.split("/").pop(); 
-  console.log("currentUuid::", currentUuid);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -43,6 +41,7 @@ export const My = () => {
           const response =  currentUuid === "my" ? await myPage() : await userPage(currentUuid);
             setUserData(response.user);
             setIsMypage(currentUuid === "my" || currentUuid === uuid ? true : false);
+
         }
       } catch (error) {
         console.error("마이페이지 정보를 가져오는 데 실패했습니다: ", error);
@@ -80,13 +79,13 @@ export const My = () => {
             profileImageUrl={userData.profileImageUrl}
             uuid={userData.uuid}
             onAvatarClick={handleAvatarClick}
-
             isMyPage={isMypage} 
+
             userData={userData}
           />
 
           <p>{userData.detail}</p>
-          <MyTab />
+          <MyTab isMyPage={isMypage} />
         </div>
       )}
     </>

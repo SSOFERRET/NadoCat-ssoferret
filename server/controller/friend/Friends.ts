@@ -32,7 +32,7 @@ export const followings = async (req: Request, res: Response) => {
     });
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const getFollowing = async (req: Request, res: Response) => {
@@ -51,7 +51,7 @@ export const getFollowing = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json(friend);
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const follow = async (req: Request, res: Response) => {
@@ -70,16 +70,16 @@ export const follow = async (req: Request, res: Response) => {
 
       notify({
         type: "follow",
-        receiver: followingId,
-        sender: userId,
-        url: `/users/${followingId}/profile`,
+        receiver: req.params.following_id,
+        sender: uuid,
+        url: `/users/user/${req.params.following_id}`,
       });
     });
 
     res.status(StatusCodes.CREATED).json({ message: "친구 추가가 완료되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const unfollow = async (req: Request, res: Response) => {
@@ -106,5 +106,5 @@ export const unfollow = async (req: Request, res: Response) => {
     res.sendStatus(StatusCodes.NO_CONTENT);
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };

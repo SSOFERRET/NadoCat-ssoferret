@@ -29,13 +29,6 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 
-// CHECKLIST
-// [x] 이벤트 게시판 게시글 목록 가져오기
-// [x] 페이지네이션 구현
-// [x] 정렬 구현
-// [ ] 좋아요 수와 좋아요 여부 구현 -> 정렬하려면 필요할지도..?
-// [ ] 에러처리
-
 export const getEvents = async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 5;
@@ -59,13 +52,9 @@ export const getEvents = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
-  }
+  } 
 };
 
-// CHECKLIST
-// [x] 이벤트 게시판 게시글 가져오기
-// [x] 좋아요 관련 부분 코드 분리
-// [ ] 에러처리
 export const getEvent = async (req: Request, res: Response) => {
   const uuid = req.headers["x-uuid"] as string;
   try {
@@ -92,21 +81,16 @@ export const getEvent = async (req: Request, res: Response) => {
         liked: !!liked,
       };
 
-      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
+      const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.EVENTS, postId);
       post.views += viewIncrementResult || 0;
     });
 
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
-// CHECKLIST
-// [x] 이미지 저장 구현
-// [x] 이벤트 게시판 게시글 등록
-// [ ] 예외 처리
-// [ ] 에러처리
 export const createEvent = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
   try {
@@ -157,7 +141,6 @@ export const createEvent = async (req: Request, res: Response) => {
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
-
   } catch (error) {
     console.error(error);
     if (error instanceof Prisma.PrismaClientValidationError) {
@@ -167,10 +150,6 @@ export const createEvent = async (req: Request, res: Response) => {
   }
 };
 
-// CHECKLIST
-// [x] 이벤트 게시판 게시글 수정
-// [x] 이미지 업로드 구현
-// [ ] 에러처리
 export const updateEvent = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
   try {
@@ -181,7 +160,6 @@ export const updateEvent = async (req: Request, res: Response) => {
     const postId = Number(req.params.event_id);
 
     const { title, content, tags, deleteTagIds, deleteImageIds, isClosed } = req.body;
-    console.log(req.body)
 
     if (!title || !content || !tags || !deleteTagIds || !deleteImageIds) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "입력값을 확인해 주세요." });
@@ -231,19 +209,14 @@ export const updateEvent = async (req: Request, res: Response) => {
       await removeImagesByIds(tx, imageIds);
 
       await deleteImages(tx, imageIds);
-
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
-// CHECKLIST
-// [x] 이벤트 게시판 게시글 삭제
-// [x] 관련 댓글 삭제
-// [ ] 에러처리
 export const deleteEvent = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
   try {
@@ -282,7 +255,6 @@ export const deleteEvent = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeEventById(tx, postId, userId);
-
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });

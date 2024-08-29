@@ -25,6 +25,7 @@ const Notification = () => {
   //     fetchNextPage();
   //   }
   // });
+  console.log(data);
 
   return (
     <section className="notification-container">

@@ -4,8 +4,17 @@ import { INotification } from "../controller/notification/Notifications";
 import { IListData } from "../types/post";
 
 export const createNotification = async (notifications: INotification[]) => {
+  const newNotifications = notifications.map((notification) => {
+    const receiver = Buffer.from(notification.receiver, "hex");
+    const sender = Buffer.from(notification.sender, "hex");
+    return {
+      ...notification,
+      receiver,
+      sender
+    }
+  })
   return await prisma.notifications.createMany({
-    data: notifications
+    data: newNotifications
   })
 }
 

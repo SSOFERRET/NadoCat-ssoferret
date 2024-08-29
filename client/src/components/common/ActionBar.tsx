@@ -6,6 +6,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { GoHeartFill } from "react-icons/go";
 import {useNavigate} from "react-router-dom"; 
 import { useAuthStore } from "../../store/userStore";
+import { useEffect } from "react";
 
 interface IProps {
   userInfo: IPostUserInfo;
@@ -14,6 +15,7 @@ interface IProps {
   toggleLike: () => void;
   liked: boolean;
 }
+
 
 const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
   const {uuid} = useAuthStore(); 
@@ -28,7 +30,9 @@ const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps
       }else{
         navigate(`/users/user/${userInfo.uuid}`); 
       }
+
     }
+  };
 
   return (
     <div className="action-bar">
@@ -39,9 +43,12 @@ const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps
           <span className="date">{formatDate(createdAt)}</span>
         </div>
         <div className="post-buttons">
-          <button className={`post-like ${liked ? "like" : "dislike"}`} onClick={() =>{
-            uuid ? toggleLike() : navigate('/users/login')
-          }}>
+          <button
+            className={`post-like ${liked ? "like" : "dislike"}`}
+            onClick={() => {
+              uuid ? toggleLike() : navigate("/users/login");
+            }}
+          >
             <GoHeartFill />
           </button>
 

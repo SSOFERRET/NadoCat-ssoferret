@@ -1,4 +1,7 @@
-import { /*IMissing,*/ IMissing, IMissingReport } from "../../models/missing.model";
+import {
+  /*IMissing,*/ IMissing,
+  IMissingReport,
+} from "../../models/missing.model";
 import "./../../styles/scss/components/missing/missingReportPost.scss";
 import PostHead from "./missingPost/PostHead";
 import PostSummary from "./common/PostSummary";
@@ -24,7 +27,6 @@ const MissingReportPost = ({ post, missing }: IProps) => {
 
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);
-    console.log("show?", isShowMenu);
   };
   const loginUser = uuid || "";
   const postId = Number(useParams().id);
@@ -39,7 +41,6 @@ const MissingReportPost = ({ post, missing }: IProps) => {
   };
 
   const handleImageModal = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log(e.target === e.currentTarget);
     if (e.target === e.currentTarget) {
       setIsOpenModal((prev) => !prev);
     }
@@ -52,7 +53,10 @@ const MissingReportPost = ({ post, missing }: IProps) => {
         <div className="image-map">
           <div className="image-container" onClick={openImageModal}>
             {post.images.length > 0 ? (
-              <img src={post.images[0].url} alt={post.images[0].imageId.toString()} />
+              <img
+                src={post.images[0].url}
+                alt={post.images[0].imageId.toString()}
+              />
             ) : (
               <img src={defaultImage} />
             )}
@@ -87,7 +91,11 @@ const MissingReportPost = ({ post, missing }: IProps) => {
               </button>
             </div>
             <div className="image-box">
-              <ImageCarousel isDots={false} images={post.images} round="round-0" />
+              <ImageCarousel
+                isDots={false}
+                images={post.images}
+                round="round-0"
+              />
             </div>
           </div>
         </div>

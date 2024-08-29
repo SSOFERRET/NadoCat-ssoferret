@@ -10,11 +10,8 @@ import {
 import { handleControllerError } from "../../util/errors/errors";
 import { notifyNewComment } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
+import prisma from "../../client";
 
-//  CHECKLIST
-// [x] model 코드 분리
-// [] 에러처리 자세하게 구현하기
-// [] 사용자 정보 받아오는 부분 구현 필요
 export const getComments = async (req: Request, res: Response) => {
   try {
     const postId = Number(req.params.community_id);
@@ -38,7 +35,7 @@ export const getComments = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const createComment = async (req: Request, res: Response) => {
@@ -63,7 +60,7 @@ export const createComment = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const updateComment = async (req: Request, res: Response) => {
@@ -86,7 +83,7 @@ export const updateComment = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "댓글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const deleteComment = async (req: Request, res: Response) => {
@@ -104,5 +101,5 @@ export const deleteComment = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "댓글이 삭제되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };

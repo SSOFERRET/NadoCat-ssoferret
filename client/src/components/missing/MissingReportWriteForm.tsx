@@ -1,10 +1,10 @@
-import { BiCheck } from "react-icons/bi";
 import "../../styles/scss/pages/streetCat/streetCatWrite.scss";
 import ImageUploader from "../communityAndEvent/ImageUploader";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Calendar from "../streetCat/Calendar";
 import LocationForm from "../streetCat/LocationForm";
 import { formatDateTime } from "./MissingWriteForm";
+import CustomSelect from "./reportPost/CustomSelect";
 
 interface IMissingWriteFormProps {
   onSubmit: (formData: FormData) => void;
@@ -106,6 +106,10 @@ const MissingReportWriteForm: React.FC<IMissingWriteFormProps> = ({
     onSubmit(formData);
   };
 
+  const ampmOptions = ["오전", "오후"];
+  const hourOptions = new Array(12).fill(0).map((_, index) => `${index + 1}`);
+  const minuteOptions = new Array(6).fill(0).map((_, index) => `${index}0`);
+
   return (
     <>
       <ImageUploader
@@ -125,50 +129,26 @@ const MissingReportWriteForm: React.FC<IMissingWriteFormProps> = ({
           </div>
 
           <div className="write-form time">
-            <input
-              id="gender_female"
-              type="radio"
-              name="ampm"
-              value="오전"
-              checked={selectedAmPm === "오전"}
-              onChange={(e) => setSelectedAmPm(e.target.value)}
+            <CustomSelect
+              options={ampmOptions}
+              selectedValue={selectedAmPm}
+              onSelect={setSelectedAmPm}
+              placeholder="Select AM/PM"
             />
-            <label htmlFor="gender_female">
-              <BiCheck />
-              오전
-            </label>
-            <input
-              id="gender_female"
-              type="radio"
-              name="ampm"
-              value="오후"
-              checked={selectedAmPm === "오후"}
-              onChange={(e) => setSelectedAmPm(e.target.value)}
+
+            <CustomSelect
+              options={hourOptions}
+              selectedValue={selectedHour}
+              onSelect={setSelectedHour}
+              placeholder="Select Hour"
             />
-            <label htmlFor="gender_female">
-              <BiCheck />
-              오후
-            </label>
-            <select
-              value={selectedHour}
-              onChange={(e) => setSelectedHour(e.target.value)}
-            >
-              {new Array(12).fill(0).map((_, index) => (
-                <option key={`hour-${index + 1}`} value={`${index + 1}`}>
-                  {index + 1}
-                </option>
-              ))}
-            </select>
-            <select
-              value={selectedMinute}
-              onChange={(e) => setSelectedMinute(e.target.value)}
-            >
-              {new Array(6).fill(0).map((_, index) => (
-                <option key={`minute-${index}0`} value={`${index}0`}>
-                  {`${index}0`}
-                </option>
-              ))}
-            </select>
+
+            <CustomSelect
+              options={minuteOptions}
+              selectedValue={selectedMinute}
+              onSelect={setSelectedMinute}
+              placeholder="Select Minute"
+            />
           </div>
 
           <div className="write-form location">

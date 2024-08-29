@@ -111,7 +111,6 @@ const Search = () => {
   };
 
   const selectKeyword = (selectedKeyword: string) => {
-    console.log(selectedKeyword);
     setKeyword("");
     setKeyword(selectedKeyword);
   };

@@ -113,13 +113,10 @@ export const useDeleteComment = () => {
 };
 
 // export const useReadStreetMap = () => {
-//   console.log("use - useReadStreetMap()")
 //   const {data} = useQuery({
 //     queryKey: ["streetCatMap"],
 //     queryFn: () => getStreetCatMap()
 //   });
-
-//   console.log("use", data)
 
 //   return {
 //     data

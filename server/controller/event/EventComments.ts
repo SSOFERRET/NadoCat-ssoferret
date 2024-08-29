@@ -10,6 +10,7 @@ import { StatusCodes } from "http-status-codes";
 import { handleControllerError } from "../../util/errors/errors";
 import { notifyNewComment } from "../notification/Notifications";
 import { CATEGORY } from "../../constants/category";
+import prisma from "../../client";
 
 export const getComments = async (req: Request, res: Response) => {
   try {
@@ -33,7 +34,7 @@ export const getComments = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const createComment = async (req: Request, res: Response) => {
@@ -58,7 +59,7 @@ export const createComment = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "댓글이 등록되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const updateComment = async (req: Request, res: Response) => {
@@ -81,7 +82,7 @@ export const updateComment = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "댓글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  }
+  } 
 };
 
 export const deleteComment = async (req: Request, res: Response) => {
