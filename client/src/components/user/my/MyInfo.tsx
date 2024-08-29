@@ -19,8 +19,18 @@ export interface MyInfoProps {
   userData: MyProps; // userData를 추가
 }
 
-const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick, isMyPage, userData }: MyInfoProps) => {
-  const [isOpenModal, setIsOpenModal] = useState(false); //모달 여닫는거 저장
+const MyInfo = ({
+  nickname,
+  uuid,
+  profileImageUrl,
+  onAvatarClick,
+  isMyPage,
+  userData,
+}: MyInfoProps) => {
+  console.log("MyInfo의 uuid:", uuid);
+  console.log("My의 userData:", userData);
+  const [isOpenModal, setIsOpenModal] = useState(false); 
+
   const [avatarUrl, setAvatarUrl] = useState(profileImageUrl);
   const navigate = useNavigate();
 
@@ -28,19 +38,16 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick, isMyPage, user
     setIsOpenModal((prev) => !prev);
   };
 
-  //사진 업로드
   const handleImageUpload = async (file: File) => {
     try {
       const newImageUrl = await uploadProfile(file);
-      // setAvatarUrl(newImageUrl);
-      setAvatarUrl(`${newImageUrl}?timestamp=${new Date().getTime()}`); //이미지 캐싱방지
+      setAvatarUrl(`${newImageUrl}?timestamp=${new Date().getTime()}`); 
       setIsOpenModal(false);
     } catch (error) {
       console.error("프로필 업로드 에러: ", error);
     }
   };
 
-  //기본이미지 변경
   const handleDefaultImage = async () => {
     const defaultImageUrl = "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
     await deleteProfile(defaultImageUrl);
@@ -52,7 +59,6 @@ const MyInfo = ({ nickname, uuid, profileImageUrl, onAvatarClick, isMyPage, user
     setAvatarUrl(profileImageUrl);
   }, [profileImageUrl]);
 
-  //채팅 연결
   const handleSendToChat = () => {
     navigate("/chats/chat", { state: { userData: userData } });
   };

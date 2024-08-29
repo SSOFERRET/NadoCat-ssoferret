@@ -13,6 +13,7 @@ import { useDeleteMissingReport } from "../../hooks/useMissingReport";
 import defaultImage from "../../assets/img/heartCat.png";
 import ImageCarousel from "../common/ImageCarousel";
 import { RxCross1 } from "react-icons/rx";
+import { useAuthStore } from "../../store/userStore";
 
 interface IProps {
   post: IMissingReport;
@@ -20,13 +21,14 @@ interface IProps {
 }
 
 const MissingReportPost = ({ post, missing }: IProps) => {
+  const { uuid } = useAuthStore(); 
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);
   };
-  const loginUser = sessionStorage.getItem("uuid") || "";
+  const loginUser = uuid || "";
   const postId = Number(useParams().id);
   const { mutateAsync: deletePost } = useDeleteMissingReport();
 

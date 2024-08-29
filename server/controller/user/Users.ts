@@ -3,7 +3,6 @@ import { StatusCodes } from "http-status-codes";
 import dotenv from "dotenv";
 
 import axios from "axios";
-// import crypto from "crypto";
 import {
   createUser,
   loginUser,
@@ -14,15 +13,13 @@ import {
 } from "../../model/user.model";
 import { IUsers, IUserSecrets } from "../../types/user";
 import prisma from "../../client";
-// import { Request, Response } from "aws-sdk";
+import connectRedis from "../../redis";
 
 dotenv.config();
 
-//[x]회원가입
 export const signup = async (req: Request, res: Response) => {
   const { email, nickname, password } = req.body;
 
-  //DB저장
   try {
     const result = await createUser(email, nickname, password);
 
@@ -45,17 +42,15 @@ export const signup = async (req: Request, res: Response) => {
   } 
 };
 
-//[x]로그인
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
-
-  const isAutoLogin = autoLogin === "true" || autoLogin === true;
-  // const generalTokenMaxAge = parseInt(process.env.GENERAL_TOKEN_MAX_AGE || '300000'); // 5분
-  // const refreshTokenMaxAge = parseInt(process.env.REFRESH_TOKEN_MAX_AGE || "604800000");// 7일
-  const generalTokenMaxAge = 10 * 60 * 1000; // 1분
-  const refreshTokenMaxAge = 60 * 60 * 1000; // 5분
-  
+  const isAutoLogin = (autoLogin === 'true' || autoLogin === true); 
+  const generalTokenMaxAge = parseInt(process.env.GENERAL_TOKEN_MAX_AGE || '28800000'); // 8시간
+  const refreshTokenMaxAge = parseInt(process.env.REFRESH_TOKEN_MAX_AGE || "604800000");// 7일
+  // const generalTokenMaxAge = 1 * 60 * 1000; // 1분
+  // const refreshTokenMaxAge = 3 * 60 * 1000;// 3분
   // const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000;// 7일
+
 
   try {
     const { generalToken, refreshToken, result, userUuidString } = await loginUser(email, password, autoLogin);
@@ -70,7 +65,6 @@ export const login = async (req: Request, res: Response) => {
       maxAge: generalTokenMaxAge,
     });
 
-    //자동로그인시
     if (isAutoLogin) {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -78,7 +72,6 @@ export const login = async (req: Request, res: Response) => {
         maxAge: refreshTokenMaxAge,
       });
 
-      //refresh token DB 저장
       await saveRefreshToken(userUuidString, refreshToken as string);
     }
 
@@ -100,9 +93,8 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-//[x] 액세스 토큰 재발급
 export const getNewAccessToken = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies.refreshToken; //오 이렇게 쓰는구나
+  const refreshToken = req.cookies.refreshToken; 
 
   if (!refreshToken) {
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Refresh token이 존재하지 않습니다." });
@@ -118,7 +110,6 @@ export const getNewAccessToken = async (req: Request, res: Response) => {
   } 
 };
 
-//[x]로그아웃
 export const logout = async (req: Request, res: Response) => {
   try {
     const { uuid } = req.body;
@@ -126,10 +117,8 @@ export const logout = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "UUID가 없습니다." });
     }
 
-    //db에서 refresh token 삭제
     await logoutUser(uuid);
 
-    //클라이언트 쿠키제거
     res.clearCookie("generalToken", { httpOnly: true, secure: true });
     res.clearCookie("refreshToken", { httpOnly: true, secure: true });
     res.clearCookie("uuid", { httpOnly: true, secure: true });
@@ -146,7 +135,6 @@ export const kakao = async (req: Request, res: Response) => {
   const refreshTokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 7일
   const { code } = req.query;
   try {
-    //카카오 토큰 받기
     const tokenResponse = await axios.post(
       process.env.KAKAO_TOKEN_URL as string,
       {},
@@ -163,10 +151,8 @@ export const kakao = async (req: Request, res: Response) => {
       }
     );
     const { access_token } = tokenResponse.data;
+    const userResponse = await axios.get(process.env.KAKAO_USERINFO_URL as string, 
 
-    //사용자 정보 받기
-
-    const userResponse = await axios.get(process.env.KAKAO_USERINFO_URL as string,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -178,8 +164,6 @@ export const kakao = async (req: Request, res: Response) => {
     const kakaoNickname = properties.nickname;
 
     const result = await kakaoUser(kakaoEmail, kakaoNickname);
-
-    // UUID가 undefined인지 확인
     if (!result || !result.uuid) {
       throw new Error("유효하지 않은 사용자입니다.");
     }
@@ -192,7 +176,6 @@ export const kakao = async (req: Request, res: Response) => {
       maxAge: generalTokenMaxAge,
     });
 
-    //자동로그인시
     res.cookie("refreshToken", result.refreshToken, {
       httpOnly: true,
       secure: true,
@@ -209,3 +192,49 @@ export const kakao = async (req: Request, res: Response) => {
     });
   } 
 };
+
+export const storeLoginData = async(req: Request, res: Response) => {
+  const { uuid, isAutoLogin } = req.body;
+  const redisClient = await connectRedis();
+
+  try {
+    await redisClient.set(`uuid:${uuid}`, JSON.stringify({ isAutoLogin }),{
+      EX: isAutoLogin ? 7 * 24 * 60 * 60 : 8 * 60 * 60,  
+    });
+
+    return res.status(StatusCodes.OK).json({ 
+      message: "데이터 저장 성공" ,
+      uuid: uuid
+    }); 
+
+  } catch (error) {
+    console.error("Redis 데이터 저장 중 오류 발생:", error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "서버 오류" });
+  }
+}
+
+export const getUuid = async(req: Request, res: Response) => {
+  const redisClient = await connectRedis();
+  const uuidKey = req.user?.uuid 
+
+  try {
+    console.log(`Fetching uuid with key: uuid:${uuidKey}`); 
+    const uuidData = await redisClient.get(`uuid:${uuidKey}`);
+    if(!uuidData) {
+      console.log("UUID를 찾을 수 없습니다."); 
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "UUID를 찾을 수 없습니다." });
+    }
+
+    console.log(`Fetched uuid data: ${uuidData}`);
+    const uuid = JSON.parse(uuidData).uuid;
+
+    return res.status(StatusCodes.OK).json({ uuid: uuid });
+
+  } catch (error) {
+    console.error("Redis 데이터 저장 중 오류 발생:", error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "서버 오류" });
+  } finally {
+    redisClient.quit(); 
+  }
+}
+

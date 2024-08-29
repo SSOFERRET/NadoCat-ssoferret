@@ -35,14 +35,17 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginProps>();
-  const { storeLogin } = useAuthStore(); //로컬에 UUID저장
+
+  const { storeLogin } = useAuthStore();
+  console.log("storeLogin:::", storeLogin);
+
 
   const handleLogin = async (data: LoginProps) => {
     try {
       const response = await login({ ...data, autoLogin });
       const { user /*, tokens*/ } = response;
 
-      await storeLogin(user.uuid, autoLogin); // 상태 업데이트 후
+      useAuthStore.getState().storeLogin(user.uuid, autoLogin, true);
       navigate("/");
     } catch (error) {
       if (
@@ -114,7 +117,6 @@ const Login = () => {
               />
               자동로그인
             </label>
-            {/* <span>|</span> */}
             <a href="/users/signup" className="signup-link">
               회원가입
             </a>
