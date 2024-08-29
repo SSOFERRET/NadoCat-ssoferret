@@ -331,7 +331,7 @@ export const deleteProfile = async (req: Request, res: Response) => {
   }
 };
 
-//작성글
+//[ ]작성글
 export const getMyPosts = async (req: Request, res: Response) => {
   const userUuid = req.user?.uuid;
   const page = parseInt(req.query.page as string) || 1; // 기본값 1 페이지;

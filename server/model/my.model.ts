@@ -7,6 +7,44 @@ import { addProfileImages } from "../util/images/addNewImages";
 
 const prisma = new PrismaClient();
 
+const selectCommunities = {
+  users: {
+    select: {
+      id: true,
+      uuid: true,
+      nickname: true,
+      profileImage: true,
+    },
+  },
+  communityImages: {
+    take: 1, // 각 게시물의 첫 번째 이미지만 가져옴
+    select: {
+      images: {
+        select: {
+          imageId: true,
+          url: true,
+        },
+      },
+    },
+  },
+  communityTags: {
+    select: {
+      tags: {
+        select: {
+          tagId: true,
+          tag: true,
+        },
+      },
+    },
+  },
+  _count: {
+    select: {
+      communityLikes: true, // 각 게시물의 좋아요 수를 포함
+    },
+  },
+};
+
+
 //[x]사용자 조회
 export const getUser = async (uuid: string) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
@@ -143,11 +181,11 @@ export const updateNewPassword = async (uuid: string, newPassword: string) => {
 };
 
 
-//[ ]회원탈퇴
+//[x]회원탈퇴
 export const deleteUserInactive = async (uuid: string) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
   try {
-    // 사용자 정보 업데이트
+        // 사용자 정보 업데이트
     const updateUser = await prisma.users.update({
       where: {
         uuid: uuidBuffer,
@@ -156,9 +194,9 @@ export const deleteUserInactive = async (uuid: string) => {
         status: "inactive",
       },
     });
-
+    
     return { updateUser };
-
+    
   } catch (error) {
     console.log("회원탈퇴 error:", error);
     throw new Error("회원탈퇴에서 오류 발생");
@@ -167,24 +205,28 @@ export const deleteUserInactive = async (uuid: string) => {
 
 
 //[ ]작성글
-export const getMyAllPosts = async(uuid: string, page: number, pageSize: number) => {
+export const getMyAllPosts = async(uuid: string, page: number, pageSize: number, cursor?: number) => {
   const uuidBuffer = Buffer.from(uuid, "hex"); //바이너리 변환
 
   try {
     //여러 게시판에서 가져오기
-    const posts = await prisma.$queryRaw`
-        SELECT * FROM (
-        SELECT postId, title, content, createdAt FROM communities WHERE uuid = ${uuidBuffer}
-        UNION ALL
-        SELECT postId, title, content, createdAt FROM events WHERE uuid = ${uuidBuffer}
-        UNION ALL
-        SELECT postId, name as title, detail as content, createdAt FROM missing_cats WHERE uuid = ${uuidBuffer}
-        UNION ALL
-        SELECT postId, name as title, content, createdAt FROM street_cats WHERE uuid = ${uuidBuffer}
-      ) AS all_posts
-      ORDER BY createdAt DESC
-      LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize};
-    `;
+       const posts = await prisma.communities.findMany({
+       where: {
+        uuid: uuidBuffer,
+         },
+         take: pageSize, //10 (한번의 요청으로 몇개?)
+         skip: cursor ? 1 : 0, //cursor가 있다면 1 건너뛰고, 아니면 0 건너뜀
+         cursor: cursor ? { postId: cursor } : undefined,
+         orderBy: {
+           createdAt: "desc",
+        },
+         include: selectCommunities,
+    });
+
+    if(!posts || posts.length === 0) {
+      console.log("작성한 글을 찾을 수 없습니다.");
+      return null;
+    }
 
     return posts;
 
@@ -193,6 +235,7 @@ export const getMyAllPosts = async(uuid: string, page: number, pageSize: number)
     throw new Error("작성글 조회에서 오류 발생");
   }
 };
+
 
 //[x]프로필 이미지 저장 로직 추가
 export const addProfileImageFormats = async (
@@ -209,5 +252,5 @@ export const deleteProfileImageFormats = async (
   ) => {
     await deleteProfileImages(imageUrl, uuid);
   };
- 
+  
 
