@@ -28,9 +28,11 @@ export const MyPosts = () => {
     const fetchPosts = async () => {
       try {
         const data = await getMyPosts(uuid);
-        setPosts((prevPosts) => [...prevPosts, ...data]);
-        if (data.length < 10) {
-          setAddPage(false);
+        if (data) {
+          setPosts((prevPosts) => [...prevPosts, ...data]);
+          if (data.length < 10) {
+            setAddPage(false);
+          }
         }
       } catch (error) {
         console.error("작성한 글을 가져오는 중 오류 발생:", error);
@@ -68,6 +70,8 @@ export const MyPosts = () => {
   //     day: "2-digit",
   //   });
   // };
+
+  console.log(posts);
 
   return (
     <>
