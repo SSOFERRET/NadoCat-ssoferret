@@ -1,38 +1,23 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getUuid, useAuthStore } from '../../store/userStore';
+import { useAuthStore } from '../../store/userStore';
 
 const KakaoRedirect = () => {
   const navigate = useNavigate();
   const {storeLogin} = useAuthStore();
-
-  const { uuid: loggedUser } = useAuthStore(); // 현재 로그인한 사용자의 UUID
-  console.log("loggedUser:", loggedUser);
-
-  useEffect(() => { //처음 렌더링시 storedUuid설정
-    const storedUuid = getUuid();
-    console.log("storedUuid::", storedUuid);
-
-  if (!loggedUser && storedUuid) {
-    useAuthStore.setState({ uuid: storedUuid }); // zustand의 상태 업데이트
-  }
-}, [loggedUser]); // loggedUser가 업데이트될 때마다 실행
-
-
+  const { uuid } = useAuthStore();
   useEffect(() => {
-    console.log("카카오 페이지로 왔다");
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-    const uuid = urlParams.get("uuid");  // uuid도 추출해
+    const uuidFromUrl = urlParams.get("uuid"); 
+
     console.log("code:", code);
-    console.log("uuid:", uuid);
-    console.log("urlParams:", urlParams);
     
     const handleKakaoLogin = async() => {
-      console.log("handleKakaoLogin 호출됨"); // 추가된 로그
       try {
-        if (uuid) {
-          storeLogin(uuid, true);
+        const fetchedUuid = uuidFromUrl || uuid;
+        if (fetchedUuid) {
+          storeLogin(fetchedUuid, true, true);
           navigate("/");
         } else {
           console.error("uuid를 찾을 수 없습니다.");
@@ -45,7 +30,7 @@ const KakaoRedirect = () => {
     };
 
     handleKakaoLogin();
-   }, [navigate, storeLogin]);
+   }, [navigate, uuid]);
 
 
   return (

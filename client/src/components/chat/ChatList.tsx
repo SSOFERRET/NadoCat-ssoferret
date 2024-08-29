@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
 import DefaultImg from "../../assets/img/DefaultImg.png";
 import { Buffer } from "buffer";
+import { useAuthStore } from "../../store/userStore";
 
 export interface IList {
   users: {
@@ -32,6 +33,7 @@ interface ChatProps {
 const ChatList: React.FC<ChatProps> = ({ lists }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  const { uuid } = useAuthStore(); 
   const navigate = useNavigate();
   console.log(lists)
   const handleClose = () => {
@@ -44,7 +46,7 @@ const ChatList: React.FC<ChatProps> = ({ lists }) => {
     setModalOpen(true);
   };
   const handleChatClick = (list: IList) => {
-    const uuid = sessionStorage.getItem("uuid");
+    // const uuid = uuid
     const otherUuid = Buffer.from(list.otherUuid.data).toString("hex");
     let realOtherUuid;
     if (uuid === otherUuid) {

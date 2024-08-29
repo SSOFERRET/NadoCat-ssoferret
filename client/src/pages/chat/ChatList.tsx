@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import NoList from "../../assets/img/StartChat.png";
 import { Buffer } from "buffer";
+import { useAuthStore } from "../../store/userStore";
 
 interface IList{
   users: {
@@ -27,13 +28,14 @@ const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 
 const ChatList = () => {
   const [list, setList] = useState<IList[]>([]);
+  const { uuid } = useAuthStore(); 
 
   useEffect(() => {
     const fetchChatLists = async () => {
       try {
         const response = await axios.get(ENDPOINT + "/chats/chatlist", {
           headers: {
-            "x-user-uuid": sessionStorage.getItem("uuid"),
+            "x-user-uuid": uuid,
           },
         });
         const chatLists = response.data;
@@ -43,11 +45,11 @@ const ChatList = () => {
             console.log(
               "otherUuid :",
               Buffer.from(list.otherUuid.data).toString("hex"),
-              sessionStorage.getItem("uuid")
+              uuid
             );
             const otherUuid =
               Buffer.from(list.otherUuid.data).toString("hex") ===
-              sessionStorage.getItem("uuid")
+              uuid
                 ? list.uuid.data
                 : list.otherUuid.data;
             const userResponse = await axios.post(`${ENDPOINT}/chats`, {

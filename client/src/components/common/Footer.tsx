@@ -53,8 +53,6 @@ const links = [
   { to: "/chats/list", label: "채팅", noMatchIcon: <PiChatCircleBold />, matchIcon: <PiChatCircleFill /> },
   { to: "/search", label: "검색", noMatchIcon: <RiSearchLine />, matchIcon: <RiSearchLine /> },
   { to: "/users/my" , label: "My", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
-  // { to: `/users/my/${localStorage.getItem('uuid')}` , label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
-//   { to: `/users/my/:uuid` , label: "마이", noMatchIcon: <BiUser />, matchIcon: <BiSolidUser /> },
 ];
 
 export const Footer: React.FC = () => {

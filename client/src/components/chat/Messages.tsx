@@ -3,6 +3,7 @@ import BasicScrollToBottom from "react-scroll-to-bottom";
 import Message from './Message';
 import "../../styles/scss/components/chat/Messages.scss";
 import { Buffer } from 'buffer';
+import { useAuthStore } from '../../store/userStore';
 export interface MessageData {
   uuid: number[],
   content: string;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const Messages: React.FC<Props> = ({ messages}) => {
+  const { uuid } = useAuthStore(); 
   useEffect(() => {
     console.log(messages);
   }, [messages]);
@@ -22,7 +24,7 @@ const Messages: React.FC<Props> = ({ messages}) => {
     <BasicScrollToBottom className="messages">
       {messages.map((message, index) => (
         <div key={index}>
-          { Buffer.from(message.uuid).toString("hex") === sessionStorage.getItem("uuid") ? 
+          { Buffer.from(message.uuid).toString("hex") === uuid ? 
           <div className="end"><Message message={message} /></div> :
           <div className="start"><Message message={message}/></div>
           }

@@ -1,5 +1,5 @@
 import express from "express";
-import { signup, login, kakao, getNewAccessToken, logout } from "../controller/user/Users";
+import { signup, login, kakao, getNewAccessToken, logout, storeLoginData, getUuid } from "../controller/user/Users";
 import { signupValidator, loginValidator } from "../middleware/validator";
 import {
   updateNickname,
@@ -32,14 +32,15 @@ router.post("/login", loginValidator, login);
 router.post("/logout", ensureAutorization, logout);
 router.post("/refresh-token", getNewAccessToken);
 
-router.get("/auth/kakao/callback", kakao);
-// router.post("/auth/kakao-redirect", kakao);
-// router.get("/auth/google", google);
+router.get("/api/get-uuid", getUuid);
+router.post("/api/store-login", storeLoginData);
 
-router.get("/user/:uuid", ensureAutorization, userPage); //사용자 프로필
-router.get("/my", ensureAutorization, myPage); //마이페이지
+router.get("/auth/kakao/callback", kakao);
+
+router.get("/user/:uuid", ensureAutorization, userPage); 
+router.get("/my", ensureAutorization, myPage); 
 router.get("/my/interests", ensureAutorization , getInterests);
-router.post("/my/myPosts", ensureAutorization , getMyPosts); //[ ]작성글
+router.post("/my/myPosts", ensureAutorization , getMyPosts); 
 
 router.put("/my/setting/nickname", ensureAutorization, updateNickname);
 router.put("/my/setting/detail", ensureAutorization, updateDetail);
@@ -50,13 +51,11 @@ router.put("/my/setting/delete-user", ensureAutorization, deleteUser);
 router.post("/update-profile", ensureAutorization, uploadImages.single("profileImage"), updateProfile);
 router.put("/delete-profile", ensureAutorization, deleteProfile);
 
-// 동네 고양이 도감 즐겨찾기(내 도감)
 router.get("/street-cats", getFavoriteCats);
 router.get("/street-cats/:street_cat_id", getFavoriteCat);
 router.post("/street-cats/:street_cat_id", addFavoriteCat);
 router.delete("/street-cats/:street_cat_id", deleteFavoriteCat);
 
-// 친구 맺기
 router.post("/follows/:following_id", ensureAutorization, follow);
 router.delete("/follows/:following_id", ensureAutorization, unfollow);
 router.get("/follows/:following_id", ensureAutorization, getFollowing);

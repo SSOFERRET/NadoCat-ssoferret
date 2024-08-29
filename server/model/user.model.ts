@@ -3,11 +3,10 @@ import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
-
+import connectRedis from "../redis"; 
 
 const prisma = new PrismaClient();
 
-//[x]회원가입
 export const createUser = async (email: string, nickname: string, password: string) => {
 
   const hashing = async (password: string) => {
@@ -25,7 +24,6 @@ export const createUser = async (email: string, nickname: string, password: stri
   const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
 
   try {
-    //중복 사용자 검증
     const selectUser = await prisma.users.findFirst({
       where: {
         email: email,
@@ -37,7 +35,6 @@ export const createUser = async (email: string, nickname: string, password: stri
       return null;
     }
 
-    //새로 가입
     const result = await prisma.$transaction(async (prisma) => {
       const user = await prisma.users.create({
         data: {
@@ -71,8 +68,9 @@ export const createUser = async (email: string, nickname: string, password: stri
 };
 
 
-//[x]로그인
 export const loginUser = async (email: string, password: string, autoLogin: boolean) => {
+  const redisClient = await connectRedis();
+
   try {
     const result = await prisma.$transaction(async (prisma) => {
       const selectUser = await prisma.users.findFirst({
@@ -86,9 +84,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
         throw { status: StatusCodes.UNAUTHORIZED, message: "사용자를 찾을 수 없습니다." };
       }
 
-      // 카카오 사용자인지 일반 사용자인지 구분
       if (selectUser.authType === "kakao") {
-        // 카카오 사용자는 비밀번호 검증을 건너뜀
         return { selectUser, selectUserSecret: null };
       }
 
@@ -150,6 +146,8 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
       )
     }
 
+    await redisClient.set(`uuid:${userUuidString}`, JSON.stringify({autoLogin: false}) , {EX: 3600 * 8 }); //8시간
+
     return { generalToken, refreshToken, result, userUuidString };
 
   } catch (error) {
@@ -159,8 +157,8 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
 };
 
 
-//[x] 자동로그인(리프레시 토큰 발급)
 export const saveRefreshToken = async (uuid: string, refreshToken: string) => {
+  const redisClient = await connectRedis();
   try {
     const uuidBuffer = Buffer.from(uuid.replace(/-/g, ""), "hex");
     const selectUserSecrets = await prisma.userSecrets.findFirst({
@@ -178,6 +176,7 @@ export const saveRefreshToken = async (uuid: string, refreshToken: string) => {
       },
     });
 
+    await redisClient.set(`uuid:${uuidBuffer.toString("hex")}`, JSON.stringify({ autoLogin: true }), { EX: 7 * 24 * 60 * 60 });
     return { selectUserSecrets, updateSecretUser };
   } catch (error) {
     console.log("자동로그인 error:", error);
@@ -186,13 +185,10 @@ export const saveRefreshToken = async (uuid: string, refreshToken: string) => {
 };
 
 
-//[x] 리프레시 토큰을 통한 액세스 토큰 발급
 export const refreshAccessToken = async (refreshToken: string) => {
   try {
-    //토큰 검증
     const decoded = jwt.verify(refreshToken, process.env.PRIVATE_KEY_REF as string) as jwt.JwtPayload;
 
-    //사용자 정보 가져옴
     const uuidBuffer = Buffer.from(decoded.uuid.replace(/-/g, ""), "hex");
     const selectUser = await prisma.users.findFirst({
       where: {
@@ -214,7 +210,6 @@ export const refreshAccessToken = async (refreshToken: string) => {
       throw new Error("유효하지 않은 사용자입니다.");
     }
 
-    //access token재발급
     const newAccessToken = jwt.sign(
       {
         uuid: decoded.uuid,
@@ -232,10 +227,13 @@ export const refreshAccessToken = async (refreshToken: string) => {
   }
 }
 
-//[x] 로그아웃
 export const logoutUser = async (uuid: string) => {
   try {
+    const redisClient = await connectRedis();
     const uuidBuffer = Buffer.from(uuid, "hex");
+
+    await redisClient.del(`uuid:${uuidBuffer.toString("hex")}`); 
+    await redisClient.del(`autoLogin:${uuidBuffer.toString("hex")}`); 
 
     const selectUserSecrets = await prisma.userSecrets.findFirst({
       where: {
@@ -265,8 +263,9 @@ export const logoutUser = async (uuid: string) => {
 }
 
 
-//[ ] 카카오 로그인
+//[x] 카카오 로그인
 export const kakaoUser = async (email: string, nickname: string) => {
+  const redisClient = await connectRedis();
   try {
     const result = await prisma.$transaction(async (prisma) => {
       const selectUser = await prisma.users.findFirst({
@@ -292,26 +291,27 @@ export const kakaoUser = async (email: string, nickname: string) => {
         const createUserSecret = await prisma.userSecrets.create({
           data: {
             uuid: uuidBuffer,
-            hashPassword: null, // 비밀번호는 없으므로 null
-            salt: null // salt도 null
+            hashPassword: null, 
+            salt: null 
           },
         });
 
-        //새 사용자
+        await redisClient.set(`uuid:${uuidBuffer.toString("hex")}`, JSON.stringify({ autoLogin: true }), { EX: 7 * 24 * 60 * 60 });
         return { createUser, createUserSecret };
       }
 
-      //jwt 토큰
       const userUuidString = selectUser.uuid.toString("hex");
       const generalToken = jwt.sign(
         {
           uuid: userUuidString,
           email: selectUser.email
         }, process.env.PRIVATE_KEY_GEN as string, {
-        expiresIn: process.env.GENERAL_TOKEN_EXPIRE_IN,
-        issuer: "fefive"
-      });
-  
+          expiresIn: process.env.GENERAL_TOKEN_EXPIRE_IN,
+          issuer: "fefive"
+        });
+        
+        await redisClient.set(`uuid:${userUuidString}`, JSON.stringify({ autoLogin: true }), { EX: 7 * 24 * 60 * 60 });
+    
       let refreshToken: string | null = null;
       const selectUserSecrets = await prisma.userSecrets.findFirst({
         where: {
@@ -332,7 +332,7 @@ export const kakaoUser = async (email: string, nickname: string) => {
 
         await prisma.userSecrets.update({
           data: {
-            refreshToken: refreshToken // Refresh Token 업데이트
+            refreshToken: refreshToken 
           },
           where: {
             userSecretId: selectUserSecrets.userSecretId,
@@ -348,5 +348,7 @@ export const kakaoUser = async (email: string, nickname: string) => {
   } catch (error) {
     console.log("카카오로그인 error:", error);
     throw new Error("카카오로그인 중 오류 발생");
+  }finally{
+    await redisClient.quit();
   }
-}
+};

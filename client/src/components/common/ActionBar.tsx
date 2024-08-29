@@ -4,9 +4,8 @@ import Avatar from "./Avatar";
 import { formatDate } from "../../utils/format/format";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { GoHeartFill } from "react-icons/go";
-import { getUuid, useAuthStore } from "../../store/userStore";
 import {useNavigate} from "react-router-dom"; 
-import { useEffect } from "react";
+import { useAuthStore } from "../../store/userStore";
 
 interface IProps {
   userInfo: IPostUserInfo;
@@ -17,27 +16,17 @@ interface IProps {
 }
 
 const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
-  const {uuid} = useAuthStore();  // 현재 로그인된 사용자의 uuid
-  const navigate = useNavigate(); //이동을 위해 추가
+  const {uuid} = useAuthStore(); 
+  const navigate = useNavigate(); 
 
   console.log("액션바의 uuid: ", uuid);
   console.log("userInfo는 어디서?: ", userInfo);
 
-  useEffect(() => { //처음 렌더링시 storedUuid설정
-    const storedUuid = getUuid();
-    console.log("storedUuid::", storedUuid);
-
-    if(!uuid && storedUuid){
-      useAuthStore.setState({ uuid: storedUuid }); 
-    }
-}, [uuid]);  // uuid 업데이트될 때마다 실행
-
-    //Avatar클릭 시 동작 정의
     const handleAvatarClick = async() => {
       if(userInfo.uuid === uuid){
         navigate("/users/my");
       }else{
-        navigate(`/users/user/${userInfo.uuid}`); //사용자 페이지 이동
+        navigate(`/users/user/${userInfo.uuid}`); 
       }
     }
 

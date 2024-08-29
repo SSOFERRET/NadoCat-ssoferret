@@ -45,7 +45,7 @@ export const login = async (data: LoginProps) => {
 
 export const logout = async (uuid: string) => {
   try {
-    const response = await httpClient.post("/users/logout", {uuid}); // uuid를 올바른 JSON 형식으로 전송
+    const response = await httpClient.post("/users/logout", {uuid});
     return response.data;
   } catch (error) {
     console.error("login error:", error);
@@ -53,10 +53,43 @@ export const logout = async (uuid: string) => {
   }
 };
 
-//사용자 프로필
+export const getUuidFromRedis = async ()=> {
+  try {
+    const response = await httpClient.get(`/users/api/get-uuid`);
+    console.log("HTTP 응답:", response); 
+    return response.data.uuid;
+
+  } catch (error) {
+     console.error("Redis에서 UUID를 가져오는 중 오류 발생:", error);
+    return null;
+  }
+}
+
+export const storeLoginData = async (uuid: string, isAutoLogin: boolean) => {
+  try {
+    const response = await httpClient.post("/users/api/store-login", {uuid, isAutoLogin});
+    console.log("storeLoginData 서버 응답 uuid:::::::::::::", uuid);
+    
+    
+    if (response && response.data && response.data.uuid) {
+      return response.data.uuid;
+    } else {
+      console.error("서버 응답에 uuid가 없습니다:", response);
+      return null;
+    }
+
+  } catch (error) {
+     console.error("Redis에서 UUID를 가져오는 중 오류 발생:", error);
+    return null;
+  }
+}; 
+
+
+
+
+
 export const userPage = async (userUuid: string) => {
   try {
-    // const response = await httpClient.get(`/users/my`);
     const response = await httpClient.get(`/users/user/${userUuid}`);
     return response.data;
   } catch (error) {
@@ -65,10 +98,8 @@ export const userPage = async (userUuid: string) => {
   }
 };
 
-//내 마이페이지
 export const myPage = async () => {
   try {
-    // const response = await httpClient.get(`/users/my`);
     const response = await httpClient.get(`/users/my`);
     return response.data;
   } catch (error) {
@@ -88,7 +119,6 @@ export const myInterests = async () => {
   }
 }
 
-//[ ]작성글
 export const getMyPosts = async (uuid: string) => {
   try {
     const response = await httpClient.post(`/users/my/myPosts`, {uuid});
@@ -100,7 +130,6 @@ export const getMyPosts = async (uuid: string) => {
 }
 
 
-//이미지
 export const uploadProfile = async (file: File) => {
   const formData = new FormData();
   formData.append("profileImage", file);
@@ -131,7 +160,6 @@ export const deleteProfile = async (imageUrl: string) => {
   }
 };
 
-//세팅
 export const updateNickname = async (data: SettingNicknameProps) => {
   try {
     const response = await httpClient.put("/users/my/setting/nickname", data);

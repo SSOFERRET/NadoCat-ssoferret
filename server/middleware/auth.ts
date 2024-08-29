@@ -4,7 +4,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-//[x]jwt 복호화
 export const ensureAutorization = (
   req: Request,
   res: Response,
@@ -13,29 +12,21 @@ export const ensureAutorization = (
   try {
     console.log("미들웨어 시작!!!!");
 
-    //쿠키에서 jwt가져오기
-    // const token = req.cookies.generalToken || req.headers["authorization"]?.split(' ')[1];
     const token =  req.headers["authorization"]?.split(" ")[1] || req.cookies.generalToken;
-    console.log("cookie token: ", token);
     
     if (!token) {
         return res.status(401).json({ message: 'JWT 토큰이 존재하지 않습니다.' });
     }
 
-      const decodedJwt = jwt.verify(
-        token,
-        process.env.PRIVATE_KEY_GEN as string
-    ) as JwtPayload;
+      const decodedJwt = jwt.verify( token, process.env.PRIVATE_KEY_GEN as string ) as JwtPayload;
 
-    // JWT 만료 시간 확인
     if (decodedJwt.exp) {
       console.log("JWT 만료 시간:", new Date(decodedJwt.exp * 1000));
     } else {
       console.error("JWT에 만료 시간이 설정되지 않았습니다.");
     }
 
-    // 요청 헤더에서 uuid 가져오기
-    const uuid = req.headers["x-uuid"] as string;
+    const uuid = decodedJwt.uuid; // JWT에서 uuid 추출
     
     req.user = {
         uuid: uuid || decodedJwt.uuid,

@@ -1,77 +1,48 @@
 import { create } from "zustand";
-import { logout } from "../api/user.api";
+import { logout, storeLoginData } from "../api/user.api";
 
-interface StoreState {
+export interface StoreState {
   isLoggedIn: boolean;
   isAutoLogin: boolean;
-  authType: string | null;
   uuid: string;
+  authType?: string | null;
   storeAutoLogin: (isAutoLogin: boolean) => void
-  storeLogin: (uuid: string, isAutoLogin: boolean) => void;
-  storeAuthType: (authType: string) => void;
+  storeLogin: (uuid: string, isAutoLogin: boolean, isLoggedIn: boolean ) => void;
   storeLogout: (uuid: string) => void;
 }
 
-//[x]uuid
-export const getUuid = () => {
-  const uuid = sessionStorage.getItem("uuid");
-  // const uuid = localStorage.getItem("uuid");
-  return uuid;
-}
 
-export const setUuid = (uuid: string) => {
-  sessionStorage.setItem("uuid", uuid);
-  // localStorage.setItem("uuid", uuid);
-}
-
-//[ ]AutoLogin상태 저장
-export const getAutoLogin = () => {
-  const autoLogin = localStorage.getItem("isAutoLogin") === "true";
-  return autoLogin;
-}
-
-export const setAutoLogin = (isAutoLogin: boolean) => {
-  if(isAutoLogin){
-    localStorage.setItem("isAutoLogin", "true");
-  }else{
-    localStorage.removeItem("isAutoLogin");
-  }
-}
 
 export const useAuthStore = create<StoreState>((set) => ({
-  isLoggedIn: !!getUuid(), // UUID가 존재하면 로그인 상태
-  isAutoLogin: getAutoLogin(), // localStorage에서 자동 로그인 상태 불러오기
+  isLoggedIn: false,
+  isAutoLogin: false,
   authType: null,
-  uuid: getUuid() || "",
+  uuid: "",
 
-  storeLogin: (uuid: string, isAutoLogin: boolean)  => {
-    console.log(sessionStorage.getItem("uuid"));
+  storeLogin: async (uuid: string, isAutoLogin: boolean, isLoggedIn: boolean)  => {
+    try {
+      await storeLoginData(uuid, isAutoLogin);
+      
+      set({isLoggedIn, uuid, isAutoLogin});
 
-    set({isLoggedIn: true, isAutoLogin});
-    setUuid(uuid);
-
-     // 자동로그인 상태 저장
-    setAutoLogin(isAutoLogin);
-  },
-  
-  storeAuthType: (authType: string) => {
-    set({ authType });
+        
+      } catch (error) {
+      console.error("서버로 데이터 전송 중 오류 발생:::::::", error);
+    }
   },
 
   storeAutoLogin: (isAutoLogin: boolean) => {
     set({ isAutoLogin });
-    setAutoLogin(isAutoLogin);
   },
 
   storeLogout: async (uuid: string) => {
     try {
-      sessionStorage.removeItem("uuid"); //동기적 처리
-      await logout(uuid); //비동기적 처리
-      set({ isLoggedIn: false, isAutoLogin: false, authType: null, uuid: "" });
+      await logout(uuid); 
+      set({ isLoggedIn: false, isAutoLogin: false, uuid: "" });
 
-      console.log("uuid제거 성공!");
+      console.log("로그아웃 성공!");
     } catch (error) {
-      console.error("uuid제거 중 오류 발생:", error);
+      console.error("로그아웃 중 오류 발생:", error);
     }
   },
 

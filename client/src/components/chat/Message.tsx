@@ -2,13 +2,15 @@ import React from "react";
 import "../../styles/scss/components/chat/Message.scss";
 import { Buffer } from "buffer";
 import { MessageData } from "./Messages";
+import { useAuthStore } from "../../store/userStore";
 
 interface Props {
   message: MessageData; 
 }
 
 const Message: React.FC<Props> = ({ message: { uuid, content, sentAt }}) => {
-  const isSentByCurrentUser = Buffer.from(uuid).toString("hex") === sessionStorage.getItem("uuid");
+  const { uuid: userUuid } = useAuthStore(); 
+  const isSentByCurrentUser = Buffer.from(uuid).toString("hex") === userUuid
 
   function formatTime(sentAt: string) {
     const date = new Date(sentAt);

@@ -7,25 +7,26 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Messages, { MessageData } from "../../components/chat/Messages";
 import axios from "axios";
 import { Buffer } from "buffer";
+import { useAuthStore } from "../../store/userStore";
 
 const ENDPOINT = import.meta.env.VITE_ENDPOINT || "http://localhost:8080";
 let socket: Socket;
 
 const Chat = () => {
-  const myUserId = sessionStorage.getItem("uuid") || "";
+  const { uuid } = useAuthStore(); 
+  const myUserId = uuid || "";
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Array<MessageData>>([]);
   const [roomId, setRoomId] = useState<string>("");
   const [otherUserNickname, setOtherUserNickname] = useState<string>("");
   const location = useLocation();
   const navigate = useNavigate();
-
   const { userData, realOtherUuid } = location.state || {};
 
   useEffect(() => {
     socket = io(ENDPOINT);
 
-    if (!sessionStorage.getItem("uuid") || (!realOtherUuid && !userData)) {
+    if (!uuid || (!realOtherUuid && !userData)) {
       alert("유효한 사용자 ID가 없습니다.");
       navigate(-1);
       return;
@@ -49,13 +50,15 @@ const Chat = () => {
         if (response) {
           setOtherUserNickname(response.data.nickname);
         }
-      } catch {}
+      } catch (error){
+        console.error("Error :", error);
+      }
     };
     const initiateChat = async () => {
       console.log("initiateChat");
       try {
         const response = await axios.post(ENDPOINT + "/chats/startchat", {
-          userUuid: sessionStorage.getItem("uuid"),
+          userUuid: uuid,
           otherUserUuid: userUuidForHere,
         });
         if (response.data.messages) {
@@ -63,7 +66,7 @@ const Chat = () => {
         }
         setRoomId(response.data.chatId);
         socket.emit("join", {
-          uuid: sessionStorage.getItem("uuid"),
+          uuid: uuid,
           roomId: response.data.chatId,
         });
 
