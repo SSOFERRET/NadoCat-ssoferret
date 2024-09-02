@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuthStore } from '../../store/userStore';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/userStore";
 
 const KakaoRedirect = () => {
   const navigate = useNavigate();
-  const {storeLogin} = useAuthStore();
+  const { storeLogin } = useAuthStore();
   const { uuid } = useAuthStore();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-    const uuidFromUrl = urlParams.get("uuid"); 
+    const uuidFromUrl = urlParams.get("uuid");
 
     console.log("code:", code);
-    
-    const handleKakaoLogin = async() => {
+
+    const handleKakaoLogin = async () => {
       try {
         const fetchedUuid = uuidFromUrl || uuid;
         if (fetchedUuid) {
@@ -29,9 +29,7 @@ const KakaoRedirect = () => {
     };
 
     handleKakaoLogin();
-   }, [navigate, uuid]);
-
-
+  }, [navigate, uuid]);
 
   return <div>카카오 로그인 처리 중...</div>;
 };

@@ -4,9 +4,8 @@ import Avatar from "./Avatar";
 import { formatDate } from "../../utils/format/format";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { GoHeartFill } from "react-icons/go";
-import {useNavigate} from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/userStore";
-import { useEffect } from "react";
 
 interface IProps {
   userInfo: IPostUserInfo;
@@ -16,21 +15,15 @@ interface IProps {
   liked: boolean;
 }
 
+const ActionBar = ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
+  const { uuid } = useAuthStore();
+  const navigate = useNavigate();
 
-const ActionBar =  ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
-  const {uuid} = useAuthStore(); 
-  const navigate = useNavigate(); 
-
-  console.log("액션바의 uuid: ", uuid);
-  console.log("userInfo는 어디서?: ", userInfo);
-
-    const handleAvatarClick = async() => {
-      if(userInfo.uuid === uuid){
-        navigate("/users/my");
-      }else{
-        navigate(`/users/user/${userInfo.uuid}`); 
-      }
-
+  const handleAvatarClick = async () => {
+    if (userInfo.uuid === uuid) {
+      navigate("/users/my");
+    } else {
+      navigate(`/users/user/${userInfo.uuid}`);
     }
   };
 
