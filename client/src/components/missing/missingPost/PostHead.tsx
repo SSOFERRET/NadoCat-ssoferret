@@ -6,8 +6,8 @@ import Avatar from "../../common/Avatar";
 import "./../../../styles/scss/components/missing/postHead.scss";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { isMissing } from "../../../utils/type/isMissing";
-import { useAuthStore } from "../../../store/userStore";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "../../../store/userStore";
 // import { useNavigate } from "react-router-dom";
 // import { useState } from "react";
 // import PostMenu from "../../communityAndEvent/PostMenu";
@@ -44,6 +44,8 @@ const PostHead = ({
   };
 
   useEffect(() => {
+    // setIsAuthor(true); // 타입 오류나 일단 보류
+
     setIsAuthor(uuid === data.users.userId);
   }, [uuid, data.users.userId]);
 

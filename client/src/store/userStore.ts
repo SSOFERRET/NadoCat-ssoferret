@@ -7,7 +7,7 @@ export interface StoreState {
   uuid: string;
   authType?: string | null;
   storeAutoLogin: (isAutoLogin: boolean) => void
-  storeLogin: (uuid: string, isAutoLogin: boolean, isLoggedIn: boolean ) => void;
+  storeLogin: (uuid: string, isAutoLogin: boolean, isLoggedIn: boolean) => void;
   storeLogout: (uuid: string) => void;
 }
 
@@ -18,14 +18,14 @@ export const useAuthStore = create<StoreState>((set) => ({
   authType: null,
   uuid: "",
 
-  storeLogin: async (uuid: string, isAutoLogin: boolean, isLoggedIn: boolean)  => {
+  storeLogin: async (uuid: string, isAutoLogin: boolean, isLoggedIn: boolean) => {
     try {
       await storeLoginData(uuid, isAutoLogin);
-      
-      set({isLoggedIn, uuid, isAutoLogin});
 
-        
-      } catch (error) {
+      set({ isLoggedIn, uuid, isAutoLogin });
+
+
+    } catch (error) {
       console.error("서버로 데이터 전송 중 오류 발생:::::::", error);
     }
 
@@ -37,7 +37,7 @@ export const useAuthStore = create<StoreState>((set) => ({
 
   storeLogout: async (uuid: string) => {
     try {
-      await logout(uuid); 
+      await logout(uuid);
       set({ isLoggedIn: false, isAutoLogin: false, uuid: "" });
 
     } catch (error) {
