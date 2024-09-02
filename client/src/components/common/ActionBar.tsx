@@ -15,13 +15,7 @@ interface IProps {
   liked: boolean;
 }
 
-const ActionBar = ({
-  userInfo,
-  createdAt,
-  showMenu,
-  toggleLike,
-  liked,
-}: IProps) => {
+const ActionBar = ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps) => {
   const { uuid } = useAuthStore();
   const navigate = useNavigate();
 
@@ -38,11 +32,7 @@ const ActionBar = ({
 
   return (
     <div className="action-bar">
-      <Avatar
-        profileImage={userInfo.profileImage}
-        nickname={userInfo.nickname}
-        onClick={handleAvatarClick}
-      />
+      <Avatar profileImage={userInfo.profileImage} nickname={userInfo.nickname} onClick={handleAvatarClick} />
       <div className="user-info">
         <div className="user-details">
           <span className="nickname">{userInfo.nickname}</span>
@@ -58,12 +48,7 @@ const ActionBar = ({
             <GoHeartFill />
           </button>
 
-          {uuid === userInfo.uuid && (
-            <HiOutlineDotsVertical
-              className="options-icon"
-              onClick={showMenu}
-            />
-          )}
+          {uuid === userInfo.uuid && <HiOutlineDotsVertical className="options-icon" onClick={showMenu} />}
         </div>
       </div>
     </div>

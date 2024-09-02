@@ -12,15 +12,17 @@ export const useIntersectionObserver = (callback: Callback, options?: ObserverOp
   const targetRef = useRef(null);
 
   useEffect(() => {
+    const currentElement = targetRef.current;
+
     const observer = new IntersectionObserver(callback, options);
 
-    if (targetRef.current) {
-      observer.observe(targetRef.current);
+    if (currentElement) {
+      observer.observe(currentElement);
     }
 
     return () => {
-      if (targetRef.current) {
-        observer.unobserve(targetRef.current);
+      if (currentElement) {
+        observer.unobserve(currentElement);
       }
     };
   }, [callback, options]);

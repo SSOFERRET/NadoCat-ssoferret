@@ -1,10 +1,6 @@
 // import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import {
-  IMenuList,
-  IMissing,
-  IMissingReport,
-} from "../../../models/missing.model";
+import { IMenuList, IMissing, IMissingReport } from "../../../models/missing.model";
 import { formatAgo, formatDate } from "../../../utils/format/format";
 import Avatar from "../../common/Avatar";
 import "./../../../styles/scss/components/missing/postHead.scss";
@@ -55,11 +51,7 @@ const PostHead = ({
 
   return (
     <section className="missing-post-head" key={data.postId}>
-      <Avatar
-        profileImage={data.users.profileImage}
-        nickname={data.users.nickname}
-        onClick={() => {}}
-      />
+      <Avatar profileImage={data.users.profileImage} nickname={data.users.nickname} onClick={() => {}} />
       <div className="post-title" onClick={() => {}}>
         <div className="user-cat-name">
           {isMissing(data) && (
@@ -77,11 +69,7 @@ const PostHead = ({
       {!isMissing(data) && (
         <div className="match-check">
           <p className={`match-is-${data.match}`}>
-            {data.match === "Y"
-              ? "일치"
-              : data.match === "N"
-              ? "불일치"
-              : "확인중"}
+            {data.match === "Y" ? "일치" : data.match === "N" ? "불일치" : "확인중"}
           </p>
         </div>
       )}
