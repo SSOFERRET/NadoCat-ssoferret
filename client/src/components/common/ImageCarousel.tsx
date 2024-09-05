@@ -43,12 +43,16 @@ const ImageCarousel = ({ images, round = "round-5", size = "md", isDots = true }
           </div>
         </div>
 
-        <button className="carousel-button prev-button" onClick={onPrevButtonClick} disabled={prevBtnDisabled}>
-          <IoIosArrowBack />
-        </button>
-        <button className="carousel-button next-button" onClick={onNextButtonClick} disabled={nextBtnDisabled}>
-          <IoIosArrowForward />
-        </button>
+        {images.length > 1 && (
+          <>
+            <button className="carousel-button prev-button" onClick={onPrevButtonClick} disabled={prevBtnDisabled}>
+              <IoIosArrowBack />
+            </button>
+            <button className="carousel-button next-button" onClick={onNextButtonClick} disabled={nextBtnDisabled}>
+              <IoIosArrowForward />
+            </button>
+          </>
+        )}
 
         {isDots && (
           <div className="image-embla__controls">

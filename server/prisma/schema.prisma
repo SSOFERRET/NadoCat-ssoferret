@@ -40,7 +40,7 @@ model Communities {
   content           String?             @db.LongText
   views             Int                 @default(0)
   createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt         DateTime            @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedAt         DateTime            @updatedAt @map("updated_at") @db.Timestamp(0)
   uuid              Bytes               @db.Binary(16)
   boardCategories   BoardCategories     @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "communities_category_id_fk")
   users             Users               @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "communities_uuid_fk")
@@ -60,7 +60,7 @@ model CommunityComments {
   communityId        Int         @map("community_id")
   comment            String      @db.MediumText
   createdAt          DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt          DateTime    @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedAt          DateTime    @updatedAt @map("updated_at") @db.Timestamp(0)
   uuid               Bytes       @db.Binary(16)
   communities        Communities @relation(fields: [communityId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "community_comments_community_id_fk")
   users              Users       @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "community_comments_uuid_fk")
@@ -105,7 +105,7 @@ model EventComments {
   eventId        Int      @map("event_id")
   comment        String   @db.MediumText
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
   uuid           Bytes    @db.Binary(16)
   events         Events   @relation(fields: [eventId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "event_comments_event_id_fk")
   users          Users    @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "event_comments_uuid_fk")
@@ -153,7 +153,7 @@ model Events {
   content         String          @db.LongText
   views           Int             @default(0)
   createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt       DateTime        @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamp(0)
   uuid            Bytes           @db.Binary(16)
   eventComments   EventComments[]
   eventImages     EventImages[]
@@ -317,7 +317,7 @@ model MissingReports {
   match                  String                   @default("-") @db.VarChar(1)
   createdAt              DateTime                 @default(now()) @map("created_at") @db.Timestamp(0)
   thumbnail              Int?
-  updatedAt              DateTime                 @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedAt              DateTime                 @updatedAt @map("updated_at") @db.Timestamp(0)
   missingReportImages    MissingReportImages[]
   missingReportLocations MissingReportLocations[]
   boardCategories        BoardCategories          @relation(fields: [categoryId], references: [categoryId], onDelete: NoAction, onUpdate: NoAction, map: "missing_reports_category_id")
@@ -346,7 +346,7 @@ model Missings {
   found            Int?               @default(0) @db.TinyInt
   views            Int                @default(0)
   createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt        DateTime           @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedAt        DateTime           @updatedAt @map("updated_at") @db.Timestamp(0)
   missingFavorites MissingFavorites[]
   missingImages    MissingImages[]
   missingLocations MissingLocations[]
@@ -397,7 +397,7 @@ model StreetCatComments {
   uuid               Bytes      @db.Binary(16)
   comment            String     @db.MediumText
   createdAt          DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt          DateTime?  @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedAt          DateTime?  @updatedAt @map("updated_at") @db.Timestamp(0)
   streetCats         StreetCats @relation(fields: [streetCatId], references: [postId], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_comments_post_id_fk")
   users              Users      @relation(fields: [uuid], references: [uuid], onDelete: NoAction, onUpdate: NoAction, map: "street_cat_comments_uuid_fk")
 
@@ -450,7 +450,7 @@ model StreetCats {
   content            String?              @db.LongText
   views              Int                  @default(0)
   createdAt          DateTime             @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt          DateTime             @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedAt          DateTime             @updatedAt @map("updated_at") @db.Timestamp(0)
   thumbnail          Int?
   uuid               Bytes                @db.Binary(16)
   streetCatComments  StreetCatComments[]
