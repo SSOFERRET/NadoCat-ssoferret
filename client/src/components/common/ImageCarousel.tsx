@@ -28,6 +28,14 @@ const ImageCarousel = ({ images, round = "round-5", size = "md", isDots = true }
 
   const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
 
+  if (images.length === 1) {
+    return (
+      <section className={`image-container ${round} ${size}`}>
+        <img src={images[0].url} alt={images[0].imageId.toString()} />
+      </section>
+    );
+  }
+
   return (
     <section className={`carousel-container ${round} ${size}`}>
       <div className="image-embla">
@@ -43,16 +51,12 @@ const ImageCarousel = ({ images, round = "round-5", size = "md", isDots = true }
           </div>
         </div>
 
-        {images.length > 1 && (
-          <>
-            <button className="carousel-button prev-button" onClick={onPrevButtonClick} disabled={prevBtnDisabled}>
-              <IoIosArrowBack />
-            </button>
-            <button className="carousel-button next-button" onClick={onNextButtonClick} disabled={nextBtnDisabled}>
-              <IoIosArrowForward />
-            </button>
-          </>
-        )}
+        <button className="carousel-button prev-button" onClick={onPrevButtonClick} disabled={prevBtnDisabled}>
+          <IoIosArrowBack />
+        </button>
+        <button className="carousel-button next-button" onClick={onNextButtonClick} disabled={nextBtnDisabled}>
+          <IoIosArrowForward />
+        </button>
 
         {isDots && (
           <div className="image-embla__controls">
