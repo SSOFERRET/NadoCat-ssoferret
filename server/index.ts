@@ -27,7 +27,7 @@ app.set('trust proxy', 1);  // 프록시 서버 뒤에서의 신뢰 설정
 
 const io = new Server(server, {
   cors: {
-    origin: FRONTEND_URL,
+    origin: [FRONTEND_URL, 'https://www.nadocat.site'],
     methods: ['GET', 'POST'],
     credentials: true,
   }
@@ -46,7 +46,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CORS_ALLOW_ORIGIN,
+    origin: [FRONTEND_URL, "https://www.nadocat.site"],
     credentials: true,
   })
 );
@@ -59,7 +59,7 @@ app.use(`${process.env.REVERSE_PROXY || ""}/boards/missings`, MissingRouter);
 app.use(`${process.env.REVERSE_PROXY || ""}/users`, UserRouter);
 app.use(`${process.env.REVERSE_PROXY || ""}/boards/events`, EventsRouter);
 app.use(`${process.env.REVERSE_PROXY || ""}/notifications`, cors({
-  origin: FRONTEND_URL,
+  origin: [FRONTEND_URL, "https://www.nadocat.site"],
   methods: ['GET', 'PATCH'],
   allowedHeaders: ["Content-Type"],
 }), NotificationsRouter);
