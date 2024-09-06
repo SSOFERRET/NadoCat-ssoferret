@@ -101,6 +101,15 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
   const isEditingCurrentComment = selectedCommentId === comment.commentId;
   const showOptionsIcon = canShowOptionsIcon && !isEditingCurrentComment && !isCommentEdit;
 
+  useEffect(() => {
+    if (isCommentEdit) {
+      textareaRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [isCommentEdit]);
+
   return (
     <li className="comment-card">
       <div className="comment">
