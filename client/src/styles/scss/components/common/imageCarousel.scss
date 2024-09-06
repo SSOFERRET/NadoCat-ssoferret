@@ -1,5 +1,26 @@
 @import "../../base/common.scss";
 
+.image-container {
+  width: 100%;
+  height: 380rem;
+  overflow: hidden;
+  margin-bottom: 13rem;
+
+  &.round-5 {
+    border-radius: $round-5;
+  }
+
+  &.round-0 {
+    border-radius: 0;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
 .carousel-container {
   position: relative;
   overflow: hidden;
