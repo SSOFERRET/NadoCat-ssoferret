@@ -39,12 +39,12 @@ export const signup = async (req: Request, res: Response) => {
     });
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: "회원가입 처리 중 오류가 발생했습니다." });
-  } 
+  }
 };
 
 export const login = async (req: Request, res: Response) => {
   const { email, password, autoLogin } = req.body;
-  const isAutoLogin = (autoLogin === 'true' || autoLogin === true); 
+  const isAutoLogin = (autoLogin === 'true' || autoLogin === true);
   const generalTokenMaxAge = parseInt(process.env.GENERAL_TOKEN_MAX_AGE || '28800000'); // 8시간
   const refreshTokenMaxAge = parseInt(process.env.REFRESH_TOKEN_MAX_AGE || "604800000");// 7일
   // const generalTokenMaxAge = 1 * 60 * 1000; // 1분
@@ -94,7 +94,7 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const getNewAccessToken = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies.refreshToken; 
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Refresh token이 존재하지 않습니다." });
@@ -107,7 +107,7 @@ export const getNewAccessToken = async (req: Request, res: Response) => {
     console.error("로그인 error:", error);
     res.clearCookie("refreshToken", { httpOnly: true, secure: true });
     return res.status(StatusCodes.UNAUTHORIZED).json({ message: "유효하지 않은 Refresh token입니다." });
-  } 
+  }
 };
 
 export const logout = async (req: Request, res: Response) => {
@@ -126,7 +126,7 @@ export const logout = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("로그아웃 에러:", error);
     return res.status(500).json({ message: "로그아웃 중 오류 발생" });
-  } 
+  }
 };
 
 //[ ]카카오
@@ -151,7 +151,7 @@ export const kakao = async (req: Request, res: Response) => {
       }
     );
     const { access_token } = tokenResponse.data;
-    const userResponse = await axios.get(process.env.KAKAO_USERINFO_URL as string, 
+    const userResponse = await axios.get(process.env.KAKAO_USERINFO_URL as string,
 
       {
         headers: {
@@ -183,29 +183,29 @@ export const kakao = async (req: Request, res: Response) => {
     });
 
     // res.redirect(`http://localhost:5173/users/auth/kakao-redirect?code=${code}&uuid=${userUuidString}`);
-    res.redirect(`http://3.37.238.147/users/auth/kakao-redirect?code=${code}&uuid=${userUuidString}`);
+    res.redirect(`${process.env.EC2_IP}/users/auth/kakao-redirect?code=${code}&uuid=${userUuidString}`);
 
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: "카카오 로그인 실패",
       error: error,
     });
-  } 
+  }
 };
 
-export const storeLoginData = async(req: Request, res: Response) => {
+export const storeLoginData = async (req: Request, res: Response) => {
   const { uuid, isAutoLogin } = req.body;
   const redisClient = await connectRedis();
 
   try {
-    await redisClient.set(`uuid:${uuid}`, JSON.stringify({ isAutoLogin }),{
-      EX: isAutoLogin ? 7 * 24 * 60 * 60 : 8 * 60 * 60,  
+    await redisClient.set(`uuid:${uuid}`, JSON.stringify({ isAutoLogin }), {
+      EX: isAutoLogin ? 7 * 24 * 60 * 60 : 8 * 60 * 60,
     });
 
-    return res.status(StatusCodes.OK).json({ 
-      message: "데이터 저장 성공" ,
+    return res.status(StatusCodes.OK).json({
+      message: "데이터 저장 성공",
       uuid: uuid
-    }); 
+    });
 
   } catch (error) {
     console.error("Redis 데이터 저장 중 오류 발생:", error);
@@ -213,15 +213,15 @@ export const storeLoginData = async(req: Request, res: Response) => {
   }
 }
 
-export const getUuid = async(req: Request, res: Response) => {
+export const getUuid = async (req: Request, res: Response) => {
   const redisClient = await connectRedis();
-  const uuidKey = req.user?.uuid 
+  const uuidKey = req.user?.uuid
 
   try {
-    console.log(`Fetching uuid with key: uuid:${uuidKey}`); 
+    console.log(`Fetching uuid with key: uuid:${uuidKey}`);
     const uuidData = await redisClient.get(`uuid:${uuidKey}`);
-    if(!uuidData) {
-      console.log("UUID를 찾을 수 없습니다."); 
+    if (!uuidData) {
+      console.log("UUID를 찾을 수 없습니다.");
       return res.status(StatusCodes.NOT_FOUND).json({ message: "UUID를 찾을 수 없습니다." });
     }
 
@@ -234,7 +234,7 @@ export const getUuid = async(req: Request, res: Response) => {
     console.error("Redis 데이터 저장 중 오류 발생:", error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "서버 오류" });
   } finally {
-    redisClient.quit(); 
+    redisClient.quit();
   }
 }
 
