@@ -1,5 +1,5 @@
 import "../../styles/scss/components/common/homeCat.scss";
-import pawLogo from "../../assets/img/pawLogo.png";
+import pawLogo from "../../assets/img/pawLogo.webp";
 import welcomeCat from "../../assets/img/home.png";
 import { useNavigate } from "react-router-dom";
 
