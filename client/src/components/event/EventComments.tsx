@@ -57,7 +57,7 @@ const EventComments = ({ postId }: IProps) => {
         {isLoading ? (
           <Spinner />
         ) : (
-          <>
+          <div className="commentList">
             <CommentList
               postId={postId}
               comments={data}
@@ -70,7 +70,7 @@ const EventComments = ({ postId }: IProps) => {
             <div className="more" ref={moreRef}>
               {isFetchingNextPage && <Spinner />}
             </div>
-          </>
+          </div>
         )}
       </section>
 
