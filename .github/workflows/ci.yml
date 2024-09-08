@@ -26,8 +26,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/NadoCat
             git pull origin develop
-            cd server && npm install && npm run build
-            cd ../client && npm install && npm run build
+            cd server && npm install && NODE_OPTIONS="--max-old-space-size=4096" npm run build
+            cd ../client && npm install && NODE_OPTIONS="--max-old-space-size=4096" npm run build
             sudo systemctl restart nginx
             pm2 restart all
           EOF
