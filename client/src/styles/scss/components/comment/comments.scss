@@ -1,6 +1,18 @@
 @import "../../base/common.scss";
 
 .comment-list {
-  padding: 0 20rem;
-  border-top: 0.5rem solid $lightgray;
+  // border-top: 0.5rem solid $lightgray;
+
+  &::before {
+    content: "";
+    display: block;
+    height: 9rem;
+    width: 430rem;
+    background-color: #f5f5f5;
+    margin-top: 34rem;
+  }
+
+  .commentList {
+    padding: 0 20rem;
+  }
 }

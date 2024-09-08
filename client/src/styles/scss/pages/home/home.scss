@@ -245,7 +245,7 @@
 
     &::after {
       content: "";
-      display: block; /* 또는 inline-block */
+      display: block;
       height: 9rem;
       width: 430rem;
       background-color: #f5f5f5;
@@ -310,6 +310,14 @@
           border-bottom: 2px solid $primary;
         }
       }
+    }
+
+    .community-more {
+      position: absolute;
+      margin-top: 10rem;
+      right: 0;
+      z-index: 10;
+      margin-right: 20rem;
     }
   }
 }
