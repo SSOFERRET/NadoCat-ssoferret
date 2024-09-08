@@ -3,21 +3,24 @@ import HomeCommunity from "./HomeCommunity";
 import HomeEvent from "./HomeEvent";
 import Cat from "../../assets/img/Maskgroup.png";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import { useNavigate } from "react-router-dom";
 
 type Menu = {
   id: number;
   category: Category;
   name: string;
+  url: string;
 };
 
 export type Category = "community" | "event";
 
 const menu: Menu[] = [
-  { id: 1, category: "community", name: "커뮤니티" },
-  { id: 2, category: "event", name: "이벤트 · 모임" },
+  { id: 1, category: "community", name: "커뮤니티", url: "/boards/communities" },
+  { id: 2, category: "event", name: "이벤트 · 모임", url: "/boards/events" },
 ];
 
 const HomeCommunitiesAndEvents = () => {
+  const navigate = useNavigate();
   const [isShow, setIsShow] = useState(false);
   const [category, setCategory] = useState<Category>(menu[0].category);
 
@@ -53,6 +56,17 @@ const HomeCommunitiesAndEvents = () => {
           ))}
         </ul>
       </div>
+
+      <button
+        className="more community-more"
+        onClick={() => {
+          const found = menu.find((v) => v.category === category);
+          found && navigate(found?.url);
+          console.log(found);
+        }}
+      >
+        전체보기
+      </button>
 
       {isShow && (
         <>

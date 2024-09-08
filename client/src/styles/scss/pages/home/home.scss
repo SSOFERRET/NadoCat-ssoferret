@@ -311,5 +311,13 @@
         }
       }
     }
+
+    .community-more {
+      position: absolute;
+      margin-top: 10rem;
+      right: 0;
+      z-index: 10;
+      margin-right: 20rem;
+    }
   }
 }
