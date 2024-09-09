@@ -19,9 +19,6 @@ const ActionBar = ({ userInfo, createdAt, showMenu, toggleLike, liked }: IProps)
   const { uuid } = useAuthStore();
   const navigate = useNavigate();
 
-  console.log("액션바의 uuid: ", uuid);
-  console.log("userInfo는 어디서?: ", userInfo);
-
   const handleAvatarClick = async () => {
     if (userInfo.uuid === uuid) {
       navigate("/users/my");
