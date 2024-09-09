@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "serve": "serve -s dist -l 8000"
+    "serve": "serve -s dist -l 8000",
+    "test": "vitest"
   },
   "dependencies": {
     "@swc/core": "^1.7.11",
@@ -39,9 +40,12 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
-    "@types/react": "^18.2.66",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@types/react": "^18.3.5",
     "@types/react-datepicker": "^7.0.0",
-    "@types/react-dom": "^18.2.22",
+    "@types/react-dom": "^18.3.0",
     "@types/react-scroll-to-bottom": "^4.2.5",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
@@ -49,7 +53,9 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "jsdom": "^25.0.0",
     "typescript": "^5.2.2",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vitest": "^2.0.5"
   }
 }
