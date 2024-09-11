@@ -8,6 +8,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ICommentPutRequest } from "../../api/community.api";
 import { useAuthStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
+import { useAlertMessage } from "../../hooks/useAlertMessage";
 
 interface IProps {
   postId: number;
@@ -25,6 +26,7 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [commentText, setCommentText] = useState(oldComment);
   const { uuid, isLoggedIn } = useAuthStore();
+  const { showAlertMessage } = useAlertMessage();
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -66,7 +68,9 @@ const Comment = ({ postId, comment, showMenu, isCommentEdit, setIsCommentEdit, e
       comment: commentText,
       commentId: comment.commentId,
     })
-      .then(() => {})
+      .then(() => {
+        showAlertMessage("댓글이 수정되었습니다.");
+      })
       .catch(() => {})
       .finally(() => {
         setIsCommentEdit(false);

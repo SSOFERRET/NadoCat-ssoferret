@@ -22,11 +22,14 @@ const CommunityDetail = () => {
   const { dislikePost, likePost } = useLike(postId, "communityDetail");
   const [isShowMenu, setIsShowMenu] = useState(false);
 
+  console.log(post);
+
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);
   };
 
   const toggleLike = () => {
+    console.log(post?.liked);
     post?.liked ? dislikePost({ categoryId, postId }) : likePost({ categoryId, postId });
   };
 

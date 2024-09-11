@@ -3,6 +3,7 @@ import "../../styles/scss/components/comment/commentForm.scss";
 import { ICreateCommentParams } from "../../hooks/useCommunityComment";
 import { useAuthStore } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
+import { useAlertMessage } from "../../hooks/useAlertMessage";
 
 interface IProps {
   postId: number;
@@ -14,6 +15,7 @@ const CommentForm = ({ postId, addComment }: IProps) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [comment, setComment] = useState("");
   const { uuid, isLoggedIn } = useAuthStore();
+  const { showAlertMessage } = useAlertMessage();
 
   const handleResizeHeight = () => {
     if (textareaRef.current) {
@@ -42,7 +44,7 @@ const CommentForm = ({ postId, addComment }: IProps) => {
     // 여기 UI로 보여주기
     addComment({ postId, userId: uuid, comment })
       .then(() => {
-        setComment("");
+        showAlertMessage("댓글이 등록되었습니다.");
       })
       .catch(() => {})
       .finally(() => {

@@ -5,6 +5,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import "../../styles/scss/components/layout/layout.scss";
 import { authPaths, postPaths, boardsDetailRegex, chatPaths } from "./LayoutRouter";
 import HomeCat from "../common/HomeCat";
+import AlertMeesageContainer from "../common/alertMessage/AlertMeesageContainer";
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const Layout: React.FC = () => {
           <Outlet />
         </main>
         {!hideHeaderFooter && <Footer />}
+        <AlertMeesageContainer />
       </section>
     </div>
   );
