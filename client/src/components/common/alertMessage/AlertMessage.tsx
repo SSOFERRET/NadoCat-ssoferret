@@ -1,5 +1,5 @@
 import useAlertMessageStore, { MessageType } from "../../../store/alertMessage";
-import "../../../styles/scss/components/common/AlertMessage/message.scss";
+import "../../../styles/scss/components/common/alertMessage/message.scss";
 
 interface IProps {
   id: number;
