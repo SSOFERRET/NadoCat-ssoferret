@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
         input: {
           main: path.resolve(__dirname, "index.html"),
         },
+        external: ["**/*.test.ts", "**/*.spec.ts"],
       },
     },
   };
