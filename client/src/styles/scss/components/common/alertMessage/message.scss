@@ -1,0 +1,11 @@
+@import "../../../base/common.scss";
+
+.message-container {
+  background-color: white;
+  box-shadow: 0 2rem 10rem rgba(0, 0, 0, 0.1);
+  padding: 15rem 10rem;
+  font-family: "medium";
+  font-size: $size-14;
+  width: 390rem;
+  text-align: center;
+}

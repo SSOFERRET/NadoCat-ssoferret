@@ -1,0 +1,13 @@
+@import "../../../base/common.scss";
+
+.alert-message-container {
+  width: 430rem;
+  position: fixed;
+  display: flex;
+  bottom: 60rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  margin: 0 auto;
+}

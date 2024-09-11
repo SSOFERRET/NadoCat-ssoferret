@@ -24,7 +24,7 @@ const CommentList = ({ postId, comments, showMenu, isCommentEdit, setIsCommentEd
               postId={postId}
               comment={comment}
               showMenu={showMenu}
-              isCommentEdit={isCommentEdit} // 여기 처리 필요
+              isCommentEdit={isCommentEdit}
               setIsCommentEdit={setIsCommentEdit}
               editComment={editComment}
             />
