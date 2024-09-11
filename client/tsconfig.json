@@ -22,5 +22,5 @@
   },
   "include": ["src", "constants"],
   "references": [{ "path": "./tsconfig.node.json" }],
-  "exclude": ["**/*.test.ts"]
+  "exclude": ["src/__test__/**"]
 }
