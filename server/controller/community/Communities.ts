@@ -28,6 +28,7 @@ import { notifyNewPostToFriends } from "../notification/Notifications";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 
 export const getCommunities = async (req: Request, res: Response) => {
   try {
@@ -137,6 +138,8 @@ export const createCommunity = async (req: Request, res: Response) => {
       return post;
     });
 
+    await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, newPost);
+
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {
     handleControllerError(error, res);
@@ -203,6 +206,11 @@ export const updateCommunity = async (req: Request, res: Response) => {
       await removeImagesByIds(tx, imageIds);
 
       await deleteImages(tx, imageIds);
+
+      // await updateOpensearchDocument(CATEGORY.COMMUNITIES, postId, {
+      //   content: 
+
+      // })
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
@@ -250,6 +258,8 @@ export const deleteCommunity = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeCommunityById(tx, postId, userId);
+
+      await deleteOpensearchDocument(CATEGORY.COMMUNITIES, postId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });

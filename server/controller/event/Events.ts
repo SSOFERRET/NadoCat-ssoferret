@@ -28,6 +28,7 @@ import { notifyNewPostToFriends } from "../notification/Notifications";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
+import { deleteOpensearchDocument, indexOpensearchDocument } from "../search/Searches";
 
 export const getEvents = async (req: Request, res: Response) => {
   try {
@@ -52,7 +53,7 @@ export const getEvents = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
-  } 
+  }
 };
 
 export const getEvent = async (req: Request, res: Response) => {
@@ -88,7 +89,7 @@ export const getEvent = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
-  } 
+  }
 };
 
 export const createEvent = async (req: Request, res: Response) => {
@@ -134,6 +135,8 @@ export const createEvent = async (req: Request, res: Response) => {
 
         await addEventImages(tx, formatedImages);
       }
+
+      await indexOpensearchDocument(CATEGORY.EVENTS, newPost.postId, newPost);
 
       await notifyNewPostToFriends(userId, CATEGORY.EVENTS, post.postId);
 
@@ -214,7 +217,7 @@ export const updateEvent = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } 
+  }
 };
 
 export const deleteEvent = async (req: Request, res: Response) => {
@@ -255,6 +258,8 @@ export const deleteEvent = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeEventById(tx, postId, userId);
+
+      await deleteOpensearchDocument(CATEGORY.EVENTS, postId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
