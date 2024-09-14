@@ -137,7 +137,7 @@ export const createCommunity = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
-      await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, { post, thumbnail: imageUrls[0] });
+      await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, { newPost, thumbnail: imageUrls[0] });
 
       return post;
     });
