@@ -116,39 +116,6 @@ export const indexOpensearchDocument = async (categoryId: TCategoryId, postId: n
   }
 };
 
-export const indexOpensearchUser = async (email: string, nickname: string, uuid: string) => {
-  try {
-    const response = await opensearch.index({
-      index: "users",
-      id: uuid,
-      body: {
-        nickname,
-        url: `/users/${uuid}/profile`
-      }
-    });
-    console.log('User indexed:', response);
-  } catch (error) {
-    console.error('Error indexing user:', error);
-  }
-}
-
-export const updateOpensearchUser = async (nickname: string, uuid: string) => {
-  try {
-    const response = await opensearch.update({
-      index: "users",
-      id: uuid,
-      body: {
-        doc: {
-          nickname
-        }
-      }
-    });
-    console.log('User indexed:', response);
-  } catch (error) {
-    console.error('Error indexing user:', error);
-  }
-}
-
 export const updateOpensearchDocument = async (categoryId: TCategoryId, postId: number, data: any) => {
   try {
     const { categoryName, documentId } = getDataForSearch(categoryId, postId);

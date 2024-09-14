@@ -32,6 +32,7 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { ILocation } from "../../types/location";
 import { handleControllerError } from "../../util/errors/errors";
+import { deleteOpensearchDocument, indexOpensearchDocument } from "../search/Searches";
 
 /* CHECKLIST
  * [ ] 사용자 정보 가져오기 반영
@@ -156,6 +157,8 @@ export const createMissing = async (req: Request, res: Response) => {
       return post;
     });
 
+    indexOpensearchDocument(CATEGORY.MISSINGS, newPost.postId, newPost);
+
     res.status(StatusCodes.CREATED).send({ postId: newPost.postId as number });
   } catch (error) {
     console.error(error)
@@ -201,6 +204,8 @@ export const deleteMissing = async (req: Request, res: Response) => {
 
       if (images) await deleteImagesByImageIds(tx, images);
     });
+
+    deleteOpensearchDocument(CATEGORY.MISSINGS, postId);
 
     return res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
