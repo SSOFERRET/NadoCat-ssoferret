@@ -26,6 +26,7 @@ import { CATEGORY } from "../../constants/category";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 
 // NOTE uuid 받아오는 임시함수 / 추후 삭제
 export const getUuid = async () => {
@@ -141,7 +142,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
       }
 
       // await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
-      // await indexOpensearchDocument(CATEGORY.STREET_CATS, name, content, postId);
+      await indexOpensearchDocument(CATEGORY.STREET_CATS, postId, post);
 
       return newPost;
     });
@@ -192,6 +193,8 @@ export const updateStreetCat = async (req: Request, res: Response) => {
         }));
 
         await createStreetCatImages(tx, getStreetCatImages);
+
+        await updateOpensearchDocument(CATEGORY.STREET_CATS, postId, postData);
       }
       // 게시글에서 지운 이미지 삭제
       if (imageIds.length) {
@@ -231,6 +234,8 @@ export const deleteStreetCat = async (req: Request, res: Response) => {
       await removeAllFavoriteCat(postId);
       await removeAllComment(postId);
       await deletePost(tx, postId, uuid);
+
+      await deleteOpensearchDocument(CATEGORY.STREET_CATS, postId)
 
       // status 204는 message가 보내지지 않아 임시로 200
       res.status(200).json({ message: "동네 고양이 도감 삭제" });
