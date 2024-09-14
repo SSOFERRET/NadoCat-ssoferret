@@ -13,7 +13,6 @@ interface IProps {
 }
 
 const SearchContainer = ({ data, getTotalCount }: IProps) => {
-  console.log(data);
   const [total, setTotal] = useState<number>(0);
   useEffect(() => {
     const totalCount = getTotalCount();
@@ -21,10 +20,11 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
   }, [getTotalCount]);
   return (
     <div className="search-result-list">
-      <span className="search-result-count">총 검색 결과 수 - {total} 건</span>
+      <span className="totalcount">총 검색 결과 수 - {total} 건</span>
       <ul className="total-results">
         {data.map((category) => (
           <li key={category.category} className="category-container">
+            <div className="devider" />
             <div className="category-title">
               <span className="search-result-count">
                 {`${
@@ -37,15 +37,6 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
               <span className="no-search">검색 결과가 없습니다.</span>
             ) : (
               <div className="results-container">
-                {/* {category.category === "communities" &&
-                  category.search.map((result) => (
-                    <div key={Number(result._source.postId)} className="result">
-                      <CommunityEventSearchComponent
-                        post={result._source as any}
-                      />
-                    </div>
-                  ))} */}
-
                 {(category.category === "communities" ||
                   category.category === "events") &&
                   category.search.map((result) => (

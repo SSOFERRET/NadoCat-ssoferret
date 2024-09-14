@@ -1,0 +1,229 @@
+@import "./../../styles/scss/base/common.scss";
+
+.page {
+  height: 100%;
+  padding-top: 20rem;
+  padding-bottom: 64rem;
+  background-color: $white;
+
+  // .totalcount {
+  //   display: block;
+  //   font-family: "bold";
+  //   color: $primary;
+  //   font-size: $size-16;
+  //   margin-top: 17rem;
+  // }
+
+  // .search-result-count {
+  //   display: block;
+  //   font-family: "bold";
+  //   color: $primary;
+  //   font-size: $size-14;
+  //   margin-top: 17rem;
+  // }
+
+  // .search-result-list {
+  //   .category-title {
+  //     display: flex;
+  //     flex-direction: row;
+  //     justify-content: space-between;
+  //     width: 280rem;
+  //   }
+  // }
+  // .more {
+  //   display: flex;
+  //   justify-content: center;
+  //   font-family: "semibold";
+  //   color: $primary;
+  //   font-size: $size-12;
+  // }
+
+  // .no-search {
+  //   font-size: $size-14;
+  // }
+}
+
+.page .category {
+  font-family: "semiBold";
+  font-size: $size-14;
+  padding-left: 20rem;
+  color: silver;
+  border-bottom: 0.5rem solid $white;
+  padding-bottom: 10rem;
+}
+
+.page .searchForm {
+  height: 38rem;
+  margin: 0 16rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50rem;
+  padding: 0 16rem;
+  gap: 5rem;
+  border: 0.5px solid #c7c7c7;
+  margin-top: 14rem;
+}
+
+.page .searchInput {
+  flex: 1;
+  font-size: $size-14;
+  font-family: "medium";
+  border: none;
+  outline: none;
+}
+
+.page .searchInputButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7rem;
+
+  button {
+    width: 20rem;
+    height: 20rem;
+    font-size: $size-20;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+}
+
+.deleteInputValue {
+  color: $silver;
+}
+
+.deleteInputHidden {
+  visibility: hidden;
+}
+
+.searchButton {
+  color: red;
+}
+
+.page .results {
+  margin-top: 19rem;
+}
+
+.searchCategories {
+  margin: 0 20rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "medium";
+  font-size: $size-12;
+  border-bottom: 0.5rem solid $lightgray;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 8rem 0;
+    background-color: transparent;
+    cursor: pointer;
+
+    &.selected {
+      color: $white;
+      background-color: $primary;
+    }
+  }
+}
+
+// 최근 검색어
+.recentKeywordContainer {
+  margin: 14rem 20rem 0;
+}
+
+.topMenu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  button {
+    font-family: "medium";
+    font-size: $size-14;
+    background-color: transparent;
+    color: $dimgray;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.topMenu .title {
+  font-size: $size-14;
+  font-family: "bold";
+}
+
+.recentKeywordContainer .keywords {
+  display: flex;
+  flex-direction: column;
+  gap: 21rem;
+  margin-top: 20rem;
+
+  .keyword {
+    display: flex;
+    align-items: center;
+    font-size: $size-14;
+    font-family: "regular";
+
+    .wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex: 1;
+
+      margin-left: 7rem;
+
+      span {
+        max-width: 339rem;
+        display: block;
+        flex: 1;
+        margin-right: 17rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: $size-14;
+        font-family: "regular";
+        color: $black;
+        cursor: pointer;
+      }
+
+      .crossIcon {
+        color: $black;
+      }
+
+      .deleteBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: $size-12;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .clockIcon {
+      font-size: 15rem;
+    }
+  }
+}
+
+.guide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 77rem;
+  span {
+    font-size: $size-16;
+    font-family: "semiBold";
+    color: #b8bcbf;
+  }
+  img {
+    width: 250rem;
+    height: 250rem;
+  }
+}
