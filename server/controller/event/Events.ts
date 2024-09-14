@@ -29,6 +29,7 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteOpensearchDocument, indexOpensearchDocument } from "../search/Searches";
+import { deleteThumbnail } from "../../model/streetCat.model";
 
 export const getEvents = async (req: Request, res: Response) => {
   try {
@@ -117,8 +118,10 @@ export const createEvent = async (req: Request, res: Response) => {
         await addEventTags(tx, formatedTags);
       }
 
+      let imageUrls: any = [];
+
       if (req.files) {
-        const imageUrls = (await uploadImagesToS3(req)) as any;
+        imageUrls = (await uploadImagesToS3(req)) as any;
         const newImages = await addNewImages(
           tx,
           {
@@ -136,7 +139,7 @@ export const createEvent = async (req: Request, res: Response) => {
         await addEventImages(tx, formatedImages);
       }
 
-      await indexOpensearchDocument(CATEGORY.EVENTS, newPost.postId, newPost);
+      await indexOpensearchDocument(CATEGORY.EVENTS, newPost.postId, { ...newPost, thumbnail: imageUrls[0] });
 
       await notifyNewPostToFriends(userId, CATEGORY.EVENTS, post.postId);
 

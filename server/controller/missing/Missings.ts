@@ -144,9 +144,10 @@ export const createMissing = async (req: Request, res: Response) => {
         locationId: newLocation.locationId,
       });
 
-      if (req.files) {
+      let imageUrls: string[] = [];
 
-        const imageUrls = await uploadImagesToS3(req) as string[];
+      if (req.files) {
+        imageUrls = await uploadImagesToS3(req) as string[];
         await addNewImages(tx, {
           userId,
           postId: post.postId,
@@ -154,7 +155,7 @@ export const createMissing = async (req: Request, res: Response) => {
         }, imageUrls);
       }
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
-      return post;
+      return { ...post, thumbnail: imageUrls[0] };
     });
 
     await indexOpensearchDocument(CATEGORY.MISSINGS, newPost.postId, newPost);

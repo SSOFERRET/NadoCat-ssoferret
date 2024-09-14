@@ -115,11 +115,12 @@ export const createStreetCat = async (req: Request, res: Response) => {
       // 도감 게시글 생성
       const newPost = await createPost(tx, postData, locationId);
       const postId = newPost.postId;
+      let images: string[] = [];
 
       // 도감 이미지 생성
       if (req.files) {
         // - uploadImagesToS3 사용해서 생성하고
-        const images = await uploadImagesToS3(req);
+        images = await uploadImagesToS3(req) as string[];
         // - addNewImages 사용해서 생성
         const newImages = await addNewImages(
           tx,
@@ -142,7 +143,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
       }
 
       // await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
-      await indexOpensearchDocument(CATEGORY.STREET_CATS, postId, post);
+      await indexOpensearchDocument(CATEGORY.STREET_CATS, postId, { ...post, thumbnail: images[0] });
 
       return newPost;
     });
