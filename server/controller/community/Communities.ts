@@ -115,8 +115,10 @@ export const createCommunity = async (req: Request, res: Response) => {
         await addCommunityTags(tx, formatedTags);
       }
 
+      let imageUrls: any = [];
+
       if (req.files) {
-        const imageUrls = (await uploadImagesToS3(req)) as any;
+        imageUrls = (await uploadImagesToS3(req)) as any;
         const newImages = await addNewImages(
           tx,
           {
@@ -135,10 +137,12 @@ export const createCommunity = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
+      await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, { post, thumbnail: imageUrls[0] });
+
       return post;
     });
 
-    await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, newPost);
+
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {
