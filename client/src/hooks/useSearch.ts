@@ -30,7 +30,8 @@ const useSearch = (keyword: string): {
   isLoading: boolean;
   error: unknown;
 } => {
-  const { data, isLoading, error } = useQuery<ISearchInfo[] | undefined>({
+
+  const { data, isLoading, error } = useQuery<ISearchInfo[]>({
     queryKey: ["opensearch", keyword],
     queryFn: () => fetchSearch(keyword),
     enabled: !!keyword,
