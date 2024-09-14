@@ -25,6 +25,7 @@ import { getPosts } from "./Common";
 import { handleControllerError } from "../../util/errors/errors";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { uploadImagesToS3 } from "../../util/images/s3ImageHandler";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 
 /* CHECKLIST
  * [ ] 사용자 정보 가져오기 반영
@@ -93,7 +94,7 @@ export const getMissingReport = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) validateError(res, error);
-  } 
+  }
 };
 
 export const createMissingReport = async (req: Request, res: Response) => {
@@ -110,7 +111,7 @@ export const createMissingReport = async (req: Request, res: Response) => {
     const report = JSON.parse(req.body.report);
     const location = JSON.parse(req.body.location);
 
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const newPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newLocation = await addLocation(tx, location);
 
       const post = await addMissingReport(tx, {
@@ -145,13 +146,17 @@ export const createMissingReport = async (req: Request, res: Response) => {
       //   sender: userId,
       //   url: `/boards/missings/${missingId}/reports/${post.postId}`
       // });
+
+      return post;
     });
 
-    return res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다." });
+    await indexOpensearchDocument(CATEGORY.MISSING_REPORTS, newPost.postId, newPost);
+
+    res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다." });
   } catch (error) {
     console.error(error);
     if (error instanceof Error) validateError(res, error);
-  } 
+  }
 };
 
 /**
@@ -186,12 +191,14 @@ export const deleteMissingReport = async (req: Request, res: Response, postIdInp
       if (locations) await deleteLocationsByLocationIds(tx, locations);
 
       if (images) await deleteImagesByImageIds(tx, images);
+
+      await deleteOpensearchDocument(CATEGORY.MISSING_REPORTS, postId);
     });
 
-    return res.status(StatusCodes.OK).json("제보글 삭제");
+    res.status(StatusCodes.OK).send("제보글 삭제");
   } catch (error) {
     return handleControllerError(error, res);
-  } 
+  }
 };
 
 export const deleteMissingReportHandler = async (req: Request, res: Response) => {
@@ -199,7 +206,7 @@ export const deleteMissingReportHandler = async (req: Request, res: Response) =>
     await deleteMissingReport(req, res);
   } catch (error) {
     if (error instanceof Error) return validateError(res, error);
-  } 
+  }
 };
 
 export const updateMissingReport = async (req: Request, res: Response) => {
@@ -243,13 +250,16 @@ export const updateMissingReport = async (req: Request, res: Response) => {
       //   sender: userId,
       //   url: `/boards/missings/${missingId}/reports/${postId}`
       // });
+      // await updateOpensearchDocument(CATEGORY.MISSINGS, postId, {
+      //   content: missing.detail
+      // })
     });
 
     return res.status(StatusCodes.OK).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     console.error(error);
     if (error instanceof Error) return validateError(res, error);
-  } 
+  }
 };
 
 export const updateMissingReportCheck = async (req: Request, res: Response) => {
@@ -288,5 +298,5 @@ export const updateMissingReportCheck = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     if (error instanceof Error) return validateError(res, error);
-  } 
+  }
 };

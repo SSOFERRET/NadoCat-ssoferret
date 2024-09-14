@@ -32,7 +32,7 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { ILocation } from "../../types/location";
 import { handleControllerError } from "../../util/errors/errors";
-import { deleteOpensearchDocument, indexOpensearchDocument } from "../search/Searches";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
 
 /* CHECKLIST
  * [ ] 사용자 정보 가져오기 반영
@@ -157,7 +157,7 @@ export const createMissing = async (req: Request, res: Response) => {
       return post;
     });
 
-    indexOpensearchDocument(CATEGORY.MISSINGS, newPost.postId, newPost);
+    await indexOpensearchDocument(CATEGORY.MISSINGS, newPost.postId, newPost);
 
     res.status(StatusCodes.CREATED).send({ postId: newPost.postId as number });
   } catch (error) {
@@ -203,9 +203,9 @@ export const deleteMissing = async (req: Request, res: Response) => {
       if (locations) await deleteLocationsByLocationIds(tx, locations);
 
       if (images) await deleteImagesByImageIds(tx, images);
-    });
 
-    deleteOpensearchDocument(CATEGORY.MISSINGS, postId);
+      await deleteOpensearchDocument(CATEGORY.MISSINGS, postId);
+    });
 
     return res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
@@ -262,7 +262,11 @@ export const updateMissing = async (req: Request, res: Response) => {
           imageUrls
         );
       }
+      await updateOpensearchDocument(CATEGORY.MISSINGS, postId, {
+        content: missing.detail
+      })
     });
+
 
     res.status(StatusCodes.OK).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
