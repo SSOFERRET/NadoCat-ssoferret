@@ -1,13 +1,11 @@
-import "../../styles/scss/components/communityAndEvent/post.scss";
 import { useEffect, useRef, useState } from "react";
 import Tags from "../common/Tags";
 import { ICommunity } from "../../models/community.model";
 import { formatAgo, formatViews } from "../../utils/format/format";
 import { useLocation, useNavigate } from "react-router-dom";
+import styles from "./communityEventSearchComponent.module.scss";
 import { IEvent } from "../../models/event.model";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
-// NOTE 타입 이거 맞나..
 type PostType = ICommunity | IEvent;
 interface IProps<T> {
   post: T;
@@ -43,36 +41,46 @@ const CommunityEventSearchComponent = <T extends PostType>({
   }, [post.title, post.thumbnail]);
 
   return (
-    <li
-      className="board-post"
-      onClick={() => navigate(`${"/boards/communities"}/${post.postId}`)}
+    <div
+      className={styles.post}
+      onClick={() =>
+        navigate(
+          `/boards/${
+            Object.keys(post).includes("isClosed") ? "events" : "communities"
+          }/${post.postId}`
+        )
+      }
     >
-      <div className="board-post-info">
-        <div className="post-title-container">
-          <span className="post-title" ref={titleRef}>
+      <div className={styles.postInfo}>
+        <div className={styles.container}>
+          <span className={styles.title} ref={titleRef}>
             {post.title}
           </span>
 
           {isClosed(post) && (
-            <span className={`is-closed ${post.isClosed ? "close" : "open"}`}>
+            <span
+              className={`${styles.isClosed} ${
+                post.isClosed ? styles.close : styles.open
+              }`}
+            >
               {post.isClosed ? "마감" : "모집중"}
             </span>
           )}
         </div>
 
-        {isSingleLine && <span className="post-content">{post.content}</span>}
+        {isSingleLine && <span className={styles.content}>{post.content}</span>}
 
-        <div className="post-meta">
+        <div className={styles.meta}>
           <span>{formatAgo(post.createdAt)}</span>
           <span>&middot;</span>
-          <span className="post-views">조회 {formatViews(post.views)}</span>
+          <span className={styles.views}>조회 {formatViews(post.views)}</span>
           <Tags tags={post.tags.slice(0, 2)} size="sm" />
         </div>
       </div>
-      <div className="post-image">
+      <div className={styles.image}>
         {post.thumbnail && <img src={post.thumbnail} alt={post.title} />}
       </div>
-    </li>
+    </div>
   );
 };
 

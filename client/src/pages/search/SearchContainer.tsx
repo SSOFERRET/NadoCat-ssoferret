@@ -6,6 +6,7 @@ import { ICommunity } from "../../models/community.model";
 import { IEvent } from "../../models/event.model";
 import { categoryNames } from "./Search";
 import CommunityEventSearchComponent from "../../components/search/CommunityEventSearchComponent";
+import styles from "./search.module.scss";
 
 interface IProps {
   data: ISearchInfo[];
@@ -20,31 +21,38 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
   }, [getTotalCount]);
   return (
     <div className="search-result-list">
-      <span className="totalcount">총 검색 결과 수 - {total} 건</span>
+      {/* <span className={`${styles.count} ${styles.leftMargin20}`}>
+        총 검색 결과 수 - {total} 건
+      </span> */}
       <ul className="total-results">
         {data.map((category) => (
-          <li key={category.category} className="category-container">
-            <div className="devider" />
-            <div className="category-title">
-              <span className="search-result-count">
-                {`${
-                  categoryNames[category.category as keyof typeof categoryNames]
-                } ${category.totalcount.value} 건`}
-              </span>
-            </div>
-
+          <li key={category.category} className={styles.categoryContainer}>
+            <span className={`${styles.count} ${styles.leftMargin12}`}>
+              {`${
+                categoryNames[category.category as keyof typeof categoryNames]
+              } ${category.totalcount.value} 건`}
+            </span>
+            <div className={styles.devider} />
             {category.search.length === 0 ? (
-              <span className="no-search">검색 결과가 없습니다.</span>
+              <span className={styles.noSearch}>검색 결과가 없습니다.</span>
             ) : (
-              <div className="results-container">
+              <div>
                 {(category.category === "communities" ||
                   category.category === "events") &&
-                  category.search.map((result) => (
-                    <div key={result._source.postId} className="result">
-                      <CommunityEventSearchComponent
-                        post={result._source as any}
-                      />
-                    </div>
+                  category.search.map((result, idx) => (
+                    <>
+                      <div
+                        key={result._source.postId}
+                        className={styles.leftMargin12}
+                      >
+                        <CommunityEventSearchComponent
+                          post={result._source as ICommunity | IEvent}
+                        />
+                      </div>
+                      {category.totalcount.value > 1 && idx === 0 && (
+                        <div className={styles.devider} />
+                      )}
+                    </>
                   ))}
 
                 {/* {(category.category === "missings" ||
@@ -64,6 +72,11 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
                     )}
                   </div>
                 )} */}
+                {category.totalcount.value > 2 && (
+                  <div className={styles.more}>
+                    <span>검색 결과 더 보기 →</span>
+                  </div>
+                )}
               </div>
             )}
           </li>

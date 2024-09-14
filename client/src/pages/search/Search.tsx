@@ -176,9 +176,7 @@ const Search = () => {
               </li>
             ))}
           </ul>
-          {selected === 0 && (
-            <SearchContainer data={data} getTotalCount={getTotalCount} />
-          )}
+          <SearchContainer data={data} getTotalCount={getTotalCount} />
         </section>
       ) : (
         !isLoading && (

@@ -5,42 +5,6 @@
   padding-top: 20rem;
   padding-bottom: 64rem;
   background-color: $white;
-
-  // .totalcount {
-  //   display: block;
-  //   font-family: "bold";
-  //   color: $primary;
-  //   font-size: $size-16;
-  //   margin-top: 17rem;
-  // }
-
-  // .search-result-count {
-  //   display: block;
-  //   font-family: "bold";
-  //   color: $primary;
-  //   font-size: $size-14;
-  //   margin-top: 17rem;
-  // }
-
-  // .search-result-list {
-  //   .category-title {
-  //     display: flex;
-  //     flex-direction: row;
-  //     justify-content: space-between;
-  //     width: 280rem;
-  //   }
-  // }
-  // .more {
-  //   display: flex;
-  //   justify-content: center;
-  //   font-family: "semibold";
-  //   color: $primary;
-  //   font-size: $size-12;
-  // }
-
-  // .no-search {
-  //   font-size: $size-14;
-  // }
 }
 
 .page .category {
@@ -226,4 +190,62 @@
     width: 250rem;
     height: 250rem;
   }
+}
+
+//SearchContainer
+
+.count {
+  display: block;
+  font-family: "bold";
+  color: $primary;
+  font-size: $size-14;
+  margin-top: 16rem;
+  margin-bottom: 16rem;
+}
+
+.search-result-list {
+  .category-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 280rem;
+  }
+}
+.more {
+  padding: 16px;
+  border-top: 0.5px solid #efefef;
+  display: flex;
+  justify-content: center;
+  color: $gray;
+  font-size: $size-12;
+  cursor: pointer;
+}
+
+.noSearch {
+  font-size: $size-14;
+}
+
+.leftMargin20 {
+  margin-left: 20rem;
+  margin-right: 20rem;
+}
+
+.leftMargin12 {
+  margin-left: 12rem;
+  margin-right: 12rem;
+}
+
+.colorSilver {
+  color: $lemon;
+}
+
+.devider {
+  border-top: 0.5rem solid #efefef;
+}
+
+.categoryContainer {
+  margin: 8rem;
+  border: 0.5px solid #efefef;
+  border-radius: 16rem;
+  box-shadow: inset;
 }
