@@ -107,8 +107,10 @@ export const createEvent = async (req: Request, res: Response) => {
       const post = await addEvent(tx, userId, title, content, !!isClosed);
       const postId = post.postId;
 
+      let newTags: ITag[] = [];
+
       if (tagList.length > 0) {
-        const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
+        newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
 
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
@@ -139,12 +141,12 @@ export const createEvent = async (req: Request, res: Response) => {
         await addEventImages(tx, formatedImages);
       }
 
-      await indexOpensearchDocument(CATEGORY.EVENTS, newPost.postId, { ...newPost, thumbnail: imageUrls[0] });
-
       await notifyNewPostToFriends(userId, CATEGORY.EVENTS, post.postId);
 
-      return post;
+      return { ...post, thumbnail: imageUrls[0], tags: newTags };
     });
+
+    await indexOpensearchDocument(CATEGORY.EVENTS, newPost.postId, newPost);
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {

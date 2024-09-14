@@ -106,8 +106,10 @@ export const createCommunity = async (req: Request, res: Response) => {
       const post = await addCommunity(tx, userId, title, content);
       const postId = post.postId;
 
+      let newTags: ITag[] = [];
+
       if (tagList.length > 0) {
-        const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
+        newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
           postId,
@@ -115,10 +117,10 @@ export const createCommunity = async (req: Request, res: Response) => {
         await addCommunityTags(tx, formatedTags);
       }
 
-      let imageUrls: any = [];
+      let imageUrls: string[] = [];
 
       if (req.files) {
-        imageUrls = (await uploadImagesToS3(req)) as any;
+        imageUrls = (await uploadImagesToS3(req)) as string[];
         const newImages = await addNewImages(
           tx,
           {
@@ -137,7 +139,7 @@ export const createCommunity = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
-      return { ...post, thumbnail: imageUrls[0] };
+      return { ...post, thumbnail: imageUrls[0], tags: newTags };
     });
 
     await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, newPost);
