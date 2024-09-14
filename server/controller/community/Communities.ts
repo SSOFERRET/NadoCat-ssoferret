@@ -137,12 +137,10 @@ export const createCommunity = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
-      await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, { newPost, thumbnail: imageUrls[0] });
-
-      return post;
+      return { ...post, thumbnail: imageUrls[0] };
     });
 
-
+    await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, newPost);
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {
