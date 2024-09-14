@@ -5,6 +5,7 @@ import { ISearchInfo } from "../../hooks/useSearch";
 import { ICommunity } from "../../models/community.model";
 import { IEvent } from "../../models/event.model";
 import { categoryNames } from "./Search";
+import CommunityEventSearchComponent from "../../components/search/CommunityEventSearchComponent";
 
 interface IProps {
   data: ISearchInfo[];
@@ -12,6 +13,7 @@ interface IProps {
 }
 
 const SearchContainer = ({ data, getTotalCount }: IProps) => {
+  console.log(data);
   const [total, setTotal] = useState<number>(0);
   useEffect(() => {
     const totalCount = getTotalCount();
@@ -35,15 +37,26 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
               <span className="no-search">검색 결과가 없습니다.</span>
             ) : (
               <div className="results-container">
+                {/* {category.category === "communities" &&
+                  category.search.map((result) => (
+                    <div key={Number(result._source.postId)} className="result">
+                      <CommunityEventSearchComponent
+                        post={result._source as any}
+                      />
+                    </div>
+                  ))} */}
+
                 {(category.category === "communities" ||
                   category.category === "events") &&
                   category.search.map((result) => (
                     <div key={result._source.postId} className="result">
-                      <Post post={result._source as ICommunity | IEvent} />
+                      <CommunityEventSearchComponent
+                        post={result._source as any}
+                      />
                     </div>
                   ))}
 
-                {(category.category === "missings" ||
+                {/* {(category.category === "missings" ||
                   category.category === "street-cats") && (
                   <div className="search-cats-container">
                     {category.category === "missings" && (
@@ -59,7 +72,7 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
                       />
                     )}
                   </div>
-                )}
+                )} */}
               </div>
             )}
           </li>
