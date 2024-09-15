@@ -166,6 +166,7 @@ export const createMissing = async (req: Request, res: Response) => {
         nickname: user?.selectUser.nickname,
         thumbnail: imageUrls[0],
         postId: post.postId,
+        found: Boolean,
         createdAt: post.createdAt
       });
 

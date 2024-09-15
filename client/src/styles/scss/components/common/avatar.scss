@@ -8,6 +8,11 @@
   flex-shrink: 0;
   margin: 0;
 
+  &.mn {
+    width: 24rem;
+    height: 24rem;
+  }
+
   &.sm {
     width: 36rem;
     height: 36rem;

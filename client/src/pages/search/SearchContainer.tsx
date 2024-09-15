@@ -36,7 +36,8 @@ const SearchContainer = ({ data }: IProps) => {
             ) : (
               <div>
                 {(category.category === "communities" ||
-                  category.category === "events") &&
+                  category.category === "events" ||
+                  category.category === "missings") &&
                   category.search.map((result, idx) => (
                     <>
                       <div

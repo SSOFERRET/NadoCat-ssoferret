@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import Tags from "../common/Tags";
-import { formatAgo } from "../../utils/format/format";
+import { formatAgo, formatDate } from "../../utils/format/format";
 import { useNavigate } from "react-router-dom";
 import styles from "./searchComponent.module.scss";
 import { ISearchData } from "../../hooks/useSearch";
+import Avatar from "../common/Avatar";
 
 interface IProps {
   post: ISearchData;
@@ -48,6 +49,7 @@ const SearchComponent = ({ post }: IProps) => {
     if (titleRef.current) {
       setIsSingleLine(calculateLine(titleRef.current));
     }
+    isMissing(post) && console.log("고양이", post);
   }, [post]);
 
   return (
@@ -58,6 +60,18 @@ const SearchComponent = ({ post }: IProps) => {
       }
     >
       <div className={styles.postInfo}>
+        <div className={styles.userInfo}>
+          <Avatar
+            profileImage={post.profile}
+            nickname={post.nickname}
+            size="mn"
+          />
+          {isMissing(post) ? (
+            <span className={styles.missings}>{post.title}</span>
+          ) : (
+            <span className={styles.notMissings}>{post.nickname}</span>
+          )}
+        </div>
         <div className={styles.container}>
           <span className={styles.title} ref={titleRef}>
             {post.title}
@@ -74,7 +88,24 @@ const SearchComponent = ({ post }: IProps) => {
           )}
         </div>
 
-        {isSingleLine && <span className={styles.content}>{post.content}</span>}
+        {isSingleLine && !isMissing(post) && (
+          <span className={styles.content}>{post.content}</span>
+        )}
+        {isMissing(post) && (
+          <div className={styles.missingContent}>
+            <span className={styles.content}>실종위치</span>
+            <span className={styles.content}>{post.location}</span>
+          </div>
+        )}
+
+        {isMissing(post) && (
+          <div className={styles.missingContent}>
+            <span className={styles.content}>실종날짜</span>
+            <span className={styles.content}>
+              {formatDate(post.time as string)}
+            </span>
+          </div>
+        )}
 
         <div className={styles.meta}>
           <span>{formatAgo(post.createdAt)}</span>
