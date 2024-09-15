@@ -12,9 +12,10 @@ export interface ISearchData {
   time?: string;
   content?: string;
   profile: string;
-  nickname: string;
+  nickname?: string;
   thumbnail: string;
   isClosed?: boolean;
+  found?: boolean;
   createdAt: string;
   tags?: ITag[];
 }

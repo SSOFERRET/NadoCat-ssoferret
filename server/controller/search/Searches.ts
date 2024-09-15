@@ -39,7 +39,7 @@ export const searchDocuments = async (req: Request, res: Response) => {
               query: {
                 query_string: {
                   query: `*${query}*`,  // 검색어 포함하는 결과
-                  fields: ["content", "title", "detail", "name", "missingCats.name", "locations.detail", "location.detail", "tags.tag"]
+                  fields: ["content", "title", "detail", "name", "location", "tags.tag"]
                 }
               }
             },
