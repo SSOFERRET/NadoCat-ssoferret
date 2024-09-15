@@ -61,11 +61,7 @@ const SearchComponent = ({ post }: IProps) => {
     >
       <div className={styles.postInfo}>
         <div className={styles.userInfo}>
-          <Avatar
-            profileImage={post.profile}
-            nickname={post.nickname}
-            size="mn"
-          />
+          <Avatar profileImage={post.profile} size="mn" />
           {isMissing(post) ? (
             <span className={styles.missings}>{post.title}</span>
           ) : (

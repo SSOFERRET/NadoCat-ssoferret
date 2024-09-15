@@ -4,7 +4,7 @@ import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 interface IProps {
   profileImage: string | null;
-  nickname: string;
+  nickname?: string;
   onClick?: () => void;
   size?: "mn" | "sm" | "md" | "lg";
 }
