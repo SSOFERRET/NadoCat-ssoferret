@@ -3,7 +3,7 @@ import styles from "./search.module.scss";
 import { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import ExclamationMarkCat from "../../assets/img/exclamationMarkCat2.png";
-import UnfindableCat from "../../assets/img/unfindableCat.png";
+// import UnfindableCat from "../../assets/img/unfindableCat.png";
 // import useDebounce from "../../hooks/useDebounce";
 import {
   deleteAllLocalStorage,
@@ -13,9 +13,7 @@ import {
 } from "../../utils/localStorage/localStorage";
 import RecentKeywords from "./RecentKeywords";
 import { IoMdCloseCircle } from "react-icons/io";
-import useSearch, {
-  /*ISearch,*/ ISearchInfo /*TIndex*/,
-} from "../../hooks/useSearch";
+import useSearch from "../../hooks/useSearch";
 // import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
 import LoadingCat from "../../components/loading/LoadingCat";
 import SearchContainer from "./SearchContainer";
@@ -86,14 +84,14 @@ const Search = () => {
     setLocalStorage(filtered);
   };
 
-  const getTotalCount = () => {
-    const total = data?.reduce(
-      (acc: number, current: ISearchInfo) => acc + current.totalcount.value,
-      0
-    );
+  // const getTotalCount = () => {
+  //   const total = data?.reduce(
+  //     (acc: number, current: ISearchInfo) => acc + current.totalcount.value,
+  //     0
+  //   );
 
-    return total;
-  };
+  //   return total;
+  // };
 
   const deleteAllRecentKeyword = () => {
     deleteAllLocalStorage();
@@ -176,7 +174,7 @@ const Search = () => {
               </li>
             ))}
           </ul>
-          <SearchContainer data={data} getTotalCount={getTotalCount} />
+          <SearchContainer data={data} />
         </section>
       ) : (
         !isLoading && (
