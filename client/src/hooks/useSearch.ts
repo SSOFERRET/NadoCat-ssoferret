@@ -1,18 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchSearch } from "../api/search.api";
-import { ICommunity } from "../models/community.model";
-import { IEvent } from "../models/event.model";
-import { IMissing } from "../models/missing.model";
-import { ICat } from "../components/search/CatSearchList";
+import { ITag } from "../models/tag.model";
+
 
 export type TIndex = "communities" | "missings" | "streetCats" | "events" | "users" | "street-cats";
+
+export interface ISearchData {
+  title: string;
+  postId: number;
+  location?: string;
+  time?: string;
+  content?: string;
+  profile: string;
+  nickname: string;
+  thumbnail: string;
+  isClosed?: boolean;
+  createdAt: string;
+  tags?: ITag[];
+}
 
 export interface ISearch {
   _index: TIndex,
   _type: string,
   _id: string,
   _score: number,
-  _source: ICommunity | IEvent | IMissing | ICat
+  _source: ISearchData
 }
 
 export interface ISearchInfo {

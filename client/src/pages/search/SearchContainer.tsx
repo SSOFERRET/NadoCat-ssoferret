@@ -5,7 +5,7 @@ import { ISearchInfo } from "../../hooks/useSearch";
 import { ICommunity } from "../../models/community.model";
 import { IEvent } from "../../models/event.model";
 import { categoryNames } from "./Search";
-import CommunityEventSearchComponent from "../../components/search/CommunityEventSearchComponent";
+import SearchComponent from "../../components/search/SearchComponent";
 import styles from "./search.module.scss";
 
 interface IProps {
@@ -14,6 +14,7 @@ interface IProps {
 }
 
 const SearchContainer = ({ data, getTotalCount }: IProps) => {
+  console.log(data);
   const [total, setTotal] = useState<number>(0);
   useEffect(() => {
     const totalCount = getTotalCount();
@@ -34,7 +35,7 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
             </span>
             <div className={styles.devider} />
             {category.search.length === 0 ? (
-              <span className={styles.noSearch}>검색 결과가 없습니다.</span>
+              <span className={styles.more}>검색 결과가 없습니다.</span>
             ) : (
               <div>
                 {(category.category === "communities" ||
@@ -45,11 +46,14 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
                         key={result._source.postId}
                         className={styles.leftMargin12}
                       >
-                        <CommunityEventSearchComponent
+                        <SearchComponent
                           post={result._source as ICommunity | IEvent}
                         />
                       </div>
                       {category.totalcount.value > 1 && idx === 0 && (
+                        <div className={styles.devider} />
+                      )}
+                      {category.totalcount.value > 2 && idx === 1 && (
                         <div className={styles.devider} />
                       )}
                     </>
@@ -73,7 +77,7 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
                   </div>
                 )} */}
                 {category.totalcount.value > 2 && (
-                  <div className={styles.more}>
+                  <div className={`${styles.more} ${styles.cursor}`}>
                     <span>검색 결과 더 보기 →</span>
                   </div>
                 )}

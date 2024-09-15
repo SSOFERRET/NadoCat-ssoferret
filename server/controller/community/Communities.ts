@@ -29,6 +29,7 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { getUser } from "../../model/my.model";
 
 export const getCommunities = async (req: Request, res: Response) => {
   try {
@@ -139,10 +140,21 @@ export const createCommunity = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
-      return { ...post, thumbnail: imageUrls[0], tags: newTags };
-    });
+      const user = await getUser(uuid);
 
-    await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, newPost);
+      await indexOpensearchDocument(CATEGORY.COMMUNITIES, post.postId, {
+        title,
+        postId: post.postId,
+        content,
+        profile: user?.selectUser.profileImage,
+        nickname: user?.selectUser.nickname,
+        tags: newTags,
+        thumbnail: imageUrls[0],
+        createdAt: post.createdAt
+      });
+
+      return post;
+    });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {
