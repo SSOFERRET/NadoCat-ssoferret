@@ -3,13 +3,11 @@ import Tags from "../common/Tags";
 import { ICommunity } from "../../models/community.model";
 import { formatAgo, formatViews } from "../../utils/format/format";
 import { useLocation, useNavigate } from "react-router-dom";
-import styles from "./communityEventSearchComponent.module.scss";
+import styles from "./searchComponent.module.scss";
 import { IEvent } from "../../models/event.model";
-
-type PostType = ICommunity | IEvent;
-interface IProps<T> {
-  post: T;
-}
+import Avatar from "../common/Avatar";
+import { IMissing } from "../../models/missing.model";
+import { ISearchData } from "../../hooks/useSearch";
 
 const calculateLine = (element: HTMLElement | null) => {
   if (element) {
@@ -24,31 +22,39 @@ const calculateLine = (element: HTMLElement | null) => {
   return false;
 };
 
-const isClosed = (post: PostType): post is IEvent => "isClosed" in post;
-
-const CommunityEventSearchComponent = <T extends PostType>({
-  post,
-}: IProps<T>) => {
+const SearchComponent = (post: ISearchData) => {
   const navigate = useNavigate();
   const titleRef = useRef<HTMLSpanElement | null>(null);
   const [isSingleLine, setIsSingleLine] = useState<boolean>(true);
-  console.log(post);
+
+  const isEvent = (post: ISearchData): boolean =>
+    Object.keys(post).includes("isClosed");
+  const isMissing = (post: ISearchData): boolean =>
+    Object.keys(post).includes("time");
+  const isCommunity = (post: ISearchData): boolean =>
+    Object.keys(post).includes("content") && !isEvent(post);
+  const isStreetCat = (post: ISearchData): boolean =>
+    Object.keys(post).includes("location") && !isMissing(post);
+
+  const getNavigateUrl = (post: ISearchData): string => {
+    if (isEvent(post)) return "events";
+    if (isMissing(post)) return "missings";
+    if (isCommunity(post)) return "communities";
+    if (isStreetCat(post)) return "street-cats";
+    throw new Error("search data type is wrong");
+  };
 
   useEffect(() => {
     if (titleRef.current) {
       setIsSingleLine(calculateLine(titleRef.current));
     }
-  }, [post.title, post.thumbnail]);
+  }, [post]);
 
   return (
     <div
       className={styles.post}
       onClick={() =>
-        navigate(
-          `/boards/${
-            Object.keys(post).includes("isClosed") ? "events" : "communities"
-          }/${post.postId}`
-        )
+        navigate(`/boards/${getNavigateUrl(post)}/${post?.postId}`)
       }
     >
       <div className={styles.postInfo}>
@@ -57,7 +63,7 @@ const CommunityEventSearchComponent = <T extends PostType>({
             {post.title}
           </span>
 
-          {isClosed(post) && (
+          {isEvent(post) && (
             <span
               className={`${styles.isClosed} ${
                 post.isClosed ? styles.close : styles.open
@@ -73,8 +79,7 @@ const CommunityEventSearchComponent = <T extends PostType>({
         <div className={styles.meta}>
           <span>{formatAgo(post.createdAt)}</span>
           <span>&middot;</span>
-          <span className={styles.views}>조회 {formatViews(post.views)}</span>
-          <Tags tags={post.tags.slice(0, 2)} size="sm" />
+          {post.tags && <Tags tags={post.tags.slice(0, 2)} size="sm" />}
         </div>
       </div>
       <div className={styles.image}>
@@ -84,4 +89,4 @@ const CommunityEventSearchComponent = <T extends PostType>({
   );
 };
 
-export default CommunityEventSearchComponent;
+export default SearchComponent;

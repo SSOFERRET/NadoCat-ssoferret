@@ -62,7 +62,7 @@
 }
 
 .searchButton {
-  color: red;
+  color: $dimgray;
 }
 
 .page .results {
@@ -211,19 +211,23 @@
     width: 280rem;
   }
 }
+
 .more {
   padding: 16px;
-  border-top: 0.5px solid #efefef;
   display: flex;
   justify-content: center;
   color: $gray;
   font-size: $size-12;
-  cursor: pointer;
 }
 
-.noSearch {
-  font-size: $size-14;
+.cursor {
+  cursor: pointer;
 }
+// .noSearch {
+//   display: flex;
+//   justify-content: center;
+//   font-size: $size-14;
+// }
 
 .leftMargin20 {
   margin-left: 20rem;
