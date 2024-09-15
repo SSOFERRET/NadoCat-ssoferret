@@ -27,6 +27,7 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { getUser } from "../../model/my.model";
 
 // NOTE uuid 받아오는 임시함수 / 추후 삭제
 export const getUuid = async () => {
@@ -115,11 +116,12 @@ export const createStreetCat = async (req: Request, res: Response) => {
       // 도감 게시글 생성
       const newPost = await createPost(tx, postData, locationId);
       const postId = newPost.postId;
+      let images: string[] = [];
 
       // 도감 이미지 생성
       if (req.files) {
         // - uploadImagesToS3 사용해서 생성하고
-        const images = await uploadImagesToS3(req);
+        images = await uploadImagesToS3(req) as string[];
         // - addNewImages 사용해서 생성
         const newImages = await addNewImages(
           tx,
@@ -141,8 +143,18 @@ export const createStreetCat = async (req: Request, res: Response) => {
         await createStreetCatImages(tx, getStreetCatImages);
       }
 
+      const user = await getUser(uuidString);
+
       // await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
-      await indexOpensearchDocument(CATEGORY.STREET_CATS, postId, post);
+      await indexOpensearchDocument(CATEGORY.STREET_CATS, newPost.postId, {
+        title: `${name}`,
+        location: newLocation.detail,
+        profile: user?.selectUser.profileImage,
+        nickname: user?.selectUser.nickname,
+        thumbnail: images[0],
+        postId: newPost.postId,
+        createdAt: newPost.createdAt
+      });
 
       return newPost;
     });

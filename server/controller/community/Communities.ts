@@ -29,6 +29,7 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { getUser } from "../../model/my.model";
 
 export const getCommunities = async (req: Request, res: Response) => {
   try {
@@ -106,8 +107,10 @@ export const createCommunity = async (req: Request, res: Response) => {
       const post = await addCommunity(tx, userId, title, content);
       const postId = post.postId;
 
+      let newTags: ITag[] = [];
+
       if (tagList.length > 0) {
-        const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
+        newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
           postId,
@@ -115,10 +118,10 @@ export const createCommunity = async (req: Request, res: Response) => {
         await addCommunityTags(tx, formatedTags);
       }
 
-      let imageUrls: any = [];
+      let imageUrls: string[] = [];
 
       if (req.files) {
-        imageUrls = (await uploadImagesToS3(req)) as any;
+        imageUrls = (await uploadImagesToS3(req)) as string[];
         const newImages = await addNewImages(
           tx,
           {
@@ -137,12 +140,21 @@ export const createCommunity = async (req: Request, res: Response) => {
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
 
-      await indexOpensearchDocument(CATEGORY.COMMUNITIES, newPost.postId, { post, thumbnail: imageUrls[0] });
+      const user = await getUser(uuid);
+
+      await indexOpensearchDocument(CATEGORY.COMMUNITIES, post.postId, {
+        title,
+        postId: post.postId,
+        content,
+        profile: user?.selectUser.profileImage,
+        nickname: user?.selectUser.nickname,
+        tags: newTags,
+        thumbnail: imageUrls[0],
+        createdAt: post.createdAt
+      });
 
       return post;
     });
-
-
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 등록되었습니다.", postId: newPost.postId });
   } catch (error) {

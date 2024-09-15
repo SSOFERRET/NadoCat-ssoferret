@@ -16,7 +16,7 @@
 import { ISearchInfo } from "../hooks/useSearch";
 import { httpClient } from "./http";
 
-export const fetchSearch = async (keyword: string): Promise<ISearchInfo[] | undefined> => {
+export const fetchSearch = async (keyword: string): Promise<ISearchInfo[]> => {
   try {
     const response = await httpClient.get(`/searches?query=${keyword}`);
     return response.data;

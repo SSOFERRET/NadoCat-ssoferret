@@ -33,6 +33,7 @@ import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/
 import { ILocation } from "../../types/location";
 import { handleControllerError } from "../../util/errors/errors";
 import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { getUser } from "../../model/my.model";
 
 /* CHECKLIST
  * [ ] 사용자 정보 가져오기 반영
@@ -144,17 +145,32 @@ export const createMissing = async (req: Request, res: Response) => {
         locationId: newLocation.locationId,
       });
 
-      if (req.files) {
+      let imageUrls: string[] = [];
 
-        const imageUrls = await uploadImagesToS3(req) as string[];
+      if (req.files) {
+        imageUrls = await uploadImagesToS3(req) as string[];
         await addNewImages(tx, {
           userId,
           postId: post.postId,
           categoryId: CATEGORY.MISSINGS,
         }, imageUrls);
       }
+
+      const user = await getUser(uuid);
+
+      await indexOpensearchDocument(CATEGORY.MISSINGS, post.postId, {
+        title: `${user?.selectUser.nickname} 님네 ${missingCat.name}`,
+        location: newLocation.detail,
+        time: post.time,
+        profile: user?.selectUser.profileImage,
+        nickname: user?.selectUser.nickname,
+        thumbnail: imageUrls[0],
+        postId: post.postId,
+        createdAt: post.createdAt
+      });
+
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
-      return post;
+      return { ...post, thumbnail: imageUrls[0] };
     });
 
     await indexOpensearchDocument(CATEGORY.MISSINGS, newPost.postId, newPost);

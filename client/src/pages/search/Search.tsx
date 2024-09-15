@@ -1,6 +1,8 @@
-import "../../styles/scss/pages/search/search.scss";
+// import "../../styles/scss/pages/search/search.scss";
+import styles from "./search.module.scss";
 import { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
+import ExclamationMarkCat from "../../assets/img/exclamationMarkCat2.png";
 import UnfindableCat from "../../assets/img/unfindableCat.png";
 // import useDebounce from "../../hooks/useDebounce";
 import {
@@ -18,7 +20,6 @@ import useSearch, {
 import LoadingCat from "../../components/loading/LoadingCat";
 import SearchContainer from "./SearchContainer";
 
-// NOTE 이건 지우면 아래 카테고리가 동작 안해용..
 const categories = [
   { id: 0, category: "전체" },
   { id: 1, category: "커뮤니티" },
@@ -27,23 +28,12 @@ const categories = [
   { id: 4, category: "동네고양이" },
 ];
 
-//opensearch 목록별 명칭
 export const categoryNames = {
   communities: "커뮤니티",
   events: "이벤트",
   missings: "실종 고양이",
   "street-cats": "동네 고양이",
 };
-
-// CHECKLIST
-// [x] 검색어 입력 폼 만들기
-// [x] 검색 목록
-// [x] 최근 검색어 목록 만들기
-// [x] 로컬 스토리지에 검색어 저장
-// [x] 로컬 스토리지에 검색어 삭제
-// [x] 검색 결과가 없을 때 보여주는 고양이 이미지 구현
-// [x] 언제 최근 검색어를 보여줄것인가 구현
-// [ ] 검색 API 적용
 
 const Search = () => {
   const keywords = getLocalStorage();
@@ -120,20 +110,20 @@ const Search = () => {
   }, [recentKeywords]);
 
   return (
-    <div className="search-container">
-      <div className="category">
+    <div className={styles.page}>
+      <div className={styles.category}>
         <span>검색</span>
       </div>
 
-      <form onSubmit={handleSubmit} className="search-form">
+      <form onSubmit={handleSubmit} className={styles.searchForm}>
         <input
           onChange={handleChange}
           value={keyword}
-          className="search-input"
+          className={styles.searchInput}
           type="text"
           placeholder="검색어를 입력해 주세요."
         />
-        <div className="search-input-buttons">
+        <div className={styles.searchInputButtons}>
           <button
             type="button"
             disabled={!keyword.length}
@@ -141,17 +131,21 @@ const Search = () => {
               setKeyword("");
               setIsRecentKeywords(true);
             }}
-            className={`delete-input-value ${keyword.length ? "" : "hidden"}`}
+            className={
+              keyword.length
+                ? styles.deleteInputValue
+                : styles.deleteInputHidden
+            }
           >
             <IoMdCloseCircle />
           </button>
-          <button type="submit" className="search-button">
+          <button type="submit" className={styles.searchButton}>
             <RiSearchLine />
           </button>
         </div>
       </form>
 
-      {isRecentKeywords && !isLoading && (
+      {isRecentKeywords && !isLoading && recentKeywords.length && (
         <RecentKeywords
           recentKeywords={recentKeywords}
           deleteAll={deleteAllRecentKeyword}
@@ -160,14 +154,21 @@ const Search = () => {
         />
       )}
 
+      {isRecentKeywords && !isLoading && !recentKeywords.length && (
+        <section className={styles.guide}>
+          <img src={ExclamationMarkCat} alt="UnfindableCat" />
+          <span>검색어를 입력하세요!</span>
+        </section>
+      )}
+
       {isLoading && <LoadingCat />}
 
       {data && !isRecentKeywords ? (
-        <section className="search-results">
-          <ul className="search-categories">
+        <section className={styles.results}>
+          <ul className={styles.searchCategories}>
             {categories.map((item) => (
               <li
-                className={`${item.id === selected ? "selected" : ""}`}
+                className={item.id === selected ? styles.selected : ""}
                 key={item.id}
                 onClick={() => handleCategory(item.id)}
               >
@@ -175,19 +176,17 @@ const Search = () => {
               </li>
             ))}
           </ul>
-          {selected === 0 && (
-            <SearchContainer data={data} getTotalCount={getTotalCount} />
-          )}
+          <SearchContainer data={data} getTotalCount={getTotalCount} />
         </section>
       ) : (
         !isLoading && (
           <section className="search-no-results">
-            <img
+            {/* <img
               className="unfindable-cat"
               src={UnfindableCat}
               alt="UnfindableCat"
             />
-            <span>검색 결과가 없습니다.</span>
+            <span>검색 결과가 없습니다.</span> */}
           </section>
         )
       )}

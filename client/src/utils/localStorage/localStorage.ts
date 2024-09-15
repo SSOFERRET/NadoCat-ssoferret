@@ -11,7 +11,7 @@ export const setLocalStorage = (items: SearchKeyword[]) => {
   localStorage.setItem("nadocat-search", JSON.stringify(items));
 };
 
-export const getLocalStorage = () => {
+export const getLocalStorage = (): SearchKeyword[] => {
   const data = localStorage.getItem("nadocat-search");
   return data ? JSON.parse(data) : [];
 };

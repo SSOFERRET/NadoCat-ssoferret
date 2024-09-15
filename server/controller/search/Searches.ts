@@ -37,21 +37,9 @@ export const searchDocuments = async (req: Request, res: Response) => {
             body: {
               track_total_hits: true,
               query: {
-                bool: {
-                  should: [
-                    { match: { content: query } },
-                    { match: { title: query } },
-                    { match: { detail: query } },
-                    { match: { name: query } },
-                    { match: { "missingCats.name": query } },
-                    { match: { "locations.detail": query } },
-                    { match: { "location.detail": query } },
-                    { match: { "tags.tag": query } },
-                    { match: { tags: query } },
-
-
-                    // { match: { nickname: query } }
-                  ]
+                query_string: {
+                  query: `*${query}*`,  // 검색어 포함하는 결과
+                  fields: ["content", "title", "detail", "name", "missingCats.name", "locations.detail", "location.detail", "tags.tag"]
                 }
               }
             },
@@ -62,8 +50,8 @@ export const searchDocuments = async (req: Request, res: Response) => {
             search: result.body.hits.hits,
             totalcount: result.body.hits.total
           };
-        } catch {
-          console.log(`No ${categoryName}`)
+        } catch (error) {
+          console.error(error);
           return;
         }
       })
@@ -104,13 +92,11 @@ export const indexOpensearchDocument = async (categoryId: TCategoryId, postId: n
   try {
     const { categoryName, documentId } = getDataForSearch(categoryId, postId);
 
-    const response = await opensearch.index({
+    await opensearch.index({
       index: categoryName,
       id: documentId,
-
       body: post
     });
-    console.log('Document indexed:', response);
   } catch (error) {
     console.error('Error indexing document:', error);
   }
