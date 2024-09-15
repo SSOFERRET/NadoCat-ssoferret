@@ -1,3 +1,3 @@
 export const SEARCH = Object.freeze({
-  SIZE: 6,
+  SIZE: 2,
 });

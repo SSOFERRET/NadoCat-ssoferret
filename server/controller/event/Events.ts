@@ -30,6 +30,7 @@ import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/
 import { addNewImages } from "../../util/images/addNewImages";
 import { deleteOpensearchDocument, indexOpensearchDocument } from "../search/Searches";
 import { deleteThumbnail } from "../../model/streetCat.model";
+import { getUser } from "../../model/my.model";
 
 export const getEvents = async (req: Request, res: Response) => {
   try {
@@ -107,8 +108,10 @@ export const createEvent = async (req: Request, res: Response) => {
       const post = await addEvent(tx, userId, title, content, !!isClosed);
       const postId = post.postId;
 
+      let newTags: ITag[] = [];
+
       if (tagList.length > 0) {
-        const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
+        newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
 
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
@@ -139,9 +142,21 @@ export const createEvent = async (req: Request, res: Response) => {
         await addEventImages(tx, formatedImages);
       }
 
-      await indexOpensearchDocument(CATEGORY.EVENTS, newPost.postId, { ...newPost, thumbnail: imageUrls[0] });
-
       await notifyNewPostToFriends(userId, CATEGORY.EVENTS, post.postId);
+
+      const user = await getUser(uuid);
+
+      await indexOpensearchDocument(CATEGORY.EVENTS, post.postId, {
+        title,
+        postId: post.postId,
+        content,
+        profile: user?.selectUser.profileImage,
+        nickname: user?.selectUser.nickname,
+        isClosed,
+        tags: newTags,
+        thumbnail: imageUrls[0],
+        createdAt: post.createdAt
+      });
 
       return post;
     });
