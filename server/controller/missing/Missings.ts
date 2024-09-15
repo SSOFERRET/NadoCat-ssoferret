@@ -174,8 +174,6 @@ export const createMissing = async (req: Request, res: Response) => {
       return { ...post, thumbnail: imageUrls[0] };
     });
 
-    await indexOpensearchDocument(CATEGORY.MISSINGS, newPost.postId, newPost);
-
     res.status(StatusCodes.CREATED).send({ postId: newPost.postId as number });
   } catch (error) {
     console.error(error)
