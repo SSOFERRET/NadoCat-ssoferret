@@ -1,25 +1,22 @@
-import { useEffect, useState } from "react";
-import Post from "../../components/communityAndEvent/Post";
-import CatSearchList from "../../components/search/CatSearchList";
+// import { useEffect, useState } from "react";
+// import Post from "../../components/communityAndEvent/Post";
 import { ISearchInfo } from "../../hooks/useSearch";
-import { ICommunity } from "../../models/community.model";
-import { IEvent } from "../../models/event.model";
 import { categoryNames } from "./Search";
 import SearchComponent from "../../components/search/SearchComponent";
 import styles from "./search.module.scss";
 
 interface IProps {
   data: ISearchInfo[];
-  getTotalCount: () => number | undefined;
+  // getTotalCount: () => number | undefined;
 }
 
-const SearchContainer = ({ data, getTotalCount }: IProps) => {
+const SearchContainer = ({ data }: IProps) => {
   console.log(data);
-  const [total, setTotal] = useState<number>(0);
-  useEffect(() => {
-    const totalCount = getTotalCount();
-    setTotal(totalCount as number);
-  }, [getTotalCount]);
+  // const [total, setTotal] = useState<number>(0);
+  // useEffect(() => {
+  //   const totalCount = getTotalCount();
+  //   setTotal(totalCount as number);
+  // }, [getTotalCount]);
   return (
     <div className="search-result-list">
       {/* <span className={`${styles.count} ${styles.leftMargin20}`}>
@@ -46,9 +43,7 @@ const SearchContainer = ({ data, getTotalCount }: IProps) => {
                         key={result._source.postId}
                         className={styles.leftMargin12}
                       >
-                        <SearchComponent
-                          post={result._source as ICommunity | IEvent}
-                        />
+                        <SearchComponent post={result._source} />
                       </div>
                       {category.totalcount.value > 1 && idx === 0 && (
                         <div className={styles.devider} />

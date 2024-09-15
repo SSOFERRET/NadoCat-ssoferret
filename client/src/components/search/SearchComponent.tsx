@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import Tags from "../common/Tags";
-import { ICommunity } from "../../models/community.model";
-import { formatAgo, formatViews } from "../../utils/format/format";
-import { useLocation, useNavigate } from "react-router-dom";
+import { formatAgo } from "../../utils/format/format";
+import { useNavigate } from "react-router-dom";
 import styles from "./searchComponent.module.scss";
-import { IEvent } from "../../models/event.model";
-import Avatar from "../common/Avatar";
-import { IMissing } from "../../models/missing.model";
 import { ISearchData } from "../../hooks/useSearch";
+
+interface IProps {
+  post: ISearchData;
+}
 
 const calculateLine = (element: HTMLElement | null) => {
   if (element) {
@@ -22,7 +22,7 @@ const calculateLine = (element: HTMLElement | null) => {
   return false;
 };
 
-const SearchComponent = (post: ISearchData) => {
+const SearchComponent = ({ post }: IProps) => {
   const navigate = useNavigate();
   const titleRef = useRef<HTMLSpanElement | null>(null);
   const [isSingleLine, setIsSingleLine] = useState<boolean>(true);
