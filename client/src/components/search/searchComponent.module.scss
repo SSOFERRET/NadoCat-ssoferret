@@ -92,5 +92,11 @@
 }
 
 .missingContent {
-  gap: 80rem;
+  display: flex;
+  gap: 12rem;
+}
+
+.missingContent .column {
+  width: 56rem;
+  font-size: $size-12;
 }

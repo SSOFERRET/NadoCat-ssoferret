@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 import prisma from "../../client";
 import { getCommunityById } from "../../model/community.model";
 import { getEventById } from "../../model/event.model";
-import { getMissingById, getPostByPostId } from "../../model/missing.model";
+import { getMissingById, getPostByPostId, getPostsCount } from "../../model/missing.model";
 import { getStreetCat } from "../streetCat/StreetCats";
 import { getStreetCatById, getStreetCatForOpenSearchData, readPost } from "../../model/streetCat.model";
 import { StatusCodes } from "http-status-codes";
@@ -22,14 +22,12 @@ const getDataForSearch = (categoryId: TCategoryId, postId: number) => {
 }
 
 export const searchDocuments = async (req: Request, res: Response) => {
-  // console.log("searchDocuments function called");
   const { query } = req.query;
   try {
-    const searchCategoryList = [1, 2, 3, 5].map((id) => getCategoryUrlStringById(id as TCategoryId))
+    const searchCategoryList = [1, 2, 3].map((id) => getCategoryUrlStringById(id as TCategoryId))
 
     const results = await Promise.all(
       searchCategoryList.map(async (categoryName) => {
-        // console.log(categoryName)
         try {
           const result = await opensearch.search({
 
@@ -38,7 +36,7 @@ export const searchDocuments = async (req: Request, res: Response) => {
               track_total_hits: true,
               query: {
                 query_string: {
-                  query: `*${query}*`,  // 검색어 포함하는 결과
+                  query: `*${query}*`,
                   fields: ["content", "title", "detail", "name", "location", "tags.tag"]
                 }
               }
@@ -64,29 +62,44 @@ export const searchDocuments = async (req: Request, res: Response) => {
   }
 };
 
-// export const indexOpensearchDocument = async (categoryId: TCategoryId, nickname: string, title: string, content: string, postId: number, timestamp: string, profile?: string, image?: string, tag?: string[]) => {
-//   try {
-//     const { categoryName, documentId } = getDataForSearch(categoryId, postId);
+export const searchDocumentsAsCategory = async (req: Request, res: Response, category: string) => {
+  const { limit, cursor, query } = req.query;
+  console.log(limit, cursor, query);
+  try {
+    const results = await opensearch.search({
+      index: category,
+      body: {
+        track_total_hits: true,
+        query: {
+          query_string: {
+            query: `*${query}*`,
+            fields: ["content", "title", "detail", "name", "location", "tags.tag"]
+          }
+        }
+      },
+      size: Number(limit),
+      from: Number(cursor)
+    });
 
-//     const response = await opensearch.index({
-//       index: categoryName,
-//       id: documentId,
-//       body: {
-//         nickname,
-//         profile,
-//         title,
-//         content,
-//         url: `/boards/${categoryName}/${postId}`,
-//         image,
-//         tag,
-//         timestamp
-//       }
-//     });
-//     console.log('Document indexed:', response);
-//   } catch (error) {
-//     console.error('Error indexing document:', error);
-//   }
-// };
+    const totalHits = typeof results.body.hits.total === 'number'
+      ? results.body.hits.total
+      : results.body.hits.total?.value;
+    const hitsLength = results.body.hits.hits.length;
+
+    const nextCursor = Number(cursor) + hitsLength < Number(totalHits) ? Number(cursor) + hitsLength : null;
+
+    res.status(StatusCodes.OK).json({
+      posts: results.body.hits.hits,
+      pagination: {
+        totalcount: totalHits,
+        nextCursor
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    console.error(error);
+  }
+};
 
 export const indexOpensearchDocument = async (categoryId: TCategoryId, postId: number, post: any) => {
   try {
@@ -159,50 +172,3 @@ export const indexResultToOpensearch = async (categoryId: TCategoryId, postId: n
     await indexOpensearchDocument(categoryId, postId, postDataForOpensearch);
   });
 };
-
-export const searchDocumentsPagination = async (req: Request, res: Response) => {
-  const { query, page = 1, pageSize = 10, category } = req.query;
-
-  const pageNumber = parseInt(page as string, 10) || 1;
-  const size = parseInt(pageSize as string, 10) || 10;
-  const from = (pageNumber - 1) * size;
-
-  try {
-    const result = await opensearch.search({
-      index: category as string,
-      body: {
-        track_total_hits: true,
-        query: {
-          bool: {
-            should: [
-              { match: { content: query } },
-              { match: { title: query } },
-              { match: { detail: query } },
-              { match: { name: query } },
-              { match: { "missingCats.name": query } },
-              { match: { "locations.detail": query } },
-              { match: { "location.detail": query } },
-              { match: { "tags.tag": query } },
-              { match: { tags: query } },
-            ],
-          },
-        },
-      },
-      from,
-      size,
-    });
-
-    res.status(StatusCodes.OK).json({
-      category: category,
-      search: result.body.hits.hits,
-      totalcount: result.body.hits.total,
-    });
-  } catch (error) {
-    console.log(`No ${category}`, error);
-    res.status(StatusCodes.BAD_REQUEST).json({
-      category: category,
-      search: [],
-      totalcount: { value: 0 },
-    });
-  }
-}

@@ -1,12 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchSearch } from "../api/search.api";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { fetchCategorySearch, fetchSearch } from "../api/search.api";
 import { ITag } from "../models/tag.model";
+import { getMissingPosts } from "../api/missing.api";
 
 
-export type TIndex = "communities" | "missings" | "streetCats" | "events" | "users" | "street-cats";
+export type TIndex = "communities" | "missings" | "streetCats" | "events";
 
 export interface ISearchData {
-  title: string;
+  title?: string;
   postId: number;
   location?: string;
   time?: string;
@@ -18,6 +19,7 @@ export interface ISearchData {
   found?: boolean;
   createdAt: string;
   tags?: ITag[];
+  cat?: string;
 }
 
 export interface ISearch {
@@ -37,7 +39,15 @@ export interface ISearchInfo {
   }
 }
 
-const useSearch = (keyword: string): {
+export interface ISearchInfoPage {
+  posts: ISearch[];
+  pagination: {
+    nextCursor: number | null,
+    totalcount: number
+  }
+}
+
+export const useSearch = (keyword: string): {
   // data: ISearch[] | undefined;
   data: ISearchInfo[] | undefined;
   isLoading: boolean;
@@ -53,4 +63,19 @@ const useSearch = (keyword: string): {
   return { data, isLoading, error };
 }
 
-export default useSearch;
+export const useCategorySearch = (category: string, keyword: string) => {
+  console.log(category, keyword)
+  const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ["opensearch", category],
+    queryFn: ({ pageParam = 0 }) => fetchCategorySearch({ pageParam, category, keyword }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const nextCursor = lastPage.pagination.nextCursor;
+      if (nextCursor) {
+        return nextCursor;
+      }
+      return undefined;
+    },
+  });
+  return { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage };
+}

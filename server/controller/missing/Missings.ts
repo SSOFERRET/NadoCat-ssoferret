@@ -159,11 +159,11 @@ export const createMissing = async (req: Request, res: Response) => {
       const user = await getUser(uuid);
 
       await indexOpensearchDocument(CATEGORY.MISSINGS, post.postId, {
-        title: `${user?.selectUser.nickname} 님네 ${missingCat.name}`,
+        nickname: user?.selectUser.nickname,
+        cat: missingCat.name,
         location: newLocation.detail,
         time: post.time,
         profile: user?.selectUser.profileImage,
-        nickname: user?.selectUser.nickname,
         thumbnail: imageUrls[0],
         postId: post.postId,
         found: Boolean,

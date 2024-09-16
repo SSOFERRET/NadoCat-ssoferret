@@ -13,24 +13,25 @@ import {
 } from "../../utils/localStorage/localStorage";
 import RecentKeywords from "./RecentKeywords";
 import { IoMdCloseCircle } from "react-icons/io";
-import useSearch from "../../hooks/useSearch";
+import { useSearch } from "../../hooks/useSearch";
 // import StreetCatPosts from "../../components/streetCat/StreetCatPosts";
 import LoadingCat from "../../components/loading/LoadingCat";
 import SearchContainer from "./SearchContainer";
+import SearchCategoryContainer from "./SearchCategoryContainer";
 
-const categories = [
-  { id: 0, category: "전체" },
-  { id: 1, category: "커뮤니티" },
-  { id: 2, category: "이벤트" },
-  { id: 3, category: "실종고양이" },
-  { id: 4, category: "동네고양이" },
+export const categories = [
+  "전체",
+  "커뮤니티",
+  "이벤트",
+  "실종고양이",
+  "동네고양이",
 ];
 
 export const categoryNames = {
   communities: "커뮤니티",
   events: "이벤트",
-  missings: "실종 고양이",
-  "street-cats": "동네 고양이",
+  missings: "실종고양이",
+  streetCats: "동네고양이",
 };
 
 const Search = () => {
@@ -84,15 +85,6 @@ const Search = () => {
     setLocalStorage(filtered);
   };
 
-  // const getTotalCount = () => {
-  //   const total = data?.reduce(
-  //     (acc: number, current: ISearchInfo) => acc + current.totalcount.value,
-  //     0
-  //   );
-
-  //   return total;
-  // };
-
   const deleteAllRecentKeyword = () => {
     deleteAllLocalStorage();
     setRecentKeywords([]);
@@ -106,6 +98,8 @@ const Search = () => {
   useEffect(() => {
     setLocalStorage(recentKeywords);
   }, [recentKeywords]);
+
+  useEffect(() => {}, [selected]);
 
   return (
     <div className={styles.page}>
@@ -155,7 +149,7 @@ const Search = () => {
       {isRecentKeywords && !isLoading && !recentKeywords.length && (
         <section className={styles.guide}>
           <img src={ExclamationMarkCat} alt="UnfindableCat" />
-          <span>검색어를 입력하세요!</span>
+          <span>검색어를 입력하세요!</span>S
         </section>
       )}
 
@@ -164,17 +158,21 @@ const Search = () => {
       {data && !isRecentKeywords ? (
         <section className={styles.results}>
           <ul className={styles.searchCategories}>
-            {categories.map((item) => (
+            {categories.map((item, idx) => (
               <li
-                className={item.id === selected ? styles.selected : ""}
-                key={item.id}
-                onClick={() => handleCategory(item.id)}
+                className={idx === selected ? styles.selected : ""}
+                key={idx}
+                onClick={() => handleCategory(idx)}
               >
-                {item.category}
+                {item}
               </li>
             ))}
           </ul>
-          <SearchContainer data={data} />
+          {selected === 0 ? (
+            <SearchContainer data={data} handleCategory={handleCategory} />
+          ) : (
+            <SearchCategoryContainer keyword={keyword} index={selected} />
+          )}
         </section>
       ) : (
         !isLoading && (

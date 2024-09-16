@@ -1,27 +1,18 @@
 // import { useEffect, useState } from "react";
 // import Post from "../../components/communityAndEvent/Post";
 import { ISearchInfo } from "../../hooks/useSearch";
-import { categoryNames } from "./Search";
+import { categories, categoryNames } from "./Search";
 import SearchComponent from "../../components/search/SearchComponent";
 import styles from "./search.module.scss";
 
 interface IProps {
   data: ISearchInfo[];
-  // getTotalCount: () => number | undefined;
+  handleCategory: (id: number) => void;
 }
 
-const SearchContainer = ({ data }: IProps) => {
-  console.log(data);
-  // const [total, setTotal] = useState<number>(0);
-  // useEffect(() => {
-  //   const totalCount = getTotalCount();
-  //   setTotal(totalCount as number);
-  // }, [getTotalCount]);
+const SearchContainer = ({ data, handleCategory }: IProps) => {
   return (
     <div className="search-result-list">
-      {/* <span className={`${styles.count} ${styles.leftMargin20}`}>
-        총 검색 결과 수 - {total} 건
-      </span> */}
       <ul className="total-results">
         {data.map((category) => (
           <li key={category.category} className={styles.categoryContainer}>
@@ -35,45 +26,32 @@ const SearchContainer = ({ data }: IProps) => {
               <span className={styles.more}>검색 결과가 없습니다.</span>
             ) : (
               <div>
-                {(category.category === "communities" ||
-                  category.category === "events" ||
-                  category.category === "missings") &&
-                  category.search.map((result, idx) => (
-                    <>
-                      <div
-                        key={result._source.postId}
-                        className={styles.leftMargin12}
-                      >
-                        <SearchComponent post={result._source} />
-                      </div>
-                      {category.totalcount.value > 1 && idx === 0 && (
-                        <div className={styles.devider} />
-                      )}
-                      {category.totalcount.value > 2 && idx === 1 && (
-                        <div className={styles.devider} />
-                      )}
-                    </>
-                  ))}
+                {category.search.map((result, idx) => (
+                  <>
+                    <div
+                      key={result._source.postId}
+                      className={styles.leftMargin12}
+                    >
+                      <SearchComponent post={result._source} />
+                    </div>
+                    {category.totalcount.value > 1 && idx === 0 && (
+                      <div className={styles.devider} />
+                    )}
+                    {category.totalcount.value > 2 && idx === 1 && (
+                      <div className={styles.devider} />
+                    )}
+                  </>
+                ))}
 
-                {/* {(category.category === "missings" ||
-                  category.category === "street-cats") && (
-                  <div className="search-cats-container">
-                    {category.category === "missings" && (
-                      <CatSearchList
-                        posts={category.search}
-                        category="missings"
-                      />
-                    )}
-                    {category.category === "street-cats" && (
-                      <CatSearchList
-                        posts={category.search}
-                        category="streetCats"
-                      />
-                    )}
-                  </div>
-                )} */}
                 {category.totalcount.value > 2 && (
-                  <div className={`${styles.more} ${styles.cursor}`}>
+                  <div
+                    className={`${styles.more} ${styles.cursor}`}
+                    onClick={() =>
+                      handleCategory(
+                        categories.indexOf(categoryNames[category.category])
+                      )
+                    }
+                  >
                     <span>검색 결과 더 보기 →</span>
                   </div>
                 )}

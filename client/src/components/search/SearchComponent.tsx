@@ -62,17 +62,15 @@ const SearchComponent = ({ post }: IProps) => {
       <div className={styles.postInfo}>
         <div className={styles.userInfo}>
           <Avatar profileImage={post.profile} size="mn" />
-          {isMissing(post) ? (
-            <span className={styles.missings}>{post.title}</span>
-          ) : (
-            <span className={styles.notMissings}>{post.nickname}</span>
-          )}
+
+          <span className={styles.notMissings}>{post.nickname}</span>
         </div>
         <div className={styles.container}>
-          <span className={styles.title} ref={titleRef}>
-            {post.title}
-          </span>
-
+          {!isMissing(post) && (
+            <span className={styles.title} ref={titleRef}>
+              {post.title}
+            </span>
+          )}
           {isEvent(post) && (
             <span
               className={`${styles.isClosed} ${
@@ -89,14 +87,21 @@ const SearchComponent = ({ post }: IProps) => {
         )}
         {isMissing(post) && (
           <div className={styles.missingContent}>
-            <span className={styles.content}>실종위치</span>
+            <span className={styles.column}>이름</span>
+            <span className={styles.content}>살구</span>
+            {/* <span className={styles.content}>{post.cat}</span> */}
+          </div>
+        )}
+        {isMissing(post) && (
+          <div className={styles.missingContent}>
+            <span className={styles.column}>실종 위치</span>
             <span className={styles.content}>{post.location}</span>
           </div>
         )}
 
         {isMissing(post) && (
           <div className={styles.missingContent}>
-            <span className={styles.content}>실종날짜</span>
+            <span className={styles.column}>실종 날짜</span>
             <span className={styles.content}>
               {formatDate(post.time as string)}
             </span>
