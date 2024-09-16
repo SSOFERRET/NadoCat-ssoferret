@@ -1,7 +1,6 @@
 
 import { ISearchInfo, ISearchInfoPage } from "../hooks/useSearch";
 import { httpClient } from "./http";
-import { LIMIT } from "./missing.api";
 
 interface ICategorySearchParams {
   pageParam: number;

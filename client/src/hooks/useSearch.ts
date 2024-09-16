@@ -1,7 +1,6 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { fetchCategorySearch, fetchSearch } from "../api/search.api";
 import { ITag } from "../models/tag.model";
-import { getMissingPosts } from "../api/missing.api";
 
 
 export type TIndex = "communities" | "missings" | "streetCats" | "events";
