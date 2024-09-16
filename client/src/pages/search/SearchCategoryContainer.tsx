@@ -5,7 +5,6 @@ import styles from "./search.module.scss";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Spinner from "../../components/loading/Spinner";
 import UnfindableCat from "./../../assets/img/unfindableCat.png";
-import { GoDotFill } from "react-icons/go";
 
 interface IProps {
   keyword: string;
