@@ -234,6 +234,11 @@
   margin-right: 20rem;
 }
 
+.leftMargin24 {
+  margin-left: 24rem;
+  margin-right: 24rem;
+}
+
 .leftMargin12 {
   margin-left: 12rem;
   margin-right: 12rem;
@@ -244,8 +249,21 @@
 }
 
 .categoryContainer {
-  margin: 8rem;
+  margin: 8rem 8rem 40rem;
   border: 0.5px solid #efefef;
   border-radius: 16rem;
   box-shadow: inset;
+}
+
+.eachContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.eachComponent {
+  border: 0.5px solid #efefef;
+  border-radius: 16rem;
+  margin: 0 16rem 16rem;
+  display: flex;
+  padding: 0 12rem;
 }

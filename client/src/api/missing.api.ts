@@ -1,7 +1,7 @@
 import { IMissing, IMissingPosts, IMissingReport, IMissingReportPosts } from "../models/missing.model";
 import { httpClient } from "./http";
 
-const LIMIT = 10;
+export const LIMIT = 10;
 const SORT = "latest";
 
 export type Sort = "latest" | "views" | "likes";
