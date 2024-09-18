@@ -49,7 +49,6 @@ const SearchComponent = ({ post }: IProps) => {
     if (titleRef.current) {
       setIsSingleLine(calculateLine(titleRef.current));
     }
-    isMissing(post) && console.log("고양이", post);
   }, [post]);
 
   return (
@@ -88,7 +87,7 @@ const SearchComponent = ({ post }: IProps) => {
         {isMissing(post) && (
           <div className={styles.missingContent}>
             <span className={styles.column}>이름</span>
-            <span className={styles.content}>살구</span>
+            <span className={styles.content}>{post.cat}</span>
             {/* <span className={styles.content}>{post.cat}</span> */}
           </div>
         )}

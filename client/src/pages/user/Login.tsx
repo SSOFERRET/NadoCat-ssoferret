@@ -36,10 +36,6 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginProps>();
 
-  const { storeLogin } = useAuthStore();
-  console.log("storeLogin:::", storeLogin);
-
-
   const handleLogin = async (data: LoginProps) => {
     try {
       const response = await login({ ...data, autoLogin });

@@ -18,6 +18,7 @@ import { useSearch } from "../../hooks/useSearch";
 import LoadingCat from "../../components/loading/LoadingCat";
 import SearchContainer from "./SearchContainer";
 import SearchCategoryContainer from "./SearchCategoryContainer";
+import useSearchCountStore from "../../store/searchCount";
 
 export const categories = [
   "전체",
@@ -36,14 +37,16 @@ export const categoryNames = {
 
 const Search = () => {
   const keywords = getLocalStorage();
-  const [keyword, setKeyword] = useState(""); // 검색어
+  const [keyword, setKeyword] = useState("");
   const [recentKeywords, setRecentKeywords] =
-    useState<SearchKeyword[]>(keywords); // 최근 검색 키워드 들어갈 자리
+    useState<SearchKeyword[]>(keywords);
   const [selected, setSelected] = useState(0);
   const [enteredKeyword, setEnteredKeyword] = useState("");
-  const [isRecentKeywords, setIsRecentKeywords] = useState(true); // 최근 검색어 보여줄지 결정하는 요소
+  const [isRecentKeywords, setIsRecentKeywords] = useState(true);
 
   const { data, isLoading /*, error*/ } = useSearch(enteredKeyword);
+
+  const { setCounts } = useSearchCountStore();
 
   const handleCategory = (id: number) => {
     setSelected(id);
@@ -99,7 +102,15 @@ const Search = () => {
     setLocalStorage(recentKeywords);
   }, [recentKeywords]);
 
-  useEffect(() => {}, [selected]);
+  useEffect(() => {
+    data &&
+      setCounts({
+        communities: Number(data[0].totalcount.value),
+        events: Number(data[1].totalcount.value),
+        missings: Number(data[2].totalcount.value),
+        streetCats: 0,
+      });
+  }, [data]);
 
   return (
     <div className={styles.page}>
@@ -149,7 +160,7 @@ const Search = () => {
       {isRecentKeywords && !isLoading && !recentKeywords.length && (
         <section className={styles.guide}>
           <img src={ExclamationMarkCat} alt="UnfindableCat" />
-          <span>검색어를 입력하세요!</span>S
+          <span>검색어를 입력하세요!</span>
         </section>
       )}
 

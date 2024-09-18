@@ -15,7 +15,12 @@ type Menu = {
 export type Category = "community" | "event";
 
 const menu: Menu[] = [
-  { id: 1, category: "community", name: "커뮤니티", url: "/boards/communities" },
+  {
+    id: 1,
+    category: "community",
+    name: "커뮤니티",
+    url: "/boards/communities",
+  },
   { id: 2, category: "event", name: "이벤트 · 모임", url: "/boards/events" },
 ];
 
@@ -62,7 +67,6 @@ const HomeCommunitiesAndEvents = () => {
         onClick={() => {
           const found = menu.find((v) => v.category === category);
           found && navigate(found?.url);
-          console.log(found);
         }}
       >
         전체보기
