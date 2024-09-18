@@ -1,8 +1,8 @@
-// import { getNotifications } from "../../api/notification.api";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import LoadingCat from "../../components/loading/LoadingCat";
+import Spinner from "../../components/loading/Spinner";
 import NotificationList from "../../components/notifications/NotificationList";
-// import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import useNotifications from "../../hooks/useNotifications";
 import "./../../styles/scss/pages/notification/notification.scss";
 
@@ -11,20 +11,20 @@ const Notification = () => {
   const {
     data,
     isLoading,
-    // fetchNextPage,
-    // hasNextPage,
-    // isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isEmpty,
   } = getNotificationList();
 
-  // const moreRef = useIntersectionObserver(([entry]) => {
-  //   if (entry.isIntersecting) {
-  //     if (!hasNextPage) {
-  //       return;
-  //     }
-  //     fetchNextPage();
-  //   }
-  // });
+  const moreRef = useIntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      if (!hasNextPage) {
+        return;
+      }
+      fetchNextPage();
+    }
+  });
 
   return (
     <section className="notification-container">
@@ -36,7 +36,9 @@ const Notification = () => {
             <span>알림</span>
           </div>
           {data?.pages && <NotificationList notifications={data} />}
-
+          <div className="more" ref={moreRef}>
+            {isFetchingNextPage && <Spinner />}
+          </div>
           {isEmpty && <PostEmpty />}
         </>
       )}
