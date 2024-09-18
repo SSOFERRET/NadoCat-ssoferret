@@ -46,7 +46,7 @@ const Search = () => {
 
   const { data, isLoading /*, error*/ } = useSearch(enteredKeyword);
 
-  const { counts, setCounts } = useSearchCountStore();
+  const { setCounts } = useSearchCountStore();
 
   const handleCategory = (id: number) => {
     setSelected(id);
@@ -111,7 +111,6 @@ const Search = () => {
         streetCats: 0,
       });
   }, [data]);
-  console.log(data);
 
   return (
     <div className={styles.page}>

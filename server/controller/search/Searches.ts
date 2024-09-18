@@ -54,7 +54,6 @@ export const searchDocuments = async (req: Request, res: Response) => {
         }
       })
     );
-    console.log(results)
     res.status(200).json(results);
   } catch (error) {
     console.error('OpenSearch search error:', error);
@@ -64,7 +63,6 @@ export const searchDocuments = async (req: Request, res: Response) => {
 
 export const searchDocumentsAsCategory = async (req: Request, res: Response, category: string) => {
   const { limit, cursor, query } = req.query;
-  console.log(limit, cursor, query);
   try {
     const results = await opensearch.search({
       index: category,
@@ -96,7 +94,6 @@ export const searchDocumentsAsCategory = async (req: Request, res: Response, cat
       }
     });
   } catch (error) {
-    console.log(error);
     console.error(error);
   }
 };
@@ -119,14 +116,13 @@ export const updateOpensearchDocument = async (categoryId: TCategoryId, postId: 
   try {
     const { categoryName, documentId } = getDataForSearch(categoryId, postId);
 
-    const response = await opensearch.update({
+    await opensearch.update({
       index: categoryName,
       id: documentId,
       body: {
         doc: data
       }
     });
-    console.log('Document updated:', response);
   } catch (error) {
     console.error('Error updating document:', error);
   }
@@ -136,11 +132,11 @@ export const deleteOpensearchDocument = async (categoryId: TCategoryId, postId: 
   try {
     const { categoryName, documentId } = getDataForSearch(categoryId, postId);
 
-    const response = await opensearch.delete({
+    await opensearch.delete({
       index: categoryName,
       id: documentId
     });
-    console.log('Document deleted:', response);
+
   } catch (error) {
     console.error('Error deleting document:', error);
   }
@@ -153,7 +149,6 @@ export const indexResultToOpensearch = async (categoryId: TCategoryId, postId: n
     switch (categoryId) {
       case 1:
         postDataForOpensearch = await getCommunityById(tx, postId);
-        console.log(postDataForOpensearch)
         break;
       case 2:
         postDataForOpensearch = await getEventById(tx, postId);

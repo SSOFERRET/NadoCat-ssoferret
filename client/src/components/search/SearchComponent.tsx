@@ -49,7 +49,6 @@ const SearchComponent = ({ post }: IProps) => {
     if (titleRef.current) {
       setIsSingleLine(calculateLine(titleRef.current));
     }
-    isMissing(post) && console.log("고양이", post);
   }, [post]);
 
   return (

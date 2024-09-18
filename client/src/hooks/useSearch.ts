@@ -63,7 +63,6 @@ export const useSearch = (keyword: string): {
 }
 
 export const useCategorySearch = (category: string, keyword: string) => {
-  console.log(category, keyword)
   const { data, isLoading, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["opensearch", category],
     queryFn: ({ pageParam = 0 }) => fetchCategorySearch({ pageParam, category, keyword }),
