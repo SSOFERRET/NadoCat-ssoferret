@@ -195,6 +195,7 @@
 //SearchContainer
 
 .count {
+  display: flex;
   display: block;
   font-family: "bold";
   color: $primary;
@@ -257,6 +258,7 @@
 
 .eachContainer {
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 

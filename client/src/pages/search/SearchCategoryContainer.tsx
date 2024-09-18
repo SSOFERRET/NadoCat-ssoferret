@@ -1,10 +1,11 @@
-import { useCategorySearch } from "../../hooks/useSearch";
+import { TIndex, useCategorySearch } from "../../hooks/useSearch";
 import { categoryNames } from "./Search";
 import SearchComponent from "../../components/search/SearchComponent";
 import styles from "./search.module.scss";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import Spinner from "../../components/loading/Spinner";
 import UnfindableCat from "./../../assets/img/unfindableCat.png";
+import useSearchCountStore from "../../store/searchCount";
 
 interface IProps {
   keyword: string;
@@ -16,12 +17,11 @@ const SearchCategoryContainer = ({ index, keyword }: IProps) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useCategorySearch(category, keyword);
 
-  // 모든 페이지의 posts를 합치기
   const posts = data?.pages.flatMap((page) =>
     page.posts.map((post) => post._source)
   );
 
-  const totalcount = data?.pages[0].pagination.totalcount;
+  const { counts } = useSearchCountStore();
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
@@ -30,30 +30,34 @@ const SearchCategoryContainer = ({ index, keyword }: IProps) => {
   });
 
   return (
-    <div className={styles.eachContainer}>
-      <ul>
+    <>
+      <div className={styles.eachContainer}>
         <span className={`${styles.count} ${styles.leftMargin24}`}>
           {`${categoryNames[category as keyof typeof categoryNames]} ${
-            totalcount || 0
+            counts[category as TIndex]
           }건`}
         </span>
-        {posts?.map((post, idx) => (
-          <li key={idx} className={styles.eachComponent}>
-            <SearchComponent post={post} />
-            <div className={styles.devider} />
-          </li>
-        ))}
-      </ul>
-      {!totalcount && (
-        <div className={styles.guide}>
-          <img src={UnfindableCat} alt="unfindableCat" />
-          <span>검색 결과가 없습니다.</span>
+
+        {counts[category as TIndex] && (
+          <ul>
+            {posts?.map((post, idx) => (
+              <li key={idx} className={styles.eachComponent}>
+                <SearchComponent post={post} />
+              </li>
+            ))}
+          </ul>
+        )}
+        {!counts[category as TIndex] && (
+          <div className={styles.guide}>
+            <img src={UnfindableCat} alt="unfindableCat" />
+            <span>검색 결과가 없습니다.</span>
+          </div>
+        )}
+        <div className="more" ref={moreRef}>
+          {isFetchingNextPage && <Spinner />}
         </div>
-      )}
-      <div className="more" ref={moreRef}>
-        {isFetchingNextPage && <Spinner />}
       </div>
-    </div>
+    </>
   );
 };
 
