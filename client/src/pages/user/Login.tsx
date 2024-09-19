@@ -48,6 +48,7 @@ const Login = () => {
       useAuthStore.getState().storeLogin(user.uuid, autoLogin, true);
       navigate("/");
 
+      // 로그아웃 상태일 동안 도착한 새 알림 확인
       await getHasNewNotification().then((res) => {
         setHasNewNotification(res.hasNewNotification);
         console.log(res.hasNewNotification);
