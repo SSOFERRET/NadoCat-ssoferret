@@ -8,7 +8,6 @@ import { IoIosArrowBack } from "react-icons/io";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { useAuthStore } from "../../store/userStore";
 import { AxiosError } from "axios";
-import useNotifications from "../../hooks/useNotifications";
 import { getHasNewNotification } from "../../api/notification.api";
 import notificationStore from "../../store/notificationStore";
 
