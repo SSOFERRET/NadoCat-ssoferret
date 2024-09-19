@@ -8,6 +8,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { useAuthStore } from "../../store/userStore";
 import { AxiosError } from "axios";
+import { getHasNewNotification } from "../../api/notification.api";
+import notificationStore from "../../store/notificationStore";
 
 const KAKAO_AUTH_URL = `${
   import.meta.env.VITE_KAKAO_AUTH_URL
@@ -29,6 +31,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [autoLogin, setAutoLogin] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const { setHasNewNotification } = notificationStore();
   const {
     register,
     setFocus,
@@ -43,6 +46,12 @@ const Login = () => {
 
       useAuthStore.getState().storeLogin(user.uuid, autoLogin, true);
       navigate("/");
+
+      // 로그아웃 상태일 동안 도착한 새 알림 확인
+      await getHasNewNotification().then((res) => {
+        setHasNewNotification(res.hasNewNotification);
+        console.log(res.hasNewNotification);
+      });
     } catch (error) {
       if (
         error instanceof AxiosError &&

@@ -1,6 +1,6 @@
 // import { create } from "zustand";
-import { getIsAllNotificationRead, getNotifications } from "../api/notification.api";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { getNotifications } from "../api/notification.api";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export interface INotification {
   type: string;
@@ -32,8 +32,8 @@ export interface INotificationFromDB {
 //   setAlarms: (update: (prevAlarms: INotification[]) => INotification[]) => void;
 // }
 
-export interface IIsAllRead {
-  isAllRead: boolean;
+export interface IHasNewNotification {
+  hasNewNotification: boolean;
 }
 
 const useNotifications = () => {
@@ -74,25 +74,11 @@ const useNotifications = () => {
     }
   };
 
-
-  const getIsAllRead = () => {
-    const { data, isLoading } = useQuery({
-      queryKey: ['isAllNotificationRead'],
-      queryFn: getIsAllNotificationRead,
-    });
-
-    return [data, isLoading];
-  }
-
-  const [isAllRead, isAllReadLoading] = getIsAllRead();
-
-
-
   return {
-    getNotificationList,
-    isAllRead, isAllReadLoading
+    getNotificationList
   };
 }
+
 
 
 export default useNotifications;

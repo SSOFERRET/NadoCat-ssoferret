@@ -211,7 +211,8 @@ export const getNotificationList = async (req: Request, res: Response) => {
   }
 };
 
-export const getIsAllNotificationRead = async (req: Request, res: Response) => {
+export const getHasNewNotification = async (req: Request, res: Response) => {
+  console.log("here");
   const uuid = req.user?.uuid;
   try {
     if (!uuid) {
@@ -219,9 +220,10 @@ export const getIsAllNotificationRead = async (req: Request, res: Response) => {
     }
     const userId = Buffer.from(uuid, "hex");
     const latest = await getLatestNotificationByReceiver(userId);
-    const isAllRead = latest?.isRead;
+    console.log("최근 알림 봤나?", latest);
+    const hasNewNotification = !latest?.isRead;
 
-    res.status(StatusCodes.OK).json({ isAllRead });
+    res.status(StatusCodes.OK).json({ hasNewNotification });
   } catch (error) {
     console.error(error);
   }

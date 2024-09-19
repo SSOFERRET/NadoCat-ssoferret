@@ -1,26 +1,15 @@
-import React, {
-  useEffect /*useEffect,*/ /*useEffect, useState*/,
-  useState,
-} from "react";
+import React, { useEffect } from "react";
 import { BiBell } from "react-icons/bi";
 import { GoDotFill } from "react-icons/go";
 import "./../../styles/scss/components/notification/notificationAlarm.scss";
 import { useAuthStore } from "../../store/userStore";
-// import useNotifications from "../../hooks/useNotifications";
-
-// interface INotificationData {
-//   type: string;
-//   sender: string;
-//   url: string;
-//   timestamp: string;
-// }
+import notificationStore from "../../store/notificationStore";
 
 const NotificationAlarm: React.FC = () => {
-  const [alarmExists, setAlarmExists] = useState<boolean>(false);
-  const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8080";
-  const { uuid: loggedUser } = useAuthStore();
+  const { isLoggedIn, uuid: loggedUser } = useAuthStore();
 
-  // const { isAllRead, isAllReadLoading } = useNotifications();
+  const { hasNewNotification, setHasNewNotification } = notificationStore();
+  const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8080";
 
   const createEventSource = () => {
     const eventSource = new EventSource(
@@ -29,7 +18,7 @@ const NotificationAlarm: React.FC = () => {
 
     eventSource.addEventListener("message", () => {
       try {
-        setAlarmExists(true);
+        setHasNewNotification(true);
       } catch (error) {
         console.error("데이터 파싱 중 오류 발생:", error);
       }
@@ -46,6 +35,7 @@ const NotificationAlarm: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!isLoggedIn) return;
     const eventSource = createEventSource();
 
     return () => {
@@ -56,7 +46,7 @@ const NotificationAlarm: React.FC = () => {
   return (
     <div className="notification-icon">
       <BiBell className="bell-icon" />
-      {alarmExists && <GoDotFill className="new-sign" />}
+      {hasNewNotification && <GoDotFill className="new-sign" />}
     </div>
   );
 };
