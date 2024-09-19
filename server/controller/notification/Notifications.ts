@@ -190,6 +190,7 @@ export const getNotificationList = async (req: Request, res: Response) => {
     const limit = 10;
     let notifications = await getNotificationListByReceiver(userId, limit);
     const count = await getNotificationsCount();
+    console.log(notifications);
 
     const nextCursor = notifications.length === limit ? notifications[notifications.length - 1].notificationId : null;
 
