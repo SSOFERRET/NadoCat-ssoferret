@@ -1,10 +1,7 @@
-
 import { useEffect } from "react";
 import PostEmpty from "../../components/communityAndEvent/PostEmpty";
 import LoadingCat from "../../components/loading/LoadingCat";
-import Spinner from "../../components/loading/Spinner";
 import NotificationList from "../../components/notifications/NotificationList";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import useNotifications from "../../hooks/useNotifications";
 import notificationStore from "../../store/notificationStore";
 import "./../../styles/scss/pages/notification/notification.scss";
