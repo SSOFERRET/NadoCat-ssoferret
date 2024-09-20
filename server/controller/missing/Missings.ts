@@ -32,6 +32,8 @@ import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { ILocation } from "../../types/location";
 import { handleControllerError } from "../../util/errors/errors";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { getUser } from "../../model/my.model";
 
 /* CHECKLIST
  * [ ] 사용자 정보 가져오기 반영
@@ -143,17 +145,33 @@ export const createMissing = async (req: Request, res: Response) => {
         locationId: newLocation.locationId,
       });
 
-      if (req.files) {
+      let imageUrls: string[] = [];
 
-        const imageUrls = await uploadImagesToS3(req) as string[];
+      if (req.files) {
+        imageUrls = await uploadImagesToS3(req) as string[];
         await addNewImages(tx, {
           userId,
           postId: post.postId,
           categoryId: CATEGORY.MISSINGS,
         }, imageUrls);
       }
+
+      const user = await getUser(uuid);
+
+      await indexOpensearchDocument(CATEGORY.MISSINGS, post.postId, {
+        nickname: user?.selectUser.nickname,
+        cat: missingCat.name,
+        location: newLocation.detail,
+        time: post.time,
+        profile: user?.selectUser.profileImage,
+        thumbnail: imageUrls[0],
+        postId: post.postId,
+        found: Boolean,
+        createdAt: post.createdAt
+      });
+
       await notifyNewPostToFriends(userId, CATEGORY.MISSINGS, post.postId);
-      return post;
+      return { ...post, thumbnail: imageUrls[0] };
     });
 
     res.status(StatusCodes.CREATED).send({ postId: newPost.postId as number });
@@ -200,13 +218,15 @@ export const deleteMissing = async (req: Request, res: Response) => {
       if (locations) await deleteLocationsByLocationIds(tx, locations);
 
       if (images) await deleteImagesByImageIds(tx, images);
+
+      await deleteOpensearchDocument(CATEGORY.MISSINGS, postId);
     });
 
     return res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });
   } catch (error) {
     console.error(error);
     if (error instanceof Error) return validateError(res, error);
-  } 
+  }
 };
 
 /**
@@ -257,12 +277,16 @@ export const updateMissing = async (req: Request, res: Response) => {
           imageUrls
         );
       }
+      await updateOpensearchDocument(CATEGORY.MISSINGS, postId, {
+        content: missing.detail
+      })
     });
 
-    res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
+
+    res.status(StatusCodes.OK).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } 
+  }
 };
 
 export const validateBadRequest = (res: Response, error: Error) => {
@@ -311,5 +335,5 @@ export const updateFoundState = async (req: Request, res: Response) => {
     return res.status(StatusCodes.OK).json({ message: "게시글이 상태가 변경 되었습니다." });
   } catch (error) {
     if (error instanceof Error) return validateError(res, error);
-  } 
+  }
 };

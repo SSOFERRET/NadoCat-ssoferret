@@ -17,20 +17,24 @@ const CommunityDetail = () => {
   const params = useParams();
   const postId = Number(params.id);
   const categoryId = 1;
-  const { data: post, error, isLoading, removeCommunityPost } = useCommunity(postId);
+  const {
+    data: post,
+    error,
+    isLoading,
+    removeCommunityPost,
+  } = useCommunity(postId);
   const { commentCount, addCommunityComment } = useCommunityComment(postId);
   const { dislikePost, likePost } = useLike(postId, "communityDetail");
   const [isShowMenu, setIsShowMenu] = useState(false);
-
-  console.log(post);
 
   const showMenu = () => {
     setIsShowMenu((prev) => !prev);
   };
 
   const toggleLike = () => {
-    console.log(post?.liked);
-    post?.liked ? dislikePost({ categoryId, postId }) : likePost({ categoryId, postId });
+    post?.liked
+      ? dislikePost({ categoryId, postId })
+      : likePost({ categoryId, postId });
   };
 
   return (
@@ -43,7 +47,12 @@ const CommunityDetail = () => {
       {error && <ErrorNotFound />}
       {post && (
         <>
-          <PostDetail post={post} commentCount={commentCount} showMenu={showMenu} toggleLike={toggleLike} />
+          <PostDetail
+            post={post}
+            commentCount={commentCount}
+            showMenu={showMenu}
+            toggleLike={toggleLike}
+          />
           <CommunityComments postId={postId} />
           <CommentForm postId={postId} addComment={addCommunityComment} />
         </>

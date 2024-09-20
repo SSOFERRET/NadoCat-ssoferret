@@ -28,6 +28,9 @@ import { notifyNewPostToFriends } from "../notification/Notifications";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
+import { deleteOpensearchDocument, indexOpensearchDocument } from "../search/Searches";
+import { deleteThumbnail } from "../../model/streetCat.model";
+import { getUser } from "../../model/my.model";
 
 export const getEvents = async (req: Request, res: Response) => {
   try {
@@ -52,7 +55,7 @@ export const getEvents = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
-  } 
+  }
 };
 
 export const getEvent = async (req: Request, res: Response) => {
@@ -88,7 +91,7 @@ export const getEvent = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     handleControllerError(error, res);
-  } 
+  }
 };
 
 export const createEvent = async (req: Request, res: Response) => {
@@ -105,8 +108,10 @@ export const createEvent = async (req: Request, res: Response) => {
       const post = await addEvent(tx, userId, title, content, !!isClosed);
       const postId = post.postId;
 
+      let newTags: ITag[] = [];
+
       if (tagList.length > 0) {
-        const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
+        newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
 
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
@@ -116,8 +121,10 @@ export const createEvent = async (req: Request, res: Response) => {
         await addEventTags(tx, formatedTags);
       }
 
+      let imageUrls: any = [];
+
       if (req.files) {
-        const imageUrls = (await uploadImagesToS3(req)) as any;
+        imageUrls = (await uploadImagesToS3(req)) as any;
         const newImages = await addNewImages(
           tx,
           {
@@ -136,6 +143,20 @@ export const createEvent = async (req: Request, res: Response) => {
       }
 
       await notifyNewPostToFriends(userId, CATEGORY.EVENTS, post.postId);
+
+      const user = await getUser(uuid);
+
+      await indexOpensearchDocument(CATEGORY.EVENTS, post.postId, {
+        title,
+        postId: post.postId,
+        content,
+        profile: user?.selectUser.profileImage,
+        nickname: user?.selectUser.nickname,
+        isClosed,
+        tags: newTags,
+        thumbnail: imageUrls[0],
+        createdAt: post.createdAt
+      });
 
       return post;
     });
@@ -214,7 +235,7 @@ export const updateEvent = async (req: Request, res: Response) => {
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } 
+  }
 };
 
 export const deleteEvent = async (req: Request, res: Response) => {
@@ -255,6 +276,8 @@ export const deleteEvent = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeEventById(tx, postId, userId);
+
+      await deleteOpensearchDocument(CATEGORY.EVENTS, postId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });

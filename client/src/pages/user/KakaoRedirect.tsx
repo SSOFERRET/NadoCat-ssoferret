@@ -8,10 +8,10 @@ const KakaoRedirect = () => {
   const { uuid } = useAuthStore();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
+    // const code = urlParams.get("code");
     const uuidFromUrl = urlParams.get("uuid");
 
-    console.log("code:", code);
+    // console.log("code:", code);
 
     const handleKakaoLogin = async () => {
       try {

@@ -1,4 +1,4 @@
-import { IIsAllRead } from "../hooks/useNotifications";
+import { IHasNewNotification } from "../hooks/useNotifications";
 import { INotificationPage } from "../models/notification.model";
 import { httpClient } from "./http";
 
@@ -45,9 +45,9 @@ export const getNotifications = async ({
   }
 };
 
-export const getIsAllNotificationRead = async (): Promise<IIsAllRead> => {
+export const getHasNewNotification = async (): Promise<IHasNewNotification> => {
   try {
-    const data: IIsAllRead = await httpClient.get(`/notifications/all-read`).then((res) => res.data);
+    const data: IHasNewNotification = await httpClient.get(`/notifications/new`).then((res) => res.data);
 
     return data;
   } catch (error) {

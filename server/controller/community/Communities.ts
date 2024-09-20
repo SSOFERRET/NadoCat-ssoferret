@@ -28,6 +28,8 @@ import { notifyNewPostToFriends } from "../notification/Notifications";
 import { incrementViewCountAsAllowed } from "../common/Views";
 import { deleteImageFromS3ByImageId, uploadImagesToS3 } from "../../util/images/s3ImageHandler";
 import { addNewImages } from "../../util/images/addNewImages";
+import { deleteOpensearchDocument, indexOpensearchDocument, updateOpensearchDocument } from "../search/Searches";
+import { getUser } from "../../model/my.model";
 
 export const getCommunities = async (req: Request, res: Response) => {
   try {
@@ -105,8 +107,10 @@ export const createCommunity = async (req: Request, res: Response) => {
       const post = await addCommunity(tx, userId, title, content);
       const postId = post.postId;
 
+      let newTags: ITag[] = [];
+
       if (tagList.length > 0) {
-        const newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
+        newTags = await Promise.all(tagList.map((tag: string) => addTag(tx, tag)));
         const formatedTags = newTags.map((tag: ITag) => ({
           tagId: tag.tagId,
           postId,
@@ -114,8 +118,10 @@ export const createCommunity = async (req: Request, res: Response) => {
         await addCommunityTags(tx, formatedTags);
       }
 
+      let imageUrls: string[] = [];
+
       if (req.files) {
-        const imageUrls = (await uploadImagesToS3(req)) as any;
+        imageUrls = (await uploadImagesToS3(req)) as string[];
         const newImages = await addNewImages(
           tx,
           {
@@ -133,6 +139,19 @@ export const createCommunity = async (req: Request, res: Response) => {
       }
 
       await notifyNewPostToFriends(userId, CATEGORY.COMMUNITIES, post.postId);
+
+      const user = await getUser(uuid);
+
+      await indexOpensearchDocument(CATEGORY.COMMUNITIES, post.postId, {
+        title,
+        postId: post.postId,
+        content,
+        profile: user?.selectUser.profileImage,
+        nickname: user?.selectUser.nickname,
+        tags: newTags,
+        thumbnail: imageUrls[0],
+        createdAt: post.createdAt
+      });
 
       return post;
     });
@@ -203,6 +222,11 @@ export const updateCommunity = async (req: Request, res: Response) => {
       await removeImagesByIds(tx, imageIds);
 
       await deleteImages(tx, imageIds);
+
+      // await updateOpensearchDocument(CATEGORY.COMMUNITIES, postId, {
+      //   content: 
+
+      // })
     });
 
     res.status(StatusCodes.CREATED).json({ message: "게시글이 수정되었습니다." });
@@ -250,6 +274,8 @@ export const deleteCommunity = async (req: Request, res: Response) => {
       await deleteCommentsById(tx, postId);
 
       await removeCommunityById(tx, postId, userId);
+
+      await deleteOpensearchDocument(CATEGORY.COMMUNITIES, postId);
     });
 
     res.status(StatusCodes.OK).json({ message: "게시글이 삭제되었습니다." });

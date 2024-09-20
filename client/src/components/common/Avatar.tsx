@@ -4,9 +4,9 @@ import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 interface IProps {
   profileImage: string | null;
-  nickname: string;
+  nickname?: string;
   onClick?: () => void;
-  size?: "sm" | "md" | "lg";
+  size?: "mn" | "sm" | "md" | "lg";
 }
 
 const Avatar = ({ profileImage, nickname, onClick, size = "sm" }: IProps) => {
@@ -23,8 +23,15 @@ const Avatar = ({ profileImage, nickname, onClick, size = "sm" }: IProps) => {
   });
 
   return (
-    <div className={`avatar ${size} ${onClick ? "pointer" : ""}`} onClick={onClick}>
-      <img ref={imageRef} data-src={profileImage || DefaultProfile} alt={nickname} />
+    <div
+      className={`avatar ${size} ${onClick ? "pointer" : ""}`}
+      onClick={onClick}
+    >
+      <img
+        ref={imageRef}
+        data-src={profileImage || DefaultProfile}
+        alt={nickname}
+      />
     </div>
   );
 };
