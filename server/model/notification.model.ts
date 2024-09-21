@@ -98,8 +98,12 @@ export const getNotificationListByReceiver = async (
   });
 };
 
-export const getNotificationsCount = async () => {
-  return await prisma.notifications.count();
+export const getNotificationsCount = async (receiver: Buffer) => {
+  return await prisma.notifications.count({
+    where: {
+      receiver
+    }
+  });
 };
 
 export const getLatestNotificationByReceiver = async (receiver: Buffer) => {
