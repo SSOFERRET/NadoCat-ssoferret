@@ -12,10 +12,6 @@ import { TCategoryId } from "../../types/category";
 import { getFriendList } from "../../model/friend.model";
 import { getCategoryUrlStringById } from "../../constants/category";
 import { getPostAuthorUuid } from "../../model/common/uuid.model";
-import { IListData } from "../../types/post";
-import prisma from "../../client";
-import { getPostsCount } from "../../model/missing.model";
-import dotenv from "dotenv";
 
 interface INoticiationData {
   type: TNotify;
@@ -144,7 +140,7 @@ export const notifyNewLike = async (userId: Buffer, categoryId: TCategoryId, pos
     type: "like",
     receiver: postAuthor.toString("hex"),
     sender: userId.toString("hex"),
-    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`, //프론트 url에 맞출 것
+    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`
   });
 };
 
