@@ -32,7 +32,7 @@ const NotificationComponent = ({ notification }: IProps) => {
       case "newPost" as TNotify:
         return `이 새로운 게시글을 작성했습니다.`;
       case "comment" as TNotify:
-        return `이 새로운 댓글`;
+        return `이 새로운 댓글을 작성했습니다.`;
       case "follow" as TNotify:
         return `이 회원님을 팔로우했습니다.`;
       case "like" as TNotify:
