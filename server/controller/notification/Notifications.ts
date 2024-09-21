@@ -17,18 +17,6 @@ import prisma from "../../client";
 import { getPostsCount } from "../../model/missing.model";
 import dotenv from "dotenv";
 
-/* CHECKLIST
- * [x] 알람글 isRead update API
- * [x] 실종고양이 제보글 => 게시글 게시자
- * [x] 실종고양이 제보글 일치 여부 => 제보글 게시자
- * [x] 실종고양이 제보글 수정 => 게시글 게시자
- * [x] 실종고양이 수색 종료 => 모든 제보글 게시자 및 모든 즐겨찾기한 사용자
- * [x] 신규 글 작성 => 친구
- * [-] 좋아요 찍힘 => 게시글 게시자
- * [x] 댓글 => 게시글 게시자
- * [x] 친구 요청 => 요청 받은 사용자
- */
-
 interface INoticiationData {
   type: TNotify;
   receiver: string;
@@ -54,26 +42,6 @@ export const serveNotifications = async (req: Request, res: Response) => {
       "Cache-Control": "no-cache",
       Connection: "keep-alive",
     });
-
-    // const sendNotifications = async () => {
-    //   if (notifications.length) {
-    //     await createNotification(notifications);
-    //     notifications.forEach((notification) => {
-    //       if (notification && userId && userId === notification.receiver) {
-    //         const notificationData = JSON.stringify({
-    //           type: notification.type,
-    //           sender: notification.sender,
-    //           url: notification.url,
-    //           timestamp: notification.timestamp
-    //         })
-    //         res.write(`data: ${notificationData}\n\n`);
-    //       }
-    //     });
-    //     notifications.length = 0;
-    //   } else {
-    //     res.write('\n\n');
-    //   }
-    // };
 
     const sendNotifications = async () => {
       if (notifications.length) {
@@ -166,7 +134,7 @@ export const notifyNewComment = async (userId: Buffer, categoryId: TCategoryId, 
     type: "comment",
     receiver: postAuthor.toString("hex"),
     sender: userId.toString("hex"),
-    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}/comments?cursor=${cursor}`, //프론트 url에 맞출 것
+    url: `/boards/${getCategoryUrlStringById(categoryId)}/${postId}`
   });
 };
 
@@ -186,13 +154,18 @@ export const getNotificationList = async (req: Request, res: Response) => {
     if (!uuid) {
       throw new Error("User UUID is missing.");
     }
-    const userId = Buffer.from(uuid, "hex");
-    const limit = 10;
-    let notifications = await getNotificationListByReceiver(userId, limit);
-    const count = await getNotificationsCount();
-    console.log(notifications);
+    const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : 10;
 
-    const nextCursor = notifications.length === limit ? notifications[notifications.length - 1].notificationId : null;
+    const userId = Buffer.from(uuid, "hex");
+    let notifications = await getNotificationListByReceiver(userId, limit, cursor);
+    const count = await getNotificationsCount(userId);
+    console.log(notifications)
+
+    const nextCursor = notifications.length === limit
+      ? notifications[notifications.length - 1].notificationId
+      : null;
+
 
     const result = {
       notifications,
