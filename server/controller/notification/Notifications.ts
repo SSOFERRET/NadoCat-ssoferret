@@ -160,7 +160,6 @@ export const getNotificationList = async (req: Request, res: Response) => {
     const userId = Buffer.from(uuid, "hex");
     let notifications = await getNotificationListByReceiver(userId, limit, cursor);
     const count = await getNotificationsCount(userId);
-    console.log(notifications)
 
     const nextCursor = notifications.length === limit
       ? notifications[notifications.length - 1].notificationId
