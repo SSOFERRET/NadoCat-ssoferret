@@ -10,7 +10,7 @@ import Spinner from "../../components/loading/Spinner";
 
 const Notification = () => {
   const { getNotificationList } = useNotifications();
-  const { setHasNewNotification } = notificationStore();
+  const { hasNewNotification, setHasNewNotification } = notificationStore();
   const {
     data,
     isLoading,
@@ -18,6 +18,7 @@ const Notification = () => {
     hasNextPage,
     isFetchingNextPage,
     isEmpty,
+    refetch,
   } = getNotificationList();
 
   const moreRef = useIntersectionObserver(([entry]) => {
@@ -32,6 +33,13 @@ const Notification = () => {
   useEffect(() => {
     setHasNewNotification(false);
   }, []);
+
+  useEffect(() => {
+    if (hasNewNotification) {
+      refetch(); // 알림 리스트 새로고침
+      setHasNewNotification(false); // 상태 초기화
+    }
+  }, [hasNewNotification]);
 
   return (
     <section className="notification-container">

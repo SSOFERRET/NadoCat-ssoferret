@@ -46,6 +46,7 @@ const useNotifications = () => {
       fetchNextPage,
       hasNextPage,
       isFetchingNextPage,
+      refetch
     } = useInfiniteQuery({
       queryKey: ["notification"],
       queryFn: ({ pageParam = 0 }) => getNotifications({ pageParam }),
@@ -71,6 +72,7 @@ const useNotifications = () => {
       isFetchingNextPage,
       isFetching,
       isEmpty,
+      refetch
     }
   };
 
