@@ -1,9 +1,7 @@
-// import "../../styles/scss/pages/search/search.scss";
 import styles from "./search.module.scss";
 import { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import ExclamationMarkCat from "../../assets/img/exclamationMarkCat2.png";
-// import UnfindableCat from "../../assets/img/unfindableCat.png";
 // import useDebounce from "../../hooks/useDebounce";
 import {
   deleteAllLocalStorage,
@@ -108,7 +106,7 @@ const Search = () => {
         communities: Number(data[0].totalcount.value),
         events: Number(data[1].totalcount.value),
         missings: Number(data[2].totalcount.value),
-        streetCats: 0,
+        streetCats: Number(data[3].totalcount.value),
       });
   }, [data]);
 
@@ -166,7 +164,7 @@ const Search = () => {
 
       {isLoading && <LoadingCat />}
 
-      {data && !isRecentKeywords ? (
+      {data && !isRecentKeywords && (
         <section className={styles.results}>
           <ul className={styles.searchCategories}>
             {categories.map((item, idx) => (
@@ -185,17 +183,6 @@ const Search = () => {
             <SearchCategoryContainer keyword={keyword} index={selected} />
           )}
         </section>
-      ) : (
-        !isLoading && (
-          <section className="search-no-results">
-            {/* <img
-              className="unfindable-cat"
-              src={UnfindableCat}
-              alt="UnfindableCat"
-            />
-            <span>검색 결과가 없습니다.</span> */}
-          </section>
-        )
       )}
     </div>
   );

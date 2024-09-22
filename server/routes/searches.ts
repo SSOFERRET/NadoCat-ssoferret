@@ -6,5 +6,9 @@ router.use(express.json());
 
 router.get("", searchDocuments);
 router.get("/communities", (req: Request, res: Response) => searchDocumentsAsCategory(req, res, "communities"));
-router.get("/events", (req: Request, res: Response) => searchDocumentsAsCategory(req, res, "events")); router.get("/missings", (req: Request, res: Response) => searchDocumentsAsCategory(req, res, "missings"));
+router.get("/events", (req: Request, res: Response) => searchDocumentsAsCategory(req, res, "events"));
+router.get("/missings", (req: Request, res: Response) => searchDocumentsAsCategory(req, res, "missings"));
+router.get("/street-cats", (req: Request, res: Response) => searchDocumentsAsCategory(req, res, "street-cats"));
+
+
 export default router;
