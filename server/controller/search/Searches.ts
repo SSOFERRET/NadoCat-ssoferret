@@ -24,7 +24,7 @@ const getDataForSearch = (categoryId: TCategoryId, postId: number) => {
 export const searchDocuments = async (req: Request, res: Response) => {
   const { query } = req.query;
   try {
-    const searchCategoryList = [1, 2, 3].map((id) => getCategoryUrlStringById(id as TCategoryId))
+    const searchCategoryList = [1, 2, 3, 5].map((id) => getCategoryUrlStringById(id as TCategoryId))
 
     const results = await Promise.all(
       searchCategoryList.map(async (categoryName) => {
