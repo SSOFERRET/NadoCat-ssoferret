@@ -37,7 +37,7 @@ export const createUser = async (email: string, nickname: string, password: stri
         data: {
           uuid: uuidBuffer,
           email: email,
-          profileImage: "https://nadocat.s3.ap-northeast-2.amazonaws.com/static/profileImg1.pngs",
+          profileImage: "https://nadocat.s3.ap-northeast-2.amazonaws.com/static/profileImg1.png",
           nickname: nickname,
           authType: "general",
           status: "active",
