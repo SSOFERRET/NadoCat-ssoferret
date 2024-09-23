@@ -29,7 +29,7 @@ const MyInfo = ({
 }: MyInfoProps) => {
   console.log("MyInfo의 uuid:", uuid);
   console.log("My의 userData:", userData);
-  const [isOpenModal, setIsOpenModal] = useState(false); 
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const [avatarUrl, setAvatarUrl] = useState(profileImageUrl);
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const MyInfo = ({
   const handleImageUpload = async (file: File) => {
     try {
       const newImageUrl = await uploadProfile(file);
-      setAvatarUrl(`${newImageUrl}?timestamp=${new Date().getTime()}`); 
+      setAvatarUrl(`${newImageUrl}?timestamp=${new Date().getTime()}`);
       setIsOpenModal(false);
     } catch (error) {
       console.error("프로필 업로드 에러: ", error);
@@ -49,7 +49,8 @@ const MyInfo = ({
   };
 
   const handleDefaultImage = async () => {
-    const defaultImageUrl = "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
+    const defaultImageUrl =
+      "https://nadocat.s3.ap-northeast-2.amazonaws.com/static/profileImg1.png";
     await deleteProfile(defaultImageUrl);
     setAvatarUrl(defaultImageUrl);
     setIsOpenModal(false);
@@ -66,9 +67,16 @@ const MyInfo = ({
   return (
     <>
       <div className="info-container">
-        <Avatar size="lg" nickname={nickname} profileImage={avatarUrl} onClick={onAvatarClick} />
+        <Avatar
+          size="lg"
+          nickname={nickname}
+          profileImage={avatarUrl}
+          onClick={onAvatarClick}
+        />
 
-        <div className={`nickname-container ${isMyPage ? "my-page" : "user-page"}`}>
+        <div
+          className={`nickname-container ${isMyPage ? "my-page" : "user-page"}`}
+        >
           <div className="nickname-text">
             <span>{nickname}</span>
             <span>님</span>
