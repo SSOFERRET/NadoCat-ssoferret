@@ -15,13 +15,17 @@ interface IProps {
 const SearchCategoryContainer = ({ index, keyword }: IProps) => {
   const category = Object.keys(categoryNames)[index - 1];
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useCategorySearch(category, keyword);
+    useCategorySearch(
+      category === "streetCats" ? "street-cats" : category,
+      keyword
+    );
 
   const posts = data?.pages.flatMap((page) =>
     page.posts.map((post) => post._source)
   );
 
   const { counts } = useSearchCountStore();
+  console.log(counts);
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {

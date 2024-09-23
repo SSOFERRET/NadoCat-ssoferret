@@ -13,6 +13,8 @@ import {
   saveLike,
 } from "../../model/like.model";
 import { Prisma } from "@prisma/client";
+import { notifyNewLike } from "../notification/Notifications";
+import { TCategoryId } from "../../types/category";
 
 export const addLike = async (req: Request, res: Response) => {
   const uuid = req.user?.uuid;
@@ -33,12 +35,15 @@ export const addLike = async (req: Request, res: Response) => {
       } else if (categoryId === CATEGORY.EVENTS) {
         await addEventLike(tx, postId, like.likeId);
       }
+
+      notifyNewLike(uuid, categoryId as TCategoryId, postId)
     });
+
 
     res.status(StatusCodes.CREATED).json({ message: "좋아요가 등록 되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } 
+  }
 };
 
 export const deleteLike = async (req: Request, res: Response) => {
@@ -71,5 +76,5 @@ export const deleteLike = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "좋아요가 삭제 되었습니다." });
   } catch (error) {
     handleControllerError(error, res);
-  } 
+  }
 };

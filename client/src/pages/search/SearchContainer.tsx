@@ -18,7 +18,9 @@ const SearchContainer = ({ data, handleCategory }: IProps) => {
           <li key={category.category} className={styles.categoryContainer}>
             <span className={`${styles.count} ${styles.leftMargin12}`}>
               {`${
-                categoryNames[category.category as keyof typeof categoryNames]
+                categoryNames[
+                  category.category as keyof typeof categoryNames
+                ] ?? "동네고양이"
               } ${category.totalcount.value} 건`}
             </span>
             <div className={styles.devider} />

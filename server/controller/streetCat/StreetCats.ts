@@ -145,7 +145,7 @@ export const createStreetCat = async (req: Request, res: Response) => {
 
       const user = await getUser(uuidString);
 
-      // await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
+      await notifyNewPostToFriends(uuid, CATEGORY.STREET_CATS, postId);
       await indexOpensearchDocument(CATEGORY.STREET_CATS, newPost.postId, {
         title: `${name}`,
         location: newLocation.detail,
