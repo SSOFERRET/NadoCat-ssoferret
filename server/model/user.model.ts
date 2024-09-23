@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
-import connectRedis from "../redis"; 
+import connectRedis from "../redis";
 
 const prisma = new PrismaClient();
 
@@ -37,7 +37,7 @@ export const createUser = async (email: string, nickname: string, password: stri
         data: {
           uuid: uuidBuffer,
           email: email,
-          profileImage: "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png",
+          profileImage: "https://nadocat.s3.ap-northeast-2.amazonaws.com/static/profileImg1.pngs",
           nickname: nickname,
           authType: "general",
           status: "active",
@@ -139,7 +139,7 @@ export const loginUser = async (email: string, password: string, autoLogin: bool
       )
     }
 
-    await redisClient.set(`uuid:${userUuidString}`, JSON.stringify({autoLogin: false}) , {EX: 3600 * 8 }); //8시간
+    await redisClient.set(`uuid:${userUuidString}`, JSON.stringify({ autoLogin: false }), { EX: 3600 * 8 }); //8시간
 
     return { generalToken, refreshToken, result, userUuidString };
 
@@ -225,8 +225,8 @@ export const logoutUser = async (uuid: string) => {
     const redisClient = await connectRedis();
     const uuidBuffer = Buffer.from(uuid, "hex");
 
-    await redisClient.del(`uuid:${uuidBuffer.toString("hex")}`); 
-    await redisClient.del(`autoLogin:${uuidBuffer.toString("hex")}`); 
+    await redisClient.del(`uuid:${uuidBuffer.toString("hex")}`);
+    await redisClient.del(`autoLogin:${uuidBuffer.toString("hex")}`);
 
     const selectUserSecrets = await prisma.userSecrets.findFirst({
       where: {
@@ -282,8 +282,8 @@ export const kakaoUser = async (email: string, nickname: string) => {
         const createUserSecret = await prisma.userSecrets.create({
           data: {
             uuid: uuidBuffer,
-            hashPassword: null, 
-            salt: null 
+            hashPassword: null,
+            salt: null
           },
         });
 
@@ -297,12 +297,12 @@ export const kakaoUser = async (email: string, nickname: string) => {
           uuid: userUuidString,
           email: selectUser.email
         }, process.env.PRIVATE_KEY_GEN as string, {
-          expiresIn: process.env.GENERAL_TOKEN_EXPIRE_IN,
-          issuer: "fefive"
-        });
-        
-        await redisClient.set(`uuid:${userUuidString}`, JSON.stringify({ autoLogin: true }), { EX: 7 * 24 * 60 * 60 });
-    
+        expiresIn: process.env.GENERAL_TOKEN_EXPIRE_IN,
+        issuer: "fefive"
+      });
+
+      await redisClient.set(`uuid:${userUuidString}`, JSON.stringify({ autoLogin: true }), { EX: 7 * 24 * 60 * 60 });
+
 
       let refreshToken: string | null = null;
       const selectUserSecrets = await prisma.userSecrets.findFirst({
@@ -324,7 +324,7 @@ export const kakaoUser = async (email: string, nickname: string) => {
 
         await prisma.userSecrets.update({
           data: {
-            refreshToken: refreshToken 
+            refreshToken: refreshToken
           },
           where: {
             userSecretId: selectUserSecrets.userSecretId,
@@ -340,7 +340,7 @@ export const kakaoUser = async (email: string, nickname: string) => {
   } catch (error) {
     console.error("카카오로그인 error:", error);
     throw new Error("카카오로그인 중 오류 발생");
-  }finally{
+  } finally {
     await redisClient.quit();
   }
 };
