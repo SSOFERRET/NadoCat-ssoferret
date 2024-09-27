@@ -98,6 +98,22 @@ export const getMissing = async (req: Request, res: Response) => {
       const viewIncrementResult = await incrementViewCountAsAllowed(req, tx, CATEGORY.MISSINGS, postId);
       post.views += viewIncrementResult || 0;
 
+      if (images[0]) {
+        await indexOpensearchDocument(CATEGORY.MISSINGS, post.postId, {
+          nickname: post.users.nickname,
+          cat: post.missingCats.name,
+          detail: post.missingCats.detail,
+          location: post.locations.detail,
+          time: post.time,
+          profile: post.users.profileImage,
+          thumbnail: images[0].url,
+          postId: postId,
+          found: post.found,
+          createdAt: post.createdAt
+        });
+      }
+
+
       return res.status(StatusCodes.OK).json({ ...post, images });
     });
   } catch (error) {
@@ -166,7 +182,7 @@ export const createMissing = async (req: Request, res: Response) => {
         profile: user?.selectUser.profileImage,
         thumbnail: imageUrls[0],
         postId: post.postId,
-        found: Boolean,
+        found: false,
         createdAt: post.createdAt
       });
 

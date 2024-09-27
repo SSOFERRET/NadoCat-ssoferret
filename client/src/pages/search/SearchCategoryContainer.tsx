@@ -25,7 +25,6 @@ const SearchCategoryContainer = ({ index, keyword }: IProps) => {
   );
 
   const { counts } = useSearchCountStore();
-  console.log(counts);
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {

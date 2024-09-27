@@ -214,7 +214,7 @@ export const updateProfile = async (req: Request, res: Response) => {
 
     // 기존 프로필 이미지 URL을 가져오기 (검증 및 삭제용)
     const user = await getProfileImage(req.user.uuid);
-    const defaultUrl = "https://nadocat.s3.ap-northeast-2.amazonaws.com/profileCat_default.png";
+    const defaultUrl = "https://nadocat.s3.ap-northeast-2.amazonaws.com/static/profileImg1.png";
     const oldProfileImageUrl = user?.profileImage || "";
 
     // 새 프로필 업로드
@@ -235,7 +235,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     // 기존 이미지 삭제 작업 비동기로 처리
     if (oldProfileImageUrl && oldProfileImageUrl !== defaultUrl) {
       deleteSingleImageToS3(oldProfileImageUrl)
-        .then(() => {})
+        .then(() => { })
         .catch((err) => console.error("기존 이미지 삭제 중 오류 발생:", err));
     }
   } catch (error) {

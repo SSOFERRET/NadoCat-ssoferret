@@ -37,6 +37,8 @@ const CommunityDetail = () => {
       : likePost({ categoryId, postId });
   };
 
+  console.log(post);
+
   return (
     <div className="community-detail">
       <HeaderWithBackButton />
