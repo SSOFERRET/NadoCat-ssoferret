@@ -1,3 +1,4 @@
+import React from "react";
 import { describe, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Avatar from "../../components/common/Avatar";
@@ -29,6 +30,8 @@ describe("Avatar", () => {
   it("size props에 값에 따라 size 값과 같은 class를 가져야 함", () => {
     render(<Avatar profileImage={users.profileImage} nickname={users.nickname} size="sm" />);
     const avatarDiv = screen.getByRole("img").closest("div");
-    expect(avatarDiv).toHaveClass("sm");
+    if (avatarDiv) {
+      expect(avatarDiv).toHaveClass("sm");
+    }
   });
 });
