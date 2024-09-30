@@ -31,14 +31,44 @@
 <h3>커뮤니티</h3>
 <ul>
   <li>
-    <strong>커뮤니티</strong>: 설명글을 써야함
+    <strong>게시글 목록</strong>
+    <img src="https://github.com/user-attachments/assets/697d5d1f-3790-4614-89da-12a03a4faa3f">
+    - 게시글 목록은 무한스크롤로 동작 <br />
+    - 게시글 목록은 최신순, 조회순, 좋아요순 정렬 가능 <br />
+  </li>
+  <li>
+    <strong>게시글 작성</strong>
+    <img src="https://github.com/user-attachments/assets/922eeee9-0d53-41e0-b7df-6b772fa76f88">
+    - 게시글 작성에는 제목, 내용, 이미지, 태그를 추가 가능<br />
+  </li>
+  <li>
+    <strong>게시글 상세 페이지</strong>
+    <img src="https://github.com/user-attachments/assets/fd7e37b8-63b5-4ab3-9862-c30cb4c355b2">
+    - 작성자 정보, 좋아요, 제목, 내용, 조회수, 댓글 등을 확인 가능하며 이미지는 2개 이상일 경우 캐러샐 슬라이드로 동작<br />
+    - 댓글 작성, 댓글 수정, 댓글 삭제 가능<br />
+    - 본인이 작성한 게시글과 댓글은 경우 수정 및 삭제 가능 <br />
   </li>
 </ul>
 
 <h3>이벤트‧모임</h3>
 <ul>
   <li>
-    <strong>커뮤니티</strong>: 설명글을 써야함
+    <strong>게시글 목록</strong>
+    <img src="https://github.com/user-attachments/assets/0f74fecc-c21b-4754-b581-73ba94671dcc">
+    - 게시글 목록은 무한스크롤로 동작 <br />
+    - 게시글 목록은 최신순, 조회순, 좋아요순 정렬 가능 <br />
+  </li>
+  <li>
+    <strong>게시글 작성</strong>
+    <img src="https://github.com/user-attachments/assets/06efd403-2c72-474f-a282-e3ecb5991bc5">
+    - 게시글 작성에는 제목, 내용, 이미지, 모집 여부, 태그를 추가 가능 <br />
+  </li>
+  <li>
+    <strong>게시글 상세 페이지</strong>
+    <img src="https://github.com/user-attachments/assets/764eb1ee-0f55-49a0-9a9b-779664d46bd9">
+    - 작성자 정보, 좋아요, 제목, 내용, 조회수, 댓글, 모집여부 등을 확인 가능하며 이미지는 2개 이상일 경우 캐러샐 슬라이드로 동작 <br />
+    - 댓글 작성, 댓글 수정, 댓글 삭제 가능 <br />
+    - 본인이 작성한 게시글과 댓글은 경우 수정 및 삭제 가능 <br />
   </li>
 </ul>
 
@@ -75,6 +105,16 @@
     <strong>커뮤니티</strong>: 설명글을 써야함
   </li>
 </ul>
+
+<h3>친구 맺기</h3>
+<ul>
+  <li>
+    <strong>친구 맺기 / 친구 삭제</strong><br />
+    - 사용자 상세 페이지에서 친구 맺기 및 삭제 가능 <br />
+    - 내가 추가한 친구 목록은 마이 페이지에서 확인 가능 <br />
+  </li>
+</ul>
+
 <br><br>
 
 
