@@ -110,9 +110,11 @@
 <ul>
   <li>
     <strong>친구 맺기 / 친구 삭제</strong><br />
+    <img src="https://github.com/user-attachments/assets/3820fca7-0289-4b2f-b610-2f4bb610bbbd" width="800px"> <br />
     - 사용자 상세 페이지에서 친구 맺기 및 삭제 가능 <br />
     - 내가 추가한 친구 목록은 마이 페이지에서 확인 가능 <br />
   </li>
+
 </ul>
 
 <br><br>
