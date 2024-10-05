@@ -1,5 +1,5 @@
 import React from "react";
-import logoHeader from "../../assets/img/logoHeader.png";
+import logoHeader from "../../assets/img/logoHeader.webp";
 import "../../styles/css/base/reset.css";
 import "../../styles/scss/components/common/header.scss";
 import { Link, useNavigate } from "react-router-dom";

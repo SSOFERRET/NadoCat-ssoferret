@@ -1,5 +1,5 @@
 import "../../styles/scss/components/communityAndEvent/postEmpty.scss";
-import CommentsEmptyCat from "../../assets/img/commentsEmpty.png";
+import CommentsEmptyCat from "../../assets/img/commentsEmpty.webp";
 
 interface IProps {
   text?: string;
