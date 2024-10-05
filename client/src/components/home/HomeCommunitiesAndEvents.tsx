@@ -1,7 +1,7 @@
 import { useState } from "react";
 import HomeCommunity from "./HomeCommunity";
 import HomeEvent from "./HomeEvent";
-import Cat from "../../assets/img/Maskgroup.png";
+import Cat from "../../assets/img/Maskgroup.webp";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import { useNavigate } from "react-router-dom";
 

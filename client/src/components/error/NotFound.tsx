@@ -1,6 +1,6 @@
 import "../../styles/scss/components/error/notFound.scss";
 import { useNavigate } from "react-router-dom";
-import NotFoundCat from "../../assets/img/notFoundCat.png";
+import NotFoundCat from "../../assets/img/notFoundCat.webp";
 
 const NotFound = () => {
   const navigate = useNavigate();
