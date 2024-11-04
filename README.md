@@ -102,7 +102,10 @@
 <h3>알림</h3>
 <ul>
   <li>
-    <strong>커뮤니티</strong>: 설명글을 써야함
+    <strong>알림 표시 / 알림 페이지</strong><br />
+    <img src="https://github.com/user-attachments/assets/d3d2f339-e168-4ab2-8a79-7335370d61bb" width="320px">
+    <img src="https://github.com/user-attachments/assets/74da0d24-dac7-4ff4-872c-69f640f2d5bc" width="320px"> <br />
+    - 좋아요/댓글/친구 맺기 시 새 알림 표시
   </li>
 </ul>
 
